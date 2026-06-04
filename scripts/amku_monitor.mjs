@@ -185,14 +185,42 @@ function isDecisionZipResource(resource) {
   return true;
 }
 
-function parseResourceMonth(title) {
+function parseResourceDate(resourceOrTitle) {
+  const title = typeof resourceOrTitle === 'string' ? resourceOrTitle : resourceTitle(resourceOrTitle);
   const text = String(title || '').toLowerCase();
+
+  // Modern monthly resources usually look like: "Рішення АМКУ за квітень 2026 ..."
   for (const [name, month] of UA_MONTHS.entries()) {
     const re = new RegExp(`${name}\\s+(20\\d{2})`, 'i');
     const m = text.match(re);
-    if (m) return { year: Number(m[1]), month };
+    if (m) return { year: Number(m[1]), month, day: 1, source: 'ua_month' };
   }
+
+  // Older resources often look like: "Рішення АМКУ від 18.04.2019 №238-269-р.zip"
+  const numeric = text.match(/(?:від\s*)?(\d{1,2})[.\s-]+(\d{1,2})[.\s-]+(20\d{2})/i);
+  if (numeric) {
+    const day = Number(numeric[1]);
+    const month = Number(numeric[2]);
+    const year = Number(numeric[3]);
+    if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+      return { year, month, day, source: 'numeric_date' };
+    }
+  }
+
   return null;
+}
+
+function resourceSortTime(resource) {
+  const parsed = parseResourceDate(resource);
+  if (parsed) return Date.UTC(parsed.year, parsed.month - 1, parsed.day || 1);
+  for (const field of ['last_modified', 'revision_timestamp', 'created']) {
+    const value = resource?.[field];
+    if (value) {
+      const t = Date.parse(value);
+      if (Number.isFinite(t)) return t;
+    }
+  }
+  return Number.NEGATIVE_INFINITY;
 }
 
 function monthsDiffFromNow(year, month) {
@@ -202,8 +230,10 @@ function monthsDiffFromNow(year, month) {
 
 function isWithinLookback(resource) {
   if (LOOKBACK_MONTHS <= 0) return true;
-  const parsed = parseResourceMonth(resourceTitle(resource));
-  if (!parsed) return true;
+  const parsed = parseResourceDate(resource);
+  // If a resource date cannot be parsed, do not include it in normal scheduled runs.
+  // This prevents old archive-style resources from leaking into recent monitoring.
+  if (!parsed) return false;
   const diff = monthsDiffFromNow(parsed.year, parsed.month);
   return diff >= 0 && diff <= LOOKBACK_MONTHS;
 }
@@ -226,6 +256,7 @@ async function getCandidateResources() {
   return resources
     .filter(isDecisionZipResource)
     .filter(isWithinLookback)
+    .sort((a, b) => resourceSortTime(b) - resourceSortTime(a))
     .slice(0, MAX_RESOURCES);
 }
 
@@ -510,6 +541,10 @@ function renderDigestText(rows, stats) {
 async function sendDigest(rows, stats) {
   const emailTo = process.env.EMAIL_TO;
   const emailForce = boolEnv('EMAIL_FORCE', false);
+  if (SKIP_GEMINI && !emailForce) {
+    console.log('Email skipped: SKIP_GEMINI=true and EMAIL_FORCE=false.');
+    return;
+  }
   if ((!rows.length && !emailForce) || DRY_RUN) {
     console.log(`Email skipped. rows=${rows.length}, EMAIL_FORCE=${emailForce}, DRY_RUN=${DRY_RUN}`);
     return;
