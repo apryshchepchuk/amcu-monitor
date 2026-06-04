@@ -1,0 +1,75 @@
+name: AMCU Decisions Monitor
+
+on:
+  workflow_dispatch:
+    inputs:
+      lookback_months:
+        description: "How many recent months of AMCU decision ZIPs to scan"
+        required: false
+        default: "3"
+      force:
+        description: "Force reprocess resources even if metadata/hash is unchanged"
+        required: false
+        default: "false"
+      skip_gemini:
+        description: "Test mode: run extraction/filtering without Gemini calls"
+        required: false
+        default: "false"
+      email_force:
+        description: "Send email even if no new relevant decisions found"
+        required: false
+        default: "false"
+
+  schedule:
+    # 08:40 Kyiv during UTC+3, Monday-Friday.
+    # During winter UTC+2 this will run at 07:40 Kyiv; adjust if exact local time matters.
+    - cron: "40 5 * * 1-5"
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install document tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip antiword pandoc
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Run AMCU decisions monitor
+        env:
+          LOOKBACK_MONTHS: ${{ github.event.inputs.lookback_months || '3' }}
+          FORCE: ${{ github.event.inputs.force || 'false' }}
+          SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
+          EMAIL_FORCE: ${{ github.event.inputs.email_force || 'false' }}
+
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: node scripts/amku_monitor.mjs
+
+      - name: Commit monitor state
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add data/amku_state.json data/amku_results.json data/amku_events.jsonl
+          git diff --cached --quiet || git commit -m "Update AMCU decisions monitor data"
+          git push
