@@ -60,6 +60,15 @@ const PROCEDURAL_PATTERNS = [
   /про\s+внесення\s+змін/i
 ];
 
+const CONCENTRATION_WITHOUT_PERMIT_PATTERNS = [
+  /пункт(?:ом|у)?\s*12\s+статті\s*50\s+Закону\s+України\s+«?Про\s+захист\s+економічної\s+конкуренції»?/i,
+  /п\.?\s*12\s+ст\.?\s*50\s+Закону\s+України\s+«?Про\s+захист\s+економічної\s+конкуренції»?/i,
+  /здійснення\s+концентрації\s+без\s+отримання\s+(?:відповідного\s+)?дозволу/i,
+  /концентраці[яї]\s+без\s+отримання\s+(?:відповідного\s+)?дозволу/i,
+  /без\s+отримання\s+(?:відповідного\s+)?дозволу\s+органів\s+Антимонопольного\s+комітету\s+України/i,
+  /у\s+разі\s+якщо\s+наявність\s+такого\s+дозволу\s+необхідна/i
+];
+
 const RESOURCE_EXCLUDE_PATTERNS = [
   /рекомендац/i,
   /список/i,
@@ -491,8 +500,31 @@ async function extractTextViaLibreOffice(filePath) {
   return normalizeSpaces(await fs.readFile(path.join(outDir, txt), 'utf8'));
 }
 
+function isConcentrationWithoutPermitP12(text) {
+  const normalized = normalizeSpaces(text);
+
+  const hasPoint12 =
+    /пункт(?:ом|у)?\s*12\s+статті\s*50/i.test(normalized)
+    || /п\.?\s*12\s+ст\.?\s*50/i.test(normalized);
+
+  const hasConcentration =
+    /здійснення\s+концентрації/i.test(normalized)
+    || /концентраці[яї]\s+без\s+отримання/i.test(normalized)
+    || /набуття\s+контролю/i.test(normalized)
+    || /придбання\s+акці[йї]/i.test(normalized)
+    || /придбання\s+активів/i.test(normalized);
+
+  const hasWithoutPermit =
+    /без\s+отримання\s+(?:відповідного\s+)?дозволу/i.test(normalized)
+    || /наявність\s+такого\s+дозволу\s+необхідна/i.test(normalized);
+
+  return hasPoint12 && hasConcentration && hasWithoutPermit;
+}
+
 function classifyDecision(text) {
-  const head = normalizeSpaces(text).slice(0, 25000);
+  const normalized = normalizeSpaces(text);
+  const head = normalized.slice(0, 25000);
+
   const include = INCLUDE_PATTERNS.some((re) => re.test(head));
 
   if (!include) return { relevant: false, reason: 'not_violation_decision' };
@@ -500,6 +532,12 @@ function classifyDecision(text) {
   const procedural = PROCEDURAL_PATTERNS.some((re) => re.test(head));
   if (procedural && !INCLUDE_PROCEDURAL_DECISIONS) {
     return { relevant: false, reason: 'procedural_decision' };
+  }
+
+  // Не передаємо в Gemini штрафи за gun-jumping:
+  // здійснення концентрації без дозволу АМКУ, п. 12 ст. 50 Закону.
+  if (isConcentrationWithoutPermitP12(normalized)) {
+    return { relevant: false, reason: 'concentration_without_permit_p12' };
   }
 
   let lawArea = 'economic_competition';
@@ -808,15 +846,15 @@ function violationBadge(row) {
   const basis = plainList(row?.legal_basis, '').toLowerCase();
 
   if (row?.law_area === 'unfair_competition' || /15\s*[¹1]/i.test(basis)) {
-    return 'НДК — ст. 15¹';
+    return 'ст. 15¹';
   }
 
-  if (/пункт\s*12|п\.?\s*12/i.test(basis)) return 'ЗЕК — п. 12 ст. 50';
-  if (/пункт\s*13|п\.?\s*13/i.test(basis)) return 'ЗЕК — п. 13 ст. 50';
-  if (/пункт\s*14|п\.?\s*14/i.test(basis)) return 'ЗЕК — п. 14 ст. 50';
-  if (/пункт\s*4|п\.?\s*4/i.test(basis)) return 'ЗЕК — п. 4 ст. 50';
+  if (/пункт\s*12|п\.?\s*12/i.test(basis)) return 'п. 12 ст. 50';
+  if (/пункт\s*13|п\.?\s*13/i.test(basis)) return 'п. 13 ст. 50';
+  if (/пункт\s*14|п\.?\s*14/i.test(basis)) return 'п. 14 ст. 50';
+  if (/пункт\s*4|п\.?\s*4/i.test(basis)) return 'п. 4 ст. 50';
 
-  return row?.law_area === 'economic_competition' ? 'ЗЕК' : lawAreaLabel(row);
+  return lawAreaLabel(row);
 }
 
 function decisionTitle(row) {
@@ -870,10 +908,6 @@ function renderDigestHtml(rows) {
       <p style="margin:10px 0 4px 0;"><b>Санкція</b></p>
       <div style="margin:0 0 10px 0;">${renderText(r.sanction)}</div>
 
-      ${Array.isArray(r.important_notes) && r.important_notes.length ? `
-      <p style="margin:10px 0 4px 0;"><b>Важливі примітки</b></p>
-      <div style="margin:0 0 10px 0;">${renderList(r.important_notes, '')}</div>` : ''}
-
       <p style="margin:10px 0 4px 0;"><b>Джерело</b></p>
       <div style="font-size:12px;color:#555;">
         ${htmlEscape(r.source_resource || '')}<br>
@@ -916,9 +950,6 @@ function renderDigestText(rows) {
     `Ключовий висновок / обґрунтування АМКУ: ${displayValue(r.amcu_reasoning)}`,
     `Позиція порушника: ${displayValue(r.respondent_position)}`,
     `Санкція: ${displayValue(r.sanction)}`,
-    Array.isArray(r.important_notes) && r.important_notes.length
-      ? `Важливі примітки: ${plainList(r.important_notes, '')}`
-      : '',
     `Джерело: ${[r.source_resource, r.source_file, r.source_url].filter(Boolean).join(' | ')}`
   ].filter(Boolean).join('\n')).join('\n\n---\n\n');
 }
