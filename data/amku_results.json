@@ -1,1 +1,156 @@
-[]
+[
+  {
+    "decision_number": "264-р",
+    "decision_date": "2019-04-18",
+    "law_area": "unfair_competition",
+    "liable_parties": [],
+    "violation_summary": "[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.",
+    "legal_basis": [],
+    "amcu_reasoning": null,
+    "respondent_position": null,
+    "sanction": null,
+    "important_notes": [
+      "Gemini-аналіз пропущено, бо SKIP_GEMINI=true."
+    ],
+    "confidence": "low",
+    "source_file": "18 04 2019/Рішення від 18 04 2019 № 264-р.doc",
+    "source_resource": "Рішення АМКУ від 18 04 2019 №238-269-р.zip",
+    "source_resource_id": "f2067fc2-c441-43e2-9ba8-72fc93b0de5d",
+    "source_url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/f2067fc2-c441-43e2-9ba8-72fc93b0de5d/download/18-04-2019.zip",
+    "file_sha256": "19084f26a8949682647679598e530fcd5c5d53418093833dc3413e33d94a4852",
+    "analyzed_at": "2026-06-04T13:13:20.067Z",
+    "sort_key": "2019-04-18|264-р"
+  },
+  {
+    "decision_number": "265-р",
+    "decision_date": "2019-04-18",
+    "law_area": "unfair_competition",
+    "liable_parties": [],
+    "violation_summary": "[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.",
+    "legal_basis": [],
+    "amcu_reasoning": null,
+    "respondent_position": null,
+    "sanction": null,
+    "important_notes": [
+      "Gemini-аналіз пропущено, бо SKIP_GEMINI=true."
+    ],
+    "confidence": "low",
+    "source_file": "18 04 2019/Рішення від 18.04.2019 №265-р.doc",
+    "source_resource": "Рішення АМКУ від 18 04 2019 №238-269-р.zip",
+    "source_resource_id": "f2067fc2-c441-43e2-9ba8-72fc93b0de5d",
+    "source_url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/f2067fc2-c441-43e2-9ba8-72fc93b0de5d/download/18-04-2019.zip",
+    "file_sha256": "1730f5defd0bfc153c337b442b3e01fad3e87631ae785b3093c05eabcf137a4e",
+    "analyzed_at": "2026-06-04T13:13:20.179Z",
+    "sort_key": "2019-04-18|265-р"
+  },
+  {
+    "decision_number": "266-р",
+    "decision_date": "2019-04-18",
+    "law_area": "unfair_competition",
+    "liable_parties": [],
+    "violation_summary": "[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.",
+    "legal_basis": [],
+    "amcu_reasoning": null,
+    "respondent_position": null,
+    "sanction": null,
+    "important_notes": [
+      "Gemini-аналіз пропущено, бо SKIP_GEMINI=true."
+    ],
+    "confidence": "low",
+    "source_file": "18 04 2019/Рішення від 18.04.2019 №266-р.doc",
+    "source_resource": "Рішення АМКУ від 18 04 2019 №238-269-р.zip",
+    "source_resource_id": "f2067fc2-c441-43e2-9ba8-72fc93b0de5d",
+    "source_url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/f2067fc2-c441-43e2-9ba8-72fc93b0de5d/download/18-04-2019.zip",
+    "file_sha256": "4094b8d381937d6806a0bb033ad19da71e06be7dcdaad67886dee907563c6c20",
+    "analyzed_at": "2026-06-04T13:13:20.188Z",
+    "sort_key": "2019-04-18|266-р"
+  },
+  {
+    "decision_number": "267-р",
+    "decision_date": "2019-04-18",
+    "law_area": "unfair_competition",
+    "liable_parties": [],
+    "violation_summary": "[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.",
+    "legal_basis": [],
+    "amcu_reasoning": null,
+    "respondent_position": null,
+    "sanction": null,
+    "important_notes": [
+      "Gemini-аналіз пропущено, бо SKIP_GEMINI=true."
+    ],
+    "confidence": "low",
+    "source_file": "18 04 2019/Рішення від 18.04.2019 №267-р.doc",
+    "source_resource": "Рішення АМКУ від 18 04 2019 №238-269-р.zip",
+    "source_resource_id": "f2067fc2-c441-43e2-9ba8-72fc93b0de5d",
+    "source_url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/f2067fc2-c441-43e2-9ba8-72fc93b0de5d/download/18-04-2019.zip",
+    "file_sha256": "1a0c13c621f25822e7a94ac2b27c0d1b87e4fc13f34a1e637bba35bf7c9ef575",
+    "analyzed_at": "2026-06-04T13:13:20.195Z",
+    "sort_key": "2019-04-18|267-р"
+  },
+  {
+    "decision_number": "284-р",
+    "decision_date": "2019-04-25",
+    "law_area": "economic_competition",
+    "liable_parties": [],
+    "violation_summary": "[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.",
+    "legal_basis": [],
+    "amcu_reasoning": null,
+    "respondent_position": null,
+    "sanction": null,
+    "important_notes": [
+      "Gemini-аналіз пропущено, бо SKIP_GEMINI=true."
+    ],
+    "confidence": "low",
+    "source_file": "25 04 2019/Рішення 25.04.2019 №284-р.doc",
+    "source_resource": "Рішення АМКУ від 25.04.2019 №277-291-р.zip",
+    "source_resource_id": "07507289-6aab-4a66-a8a8-5d75281f673b",
+    "source_url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/07507289-6aab-4a66-a8a8-5d75281f673b/download/25-04-2019.zip",
+    "file_sha256": "8abd2741a237dd65dff12847c3843c9e6c427253699a7ae6043045f36374ac6e",
+    "analyzed_at": "2026-06-04T13:13:24.535Z",
+    "sort_key": "2019-04-25|284-р"
+  },
+  {
+    "decision_number": "286-р",
+    "decision_date": "2019-04-25",
+    "law_area": "economic_competition",
+    "liable_parties": [],
+    "violation_summary": "[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.",
+    "legal_basis": [],
+    "amcu_reasoning": null,
+    "respondent_position": null,
+    "sanction": null,
+    "important_notes": [
+      "Gemini-аналіз пропущено, бо SKIP_GEMINI=true."
+    ],
+    "confidence": "low",
+    "source_file": "25 04 2019/Рішення 25.04.2019 №286-р.doc",
+    "source_resource": "Рішення АМКУ від 25.04.2019 №277-291-р.zip",
+    "source_resource_id": "07507289-6aab-4a66-a8a8-5d75281f673b",
+    "source_url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/07507289-6aab-4a66-a8a8-5d75281f673b/download/25-04-2019.zip",
+    "file_sha256": "71c06b52a5f3ccad92d585b3ec08fc53b21de890e6386a7c1adf30da8e0c2aa1",
+    "analyzed_at": "2026-06-04T13:13:24.546Z",
+    "sort_key": "2019-04-25|286-р"
+  },
+  {
+    "decision_number": "287-р",
+    "decision_date": "2019-04-25",
+    "law_area": "economic_competition",
+    "liable_parties": [],
+    "violation_summary": "[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.",
+    "legal_basis": [],
+    "amcu_reasoning": null,
+    "respondent_position": null,
+    "sanction": null,
+    "important_notes": [
+      "Gemini-аналіз пропущено, бо SKIP_GEMINI=true."
+    ],
+    "confidence": "low",
+    "source_file": "25 04 2019/Рішення 25.04.2019 №287-р.doc",
+    "source_resource": "Рішення АМКУ від 25.04.2019 №277-291-р.zip",
+    "source_resource_id": "07507289-6aab-4a66-a8a8-5d75281f673b",
+    "source_url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/07507289-6aab-4a66-a8a8-5d75281f673b/download/25-04-2019.zip",
+    "file_sha256": "e442c5f429fd6d057cef4a465233efa91ff3ea374e933bbe81aac906dfac42e0",
+    "analyzed_at": "2026-06-04T13:13:24.557Z",
+    "sort_key": "2019-04-25|287-р"
+  }
+]
