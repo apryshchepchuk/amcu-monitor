@@ -1,0 +1,13 @@
+{
+  "name": "amku-decisions-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "amku:monitor": "node scripts/amku_monitor.mjs",
+    "amku:test-local": "LOCAL_ZIP=/mnt/data/rish_kviten_2026.zip DRY_RUN=true SKIP_GEMINI=true node scripts/amku_monitor.mjs"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}
