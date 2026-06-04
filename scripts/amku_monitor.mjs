@@ -29,6 +29,22 @@ const INCLUDE_PROCEDURAL_DECISIONS = boolEnv('INCLUDE_PROCEDURAL_DECISIONS', fal
 const MAX_TEXT_CHARS = intEnv('MAX_TEXT_CHARS', 180000);
 const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 50);
 const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
+
+// Version marker for resource-level state.
+// If we change processing logic, old resource state will be rechecked once.
+const RESOURCE_STATE_VERSION = 2;
+
+// Conservative defaults based on observed free-tier quota:
+// RPM around 20, input TPM error showed 250000.
+// We keep headroom to avoid 429.
+const GEMINI_RPM_LIMIT = intEnv('GEMINI_RPM_LIMIT', 10);
+const GEMINI_TPM_LIMIT = intEnv('GEMINI_TPM_LIMIT', 220000);
+const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 4);
+const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
+const GEMINI_QUOTA_WINDOW_MS = 60_000;
+
+const geminiUsageWindow = [];
+
 const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
 
 const UA_MONTHS = new Map([
@@ -594,6 +610,92 @@ function fitTextForGemini(text) {
   return `${text.slice(0, headChars)}\n\n[... СЕРЕДИНУ ТЕКСТУ СКОРОЧЕНО АВТОМАТИЧНО ...]\n\n${text.slice(-tailChars)}`;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function estimateGeminiInputTokens(text) {
+  // Rough but practical estimator for Ukrainian/English text.
+  // We intentionally over-reserve a bit to avoid free-tier TPM errors.
+  return Math.ceil(String(text || '').length / 3.5);
+}
+
+function pruneGeminiUsageWindow(now = Date.now()) {
+  while (
+    geminiUsageWindow.length
+    && now - geminiUsageWindow[0].ts >= GEMINI_QUOTA_WINDOW_MS
+  ) {
+    geminiUsageWindow.shift();
+  }
+}
+
+async function waitForGeminiQuota(estimatedInputTokens) {
+  if (SKIP_GEMINI) return;
+
+  const reservedTokens = Math.max(1, estimatedInputTokens || 1);
+
+  while (true) {
+    const now = Date.now();
+    pruneGeminiUsageWindow(now);
+
+    const usedRequests = geminiUsageWindow.length;
+    const usedTokens = geminiUsageWindow.reduce((sum, item) => sum + item.tokens, 0);
+
+    const wouldExceedRpm =
+      GEMINI_RPM_LIMIT > 0
+      && usedRequests + 1 > GEMINI_RPM_LIMIT;
+
+    const wouldExceedTpm =
+      GEMINI_TPM_LIMIT > 0
+      && usedTokens + reservedTokens > GEMINI_TPM_LIMIT;
+
+    if (!wouldExceedRpm && !wouldExceedTpm) {
+      geminiUsageWindow.push({
+        ts: Date.now(),
+        tokens: reservedTokens
+      });
+      return;
+    }
+
+    const oldest = geminiUsageWindow[0];
+    const waitMs = oldest
+      ? Math.max(1000, GEMINI_QUOTA_WINDOW_MS - (now - oldest.ts) + GEMINI_RETRY_BUFFER_MS)
+      : GEMINI_RETRY_BUFFER_MS;
+
+    console.log(
+      `Gemini quota throttle: waiting ${Math.ceil(waitMs / 1000)}s `
+      + `(usedRequests=${usedRequests}/${GEMINI_RPM_LIMIT}, `
+      + `usedInputTokens≈${usedTokens}/${GEMINI_TPM_LIMIT}, `
+      + `nextInputTokens≈${reservedTokens})`
+    );
+
+    await sleep(waitMs);
+  }
+}
+
+function parseGeminiRetryDelayMs(payload) {
+  const retryDelay =
+    payload?.error?.details?.find((d) => d?.['@type']?.includes('RetryInfo'))?.retryDelay;
+
+  if (typeof retryDelay === 'string') {
+    const seconds = retryDelay.match(/^([\d.]+)s$/i);
+    if (seconds) return Math.ceil(Number(seconds[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
+
+    const millis = retryDelay.match(/^([\d.]+)ms$/i);
+    if (millis) return Math.ceil(Number(millis[1])) + GEMINI_RETRY_BUFFER_MS;
+  }
+
+  const message = payload?.error?.message || '';
+  const m = String(message).match(/retry\s+in\s+([\d.]+)s/i);
+  if (m) return Math.ceil(Number(m[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
+
+  return 60_000 + GEMINI_RETRY_BUFFER_MS;
+}
+
+function isGeminiQuotaError(status, payload) {
+  return status === 429 || payload?.error?.status === 'RESOURCE_EXHAUSTED';
+}
+
 function buildGeminiPrompt({ text, meta, fileName, resourceTitle }) {
   return `Ти юрист у сфері конкурентної практики АМКУ.
 
@@ -662,11 +764,14 @@ async function analyzeWithGemini(input) {
   const url =
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
+  const promptText = buildGeminiPrompt(input);
+  const estimatedInputTokens = estimateGeminiInputTokens(promptText);
+
   const body = {
     contents: [
       {
         role: 'user',
-        parts: [{ text: buildGeminiPrompt(input) }]
+        parts: [{ text: promptText }]
       }
     ],
     generationConfig: {
@@ -675,22 +780,45 @@ async function analyzeWithGemini(input) {
     }
   };
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
+  let lastError = null;
 
-  const payload = await res.json().catch(() => null);
+  for (let attempt = 0; attempt <= GEMINI_RETRY_MAX; attempt += 1) {
+    await waitForGeminiQuota(estimatedInputTokens);
 
-  if (!res.ok) {
-    throw new Error(`Gemini HTTP ${res.status}: ${JSON.stringify(payload).slice(0, 1200)}`);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const payload = await res.json().catch(() => null);
+
+    if (res.ok) {
+      const rawText =
+        payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
+
+      return parseJsonLenient(rawText);
+    }
+
+    const message = `Gemini HTTP ${res.status}: ${JSON.stringify(payload).slice(0, 1200)}`;
+    lastError = new Error(message);
+
+    if (isGeminiQuotaError(res.status, payload) && attempt < GEMINI_RETRY_MAX) {
+      const waitMs = parseGeminiRetryDelayMs(payload);
+
+      console.warn(
+        `Gemini quota error. Retry ${attempt + 1}/${GEMINI_RETRY_MAX} `
+        + `after ${Math.ceil(waitMs / 1000)}s.`
+      );
+
+      await sleep(waitMs);
+      continue;
+    }
+
+    throw lastError;
   }
 
-  const rawText =
-    payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
-
-  return parseJsonLenient(rawText);
+  throw lastError || new Error('Gemini request failed');
 }
 
 function parseJsonLenient(rawText) {
@@ -1006,7 +1134,19 @@ async function processResource(resource, state) {
   const signature = resourceSignature(resource);
   const prev = state.processed_resources[id];
 
-  if (!LOCAL_ZIP && !FORCE && prev?.signature && signature && prev.signature === signature) {
+  const prevResourceClean =
+    prev?.state_version === RESOURCE_STATE_VERSION
+    && Number(prev?.errors || 0) === 0
+    && prev?.incomplete !== true;
+
+  if (
+    !LOCAL_ZIP
+    && !FORCE
+    && prevResourceClean
+    && prev?.signature
+    && signature
+    && prev.signature === signature
+  ) {
     return {
       skippedResource: true,
       reason: 'metadata_signature_unchanged',
@@ -1027,7 +1167,7 @@ async function processResource(resource, state) {
     zipSha = await downloadFile(resource.url, zipPath);
   }
 
-  if (!FORCE && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
+  if (!FORCE && prevResourceClean && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
     return {
       skippedResource: true,
       reason: 'zip_hash_unchanged',
@@ -1166,13 +1306,16 @@ async function processResource(resource, state) {
   }
 
   state.processed_resources[id] = {
+    state_version: RESOURCE_STATE_VERSION,
     title,
     url: resource.url,
     signature,
     zip_sha256: zipSha,
     processed_at: new Date().toISOString(),
     docs_seen: stats.docsSeen,
-    docs_relevant: stats.docsRelevant
+    docs_relevant: stats.docsRelevant,
+    errors: stats.errors,
+    incomplete: stats.errors > 0
   };
 
   return { skippedResource: false, additions, stats };
