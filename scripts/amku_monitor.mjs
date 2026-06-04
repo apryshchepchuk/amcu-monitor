@@ -122,8 +122,18 @@ async function writeJson(filePath, value) {
 }
 
 async function appendEvent(event) {
+  if (DRY_RUN) {
+    // In dry-run mode do not mutate repository files at all.
+    console.log(`DRY_RUN event skipped: ${event?.type || 'event'}`);
+    return;
+  }
+
   await fs.mkdir(path.dirname(EVENTS_PATH), { recursive: true });
-  await fs.appendFile(EVENTS_PATH, JSON.stringify({ ts: new Date().toISOString(), ...event }) + '\n', 'utf8');
+  await fs.appendFile(
+    EVENTS_PATH,
+    JSON.stringify({ ts: new Date().toISOString(), ...event }) + '\n',
+    'utf8'
+  );
 }
 
 async function runCmd(command, args, options = {}) {
