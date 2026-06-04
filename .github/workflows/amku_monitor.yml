@@ -72,9 +72,14 @@ jobs:
         run: node scripts/amku_monitor.mjs
 
       - name: Commit monitor state
+        if: ${{ github.event.inputs.dry_run != 'true' }}
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add data/amku_state.json data/amku_results.json data/amku_events.jsonl
-          git diff --cached --quiet || git commit -m "Update AMCU decisions monitor data"
-          git push
+          if git diff --cached --quiet; then
+            echo "No monitor state changes to commit."
+          else
+            git commit -m "Update AMCU decisions monitor data"
+            git push
+          fi
