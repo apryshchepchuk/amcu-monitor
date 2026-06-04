@@ -19,6 +19,10 @@ on:
         description: "Send email even if no new relevant decisions found"
         required: false
         default: "false"
+      dry_run:
+        description: "Do not write state/results and do not send email"
+        required: false
+        default: "false"
 
   schedule:
     # 08:40 Kyiv during UTC+3, Monday-Friday.
@@ -53,6 +57,7 @@ jobs:
           FORCE: ${{ github.event.inputs.force || 'false' }}
           SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
           EMAIL_FORCE: ${{ github.event.inputs.email_force || 'false' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
 
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
