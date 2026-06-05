@@ -1,10 +1,30 @@
-name: AMCU Practice Monitor
+name: AMCU Practice Backfill
 
 on:
   workflow_dispatch:
     inputs:
+      backfill_enabled:
+        description: "Process only the next unprocessed/incomplete monthly resource"
+        required: false
+        default: "true"
+
+      backfill_months_per_run:
+        description: "How many monthly ZIP resources to process per run"
+        required: false
+        default: "1"
+
+      backfill_from_month:
+        description: "Optional lower bound for backfill, YYYY-MM"
+        required: false
+        default: ""
+
+      backfill_to_month:
+        description: "Optional upper bound for backfill, YYYY-MM"
+        required: false
+        default: ""
+
       lookback_months:
-        description: "How many recent months of AMCU decision ZIPs to scan"
+        description: "Used only when backfill_enabled=false"
         required: false
         default: "4"
 
@@ -49,7 +69,7 @@ on:
         default: "90000"
 
       gemini_token_estimate_chars_per_token:
-        description: "Conservative chars-per-token estimator for Gemini input quota"
+        description: "Local token estimator: lower value = more conservative"
         required: false
         default: "2.0"
 
@@ -59,9 +79,14 @@ on:
         default: "true"
 
   schedule:
-    # 08:40 Kyiv during UTC+3, Monday-Friday.
-    # During winter UTC+2 this will run at 07:40 Kyiv; adjust if exact local time matters.
-    - cron: "40 5 * * 1-5"
+    # Three automatic backfill attempts per day.
+    # Kyiv summer time UTC+3: 09:10, 14:10, 19:10.
+    # Kyiv winter time UTC+2: 08:10, 13:10, 18:10.
+    - cron: "10 6,11,16 * * *"
+
+concurrency:
+  group: amcu-practice-backfill
+  cancel-in-progress: false
 
 jobs:
   monitor:
@@ -87,9 +112,18 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
-      - name: Run AMCU practice monitor
+      - name: Run AMCU practice backfill
         env:
+          # Backfill mode: scheduled runs process exactly the next incomplete/unprocessed month.
+          BACKFILL_ENABLED: ${{ github.event.inputs.backfill_enabled || 'true' }}
+          BACKFILL_MONTHS_PER_RUN: ${{ github.event.inputs.backfill_months_per_run || '1' }}
+          BACKFILL_FROM_MONTH: ${{ github.event.inputs.backfill_from_month || '' }}
+          BACKFILL_TO_MONTH: ${{ github.event.inputs.backfill_to_month || '' }}
+
+          # Used only when BACKFILL_ENABLED=false.
           LOOKBACK_MONTHS: ${{ github.event.inputs.lookback_months || '4' }}
+
+          # Important: scheduled runs must not force already clean resources and must not reanalyze analyzed decisions.
           FORCE_RESOURCES: ${{ github.event.inputs.force || 'false' }}
           FORCE_REANALYZE_DECISIONS: ${{ github.event.inputs.force_reanalyze_decisions || 'false' }}
           SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
@@ -108,7 +142,7 @@ jobs:
           MAX_TEXT_CHARS: ${{ github.event.inputs.max_text_chars || '90000' }}
           GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN: ${{ github.event.inputs.gemini_token_estimate_chars_per_token || '2.0' }}
           GEMINI_RETRY_MAX: "4"
-          GEMINI_RETRY_BUFFER_MS: "2500"
+          GEMINI_RETRY_BUFFER_MS: "1500"
 
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
@@ -147,6 +181,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No AMCU practice/dashboard data changes to commit."
           else
-            git commit -m "Update AMCU practice dashboard"
+            git commit -m "Update AMCU practice backfill"
             git push
           fi
