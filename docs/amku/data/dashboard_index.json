@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-06-05T14:03:53.074Z",
+  "updated_at": "2026-06-05T18:09:48.365Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 97,
-  "total_sanction_uah": 5194118367,
+  "total_decisions": 112,
+  "total_sanction_uah": 5225021168,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 81,
-    "unfair_competition": 16,
+    "economic_competition": 95,
+    "unfair_competition": 17,
     "other": 0
   },
   "categories": [
@@ -18,7 +18,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 14
+      "count": 19
     },
     {
       "code": "zek:50:2",
@@ -46,35 +46,35 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 33
+      "count": 36
     },
     {
       "code": "zek:50:13",
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 14
+      "count": 18
     },
     {
       "code": "zek:50:14",
       "label": "п. 14 ст. 50 — подання інформації в неповному обсязі у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "подання інформації в неповному обсязі у встановлені строки",
-      "count": 4
+      "count": 5
     },
     {
       "code": "zek:50:15",
       "label": "п. 15 ст. 50 — подання недостовірної інформації",
       "law_family": "economic_competition",
       "short_label": "подання недостовірної інформації",
-      "count": 3
+      "count": 4
     },
     {
       "code": "unfair:4",
       "label": "ст. 4 — неправомірне використання позначень",
       "law_family": "unfair_competition",
       "short_label": "неправомірне використання позначень",
-      "count": 2
+      "count": 3
     },
     {
       "code": "unfair:8",
@@ -92,5 +92,5 @@
     }
   ],
   "newest_decision_date": "2026-05-14",
-  "oldest_decision_date": "2025-10-02"
+  "oldest_decision_date": "2025-09-04"
 }
