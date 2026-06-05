@@ -1,0 +1,67 @@
+{
+  "updated_at": "2026-06-05T08:08:24.257Z",
+  "source_file": "data/practice/amku_practice.json",
+  "total_decisions": 21,
+  "total_sanction_uah": 39723179,
+  "years": [
+    2026
+  ],
+  "by_law_family": {
+    "economic_competition": 20,
+    "unfair_competition": 1,
+    "other": 0
+  },
+  "categories": [
+    {
+      "code": "zek:50:1",
+      "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
+      "law_family": "economic_competition",
+      "short_label": "антиконкурентні узгоджені дії",
+      "count": 3
+    },
+    {
+      "code": "zek:50:2",
+      "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
+      "law_family": "economic_competition",
+      "short_label": "зловживання монопольним (домінуючим) становищем",
+      "count": 1
+    },
+    {
+      "code": "zek:50:4",
+      "label": "п. 4 ст. 50 — невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
+      "law_family": "economic_competition",
+      "short_label": "невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
+      "count": 1
+    },
+    {
+      "code": "zek:50:12",
+      "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
+      "law_family": "economic_competition",
+      "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
+      "count": 8
+    },
+    {
+      "code": "zek:50:13",
+      "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
+      "law_family": "economic_competition",
+      "short_label": "неподання інформації у встановлені строки",
+      "count": 5
+    },
+    {
+      "code": "zek:50:14",
+      "label": "п. 14 ст. 50 — подання інформації в неповному обсязі у встановлені строки",
+      "law_family": "economic_competition",
+      "short_label": "подання інформації в неповному обсязі у встановлені строки",
+      "count": 2
+    },
+    {
+      "code": "unfair:15-1",
+      "label": "ст. 15-1 — поширення інформації, що вводить в оману",
+      "law_family": "unfair_competition",
+      "short_label": "поширення інформації, що вводить в оману",
+      "count": 1
+    }
+  ],
+  "newest_decision_date": "2026-05-14",
+  "oldest_decision_date": "2026-03-05"
+}
