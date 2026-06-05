@@ -3,6 +3,7 @@ const DATA_PRACTICE_URL = './data/practice.json';
 
 const ICONS = {
   default: `<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>`,
+  search: `<svg viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35"/><circle cx="11" cy="11" r="6.5"/></svg>`,
   economic: `<svg viewBox="0 0 24 24" fill="none"><path d="M4 18h16"/><path d="M7 18V9"/><path d="M12 18V6"/><path d="M17 18v-4"/></svg>`,
   unfair: `<svg viewBox="0 0 24 24" fill="none"><path d="M7 17l10-10"/><path d="M9 7h8v8"/></svg>`,
   info: `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M12 10v5"/><path d="M12 7h.01"/></svg>`,
@@ -13,6 +14,9 @@ const ICONS = {
   party: `<svg viewBox="0 0 24 24" fill="none"><path d="M7 20v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2"/><circle cx="12" cy="8" r="4"/></svg>`,
   summary: `<svg viewBox="0 0 24 24" fill="none"><path d="M8 6h8"/><path d="M6 10h12"/><path d="M6 14h12"/><path d="M6 18h8"/></svg>`,
   source: `<svg viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 1 0-7l1-1a5 5 0 1 1 7 7l-1 1"/><path d="M14 11a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1"/></svg>`,
+  evidence: `<svg viewBox="0 0 24 24" fill="none"><path d="M9 11l2 2 4-5"/><path d="M5 4h14v16H5z"/></svg>`,
+  lightbulb: `<svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M8 14a6 6 0 1 1 8 0c-.7.6-1 1.4-1 2H9c0-.6-.3-1.4-1-2z"/></svg>`,
+  response: `<svg viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>`,
 };
 
 const state = {
@@ -25,6 +29,7 @@ const state = {
   activeYear: 'all',
   query: '',
   sort: 'date_desc',
+  readingMode: false,
   urlSyncEnabled: true,
 };
 
@@ -44,9 +49,7 @@ async function fetchJson(url) {
 
 function setupEls() {
   Object.assign(els, {
-    summaryGrid: document.getElementById('summaryGrid'),
-    updatedAt: document.getElementById('updatedAt'),
-    periodRange: document.getElementById('periodRange'),
+    heroFacts: document.getElementById('heroFacts'),
     economicCards: document.getElementById('economicCards'),
     unfairCards: document.getElementById('unfairCards'),
     searchInput: document.getElementById('searchInput'),
@@ -54,9 +57,10 @@ function setupEls() {
     sortSelect: document.getElementById('sortSelect'),
     clearFiltersBtn: document.getElementById('clearFiltersBtn'),
     lawFamilyTabs: document.getElementById('lawFamilyTabs'),
+    activeContext: document.getElementById('activeContext'),
+    workspace: document.getElementById('workspace'),
     resultsList: document.getElementById('resultsList'),
     resultsMeta: document.getElementById('resultsMeta'),
-    activeFilterChip: document.getElementById('activeFilterChip'),
     detailEmpty: document.getElementById('detailEmpty'),
     detailCard: document.getElementById('detailCard'),
   });
@@ -117,6 +121,12 @@ function getCodeMeta(code) {
   return state.index.categories.find((c) => c.code === code) || null;
 }
 
+function shortCodeBadge(code) {
+  return String(code || '')
+    .replace(/^zek:/, '')
+    .replace(/^unfair:/, 'НДК ');
+}
+
 function categoryIcon(code, family) {
   if (code === 'zek:50:1') return ICONS.collusion;
   if (code === 'zek:50:2') return ICONS.dominance;
@@ -125,12 +135,6 @@ function categoryIcon(code, family) {
   if (family === 'unfair_competition') return ICONS.unfair;
   if (family === 'economic_competition') return ICONS.economic;
   return ICONS.default;
-}
-
-function shortCodeBadge(code) {
-  return String(code || '')
-    .replace(/^zek:/, '')
-    .replace(/^unfair:/, 'НДК ');
 }
 
 function pluralize(n, forms) {
@@ -165,32 +169,20 @@ function syncStateToUrl() {
   window.history.replaceState(null, '', nextUrl);
 }
 
-function renderSummary() {
+function renderHeroFacts() {
   const total = state.index.total_decisions || 0;
-  const zec = state.index.by_law_family.economic_competition || 0;
-  const unfair = state.index.by_law_family.unfair_competition || 0;
-  const sanction = state.index.total_sanction_uah || 0;
+  const categories = state.index.categories?.length || 0;
+  const years = state.index.years?.length || 0;
+  const updated = formatDateTime(state.index.updated_at);
+  const period = `${formatDate(state.index.oldest_decision_date)} — ${formatDate(state.index.newest_decision_date)}`;
 
-  els.updatedAt.textContent = formatDateTime(state.index.updated_at);
-  els.periodRange.textContent = `${formatDate(state.index.oldest_decision_date)} — ${formatDate(state.index.newest_decision_date)}`;
-
-  const cards = [
-    { title: 'Усього рішень', value: total, sub: `${state.index.years.length} рік(роки) у базі`, icon: ICONS.default },
-    { title: 'ЗЕК', value: zec, sub: 'Порушення за ст. 50 ЗУ «Про захист економічної конкуренції»', icon: ICONS.economic },
-    { title: 'НДК', value: unfair, sub: 'Порушення за ЗУ «Про захист від недобросовісної конкуренції»', icon: ICONS.unfair },
-    { title: 'Сума штрафів', value: formatMoney(sanction), sub: 'За структурованими даними бази', icon: ICONS.sanction },
-  ];
-
-  els.summaryGrid.innerHTML = cards.map((card) => `
-    <article class="summary-card">
-      <div class="summary-card-top">
-        <span class="category-icon kpi-icon">${card.icon}</span>
-      </div>
-      <div class="summary-title">${escapeHtml(card.title)}</div>
-      <div class="summary-value">${escapeHtml(card.value)}</div>
-      <div class="summary-sub">${escapeHtml(card.sub)}</div>
-    </article>
-  `).join('');
+  els.heroFacts.innerHTML = `
+    <div class="fact-line"><strong>${total}</strong> ${pluralize(total, ['рішення', 'рішення', 'рішень'])}</div>
+    <div class="fact-line"><strong>${categories}</strong> ${pluralize(categories, ['категорія', 'категорії', 'категорій'])}</div>
+    <div class="fact-line"><strong>${years}</strong> ${pluralize(years, ['рік', 'роки', 'років'])}</div>
+    <div class="fact-line"><span>Оновлено:</span> <strong>${escapeHtml(updated)}</strong></div>
+    <div class="fact-subline">Період: ${escapeHtml(period)}</div>
+  `;
 }
 
 function renderYearFilter() {
@@ -206,9 +198,8 @@ function renderFamilyTabs() {
   });
 }
 
-function renderCategoryCards() {
+function renderCategoryPills() {
   const categories = state.index.categories || [];
-  const familyFilter = state.activeFamily;
   const economic = categories.filter((c) => c.law_family === 'economic_competition');
   const unfair = categories.filter((c) => c.law_family === 'unfair_competition');
 
@@ -216,31 +207,49 @@ function renderCategoryCards() {
     const active = state.activeCode === item.code ? 'active' : '';
     const codeLabel = shortCodeBadge(item.code);
     return `
-      <button class="category-card ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
-        <div class="category-top">
-          <div>
-            <div class="category-code">${escapeHtml(codeLabel)}</div>
-            <div class="category-title">${escapeHtml(item.label)}</div>
-          </div>
-          <div class="category-icon">${categoryIcon(item.code, item.law_family)}</div>
-        </div>
-        <div class="category-count">${item.count}</div>
+      <button class="category-pill ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
+        <span class="category-pill-icon">${categoryIcon(item.code, item.law_family)}</span>
+        <span class="category-pill-code">${escapeHtml(codeLabel)}</span>
+        <span class="category-pill-title">${escapeHtml(item.short_label || item.label)}</span>
+        <span class="category-pill-count">${item.count}</span>
       </button>
     `;
   }).join('');
 
-  els.economicCards.parentElement.style.display = familyFilter === 'unfair_competition' ? 'none' : '';
-  els.unfairCards.parentElement.style.display = familyFilter === 'economic_competition' ? 'none' : '';
-  els.economicCards.innerHTML = render(economic) || '<div class="empty-state">Поки що немає даних.</div>';
-  els.unfairCards.innerHTML = render(unfair) || '<div class="empty-state">Поки що немає даних.</div>';
+  els.economicCards.innerHTML = render(economic) || '<div class="empty-state small">Поки що немає даних.</div>';
+  els.unfairCards.innerHTML = render(unfair) || '<div class="empty-state small">Поки що немає даних.</div>';
 
-  document.querySelectorAll('.category-card').forEach((button) => {
+  document.querySelectorAll('.category-pill').forEach((button) => {
     button.addEventListener('click', () => {
       const code = button.dataset.code;
       state.activeCode = state.activeCode === code ? null : code;
-      state.selectedKey = null;
-      applyFilters({ scrollResults: true });
+      applyFilters({ scrollToResults: true });
     });
+  });
+}
+
+function renderActiveContext() {
+  if (!state.activeCode) {
+    els.activeContext.classList.add('hidden');
+    els.activeContext.innerHTML = '';
+    return;
+  }
+
+  const meta = getCodeMeta(state.activeCode);
+  const count = state.filtered.length;
+  els.activeContext.classList.remove('hidden');
+  els.activeContext.innerHTML = `
+    <div>
+      <div class="context-kicker">Активний фільтр</div>
+      <h2>${escapeHtml(meta?.label || state.activeCode)}</h2>
+      <p>${count} ${pluralize(count, ['рішення', 'рішення', 'рішень'])} за поточними умовами пошуку.</p>
+    </div>
+    <button class="ghost-btn" id="clearCodeBtn">Очистити категорію</button>
+  `;
+
+  document.getElementById('clearCodeBtn')?.addEventListener('click', () => {
+    state.activeCode = null;
+    applyFilters();
   });
 }
 
@@ -251,7 +260,7 @@ function applyFilters(options = {}) {
   if (state.activeFamily !== 'all') rows = rows.filter((row) => row.law_family === state.activeFamily);
   if (state.activeYear !== 'all') rows = rows.filter((row) => String(row.year) === String(state.activeYear));
   if (state.activeCode) rows = rows.filter((row) => row.primary_code === state.activeCode);
-  if (terms.length) rows = rows.filter((row) => rowMatchesQuery(row, terms));
+  rows = rows.filter((row) => rowMatchesQuery(row, terms));
 
   rows.sort((a, b) => {
     switch (state.sort) {
@@ -264,31 +273,30 @@ function applyFilters(options = {}) {
   });
 
   state.filtered = rows;
-  if (!rows.some((row) => row.decision_key === state.selectedKey)) state.selectedKey = rows[0]?.decision_key || null;
+  if (!rows.some((row) => row.decision_key === state.selectedKey)) {
+    state.selectedKey = rows[0]?.decision_key || null;
+  }
 
   renderFamilyTabs();
-  renderCategoryCards();
+  renderCategoryPills();
+  renderActiveContext();
   renderResults();
   renderDetail();
   syncStateToUrl();
 
-  if (options.scrollResults && window.matchMedia('(max-width: 1180px)').matches) {
-    document.querySelector('.results-shell')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (options.scrollToResults && window.matchMedia('(max-width: 900px)').matches) {
+    els.workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+}
+
+function firstParty(row) {
+  return row.liable_parties?.[0] || 'Суб’єкт не визначений';
 }
 
 function renderResults() {
   const rows = state.filtered;
   const count = rows.length;
   els.resultsMeta.textContent = `${count} ${pluralize(count, ['рішення', 'рішення', 'рішень'])}`;
-
-  if (state.activeCode) {
-    const meta = getCodeMeta(state.activeCode);
-    els.activeFilterChip.textContent = meta?.label || state.activeCode;
-    els.activeFilterChip.classList.remove('hidden');
-  } else {
-    els.activeFilterChip.classList.add('hidden');
-  }
 
   if (!rows.length) {
     els.resultsList.innerHTML = '<div class="empty-state">За поточними фільтрами нічого не знайдено.</div>';
@@ -297,22 +305,21 @@ function renderResults() {
 
   els.resultsList.innerHTML = rows.map((row) => {
     const active = row.decision_key === state.selectedKey ? 'active' : '';
-    const party = row.liable_parties[0] || 'Суб’єкт не визначений';
+    const party = firstParty(row);
     const extra = row.liable_parties.length > 1 ? ` +${row.liable_parties.length - 1}` : '';
+    const amount = row.sanction_total_uah ? formatMoney(row.sanction_total_uah) : null;
     return `
       <button class="result-item ${active}" data-key="${escapeHtml(row.decision_key)}">
-        <div class="result-row-top">
-          <div>
-            <div class="result-title">${escapeHtml(`${formatDate(row.decision_date)} · № ${row.decision_number || '—'}`)}</div>
-            <div class="result-subtitle">${escapeHtml(row.primary_label)}</div>
-          </div>
+        <div class="result-title-row">
+          <div class="result-title">${escapeHtml(`${formatDate(row.decision_date)} · № ${row.decision_number || '—'}`)}</div>
           <span class="tag primary">${escapeHtml(shortCodeBadge(row.primary_code))}</span>
         </div>
-        <div class="meta-row">
-          <span class="meta-pill">${escapeHtml(party)}${escapeHtml(extra)}</span>
-          ${row.sanction_total_uah ? `<span class="meta-pill">${escapeHtml(formatMoney(row.sanction_total_uah))}</span>` : ''}
+        <div class="result-party">${escapeHtml(party)}${escapeHtml(extra)}</div>
+        <div class="result-meta-row">
+          <span>${escapeHtml(row.primary_label)}</span>
+          ${amount ? `<strong>${escapeHtml(amount)}</strong>` : ''}
         </div>
-        <div class="result-summary">${escapeHtml(row.violation_summary)}</div>
+        <div class="result-summary">${escapeHtml(row.violation_summary || '')}</div>
       </button>
     `;
   }).join('');
@@ -323,16 +330,48 @@ function renderResults() {
       renderResults();
       renderDetail();
       syncStateToUrl();
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        document.querySelector('.detail-pane')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 }
 
-function renderListItems(list, fallback = 'Не виявлено') {
-  return list?.length ? list.map((v) => `<li>${escapeHtml(v)}</li>`).join('') : `<li>${escapeHtml(fallback)}</li>`;
+function renderListItems(values, fallback = 'Не виявлено') {
+  if (!Array.isArray(values) || !values.length) return `<li>${escapeHtml(fallback)}</li>`;
+  return values.map((value) => `<li>${escapeHtml(value)}</li>`).join('');
+}
+
+function renderPills(values, fallback = 'Не виявлено') {
+  if (!Array.isArray(values) || !values.length) return `<span class="tag">${escapeHtml(fallback)}</span>`;
+  return values.map((value) => `<span class="tag">${escapeHtml(value)}</span>`).join('');
+}
+
+function sourceTitle(row) {
+  const resource = row.source?.resource_title || row.source_resource || 'джерело не визначено';
+  return resource.replace(/Рішення Антимонопольного комітету України/g, 'Рішення АМКУ');
+}
+
+function citationText(row) {
+  const party = firstParty(row);
+  return `АМКУ, рішення від ${formatDate(row.decision_date)} № ${row.decision_number || '—'}, ${row.primary_label}, ${party}.`;
+}
+
+async function copyText(text, button) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const old = button.textContent;
+    button.textContent = 'Скопійовано';
+    setTimeout(() => { button.textContent = old; }, 1400);
+  } catch {
+    window.prompt('Скопіюйте текст:', text);
+  }
 }
 
 function renderDetail() {
   const row = state.filtered.find((item) => item.decision_key === state.selectedKey);
+  document.body.classList.toggle('reading-mode', state.readingMode);
+
   if (!row) {
     els.detailEmpty.classList.remove('hidden');
     els.detailCard.classList.add('hidden');
@@ -343,154 +382,119 @@ function renderDetail() {
   els.detailEmpty.classList.add('hidden');
   els.detailCard.classList.remove('hidden');
 
-  const parties = row.liable_parties.length
-    ? row.liable_parties.map((v) => `<span class="meta-pill">${escapeHtml(v)}</span>`).join('')
-    : '<span class="meta-pill">Не виявлено</span>';
-
-  const keywords = row.search_keywords.length
-    ? row.search_keywords.map((v) => `<span class="tag">${escapeHtml(v)}</span>`).join('')
-    : '<span class="tag">Немає</span>';
-
-  const sanctions = row.sanction_amounts.length
+  const parties = renderPills(row.liable_parties);
+  const sanctions = row.sanction_amounts?.length
     ? row.sanction_amounts.map((item) => `
-        <div class="detail-block">
-          <div class="detail-block-label">${escapeHtml(item.party || 'Суб’єкт')}</div>
-          <div class="detail-block-value"><strong>${escapeHtml(formatMoney(item.amount_uah))}</strong>${item.note ? `<br><span class="muted">${escapeHtml(item.note)}</span>` : ''}</div>
+        <div class="detail-mini-card">
+          <span>${escapeHtml(item.party || 'Суб’єкт')}</span>
+          <strong>${escapeHtml(formatMoney(item.amount_uah))}</strong>
+          ${item.note ? `<small>${escapeHtml(item.note)}</small>` : ''}
         </div>
       `).join('')
-    : `
-      <div class="detail-block">
-        <div class="detail-block-value">${escapeHtml(row.sanction || 'Не виявлено')}</div>
-      </div>
-    `;
-
-  const sourceUrl = row.source?.url ? encodeURI(row.source.url) : '';
-  const shareUrl = `${window.location.origin}${window.location.pathname}?decision=${encodeURIComponent(row.decision_key)}`;
+    : `<div class="detail-mini-card"><span>Санкція</span><strong>${escapeHtml(row.sanction || 'Не виявлено')}</strong></div>`;
 
   els.detailCard.innerHTML = `
-    <header class="detail-header">
-      <div>
-        <h2 class="detail-title">${escapeHtml(`№ ${row.decision_number || '—'}`)}</h2>
-        <div class="detail-subline">
-          <span class="tag primary">${escapeHtml(row.primary_label)}</span>
-          <span class="meta-pill">${escapeHtml(formatDate(row.decision_date))}</span>
-          <span class="meta-pill">${escapeHtml(row.law_family === 'unfair_competition' ? 'Недобросовісна конкуренція' : 'Захист економічної конкуренції')}</span>
+    <header class="decision-hero">
+      <div class="decision-main">
+        <div class="decision-kicker">${escapeHtml(row.primary_label)}</div>
+        <h2>№ ${escapeHtml(row.decision_number || '—')}</h2>
+        <div class="decision-meta">
+          <span>${escapeHtml(formatDate(row.decision_date))}</span>
+          <span>${escapeHtml(row.law_family === 'unfair_competition' ? 'Недобросовісна конкуренція' : 'Захист економічної конкуренції')}</span>
+          ${row.sanction_total_uah ? `<span>${escapeHtml(formatMoney(row.sanction_total_uah))}</span>` : ''}
         </div>
       </div>
-      <div class="detail-block detail-fine-card">
-        <div class="detail-block-label">Загальна сума штрафів</div>
-        <div class="detail-block-value"><strong>${escapeHtml(formatMoney(row.sanction_total_uah))}</strong></div>
+      <div class="decision-actions">
+        <button class="ghost-btn small" id="readingModeBtn">${state.readingMode ? 'Звичайний режим' : 'Режим читання'}</button>
+        <button class="ghost-btn small" id="copyCitationBtn">Скопіювати цитату</button>
+        <button class="ghost-btn small" id="copyLinkBtn">Скопіювати посилання</button>
       </div>
     </header>
 
-    <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.party}</span>Суб’єкт / суб’єкти порушення</h3>
+    <section class="detail-section compact">
+      <h3><span class="detail-icon">${ICONS.party}</span>Суб’єкт / суб’єкти</h3>
       <div class="tag-row">${parties}</div>
     </section>
 
-    <section class="detail-section">
+    <section class="detail-section lead-section">
       <h3><span class="detail-icon">${ICONS.summary}</span>Суть порушення</h3>
-      <div class="detail-prose"><p>${escapeHtml(row.violation_summary || 'Не виявлено')}</p></div>
-      <div class="detail-grid" style="margin-top:14px;">
-        <div class="detail-block">
-          <div class="detail-block-label">Основна категорія</div>
-          <div class="detail-block-value">${escapeHtml(row.primary_label)}</div>
-        </div>
-        <div class="detail-block">
-          <div class="detail-block-label">Ринок / сектор</div>
-          <div class="detail-block-value">${escapeHtml(row.market_or_sector || 'Не виявлено')}</div>
-        </div>
+      <p>${escapeHtml(row.violation_summary || 'Не виявлено')}</p>
+      <div class="info-grid">
+        <div class="info-card"><span>Категорія</span><strong>${escapeHtml(row.primary_label)}</strong></div>
+        <div class="info-card"><span>Ринок / сектор</span><strong>${escapeHtml(row.market_or_sector || 'Не виявлено')}</strong></div>
       </div>
     </section>
 
-    <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.economic}</span>Норми та правова база</h3>
-      <ul class="bullet-list">${renderListItems(row.legal_basis)}</ul>
+    <section class="detail-section practice-section">
+      <h3><span class="detail-icon">${ICONS.lightbulb}</span>Ключові висновки для практики</h3>
+      <ul class="bullet-list emphatic">${renderListItems(row.key_takeaways)}</ul>
     </section>
 
     <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.default}</span>Ключові висновки АМКУ</h3>
-      <div class="detail-prose"><p>${escapeHtml(row.amcu_reasoning || 'Не виявлено')}</p></div>
+      <h3><span class="detail-icon">${ICONS.economic}</span>Ключовий висновок / обґрунтування АМКУ</h3>
+      <p>${escapeHtml(row.amcu_reasoning || 'Не виявлено')}</p>
     </section>
 
     <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.unfair}</span>Позиція порушника</h3>
-      <div class="detail-prose"><p>${escapeHtml(row.respondent_position || 'Не виявлено')}</p></div>
-    </section>
-
-    <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.sanction}</span>Санкція</h3>
-      <div class="detail-grid">${sanctions}</div>
-      ${row.sanction && row.sanction_amounts.length ? `<div class="detail-prose" style="margin-top:12px;"><p>${escapeHtml(row.sanction)}</p></div>` : ''}
-    </section>
-
-    <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.default}</span>Ключові takeaway</h3>
-      <ul class="bullet-list">${renderListItems(row.key_takeaways)}</ul>
-    </section>
-
-    <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.info}</span>Фактори та докази</h3>
+      <h3><span class="detail-icon">${ICONS.evidence}</span>Фактори та докази</h3>
       <ul class="bullet-list">${renderListItems(row.evidence_factors)}</ul>
     </section>
 
     <section class="detail-section">
-      <h3><span class="detail-icon">${ICONS.default}</span>Ключові слова для пошуку</h3>
-      <div class="keyword-row">${keywords}</div>
+      <h3><span class="detail-icon">${ICONS.response}</span>Позиція порушника</h3>
+      <p>${escapeHtml(row.respondent_position || 'Не виявлено')}</p>
     </section>
 
     <section class="detail-section">
-      <h3><span class="detail-icon source-icon">${ICONS.source}</span>Джерело</h3>
-      <div class="detail-grid source-links">
-        <div class="detail-block">
-          <div class="detail-block-label">Ресурс</div>
-          <div class="detail-block-value">${escapeHtml(row.source?.resource_title || '—')}</div>
-        </div>
-        <div class="detail-block">
-          <div class="detail-block-label">Файл</div>
-          <div class="detail-block-value">${escapeHtml(row.source?.file || '—')}</div>
-        </div>
-      </div>
-      <div class="detail-actions">
-        ${sourceUrl ? `<a class="ghost-btn action-link" href="${sourceUrl}" target="_blank" rel="noopener">ZIP на data.gov.ua</a>` : ''}
-        <button class="ghost-btn" id="copyDecisionLink" type="button" data-url="${escapeHtml(shareUrl)}">Скопіювати посилання</button>
+      <h3><span class="detail-icon">${ICONS.sanction}</span>Санкція</h3>
+      <div class="info-grid sanctions-grid">${sanctions}</div>
+      ${row.sanction ? `<p class="muted-block">${escapeHtml(row.sanction)}</p>` : ''}
+    </section>
+
+    <section class="detail-section">
+      <h3><span class="detail-icon">${ICONS.default}</span>Норми</h3>
+      <ul class="bullet-list legal-list">${renderListItems(row.legal_basis)}</ul>
+    </section>
+
+    <section class="detail-section source-section">
+      <h3><span class="detail-icon">${ICONS.source}</span>Джерело</h3>
+      <p><strong>${escapeHtml(sourceTitle(row))}</strong></p>
+      <p class="source-file">${escapeHtml(row.source?.file || row.source_file || 'Файл не визначено')}</p>
+      <div class="source-actions">
+        ${row.source?.url ? `<a class="ghost-link" href="${escapeHtml(row.source.url)}" target="_blank" rel="noopener">ZIP на data.gov.ua</a>` : ''}
       </div>
     </section>
+
+    <details class="service-details">
+      <summary>Службові поля</summary>
+      <div class="keyword-row">${renderPills(row.search_keywords, 'Немає keywords')}</div>
+    </details>
   `;
 
-  document.getElementById('copyDecisionLink')?.addEventListener('click', async (event) => {
-    const url = event.currentTarget.dataset.url;
-    try {
-      await navigator.clipboard.writeText(url);
-      event.currentTarget.textContent = 'Скопійовано';
-      setTimeout(() => { event.currentTarget.textContent = 'Скопіювати посилання'; }, 1300);
-    } catch {
-      window.prompt('Скопіюйте посилання:', url);
-    }
+  document.getElementById('readingModeBtn')?.addEventListener('click', () => {
+    state.readingMode = !state.readingMode;
+    renderDetail();
   });
+  document.getElementById('copyCitationBtn')?.addEventListener('click', (event) => copyText(citationText(row), event.currentTarget));
+  document.getElementById('copyLinkBtn')?.addEventListener('click', (event) => copyText(window.location.href, event.currentTarget));
 }
 
 function wireEvents() {
-  els.searchInput.addEventListener('input', (e) => {
-    window.clearTimeout(searchTimer);
-    searchTimer = window.setTimeout(() => {
-      state.query = e.target.value || '';
-      state.selectedKey = null;
+  els.searchInput.addEventListener('input', (event) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      state.query = event.target.value || '';
       applyFilters();
     }, 120);
   });
-
-  els.yearFilter.addEventListener('change', (e) => {
-    state.activeYear = e.target.value;
-    state.selectedKey = null;
+  els.yearFilter.addEventListener('change', (event) => {
+    state.activeYear = event.target.value;
     applyFilters();
   });
-
-  els.sortSelect.addEventListener('change', (e) => {
-    state.sort = e.target.value;
+  els.sortSelect.addEventListener('change', (event) => {
+    state.sort = event.target.value;
     applyFilters();
   });
-
   els.clearFiltersBtn.addEventListener('click', () => {
     state.activeCode = null;
     state.activeFamily = 'all';
@@ -498,27 +502,18 @@ function wireEvents() {
     state.query = '';
     state.sort = 'date_desc';
     state.selectedKey = null;
+    state.readingMode = false;
     els.searchInput.value = '';
     els.yearFilter.value = 'all';
     els.sortSelect.value = 'date_desc';
     applyFilters();
   });
-
   document.querySelectorAll('.segmented-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.activeFamily = btn.dataset.family;
-      state.activeCode = null;
-      state.selectedKey = null;
       applyFilters();
     });
   });
-}
-
-function applyStateToControls() {
-  els.searchInput.value = state.query;
-  els.yearFilter.value = state.activeYear;
-  els.sortSelect.value = state.sort;
-  renderFamilyTabs();
 }
 
 async function init() {
@@ -528,26 +523,15 @@ async function init() {
   state.index = index;
   state.practice = practice.map((row) => ({
     ...row,
-    normalized_search_blob: normalizeSearchText(row.search_blob || [
-      row.decision_number,
-      row.decision_date,
-      row.primary_code,
-      row.primary_label,
-      ...(row.liable_parties || []),
-      row.violation_summary,
-      row.amcu_reasoning,
-      row.respondent_position,
-      row.sanction,
-      ...(row.key_takeaways || []),
-      ...(row.evidence_factors || []),
-      row.market_or_sector,
-      ...(row.search_keywords || []),
-    ].filter(Boolean).join(' ')),
+    normalized_search_blob: normalizeSearchText(row.search_blob || '')
   }));
-  renderSummary();
+  renderHeroFacts();
   renderYearFilter();
+  renderFamilyTabs();
   wireEvents();
-  applyStateToControls();
+  els.searchInput.value = state.query;
+  els.yearFilter.value = state.activeYear;
+  els.sortSelect.value = state.sort;
   applyFilters();
 }
 
