@@ -711,6 +711,98 @@ function fitTextForGemini(text) {
 }
 
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function estimateGeminiInputTokens(text) {
+  const charsPerToken = Number.isFinite(GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN)
+    && GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN > 0
+    ? GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN
+    : 2.0;
+
+  // Conservative estimator for Ukrainian legal texts.
+  // The goal is to stay well below the real Gemini TPM limit, not to be exact.
+  return Math.max(1, Math.ceil(String(text || '').length / charsPerToken));
+}
+
+function pruneGeminiUsageWindow(now = Date.now()) {
+  while (
+    geminiUsageWindow.length
+    && now - geminiUsageWindow[0].ts >= GEMINI_QUOTA_WINDOW_MS
+  ) {
+    geminiUsageWindow.shift();
+  }
+}
+
+async function waitForGeminiQuota(estimatedInputTokens) {
+  if (SKIP_GEMINI) return;
+
+  const reservedTokens = Math.max(1, Number(estimatedInputTokens) || 1);
+
+  while (true) {
+    const now = Date.now();
+    pruneGeminiUsageWindow(now);
+
+    const usedRequests = geminiUsageWindow.length;
+    const usedTokens = geminiUsageWindow.reduce((sum, item) => sum + item.tokens, 0);
+
+    const wouldExceedRpm =
+      GEMINI_RPM_LIMIT > 0
+      && usedRequests + 1 > GEMINI_RPM_LIMIT;
+
+    const wouldExceedTpm =
+      GEMINI_TPM_LIMIT > 0
+      && usedTokens + reservedTokens > GEMINI_TPM_LIMIT;
+
+    if (!wouldExceedRpm && !wouldExceedTpm) {
+      geminiUsageWindow.push({
+        ts: Date.now(),
+        tokens: reservedTokens
+      });
+      return;
+    }
+
+    const oldest = geminiUsageWindow[0];
+    const waitMs = oldest
+      ? Math.max(1000, GEMINI_QUOTA_WINDOW_MS - (now - oldest.ts) + GEMINI_RETRY_BUFFER_MS)
+      : GEMINI_RETRY_BUFFER_MS;
+
+    console.log(
+      `Gemini quota throttle: waiting ${Math.ceil(waitMs / 1000)}s `
+      + `(usedRequests=${usedRequests}/${GEMINI_RPM_LIMIT}, `
+      + `usedInputTokens≈${usedTokens}/${GEMINI_TPM_LIMIT}, `
+      + `nextInputTokens≈${reservedTokens})`
+    );
+
+    await sleep(waitMs);
+  }
+}
+
+function parseGeminiRetryDelayMs(payload) {
+  const retryDelay =
+    payload?.error?.details?.find((d) => d?.['@type']?.includes('RetryInfo'))?.retryDelay;
+
+  if (typeof retryDelay === 'string') {
+    const seconds = retryDelay.match(/^([\d.]+)s$/i);
+    if (seconds) return Math.ceil(Number(seconds[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
+
+    const millis = retryDelay.match(/^([\d.]+)ms$/i);
+    if (millis) return Math.ceil(Number(millis[1])) + GEMINI_RETRY_BUFFER_MS;
+  }
+
+  const message = payload?.error?.message || '';
+  const m = String(message).match(/retry\s+in\s+([\d.]+)s/i);
+  if (m) return Math.ceil(Number(m[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
+
+  return 60_000 + GEMINI_RETRY_BUFFER_MS;
+}
+
+function isGeminiQuotaError(status, payload) {
+  return status === 429 || payload?.error?.status === 'RESOURCE_EXHAUSTED';
+}
+
+
 function uniqueArray(values) {
   return [...new Set((values || []).filter((v) => v !== null && v !== undefined && String(v).trim() !== '').map((v) => String(v).trim()))];
 }
