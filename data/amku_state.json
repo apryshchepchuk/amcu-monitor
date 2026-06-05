@@ -5622,21 +5622,21 @@
     }
   },
   "last_run": {
-    "at": "2026-06-05T08:53:50.283Z",
-    "resources_considered": 6,
-    "additions": 15,
-    "raw_additions": 15,
+    "at": "2026-06-05T08:57:17.003Z",
+    "resources_considered": 4,
+    "additions": 0,
+    "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 6,
-      "docsSeen": 569,
-      "docsRelevant": 23,
-      "docsSkipped": 546,
-      "errors": 8
+      "resourcesChecked": 0,
+      "docsSeen": 0,
+      "docsRelevant": 0,
+      "docsSkipped": 0,
+      "errors": 0
     },
-    "gemini_calls": 15,
+    "gemini_calls": 0,
     "settings": {
-      "force_resources": true,
+      "force_resources": false,
       "force_reanalyze_decisions": false,
       "max_gemini_calls": 15,
       "gemini_rpm_limit": 5,
