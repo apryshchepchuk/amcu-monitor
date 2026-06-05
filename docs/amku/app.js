@@ -25,12 +25,19 @@ const state = {
   activeYear: 'all',
   query: '',
   sort: 'date_desc',
+  urlSyncEnabled: true,
 };
 
 const els = {};
+let searchTimer = null;
+
+function withCacheBuster(url) {
+  const glue = url.includes('?') ? '&' : '?';
+  return `${url}${glue}v=${Date.now()}`;
+}
 
 async function fetchJson(url) {
-  const res = await fetch(url, { cache: 'no-store' });
+  const res = await fetch(withCacheBuster(url), { cache: 'no-store' });
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
   return await res.json();
 }
@@ -53,6 +60,37 @@ function setupEls() {
     detailEmpty: document.getElementById('detailEmpty'),
     detailCard: document.getElementById('detailCard'),
   });
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function normalizeSearchText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/\u00a0/g, ' ')
+    .replace(/[’ʼ`´]/g, "'")
+    .replace(/[¹]/g, '-1')
+    .replace(/[–—]/g, '-')
+    .replace(/[^0-9a-zа-яіїєґ'\-]+/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function queryTerms(query) {
+  return normalizeSearchText(query).split(' ').filter((term) => term.length > 1);
+}
+
+function rowMatchesQuery(row, terms) {
+  if (!terms.length) return true;
+  const blob = row.normalized_search_blob || normalizeSearchText(row.search_blob || '');
+  return terms.every((term) => blob.includes(term));
 }
 
 function formatDate(iso) {
@@ -89,13 +127,42 @@ function categoryIcon(code, family) {
   return ICONS.default;
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+function shortCodeBadge(code) {
+  return String(code || '')
+    .replace(/^zek:/, '')
+    .replace(/^unfair:/, 'НДК ');
+}
+
+function pluralize(n, forms) {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return forms[0];
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1];
+  return forms[2];
+}
+
+function loadStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  state.activeCode = params.get('code') || null;
+  state.activeFamily = params.get('family') || 'all';
+  state.activeYear = params.get('year') || 'all';
+  state.query = params.get('q') || '';
+  state.sort = params.get('sort') || 'date_desc';
+  state.selectedKey = params.get('decision') || null;
+}
+
+function syncStateToUrl() {
+  if (!state.urlSyncEnabled) return;
+  const params = new URLSearchParams();
+  if (state.query) params.set('q', state.query);
+  if (state.activeCode) params.set('code', state.activeCode);
+  if (state.activeFamily !== 'all') params.set('family', state.activeFamily);
+  if (state.activeYear !== 'all') params.set('year', state.activeYear);
+  if (state.sort !== 'date_desc') params.set('sort', state.sort);
+  if (state.selectedKey) params.set('decision', state.selectedKey);
+  const query = params.toString();
+  const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}`;
+  window.history.replaceState(null, '', nextUrl);
 }
 
 function renderSummary() {
@@ -116,7 +183,9 @@ function renderSummary() {
 
   els.summaryGrid.innerHTML = cards.map((card) => `
     <article class="summary-card">
-      <div class="tag-row"><span class="category-icon kpi-icon">${card.icon}</span></div>
+      <div class="summary-card-top">
+        <span class="category-icon kpi-icon">${card.icon}</span>
+      </div>
       <div class="summary-title">${escapeHtml(card.title)}</div>
       <div class="summary-value">${escapeHtml(card.value)}</div>
       <div class="summary-sub">${escapeHtml(card.sub)}</div>
@@ -128,16 +197,24 @@ function renderYearFilter() {
   const options = ['<option value="all">Усі роки</option>']
     .concat(state.index.years.map((year) => `<option value="${year}">${year}</option>`));
   els.yearFilter.innerHTML = options.join('');
+  els.yearFilter.value = state.activeYear;
+}
+
+function renderFamilyTabs() {
+  document.querySelectorAll('.segmented-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.family === state.activeFamily);
+  });
 }
 
 function renderCategoryCards() {
   const categories = state.index.categories || [];
+  const familyFilter = state.activeFamily;
   const economic = categories.filter((c) => c.law_family === 'economic_competition');
   const unfair = categories.filter((c) => c.law_family === 'unfair_competition');
 
   const render = (list) => list.map((item) => {
     const active = state.activeCode === item.code ? 'active' : '';
-    const codeLabel = item.code.replace(/^zek:/, '').replace(/^unfair:/, '');
+    const codeLabel = shortCodeBadge(item.code);
     return `
       <button class="category-card ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
         <div class="category-top">
@@ -152,6 +229,8 @@ function renderCategoryCards() {
     `;
   }).join('');
 
+  els.economicCards.parentElement.style.display = familyFilter === 'unfair_competition' ? 'none' : '';
+  els.unfairCards.parentElement.style.display = familyFilter === 'economic_competition' ? 'none' : '';
   els.economicCards.innerHTML = render(economic) || '<div class="empty-state">Поки що немає даних.</div>';
   els.unfairCards.innerHTML = render(unfair) || '<div class="empty-state">Поки що немає даних.</div>';
 
@@ -159,27 +238,20 @@ function renderCategoryCards() {
     button.addEventListener('click', () => {
       const code = button.dataset.code;
       state.activeCode = state.activeCode === code ? null : code;
-      applyFilters();
+      state.selectedKey = null;
+      applyFilters({ scrollResults: true });
     });
   });
 }
 
-function applyFilters() {
-  const query = state.query.trim().toLowerCase();
+function applyFilters(options = {}) {
+  const terms = queryTerms(state.query);
   let rows = [...state.practice];
 
-  if (state.activeFamily !== 'all') {
-    rows = rows.filter((row) => row.law_family === state.activeFamily);
-  }
-  if (state.activeYear !== 'all') {
-    rows = rows.filter((row) => String(row.year) === String(state.activeYear));
-  }
-  if (state.activeCode) {
-    rows = rows.filter((row) => row.primary_code === state.activeCode);
-  }
-  if (query) {
-    rows = rows.filter((row) => row.search_blob.includes(query));
-  }
+  if (state.activeFamily !== 'all') rows = rows.filter((row) => row.law_family === state.activeFamily);
+  if (state.activeYear !== 'all') rows = rows.filter((row) => String(row.year) === String(state.activeYear));
+  if (state.activeCode) rows = rows.filter((row) => row.primary_code === state.activeCode);
+  if (terms.length) rows = rows.filter((row) => rowMatchesQuery(row, terms));
 
   rows.sort((a, b) => {
     switch (state.sort) {
@@ -192,12 +264,17 @@ function applyFilters() {
   });
 
   state.filtered = rows;
-  if (!rows.some((row) => row.decision_key === state.selectedKey)) {
-    state.selectedKey = rows[0]?.decision_key || null;
-  }
+  if (!rows.some((row) => row.decision_key === state.selectedKey)) state.selectedKey = rows[0]?.decision_key || null;
+
+  renderFamilyTabs();
   renderCategoryCards();
   renderResults();
   renderDetail();
+  syncStateToUrl();
+
+  if (options.scrollResults && window.matchMedia('(max-width: 1180px)').matches) {
+    document.querySelector('.results-shell')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function renderResults() {
@@ -245,8 +322,13 @@ function renderResults() {
       state.selectedKey = button.dataset.key;
       renderResults();
       renderDetail();
+      syncStateToUrl();
     });
   });
+}
+
+function renderListItems(list, fallback = 'Не виявлено') {
+  return list?.length ? list.map((v) => `<li>${escapeHtml(v)}</li>`).join('') : `<li>${escapeHtml(fallback)}</li>`;
 }
 
 function renderDetail() {
@@ -265,18 +347,6 @@ function renderDetail() {
     ? row.liable_parties.map((v) => `<span class="meta-pill">${escapeHtml(v)}</span>`).join('')
     : '<span class="meta-pill">Не виявлено</span>';
 
-  const legalBasis = row.legal_basis.length
-    ? row.legal_basis.map((v) => `<li>${escapeHtml(v)}</li>`).join('')
-    : '<li>Не виявлено</li>';
-
-  const takeaways = row.key_takeaways.length
-    ? row.key_takeaways.map((v) => `<li>${escapeHtml(v)}</li>`).join('')
-    : '<li>Не виявлено</li>';
-
-  const evidence = row.evidence_factors.length
-    ? row.evidence_factors.map((v) => `<li>${escapeHtml(v)}</li>`).join('')
-    : '<li>Не виявлено</li>';
-
   const keywords = row.search_keywords.length
     ? row.search_keywords.map((v) => `<span class="tag">${escapeHtml(v)}</span>`).join('')
     : '<span class="tag">Немає</span>';
@@ -294,6 +364,9 @@ function renderDetail() {
       </div>
     `;
 
+  const sourceUrl = row.source?.url ? encodeURI(row.source.url) : '';
+  const shareUrl = `${window.location.origin}${window.location.pathname}?decision=${encodeURIComponent(row.decision_key)}`;
+
   els.detailCard.innerHTML = `
     <header class="detail-header">
       <div>
@@ -304,7 +377,7 @@ function renderDetail() {
           <span class="meta-pill">${escapeHtml(row.law_family === 'unfair_competition' ? 'Недобросовісна конкуренція' : 'Захист економічної конкуренції')}</span>
         </div>
       </div>
-      <div class="detail-block" style="min-width:220px;">
+      <div class="detail-block detail-fine-card">
         <div class="detail-block-label">Загальна сума штрафів</div>
         <div class="detail-block-value"><strong>${escapeHtml(formatMoney(row.sanction_total_uah))}</strong></div>
       </div>
@@ -332,7 +405,7 @@ function renderDetail() {
 
     <section class="detail-section">
       <h3><span class="detail-icon">${ICONS.economic}</span>Норми та правова база</h3>
-      <ul class="bullet-list">${legalBasis}</ul>
+      <ul class="bullet-list">${renderListItems(row.legal_basis)}</ul>
     </section>
 
     <section class="detail-section">
@@ -353,12 +426,12 @@ function renderDetail() {
 
     <section class="detail-section">
       <h3><span class="detail-icon">${ICONS.default}</span>Ключові takeaway</h3>
-      <ul class="bullet-list">${takeaways}</ul>
+      <ul class="bullet-list">${renderListItems(row.key_takeaways)}</ul>
     </section>
 
     <section class="detail-section">
       <h3><span class="detail-icon">${ICONS.info}</span>Фактори та докази</h3>
-      <ul class="bullet-list">${evidence}</ul>
+      <ul class="bullet-list">${renderListItems(row.evidence_factors)}</ul>
     </section>
 
     <section class="detail-section">
@@ -378,65 +451,103 @@ function renderDetail() {
           <div class="detail-block-value">${escapeHtml(row.source?.file || '—')}</div>
         </div>
       </div>
-      ${row.source?.url ? `<p style="margin-top:12px;"><a href="${escapeHtml(row.source.url)}" target="_blank" rel="noopener">Відкрити ZIP-ресурс на data.gov.ua</a></p>` : ''}
+      <div class="detail-actions">
+        ${sourceUrl ? `<a class="ghost-btn action-link" href="${sourceUrl}" target="_blank" rel="noopener">ZIP на data.gov.ua</a>` : ''}
+        <button class="ghost-btn" id="copyDecisionLink" type="button" data-url="${escapeHtml(shareUrl)}">Скопіювати посилання</button>
+      </div>
     </section>
   `;
-}
 
-function pluralize(n, forms) {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod10 === 1 && mod100 !== 11) return forms[0];
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1];
-  return forms[2];
-}
-
-function shortCodeBadge(code) {
-  return code.replace(/^zek:/, '').replace(/^unfair:/, 'НДК ');
+  document.getElementById('copyDecisionLink')?.addEventListener('click', async (event) => {
+    const url = event.currentTarget.dataset.url;
+    try {
+      await navigator.clipboard.writeText(url);
+      event.currentTarget.textContent = 'Скопійовано';
+      setTimeout(() => { event.currentTarget.textContent = 'Скопіювати посилання'; }, 1300);
+    } catch {
+      window.prompt('Скопіюйте посилання:', url);
+    }
+  });
 }
 
 function wireEvents() {
   els.searchInput.addEventListener('input', (e) => {
-    state.query = e.target.value || '';
-    applyFilters();
+    window.clearTimeout(searchTimer);
+    searchTimer = window.setTimeout(() => {
+      state.query = e.target.value || '';
+      state.selectedKey = null;
+      applyFilters();
+    }, 120);
   });
+
   els.yearFilter.addEventListener('change', (e) => {
     state.activeYear = e.target.value;
+    state.selectedKey = null;
     applyFilters();
   });
+
   els.sortSelect.addEventListener('change', (e) => {
     state.sort = e.target.value;
     applyFilters();
   });
+
   els.clearFiltersBtn.addEventListener('click', () => {
     state.activeCode = null;
     state.activeFamily = 'all';
     state.activeYear = 'all';
     state.query = '';
     state.sort = 'date_desc';
+    state.selectedKey = null;
     els.searchInput.value = '';
     els.yearFilter.value = 'all';
     els.sortSelect.value = 'date_desc';
-    document.querySelectorAll('.segmented-btn').forEach((btn) => btn.classList.toggle('active', btn.dataset.family === 'all'));
     applyFilters();
   });
+
   document.querySelectorAll('.segmented-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.activeFamily = btn.dataset.family;
-      document.querySelectorAll('.segmented-btn').forEach((item) => item.classList.toggle('active', item === btn));
+      state.activeCode = null;
+      state.selectedKey = null;
       applyFilters();
     });
   });
 }
 
+function applyStateToControls() {
+  els.searchInput.value = state.query;
+  els.yearFilter.value = state.activeYear;
+  els.sortSelect.value = state.sort;
+  renderFamilyTabs();
+}
+
 async function init() {
   setupEls();
+  loadStateFromUrl();
   const [index, practice] = await Promise.all([fetchJson(DATA_INDEX_URL), fetchJson(DATA_PRACTICE_URL)]);
   state.index = index;
-  state.practice = practice;
+  state.practice = practice.map((row) => ({
+    ...row,
+    normalized_search_blob: normalizeSearchText(row.search_blob || [
+      row.decision_number,
+      row.decision_date,
+      row.primary_code,
+      row.primary_label,
+      ...(row.liable_parties || []),
+      row.violation_summary,
+      row.amcu_reasoning,
+      row.respondent_position,
+      row.sanction,
+      ...(row.key_takeaways || []),
+      ...(row.evidence_factors || []),
+      row.market_or_sector,
+      ...(row.search_keywords || []),
+    ].filter(Boolean).join(' ')),
+  }));
   renderSummary();
   renderYearFilter();
   wireEvents();
+  applyStateToControls();
   applyFilters();
 }
 
