@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AMCU Practice Dashboard</title>
+  <meta name="description" content="База практики Антимонопольного комітету України">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">AMCU Practice</p>
+        <h1>База практики АМКУ</h1>
+        <p class="hero-copy">
+          Чистий професійний дашборд для пошуку й перегляду рішень щодо порушень законодавства про захист економічної конкуренції та недобросовісної конкуренції.
+        </p>
+      </div>
+      <div class="hero-meta">
+        <div class="meta-card">
+          <span class="meta-label">Оновлено</span>
+          <strong id="updatedAt">—</strong>
+        </div>
+        <div class="meta-card">
+          <span class="meta-label">Період</span>
+          <strong id="periodRange">—</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="summary-grid" id="summaryGrid"></section>
+
+    <section class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35"/><circle cx="11" cy="11" r="6.5"/></svg>
+        </span>
+        <input id="searchInput" type="search" placeholder="Пошук за номером, суб’єктом, статтею, фактами, ключовими словами…" autocomplete="off">
+      </div>
+      <div class="controls-row">
+        <div class="segmented" id="lawFamilyTabs">
+          <button class="segmented-btn active" data-family="all">Усі</button>
+          <button class="segmented-btn" data-family="economic_competition">ЗЕК</button>
+          <button class="segmented-btn" data-family="unfair_competition">НДК</button>
+        </div>
+        <select id="yearFilter" class="select-control">
+          <option value="all">Усі роки</option>
+        </select>
+        <select id="sortSelect" class="select-control">
+          <option value="date_desc">Спочатку новіші</option>
+          <option value="date_asc">Спочатку старіші</option>
+          <option value="sanction_desc">Найбільший штраф</option>
+          <option value="title_asc">За номером рішення</option>
+        </select>
+        <button id="clearFiltersBtn" class="ghost-btn">Скинути</button>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="section-head">
+        <h2>Категорії</h2>
+        <span class="section-note">Натисніть картку, щоб відфільтрувати рішення.</span>
+      </div>
+      <div class="cards-group">
+        <div>
+          <div class="group-title">Захист економічної конкуренції</div>
+          <div id="economicCards" class="cards-grid"></div>
+        </div>
+        <div>
+          <div class="group-title">Недобросовісна конкуренція</div>
+          <div id="unfairCards" class="cards-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-shell">
+      <aside class="results-pane card-surface">
+        <div class="results-head">
+          <div>
+            <h2>Рішення</h2>
+            <p id="resultsMeta" class="muted">—</p>
+          </div>
+          <div id="activeFilterChip" class="active-filter-chip hidden"></div>
+        </div>
+        <div id="resultsList" class="results-list"></div>
+      </aside>
+
+      <section class="detail-pane card-surface">
+        <div id="detailEmpty" class="detail-empty">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+          </div>
+          <h3>Оберіть рішення</h3>
+          <p>Виберіть запис ліворуч, щоб переглянути детальну аналітичну картку.</p>
+        </div>
+        <article id="detailCard" class="detail-card hidden"></article>
+      </section>
+    </section>
+  </div>
+
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
