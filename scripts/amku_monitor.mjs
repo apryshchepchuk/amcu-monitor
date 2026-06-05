@@ -28,9 +28,20 @@ const FORCE_REANALYZE_DECISIONS = boolEnv('FORCE_REANALYZE_DECISIONS', false);
 const DRY_RUN = boolEnv('DRY_RUN', false);
 const SKIP_GEMINI = boolEnv('SKIP_GEMINI', false);
 const INCLUDE_PROCEDURAL_DECISIONS = boolEnv('INCLUDE_PROCEDURAL_DECISIONS', false);
-const MAX_TEXT_CHARS = intEnv('MAX_TEXT_CHARS', 180000);
+const MAX_TEXT_CHARS = intEnv('MAX_TEXT_CHARS', 90000);
 const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 50);
 const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
+
+// Conservative Gemini quota guardrails.
+// The free-tier dashboard showed TPM=250k and RPM=15; defaults below keep a safety margin.
+const GEMINI_RPM_LIMIT = intEnv('GEMINI_RPM_LIMIT', 5);
+const GEMINI_TPM_LIMIT = intEnv('GEMINI_TPM_LIMIT', 120000);
+const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 4);
+const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 2500);
+const GEMINI_QUOTA_WINDOW_MS = intEnv('GEMINI_QUOTA_WINDOW_MS', 60_000);
+const GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN = floatEnv('GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN', 2.0);
+const geminiUsageWindow = [];
+
 const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
 
 // Practice database mode: by default we do not send email and do not exclude p.12 ст. 50.
@@ -138,6 +149,12 @@ function intEnv(name, fallback) {
   const raw = env(name, String(fallback));
   const n = Number.parseInt(raw, 10);
   return Number.isFinite(n) ? n : fallback;
+}
+
+function floatEnv(name, fallback) {
+  const raw = env(name, String(fallback));
+  const n = Number.parseFloat(raw);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
 function boolEnv(name, fallback = false) {
@@ -649,6 +666,101 @@ function fitTextForGemini(text) {
 }
 
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function estimateGeminiInputTokens(text) {
+  // Conservative estimator for Ukrainian legal text.
+  // Previous /3.5 estimates were too optimistic and allowed TPM spikes.
+  return Math.ceil(String(text || '').length / GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN);
+}
+
+function pruneGeminiUsageWindow(now = Date.now()) {
+  while (
+    geminiUsageWindow.length
+    && now - geminiUsageWindow[0].ts >= GEMINI_QUOTA_WINDOW_MS
+  ) {
+    geminiUsageWindow.shift();
+  }
+}
+
+async function waitForGeminiQuota(estimatedInputTokens) {
+  if (SKIP_GEMINI) return;
+
+  const reservedTokens = Math.max(1, estimatedInputTokens || 1);
+
+  while (true) {
+    const now = Date.now();
+    pruneGeminiUsageWindow(now);
+
+    const usedRequests = geminiUsageWindow.length;
+    const usedTokens = geminiUsageWindow.reduce((sum, item) => sum + item.tokens, 0);
+
+    const wouldExceedRpm =
+      GEMINI_RPM_LIMIT > 0
+      && usedRequests + 1 > GEMINI_RPM_LIMIT;
+
+    const wouldExceedTpm =
+      GEMINI_TPM_LIMIT > 0
+      && usedTokens + reservedTokens > GEMINI_TPM_LIMIT;
+
+    if (!wouldExceedRpm && !wouldExceedTpm) {
+      geminiUsageWindow.push({ ts: Date.now(), tokens: reservedTokens });
+      return;
+    }
+
+    // If one single prompt is estimated above our local TPM threshold, we cannot split it here.
+    // Allow it only when the window is otherwise empty; MAX_TEXT_CHARS should normally prevent this.
+    if (!wouldExceedRpm && usedRequests === 0 && reservedTokens > GEMINI_TPM_LIMIT) {
+      console.warn(
+        `Gemini prompt estimate ${reservedTokens} tokens exceeds local TPM guard ${GEMINI_TPM_LIMIT}. `
+        + `Proceeding because quota window is empty. Consider lowering MAX_TEXT_CHARS.`
+      );
+      geminiUsageWindow.push({ ts: Date.now(), tokens: reservedTokens });
+      return;
+    }
+
+    const oldest = geminiUsageWindow[0];
+    const waitMs = oldest
+      ? Math.max(1000, GEMINI_QUOTA_WINDOW_MS - (now - oldest.ts) + GEMINI_RETRY_BUFFER_MS)
+      : GEMINI_RETRY_BUFFER_MS;
+
+    console.log(
+      `Gemini quota throttle: waiting ${Math.ceil(waitMs / 1000)}s `
+      + `(usedRequests=${usedRequests}/${GEMINI_RPM_LIMIT}, `
+      + `usedInputTokens≈${usedTokens}/${GEMINI_TPM_LIMIT}, `
+      + `nextInputTokens≈${reservedTokens})`
+    );
+
+    await sleep(waitMs);
+  }
+}
+
+function parseGeminiRetryDelayMs(payload) {
+  const retryDelay =
+    payload?.error?.details?.find((d) => String(d?.['@type'] || '').includes('RetryInfo'))?.retryDelay;
+
+  if (typeof retryDelay === 'string') {
+    const seconds = retryDelay.match(/^([\d.]+)s$/i);
+    if (seconds) return Math.ceil(Number(seconds[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
+
+    const millis = retryDelay.match(/^([\d.]+)ms$/i);
+    if (millis) return Math.ceil(Number(millis[1])) + GEMINI_RETRY_BUFFER_MS;
+  }
+
+  const message = payload?.error?.message || '';
+  const m = String(message).match(/retry\s+in\s+([\d.]+)s/i);
+  if (m) return Math.ceil(Number(m[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
+
+  return 60_000 + GEMINI_RETRY_BUFFER_MS;
+}
+
+function isGeminiQuotaError(status, payload) {
+  return status === 429 || payload?.error?.status === 'RESOURCE_EXHAUSTED';
+}
+
+
 function uniqueArray(values) {
   return [...new Set((values || []).filter((v) => v !== null && v !== undefined && String(v).trim() !== '').map((v) => String(v).trim()))];
 }
@@ -1051,11 +1163,14 @@ async function analyzeWithGemini(input) {
   const url =
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
+  const promptText = buildGeminiPrompt(input);
+  const estimatedInputTokens = estimateGeminiInputTokens(promptText);
+
   const body = {
     contents: [
       {
         role: 'user',
-        parts: [{ text: buildGeminiPrompt(input) }]
+        parts: [{ text: promptText }]
       }
     ],
     generationConfig: {
@@ -1064,22 +1179,44 @@ async function analyzeWithGemini(input) {
     }
   };
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
+  let lastError = null;
 
-  const payload = await res.json().catch(() => null);
+  for (let attempt = 0; attempt <= GEMINI_RETRY_MAX; attempt += 1) {
+    await waitForGeminiQuota(estimatedInputTokens);
 
-  if (!res.ok) {
-    throw new Error(`Gemini HTTP ${res.status}: ${JSON.stringify(payload).slice(0, 1200)}`);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const payload = await res.json().catch(() => null);
+
+    if (res.ok) {
+      const rawText =
+        payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
+
+      return parseJsonLenient(rawText);
+    }
+
+    const message = `Gemini HTTP ${res.status}: ${JSON.stringify(payload).slice(0, 1200)}`;
+    lastError = new Error(message);
+
+    if (isGeminiQuotaError(res.status, payload) && attempt < GEMINI_RETRY_MAX) {
+      const waitMs = parseGeminiRetryDelayMs(payload);
+      console.warn(
+        `Gemini quota error. Retry ${attempt + 1}/${GEMINI_RETRY_MAX} `
+        + `after ${Math.ceil(waitMs / 1000)}s `
+        + `(estimatedInputTokens≈${estimatedInputTokens}).`
+      );
+      await sleep(waitMs);
+      continue;
+    }
+
+    throw lastError;
   }
 
-  const rawText =
-    payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
-
-  return parseJsonLenient(rawText);
+  throw lastError || new Error('Gemini request failed');
 }
 
 function parseJsonLenient(rawText) {
@@ -1715,6 +1852,11 @@ async function main() {
   for (const r of resources) {
     console.log(`- ${resourceTitle(r)} (${r.format || ''})`);
   }
+  console.log(
+    `Gemini settings: model=${GEMINI_MODEL}, maxCalls=${MAX_GEMINI_CALLS}, `
+    + `rpm=${GEMINI_RPM_LIMIT}, tpm≈${GEMINI_TPM_LIMIT}, `
+    + `maxTextChars=${MAX_TEXT_CHARS}, charsPerToken≈${GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN}`
+  );
 
   const additions = [];
   const totalStats = blankStats();
@@ -1764,6 +1906,10 @@ async function main() {
       force_resources: FORCE_RESOURCES,
       force_reanalyze_decisions: FORCE_REANALYZE_DECISIONS,
       max_gemini_calls: MAX_GEMINI_CALLS,
+      gemini_rpm_limit: GEMINI_RPM_LIMIT,
+      gemini_tpm_limit: GEMINI_TPM_LIMIT,
+      max_text_chars: MAX_TEXT_CHARS,
+      gemini_token_estimate_chars_per_token: GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN,
       resource_state_version: RESOURCE_STATE_VERSION
     }
   };
