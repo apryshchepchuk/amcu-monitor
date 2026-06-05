@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-06-05T10:02:35.168Z",
+  "updated_at": "2026-06-05T10:20:56.518Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 78,
-  "total_sanction_uah": 299981742,
+  "total_decisions": 93,
+  "total_sanction_uah": 5193463947,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 65,
+    "economic_competition": 80,
     "unfair_competition": 13,
     "other": 0
   },
@@ -18,14 +18,14 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 11
+      "count": 13
     },
     {
       "code": "zek:50:2",
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 5
+      "count": 7
     },
     {
       "code": "zek:50:3",
@@ -39,21 +39,21 @@
       "label": "п. 4 ст. 50 — невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
       "law_family": "economic_competition",
       "short_label": "невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
-      "count": 4
+      "count": 5
     },
     {
       "code": "zek:50:12",
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 28
+      "count": 33
     },
     {
       "code": "zek:50:13",
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 9
+      "count": 14
     },
     {
       "code": "zek:50:14",
@@ -92,5 +92,5 @@
     }
   ],
   "newest_decision_date": "2026-05-14",
-  "oldest_decision_date": "2025-11-06"
+  "oldest_decision_date": "2025-10-02"
 }
