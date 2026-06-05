@@ -1,15 +1,15 @@
-name: AMCU Practice Backfill
+name: AMCU Practice Monitor
 
 on:
   workflow_dispatch:
     inputs:
       backfill_enabled:
-        description: "Process only the next unprocessed/incomplete monthly resource"
+        description: "Process only the next unfinished month(s); skips fully clean months"
         required: false
         default: "true"
 
       backfill_months_per_run:
-        description: "How many monthly ZIP resources to process per run"
+        description: "How many unfinished months to process per run"
         required: false
         default: "1"
 
@@ -24,7 +24,7 @@ on:
         default: ""
 
       lookback_months:
-        description: "Used only when backfill_enabled=false"
+        description: "Fallback recent-month scan when backfill_enabled=false"
         required: false
         default: "4"
 
@@ -69,7 +69,7 @@ on:
         default: "90000"
 
       gemini_token_estimate_chars_per_token:
-        description: "Local token estimator: lower value = more conservative"
+        description: "Conservative chars-per-token estimator for local TPM throttling"
         required: false
         default: "2.0"
 
@@ -79,13 +79,13 @@ on:
         default: "true"
 
   schedule:
-    # Three automatic backfill attempts per day.
-    # Kyiv summer time UTC+3: 09:10, 14:10, 19:10.
-    # Kyiv winter time UTC+2: 08:10, 13:10, 18:10.
+    # Three daily gradual backfill runs.
+    # UTC 06:10, 11:10, 16:10 = Kyiv 09:10, 14:10, 19:10 during UTC+3.
+    # During winter UTC+2 this will run at 08:10, 13:10, 18:10 Kyiv.
     - cron: "10 6,11,16 * * *"
 
 concurrency:
-  group: amcu-practice-backfill
+  group: amku-practice-backfill
   cancel-in-progress: false
 
 jobs:
@@ -112,18 +112,19 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
+      - name: Check AMCU scripts syntax
+        run: |
+          node --check scripts/amku_monitor.mjs
+          node --check scripts/amku_build_dashboard.mjs
+
       - name: Run AMCU practice backfill
         env:
-          # Backfill mode: scheduled runs process exactly the next incomplete/unprocessed month.
           BACKFILL_ENABLED: ${{ github.event.inputs.backfill_enabled || 'true' }}
           BACKFILL_MONTHS_PER_RUN: ${{ github.event.inputs.backfill_months_per_run || '1' }}
           BACKFILL_FROM_MONTH: ${{ github.event.inputs.backfill_from_month || '' }}
           BACKFILL_TO_MONTH: ${{ github.event.inputs.backfill_to_month || '' }}
 
-          # Used only when BACKFILL_ENABLED=false.
           LOOKBACK_MONTHS: ${{ github.event.inputs.lookback_months || '4' }}
-
-          # Important: scheduled runs must not force already clean resources and must not reanalyze analyzed decisions.
           FORCE_RESOURCES: ${{ github.event.inputs.force || 'false' }}
           FORCE_REANALYZE_DECISIONS: ${{ github.event.inputs.force_reanalyze_decisions || 'false' }}
           SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
@@ -181,6 +182,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No AMCU practice/dashboard data changes to commit."
           else
-            git commit -m "Update AMCU practice backfill"
+            git commit -m "Update AMCU practice dashboard"
             git push
           fi
