@@ -2991,17 +2991,17 @@
     }
   },
   "last_run": {
-    "at": "2026-06-05T06:26:38.825Z",
+    "at": "2026-06-05T06:55:55.753Z",
     "resources_considered": 4,
-    "additions": 19,
-    "raw_additions": 19,
+    "additions": 0,
+    "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 4,
-      "docsSeen": 299,
-      "docsRelevant": 21,
-      "docsSkipped": 278,
-      "errors": 2
+      "resourcesChecked": 0,
+      "docsSeen": 0,
+      "docsRelevant": 0,
+      "docsSkipped": 0,
+      "errors": 0
     }
   }
 }
