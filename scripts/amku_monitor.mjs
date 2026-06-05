@@ -23,7 +23,8 @@ const CKAN_PACKAGE_SHOW_URL = env(
 
 const LOOKBACK_MONTHS = intEnv('LOOKBACK_MONTHS', 3);
 const MAX_RESOURCES = intEnv('MAX_RESOURCES', 12);
-const FORCE = boolEnv('FORCE', false);
+const FORCE_RESOURCES = boolEnv('FORCE_RESOURCES', boolEnv('FORCE', false));
+const FORCE_REANALYZE_DECISIONS = boolEnv('FORCE_REANALYZE_DECISIONS', false);
 const DRY_RUN = boolEnv('DRY_RUN', false);
 const SKIP_GEMINI = boolEnv('SKIP_GEMINI', false);
 const INCLUDE_PROCEDURAL_DECISIONS = boolEnv('INCLUDE_PROCEDURAL_DECISIONS', false);
@@ -36,7 +37,10 @@ const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
 const EMAIL_DISABLED = boolEnv('EMAIL_DISABLED', true);
 const PRACTICE_DB_ENABLED = boolEnv('PRACTICE_DB_ENABLED', true);
 const INCLUDE_CONCENTRATION_P12 = boolEnv('INCLUDE_CONCENTRATION_P12', true);
-const PROMPT_VERSION = intEnv('PROMPT_VERSION', 3);
+const PROMPT_VERSION = intEnv('PROMPT_VERSION', 4);
+
+// Resource-level state version. Increment when resource skip / classification logic changes.
+const RESOURCE_STATE_VERSION = 4;
 
 const UA_MONTHS = new Map([
   ['січень', 1], ['січня', 1],
@@ -719,6 +723,10 @@ function classificationFromPrimaryCode(primaryCode, fallback = {}) {
   const code = normalizePrimaryCode(primaryCode);
   if (!code) return null;
 
+  // Dashboard classification must be strict and canonical:
+  // - zek:* cards are driven only by article_50_points;
+  // - unfair:* cards are driven only by unfair_competition_articles.
+  // Contextual references to other laws/articles are preserved only in secondary_legal_basis.
   if (code.startsWith('zek:50:')) {
     const point = Number(code.split(':').pop());
     return {
@@ -726,8 +734,8 @@ function classificationFromPrimaryCode(primaryCode, fallback = {}) {
       primary_code: code,
       primary_article: `п. ${point} ст. 50`,
       primary_label: article50Label(point),
-      article_50_points: uniqueArray([point, ...(fallback.article_50_points || [])]).map(Number).sort((a, b) => a - b),
-      unfair_competition_articles: uniqueArray(fallback.unfair_competition_articles || []),
+      article_50_points: [point],
+      unfair_competition_articles: [],
       secondary_legal_basis: uniqueArray(fallback.secondary_legal_basis || [])
     };
   }
@@ -739,8 +747,8 @@ function classificationFromPrimaryCode(primaryCode, fallback = {}) {
       primary_code: `unfair:${article}`,
       primary_article: `ст. ${article}`,
       primary_label: unfairArticleLabel(article),
-      article_50_points: uniqueArray(fallback.article_50_points || []).map(Number).sort((a, b) => a - b),
-      unfair_competition_articles: uniqueArray([article, ...(fallback.unfair_competition_articles || [])]),
+      article_50_points: [],
+      unfair_competition_articles: [article],
       secondary_legal_basis: uniqueArray(fallback.secondary_legal_basis || [])
     };
   }
@@ -787,8 +795,7 @@ function extractUnfairCompetitionArticles(text) {
 
   const patterns = [
     /статт(?:і|ею|я)\s*(15\s*[-–—]?\s*1|15\s*¹|15¹|\d{1,2})\s+Закону\s+України\s+«?Про\s+захист\s+від\s+недобросовісної\s+конкуренції»?/gi,
-    /ст\.?\s*(15\s*[-–—]?\s*1|15\s*¹|15¹|\d{1,2})\s+Закону\s+України\s+«?Про\s+захист\s+від\s+недобросовісної\s+конкуренції»?/gi,
-    /статт(?:і|ею|я)\s*(15\s*[-–—]?\s*1|15\s*¹|15¹|\d{1,2})/gi
+    /ст\.?\s*(15\s*[-–—]?\s*1|15\s*¹|15¹|\d{1,2})\s+Закону\s+України\s+«?Про\s+захист\s+від\s+недобросовісної\s+конкуренції»?/gi
   ];
 
   for (const re of patterns) {
@@ -1133,9 +1140,7 @@ function extractFirstJsonObject(text) {
     if (ch === '}') {
       depth -= 1;
 
-      if (depth === 0) {
-        return s.slice(start, i + 1);
-      }
+      if (depth === 0) return s.slice(start, i + 1);
     }
   }
 
@@ -1484,13 +1489,18 @@ async function sendDigest(rows, stats) {
   console.log(`Email sent to ${emailTo}`);
 }
 
-async function processResource(resource, state) {
+async function processResource(resource, state, runBudget) {
   const title = resourceTitle(resource);
   const id = resource.id || resource.url || title;
   const signature = resourceSignature(resource);
   const prev = state.processed_resources[id];
 
-  if (!LOCAL_ZIP && !FORCE && prev?.signature && signature && prev.signature === signature) {
+  const prevResourceClean =
+    prev?.state_version === RESOURCE_STATE_VERSION
+    && Number(prev?.errors || 0) === 0
+    && prev?.incomplete !== true;
+
+  if (!LOCAL_ZIP && !FORCE_RESOURCES && prevResourceClean && prev?.signature && signature && prev.signature === signature) {
     return {
       skippedResource: true,
       reason: 'metadata_signature_unchanged',
@@ -1511,7 +1521,7 @@ async function processResource(resource, state) {
     zipSha = await downloadFile(resource.url, zipPath);
   }
 
-  if (!FORCE && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
+  if (!FORCE_RESOURCES && prevResourceClean && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
     return {
       skippedResource: true,
       reason: 'zip_hash_unchanged',
@@ -1531,7 +1541,6 @@ async function processResource(resource, state) {
   stats.docsSeen = files.length;
 
   const additions = [];
-  let geminiCalls = 0;
 
   for (const file of files) {
     const decodedFileName = decodeHashUnicodeName(path.relative(extractDir, file));
@@ -1543,7 +1552,7 @@ async function processResource(resource, state) {
       const key = decisionKey(meta, fileHash);
       const known = state.processed_decisions[key];
 
-      if (!FORCE && known?.file_sha256 === fileHash && known?.status === 'analyzed') {
+      if (!FORCE_REANALYZE_DECISIONS && known?.file_sha256 === fileHash && known?.status === 'analyzed') {
         stats.docsSkipped += 1;
         continue;
       }
@@ -1569,18 +1578,20 @@ async function processResource(resource, state) {
 
       stats.docsRelevant += 1;
 
-      if (geminiCalls >= MAX_GEMINI_CALLS) {
+      if (runBudget.geminiCalls >= MAX_GEMINI_CALLS) {
         stats.errors += 1;
         await appendEvent({
           type: 'gemini_budget_exceeded',
           resource_id: id,
           file: decodedFileName,
-          key
+          key,
+          max_gemini_calls: MAX_GEMINI_CALLS
         });
+        console.log(`Gemini run budget exceeded: ${runBudget.geminiCalls}/${MAX_GEMINI_CALLS}. Skipping ${decodedFileName}`);
         continue;
       }
 
-      geminiCalls += 1;
+      runBudget.geminiCalls += 1;
 
       const analysis = await analyzeWithGemini({
         text,
@@ -1651,13 +1662,16 @@ async function processResource(resource, state) {
   }
 
   state.processed_resources[id] = {
+    state_version: RESOURCE_STATE_VERSION,
     title,
     url: resource.url,
     signature,
     zip_sha256: zipSha,
     processed_at: new Date().toISOString(),
     docs_seen: stats.docsSeen,
-    docs_relevant: stats.docsRelevant
+    docs_relevant: stats.docsRelevant,
+    errors: stats.errors,
+    incomplete: stats.errors > 0
   };
 
   return { skippedResource: false, additions, stats };
@@ -1704,12 +1718,13 @@ async function main() {
 
   const additions = [];
   const totalStats = blankStats();
+  const runBudget = { geminiCalls: 0 };
 
   for (const resource of resources) {
     console.log(`Processing: ${resourceTitle(resource)}`);
 
     try {
-      const result = await processResource(resource, state);
+      const result = await processResource(resource, state, runBudget);
 
       addStats(totalStats, result.stats);
       additions.push(...result.additions);
@@ -1743,7 +1758,14 @@ async function main() {
     additions: uniqueAdditions.length,
     raw_additions: additions.length,
     duplicates_in_run: duplicatesInRun,
-    stats: totalStats
+    stats: totalStats,
+    gemini_calls: runBudget.geminiCalls,
+    settings: {
+      force_resources: FORCE_RESOURCES,
+      force_reanalyze_decisions: FORCE_REANALYZE_DECISIONS,
+      max_gemini_calls: MAX_GEMINI_CALLS,
+      resource_state_version: RESOURCE_STATE_VERSION
+    }
   };
 
   console.log(`New/updated relevant rows: ${uniqueAdditions.length}`);
@@ -1753,6 +1775,7 @@ async function main() {
   }
 
   console.log(`Stats: ${JSON.stringify(totalStats)}`);
+  console.log(`Gemini calls used: ${runBudget.geminiCalls}/${MAX_GEMINI_CALLS}`);
 
   if (!DRY_RUN) {
     await writeJson(STATE_PATH, state);
