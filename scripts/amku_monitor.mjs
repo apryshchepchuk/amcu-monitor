@@ -31,22 +31,6 @@ const INCLUDE_PROCEDURAL_DECISIONS = boolEnv('INCLUDE_PROCEDURAL_DECISIONS', fal
 const MAX_TEXT_CHARS = intEnv('MAX_TEXT_CHARS', 90000);
 const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 50);
 const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
-
-// Gemini quota safety. Defaults are intentionally conservative for long Ukrainian legal texts.
-const GEMINI_RPM_LIMIT = intEnv('GEMINI_RPM_LIMIT', 5);
-const GEMINI_TPM_LIMIT = intEnv('GEMINI_TPM_LIMIT', 120000);
-const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 4);
-const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
-const GEMINI_QUOTA_WINDOW_MS = intEnv('GEMINI_QUOTA_WINDOW_MS', 60000);
-const GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN = numberEnv('GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN', 2.0);
-const geminiUsageWindow = [];
-
-// Historical backfill mode: process only the next unprocessed/incomplete monthly resource.
-const BACKFILL_ENABLED = boolEnv('BACKFILL_ENABLED', false);
-const BACKFILL_MONTHS_PER_RUN = intEnv('BACKFILL_MONTHS_PER_RUN', 1);
-const BACKFILL_FROM_MONTH = env('BACKFILL_FROM_MONTH', ''); // YYYY-MM, optional lower bound
-const BACKFILL_TO_MONTH = env('BACKFILL_TO_MONTH', ''); // YYYY-MM, optional upper bound
-
 const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
 
 // Practice database mode: by default we do not send email and do not exclude p.12 ст. 50.
@@ -54,6 +38,25 @@ const EMAIL_DISABLED = boolEnv('EMAIL_DISABLED', true);
 const PRACTICE_DB_ENABLED = boolEnv('PRACTICE_DB_ENABLED', true);
 const INCLUDE_CONCENTRATION_P12 = boolEnv('INCLUDE_CONCENTRATION_P12', true);
 const PROMPT_VERSION = intEnv('PROMPT_VERSION', 4);
+
+
+// Historical backfill mode: process only the next unfinished month(s), skipping fully clean months.
+const BACKFILL_ENABLED = boolEnv('BACKFILL_ENABLED', false);
+const BACKFILL_MONTHS_PER_RUN = intEnv('BACKFILL_MONTHS_PER_RUN', 1);
+const BACKFILL_FROM_MONTH = env('BACKFILL_FROM_MONTH', ''); // YYYY-MM, optional lower bound
+const BACKFILL_TO_MONTH = env('BACKFILL_TO_MONTH', '');     // YYYY-MM, optional upper bound
+
+// Conservative Gemini quota controls.
+// Free-tier observed limits can be around 15 RPM / 250k input TPM, so defaults keep a buffer.
+const GEMINI_RPM_LIMIT = intEnv('GEMINI_RPM_LIMIT', 5);
+const GEMINI_TPM_LIMIT = intEnv('GEMINI_TPM_LIMIT', 120000);
+const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 4);
+const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
+const GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN = Number.parseFloat(
+  env('GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN', '2.0')
+) || 2.0;
+const GEMINI_QUOTA_WINDOW_MS = 60_000;
+const geminiUsageWindow = [];
 
 // Resource-level state version. Increment when resource skip / classification logic changes.
 const RESOURCE_STATE_VERSION = 4;
@@ -154,12 +157,6 @@ function intEnv(name, fallback) {
   const raw = env(name, String(fallback));
   const n = Number.parseInt(raw, 10);
   return Number.isFinite(n) ? n : fallback;
-}
-
-function numberEnv(name, fallback) {
-  const raw = env(name, String(fallback));
-  const n = Number.parseFloat(raw);
-  return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
 function boolEnv(name, fallback = false) {
@@ -463,7 +460,7 @@ function isWithinLookback(resource) {
   return diff >= 0 && diff <= LOOKBACK_MONTHS;
 }
 
-function monthKeyToNumber(key) {
+function monthKeyValue(key) {
   const m = String(key || '').match(/^(20\d{2})-(\d{2})$/);
   if (!m) return null;
 
@@ -474,28 +471,25 @@ function monthKeyToNumber(key) {
   return year * 12 + month;
 }
 
-function isWithinBackfillRange(resource) {
+function isWithinBackfillMonthRange(resource) {
   const key = resourcePeriodKey(resource);
   if (!key) return false;
 
-  const n = monthKeyToNumber(key);
-  if (n === null) return false;
+  const current = monthKeyValue(key);
+  const from = BACKFILL_FROM_MONTH ? monthKeyValue(BACKFILL_FROM_MONTH) : null;
+  const to = BACKFILL_TO_MONTH ? monthKeyValue(BACKFILL_TO_MONTH) : null;
 
-  const from = BACKFILL_FROM_MONTH ? monthKeyToNumber(BACKFILL_FROM_MONTH) : null;
-  const to = BACKFILL_TO_MONTH ? monthKeyToNumber(BACKFILL_TO_MONTH) : null;
-
-  if (from !== null && n < from) return false;
-  if (to !== null && n > to) return false;
+  if (from !== null && current < from) return false;
+  if (to !== null && current > to) return false;
 
   return true;
 }
 
-function resourceId(resource) {
-  return resource?.id || resource?.url || resourceTitle(resource);
-}
+function isResourceCleanInState(resource, state) {
+  if (!state?.processed_resources) return false;
 
-function isProcessedResourceClean(resource, state) {
-  const prev = state?.processed_resources?.[resourceId(resource)];
+  const id = resource.id || resource.url || resourceTitle(resource);
+  const prev = state.processed_resources[id];
 
   return Boolean(
     prev?.state_version === RESOURCE_STATE_VERSION
@@ -520,30 +514,19 @@ async function getCandidateResources(state = null) {
   if (!pkg.success) throw new Error('CKAN package_show returned success=false');
 
   const resources = pkg.result?.resources || [];
-  const decisionResources = resources.filter(isDecisionZipResource);
-
-  // data.gov.ua often has multiple ZIPs for the same month.
-  // We keep only the best/latest resource per month before selecting work.
-  const bestByMonthAll = selectBestResourcePerMonth(decisionResources);
+  const decisionZipResources = resources.filter(isDecisionZipResource);
 
   if (BACKFILL_ENABLED) {
-    const candidates = bestByMonthAll
-      .filter(isWithinBackfillRange)
-      .filter((resource) => !isProcessedResourceClean(resource, state));
+    const backfillResources = selectBestResourcePerMonth(decisionZipResources)
+      .filter(isWithinBackfillMonthRange)
+      .filter((resource) => !isResourceCleanInState(resource, state));
 
-    console.log(
-      `Backfill mode: ${candidates.length} monthly resource(s) still need processing; `
-      + `taking ${Math.max(0, BACKFILL_MONTHS_PER_RUN)} this run.`
-    );
-
-    return candidates.slice(0, Math.max(0, BACKFILL_MONTHS_PER_RUN));
+    return backfillResources.slice(0, Math.max(1, BACKFILL_MONTHS_PER_RUN));
   }
 
-  const recentResources = decisionResources.filter(isWithinLookback);
+  const recentResources = decisionZipResources.filter(isWithinLookback);
 
-  // data.gov.ua часто зберігає кілька ZIP за один місяць:
-  // наприклад, частковий березень і пізніше повний березень.
-  // Щоб не було дублів і зайвих Gemini-викликів, беремо найкращий ресурс за місяць.
+  // data.gov.ua often stores several ZIPs for one month; keep the most complete one.
   const bestByMonth = selectBestResourcePerMonth(recentResources);
 
   return bestByMonth.slice(0, MAX_RESOURCES);
@@ -725,92 +708,6 @@ function fitTextForGemini(text) {
   const tailChars = MAX_TEXT_CHARS - headChars;
 
   return `${text.slice(0, headChars)}\n\n[... СЕРЕДИНУ ТЕКСТУ СКОРОЧЕНО АВТОМАТИЧНО ...]\n\n${text.slice(-tailChars)}`;
-}
-
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function estimateGeminiInputTokens(text) {
-  const charsPerToken = Math.max(1, GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN || 2);
-  return Math.ceil(String(text || '').length / charsPerToken);
-}
-
-function pruneGeminiUsageWindow(now = Date.now()) {
-  while (
-    geminiUsageWindow.length
-    && now - geminiUsageWindow[0].ts >= GEMINI_QUOTA_WINDOW_MS
-  ) {
-    geminiUsageWindow.shift();
-  }
-}
-
-async function waitForGeminiQuota(estimatedInputTokens) {
-  if (SKIP_GEMINI) return;
-
-  const reservedTokens = Math.max(1, estimatedInputTokens || 1);
-
-  while (true) {
-    const now = Date.now();
-    pruneGeminiUsageWindow(now);
-
-    const usedRequests = geminiUsageWindow.length;
-    const usedTokens = geminiUsageWindow.reduce((sum, item) => sum + item.tokens, 0);
-
-    const wouldExceedRpm =
-      GEMINI_RPM_LIMIT > 0
-      && usedRequests + 1 > GEMINI_RPM_LIMIT;
-
-    const wouldExceedTpm =
-      GEMINI_TPM_LIMIT > 0
-      && usedTokens + reservedTokens > GEMINI_TPM_LIMIT;
-
-    if (!wouldExceedRpm && !wouldExceedTpm) {
-      geminiUsageWindow.push({
-        ts: Date.now(),
-        tokens: reservedTokens
-      });
-      return;
-    }
-
-    const oldest = geminiUsageWindow[0];
-    const waitMs = oldest
-      ? Math.max(1000, GEMINI_QUOTA_WINDOW_MS - (now - oldest.ts) + GEMINI_RETRY_BUFFER_MS)
-      : GEMINI_RETRY_BUFFER_MS;
-
-    console.log(
-      `Gemini quota throttle: waiting ${Math.ceil(waitMs / 1000)}s `
-      + `(usedRequests=${usedRequests}/${GEMINI_RPM_LIMIT}, `
-      + `usedInputTokens≈${usedTokens}/${GEMINI_TPM_LIMIT}, `
-      + `nextInputTokens≈${reservedTokens})`
-    );
-
-    await sleep(waitMs);
-  }
-}
-
-function parseGeminiRetryDelayMs(payload) {
-  const retryDelay =
-    payload?.error?.details?.find((d) => d?.['@type']?.includes('RetryInfo'))?.retryDelay;
-
-  if (typeof retryDelay === 'string') {
-    const seconds = retryDelay.match(/^([\d.]+)s$/i);
-    if (seconds) return Math.ceil(Number(seconds[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
-
-    const millis = retryDelay.match(/^([\d.]+)ms$/i);
-    if (millis) return Math.ceil(Number(millis[1])) + GEMINI_RETRY_BUFFER_MS;
-  }
-
-  const message = payload?.error?.message || '';
-  const m = String(message).match(/retry\s+in\s+([\d.]+)s/i);
-  if (m) return Math.ceil(Number(m[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
-
-  return 60_000 + GEMINI_RETRY_BUFFER_MS;
-}
-
-function isGeminiQuotaError(status, payload) {
-  return status === 429 || payload?.error?.status === 'RESOURCE_EXHAUSTED';
 }
 
 
@@ -1247,8 +1144,7 @@ async function analyzeWithGemini(input) {
 
     if (res.ok) {
       const rawText =
-        payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('
-') || '';
+        payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
 
       return parseJsonLenient(rawText);
     }
@@ -1903,6 +1799,7 @@ async function main() {
 
   const resources = await getCandidateResources(state);
 
+  console.log(`Candidate resources: ${resources.length}`);
   console.log(
     `Gemini settings: model=${GEMINI_MODEL}, maxCalls=${MAX_GEMINI_CALLS}, `
     + `rpm=${GEMINI_RPM_LIMIT}, tpm≈${GEMINI_TPM_LIMIT}, `
@@ -1910,10 +1807,8 @@ async function main() {
   );
   console.log(
     `Backfill settings: enabled=${BACKFILL_ENABLED}, monthsPerRun=${BACKFILL_MONTHS_PER_RUN}, `
-    + `from=${BACKFILL_FROM_MONTH || 'auto'}, to=${BACKFILL_TO_MONTH || 'auto'}`
+    + `from=${BACKFILL_FROM_MONTH || '-'}, to=${BACKFILL_TO_MONTH || '-'}`
   );
-
-  console.log(`Candidate resources: ${resources.length}`);
   for (const r of resources) {
     console.log(`- ${resourceTitle(r)} (${r.format || ''})`);
   }
@@ -1967,14 +1862,12 @@ async function main() {
       force_reanalyze_decisions: FORCE_REANALYZE_DECISIONS,
       max_gemini_calls: MAX_GEMINI_CALLS,
       resource_state_version: RESOURCE_STATE_VERSION,
-      max_text_chars: MAX_TEXT_CHARS,
-      gemini_rpm_limit: GEMINI_RPM_LIMIT,
-      gemini_tpm_limit: GEMINI_TPM_LIMIT,
-      gemini_token_estimate_chars_per_token: GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN,
       backfill_enabled: BACKFILL_ENABLED,
       backfill_months_per_run: BACKFILL_MONTHS_PER_RUN,
-      backfill_from_month: BACKFILL_FROM_MONTH || null,
-      backfill_to_month: BACKFILL_TO_MONTH || null
+      gemini_rpm_limit: GEMINI_RPM_LIMIT,
+      gemini_tpm_limit: GEMINI_TPM_LIMIT,
+      max_text_chars: MAX_TEXT_CHARS,
+      gemini_token_estimate_chars_per_token: GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN
     }
   };
 
