@@ -31,17 +31,27 @@ on:
       max_gemini_calls:
         description: "Global max Gemini calls per run"
         required: false
-        default: "20"
+        default: "15"
 
       gemini_rpm_limit:
         description: "Conservative Gemini requests-per-minute limit"
         required: false
-        default: "10"
+        default: "5"
 
       gemini_tpm_limit:
         description: "Conservative Gemini input-tokens-per-minute limit"
         required: false
-        default: "220000"
+        default: "120000"
+
+      max_text_chars:
+        description: "Max extracted decision text chars sent to Gemini"
+        required: false
+        default: "90000"
+
+      gemini_token_estimate_chars_per_token:
+        description: "Conservative chars-per-token estimator for Gemini input quota"
+        required: false
+        default: "2.0"
 
       include_concentration_p12:
         description: "Include p.12 Art.50 concentration-without-permit decisions in practice DB"
@@ -92,11 +102,13 @@ jobs:
           INCLUDE_PROCEDURAL_DECISIONS: "false"
 
           # Gemini limits / quota safety
-          MAX_GEMINI_CALLS: ${{ github.event.inputs.max_gemini_calls || '20' }}
-          GEMINI_RPM_LIMIT: ${{ github.event.inputs.gemini_rpm_limit || '10' }}
-          GEMINI_TPM_LIMIT: ${{ github.event.inputs.gemini_tpm_limit || '220000' }}
+          MAX_GEMINI_CALLS: ${{ github.event.inputs.max_gemini_calls || '15' }}
+          GEMINI_RPM_LIMIT: ${{ github.event.inputs.gemini_rpm_limit || '5' }}
+          GEMINI_TPM_LIMIT: ${{ github.event.inputs.gemini_tpm_limit || '120000' }}
+          MAX_TEXT_CHARS: ${{ github.event.inputs.max_text_chars || '90000' }}
+          GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN: ${{ github.event.inputs.gemini_token_estimate_chars_per_token || '2.0' }}
           GEMINI_RETRY_MAX: "4"
-          GEMINI_RETRY_BUFFER_MS: "1500"
+          GEMINI_RETRY_BUFFER_MS: "2500"
 
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
