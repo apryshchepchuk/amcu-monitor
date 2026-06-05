@@ -12,6 +12,7 @@ const ROOT = process.cwd();
 const DATA_DIR = path.join(ROOT, 'data');
 const STATE_PATH = path.join(DATA_DIR, 'amku_state.json');
 const RESULTS_PATH = path.join(DATA_DIR, 'amku_results.json');
+const PRACTICE_RESULTS_PATH = path.join(DATA_DIR, 'practice', 'amku_practice.json');
 const EVENTS_PATH = path.join(DATA_DIR, 'amku_events.jsonl');
 
 const DATASET_ID = env('DATASET_ID', '8bdd45b8-0684-463a-ba76-26361c32841a');
@@ -29,23 +30,13 @@ const INCLUDE_PROCEDURAL_DECISIONS = boolEnv('INCLUDE_PROCEDURAL_DECISIONS', fal
 const MAX_TEXT_CHARS = intEnv('MAX_TEXT_CHARS', 180000);
 const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 50);
 const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
-
-// Version marker for resource-level state.
-// If we change processing logic, old resource state will be rechecked once.
-const RESOURCE_STATE_VERSION = 2;
-
-// Conservative defaults based on observed free-tier quota:
-// RPM around 20, input TPM error showed 250000.
-// We keep headroom to avoid 429.
-const GEMINI_RPM_LIMIT = intEnv('GEMINI_RPM_LIMIT', 10);
-const GEMINI_TPM_LIMIT = intEnv('GEMINI_TPM_LIMIT', 220000);
-const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 4);
-const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
-const GEMINI_QUOTA_WINDOW_MS = 60_000;
-
-const geminiUsageWindow = [];
-
 const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
+
+// Practice database mode: by default we do not send email and do not exclude p.12 ст. 50.
+const EMAIL_DISABLED = boolEnv('EMAIL_DISABLED', true);
+const PRACTICE_DB_ENABLED = boolEnv('PRACTICE_DB_ENABLED', true);
+const INCLUDE_CONCENTRATION_P12 = boolEnv('INCLUDE_CONCENTRATION_P12', true);
+const PROMPT_VERSION = intEnv('PROMPT_VERSION', 3);
 
 const UA_MONTHS = new Map([
   ['січень', 1], ['січня', 1],
@@ -61,6 +52,49 @@ const UA_MONTHS = new Map([
   ['листопад', 11], ['листопада', 11],
   ['грудень', 12], ['грудня', 12]
 ]);
+
+
+const ZEK_ARTICLE_50_TAXONOMY = {
+  1: 'антиконкурентні узгоджені дії',
+  2: 'зловживання монопольним (домінуючим) становищем',
+  3: 'антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю',
+  4: 'невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі',
+  5: 'дії учасників узгоджених дій, заборонені згідно з ч. 5 ст. 10 Закону',
+  6: 'делегування повноважень у випадках, заборонених ст. 16 Закону',
+  7: 'вчинення дій, заборонених ст. 17 Закону',
+  8: 'обмежувальна та дискримінаційна діяльність, заборонена ч. 2 ст. 18, ст. 19 і 20 Закону',
+  9: 'обмежувальна діяльність, заборонена ч. 1 ст. 18 Закону',
+  10: 'недотримання умов, передбачених пунктами 2, 5 та 6 ч. 3 ст. 22 Закону',
+  11: 'порушення положень погоджених установчих документів суб’єкта, створеного в результаті концентрації',
+  12: 'концентрація без отримання відповідного дозволу органів АМКУ',
+  13: 'неподання інформації у встановлені строки',
+  14: 'подання інформації в неповному обсязі у встановлені строки',
+  15: 'подання недостовірної інформації',
+  16: 'створення перешкод працівникам АМКУ у проведенні перевірок, огляду, вилученні чи накладенні арешту',
+  17: 'надання рекомендацій, що схиляють до вчинення порушень або сприяють таким порушенням',
+  18: 'обмеження в господарській діяльності у відповідь на звернення до АМКУ',
+  19: 'невиконання вимог і зобов’язань, якими було обумовлене рішення про надання дозволу',
+  20: 'обмежувальна діяльність об’єднань, заборонена ст. 21 Закону',
+  21: 'розпломбування приміщень, систем електронних комунікацій, інших володінь чи місць зберігання інформації'
+};
+
+const UNFAIR_COMPETITION_TAXONOMY = {
+  '4': 'неправомірне використання позначень',
+  '5': 'неправомірне використання товару іншого виробника',
+  '6': 'копіювання зовнішнього вигляду виробу',
+  '7': 'порівняльна реклама',
+  '8': 'дискредитація суб’єкта господарювання',
+  '10': 'схилення до бойкоту суб’єкта господарювання',
+  '11': 'схилення постачальника до дискримінації покупця (замовника)',
+  '13': 'підкуп працівника, посадової особи постачальника',
+  '14': 'підкуп працівника, посадової особи покупця (замовника)',
+  '15': 'досягнення неправомірних переваг у конкуренції',
+  '15-1': 'поширення інформації, що вводить в оману',
+  '16': 'неправомірне збирання комерційної таємниці',
+  '17': 'розголошення комерційної таємниці',
+  '18': 'схилення до розголошення комерційної таємниці',
+  '19': 'неправомірне використання комерційної таємниці'
+};
 
 const INCLUDE_PATTERNS = [
   /про\s+порушення\s+законодавства\s+про\s+захист\s+економічної\s+конкуренції/i,
@@ -550,9 +584,9 @@ function classifyDecision(text) {
     return { relevant: false, reason: 'procedural_decision' };
   }
 
-  // Не передаємо в Gemini штрафи за gun-jumping:
-  // здійснення концентрації без дозволу АМКУ, п. 12 ст. 50 Закону.
-  if (isConcentrationWithoutPermitP12(normalized)) {
+  // У режимі бази практики за замовчуванням п. 12 ст. 50 НЕ відсікаємо.
+  // Для вузької email-розсилки можна встановити INCLUDE_CONCENTRATION_P12=false.
+  if (!INCLUDE_CONCENTRATION_P12 && isConcentrationWithoutPermitP12(normalized)) {
     return { relevant: false, reason: 'concentration_without_permit_p12' };
   }
 
@@ -610,123 +644,355 @@ function fitTextForGemini(text) {
   return `${text.slice(0, headChars)}\n\n[... СЕРЕДИНУ ТЕКСТУ СКОРОЧЕНО АВТОМАТИЧНО ...]\n\n${text.slice(-tailChars)}`;
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+
+function uniqueArray(values) {
+  return [...new Set((values || []).filter((v) => v !== null && v !== undefined && String(v).trim() !== '').map((v) => String(v).trim()))];
 }
 
-function estimateGeminiInputTokens(text) {
-  // Rough but practical estimator for Ukrainian/English text.
-  // We intentionally over-reserve a bit to avoid free-tier TPM errors.
-  return Math.ceil(String(text || '').length / 3.5);
+function compactTextParts(...parts) {
+  return normalizeSpaces(
+    parts
+      .flatMap((part) => {
+        if (Array.isArray(part)) return part;
+        if (part && typeof part === 'object') return Object.values(part);
+        return [part];
+      })
+      .filter(Boolean)
+      .join('\n')
+  );
 }
 
-function pruneGeminiUsageWindow(now = Date.now()) {
-  while (
-    geminiUsageWindow.length
-    && now - geminiUsageWindow[0].ts >= GEMINI_QUOTA_WINDOW_MS
-  ) {
-    geminiUsageWindow.shift();
+function normalizeUnfairArticle(raw) {
+  if (raw === null || raw === undefined) return null;
+
+  const s = String(raw)
+    .toLowerCase()
+    .replace(/¹/g, '-1')
+    .replace(/прим\.\s*1/g, '-1')
+    .replace(/примітка\s*1/g, '-1')
+    .replace(/\s+/g, '')
+    .replace(/[–—]/g, '-');
+
+  if (/^15-?1$/.test(s)) return '15-1';
+
+  const n = Number.parseInt(s, 10);
+  if (Number.isFinite(n) && Object.hasOwn(UNFAIR_COMPETITION_TAXONOMY, String(n))) {
+    return String(n);
   }
+
+  return null;
 }
 
-async function waitForGeminiQuota(estimatedInputTokens) {
-  if (SKIP_GEMINI) return;
+function normalizePrimaryCode(raw) {
+  if (!raw) return null;
 
-  const reservedTokens = Math.max(1, estimatedInputTokens || 1);
+  const s = String(raw).toLowerCase().replace(/\s+/g, '').replace(/[–—]/g, '-');
 
-  while (true) {
-    const now = Date.now();
-    pruneGeminiUsageWindow(now);
+  let m = s.match(/^zek:50:(\d{1,2})$/);
+  if (m) {
+    const p = Number(m[1]);
+    if (Object.hasOwn(ZEK_ARTICLE_50_TAXONOMY, p)) return `zek:50:${p}`;
+  }
 
-    const usedRequests = geminiUsageWindow.length;
-    const usedTokens = geminiUsageWindow.reduce((sum, item) => sum + item.tokens, 0);
+  m = s.match(/^unfair:(15-?1|\d{1,2})$/);
+  if (m) {
+    const art = normalizeUnfairArticle(m[1]);
+    if (art) return `unfair:${art}`;
+  }
 
-    const wouldExceedRpm =
-      GEMINI_RPM_LIMIT > 0
-      && usedRequests + 1 > GEMINI_RPM_LIMIT;
+  return null;
+}
 
-    const wouldExceedTpm =
-      GEMINI_TPM_LIMIT > 0
-      && usedTokens + reservedTokens > GEMINI_TPM_LIMIT;
+function article50Label(point) {
+  const p = Number(point);
+  const label = ZEK_ARTICLE_50_TAXONOMY[p] || 'невизначене порушення';
+  return `п. ${p} ст. 50 — ${label}`;
+}
 
-    if (!wouldExceedRpm && !wouldExceedTpm) {
-      geminiUsageWindow.push({
-        ts: Date.now(),
-        tokens: reservedTokens
-      });
-      return;
+function unfairArticleLabel(article) {
+  const art = normalizeUnfairArticle(article);
+  const label = UNFAIR_COMPETITION_TAXONOMY[art] || 'невизначене порушення';
+  return `ст. ${art} — ${label}`;
+}
+
+function classificationFromPrimaryCode(primaryCode, fallback = {}) {
+  const code = normalizePrimaryCode(primaryCode);
+  if (!code) return null;
+
+  if (code.startsWith('zek:50:')) {
+    const point = Number(code.split(':').pop());
+    return {
+      law_family: 'economic_competition',
+      primary_code: code,
+      primary_article: `п. ${point} ст. 50`,
+      primary_label: article50Label(point),
+      article_50_points: uniqueArray([point, ...(fallback.article_50_points || [])]).map(Number).sort((a, b) => a - b),
+      unfair_competition_articles: uniqueArray(fallback.unfair_competition_articles || []),
+      secondary_legal_basis: uniqueArray(fallback.secondary_legal_basis || [])
+    };
+  }
+
+  if (code.startsWith('unfair:')) {
+    const article = normalizeUnfairArticle(code.replace('unfair:', ''));
+    return {
+      law_family: 'unfair_competition',
+      primary_code: `unfair:${article}`,
+      primary_article: `ст. ${article}`,
+      primary_label: unfairArticleLabel(article),
+      article_50_points: uniqueArray(fallback.article_50_points || []).map(Number).sort((a, b) => a - b),
+      unfair_competition_articles: uniqueArray([article, ...(fallback.unfair_competition_articles || [])]),
+      secondary_legal_basis: uniqueArray(fallback.secondary_legal_basis || [])
+    };
+  }
+
+  return null;
+}
+
+function extractArticle50Points(text) {
+  const s = normalizeSpaces(text);
+  const points = [];
+
+  const patterns = [
+    /пункт(?:ом|у|а|і)?\s*(\d{1,2})\s+статті\s*50/gi,
+    /п\.?\s*(\d{1,2})\s*ст\.?\s*50/gi,
+    /пункт(?:ом|у|а|і)?\s*(\d{1,2})\s+частини\s+першої\s+статті\s*50/gi
+  ];
+
+  for (const re of patterns) {
+    for (const m of s.matchAll(re)) {
+      const p = Number(m[1]);
+      if (Object.hasOwn(ZEK_ARTICLE_50_TAXONOMY, p)) points.push(p);
+    }
+  }
+
+  // Часто рішення описує тендерні змови через "пункт 4 частини другої статті 6",
+  // але безпосередня кваліфікація за ст. 50 все одно зазвичай п. 1 ст. 50.
+  if (
+    /пункт(?:ом|у|а|і)?\s*4\s+частини\s+другої\s+статті\s*6/i.test(s)
+    && /антиконкурентн[іи]\s+узгоджен[іи]\s+ді[їй]/i.test(s)
+  ) {
+    points.push(1);
+  }
+
+  if (/частин[аи]\s+перш[аої]+\s+статті\s*13/i.test(s) && /зловживан/i.test(s)) {
+    points.push(2);
+  }
+
+  return uniqueArray(points).map(Number).sort((a, b) => a - b);
+}
+
+function extractUnfairCompetitionArticles(text) {
+  const s = normalizeSpaces(text);
+  const articles = [];
+
+  const patterns = [
+    /статт(?:і|ею|я)\s*(15\s*[-–—]?\s*1|15\s*¹|15¹|\d{1,2})\s+Закону\s+України\s+«?Про\s+захист\s+від\s+недобросовісної\s+конкуренції»?/gi,
+    /ст\.?\s*(15\s*[-–—]?\s*1|15\s*¹|15¹|\d{1,2})\s+Закону\s+України\s+«?Про\s+захист\s+від\s+недобросовісної\s+конкуренції»?/gi,
+    /статт(?:і|ею|я)\s*(15\s*[-–—]?\s*1|15\s*¹|15¹|\d{1,2})/gi
+  ];
+
+  for (const re of patterns) {
+    for (const m of s.matchAll(re)) {
+      const art = normalizeUnfairArticle(m[1]);
+      if (art) articles.push(art);
+    }
+  }
+
+  return uniqueArray(articles).sort((a, b) => Number(a.replace('-1', '.1')) - Number(b.replace('-1', '.1')));
+}
+
+function collectLegalBasis(analysis) {
+  return uniqueArray([
+    ...(Array.isArray(analysis?.legal_basis) ? analysis.legal_basis : []),
+    ...(Array.isArray(analysis?.classification?.secondary_legal_basis) ? analysis.classification.secondary_legal_basis : []),
+    ...(Array.isArray(analysis?.classification?.legal_basis) ? analysis.classification.legal_basis : []),
+    analysis?.classification?.primary_article,
+    analysis?.classification?.primary_label
+  ]);
+}
+
+function inferPrimaryCodeFromText(text, analysis = {}) {
+  const legalBasisText = compactTextParts(
+    collectLegalBasis(analysis),
+    analysis?.violation_summary,
+    analysis?.amcu_reasoning,
+    analysis?.classification?.primary_code,
+    analysis?.classification?.primary_article,
+    analysis?.classification?.primary_label
+  );
+
+  const article50Points = extractArticle50Points(legalBasisText);
+  const unfairArticles = extractUnfairCompetitionArticles(legalBasisText);
+
+  // Якщо безпосередня норма ст. 50 є в legal_basis, вона має пріоритет.
+  // Це захищає кейси "неподання інформації у справі про недобросовісну конкуренцію":
+  // primary має бути zek:50:13, а не unfair:*.
+  if (article50Points.length) return `zek:50:${article50Points[0]}`;
+  if (unfairArticles.length) return `unfair:${unfairArticles[0]}`;
+
+  const broaderText = compactTextParts(
+    legalBasisText,
+    String(text || '').slice(0, 25000),
+    String(text || '').slice(-12000)
+  );
+
+  const broaderArticle50Points = extractArticle50Points(broaderText);
+  const broaderUnfairArticles = extractUnfairCompetitionArticles(broaderText);
+
+  if (broaderArticle50Points.length) return `zek:50:${broaderArticle50Points[0]}`;
+  if (broaderUnfairArticles.length) return `unfair:${broaderUnfairArticles[0]}`;
+
+  return null;
+}
+
+function buildCanonicalClassification(analysis, text, fallbackLawArea = null) {
+  const secondaryLegalBasis = collectLegalBasis(analysis);
+  const relevantText = compactTextParts(
+    secondaryLegalBasis,
+    analysis?.violation_summary,
+    analysis?.amcu_reasoning,
+    analysis?.sanction,
+    String(text || '').slice(0, 25000),
+    String(text || '').slice(-12000)
+  );
+
+  const article50Points = uniqueArray([
+    ...(Array.isArray(analysis?.classification?.article_50_points) ? analysis.classification.article_50_points : []),
+    ...extractArticle50Points(relevantText)
+  ]).map(Number).filter((p) => Object.hasOwn(ZEK_ARTICLE_50_TAXONOMY, p)).sort((a, b) => a - b);
+
+  const unfairCompetitionArticles = uniqueArray([
+    ...(Array.isArray(analysis?.classification?.unfair_competition_articles) ? analysis.classification.unfair_competition_articles : []),
+    ...extractUnfairCompetitionArticles(relevantText)
+  ]).map(normalizeUnfairArticle).filter(Boolean);
+
+  const geminiPrimary = normalizePrimaryCode(analysis?.classification?.primary_code);
+  const inferredPrimary = inferPrimaryCodeFromText(text, analysis);
+  const primaryCode = inferredPrimary || geminiPrimary;
+
+  const built = classificationFromPrimaryCode(primaryCode, {
+    article_50_points: article50Points,
+    unfair_competition_articles: unfairCompetitionArticles,
+    secondary_legal_basis: secondaryLegalBasis
+  });
+
+  if (built) return built;
+
+  const lawFamily =
+    analysis?.classification?.law_family
+    || fallbackLawArea
+    || analysis?.law_area
+    || 'other';
+
+  return {
+    law_family: lawFamily,
+    primary_code: 'other',
+    primary_article: null,
+    primary_label: 'Інше / потребує перевірки',
+    article_50_points: article50Points,
+    unfair_competition_articles: unfairCompetitionArticles,
+    secondary_legal_basis: secondaryLegalBasis
+  };
+}
+
+function normalizeSanctionAmounts(value) {
+  if (!Array.isArray(value)) return [];
+
+  return value.map((item) => {
+    if (item && typeof item === 'object') {
+      const amount = item.amount_uah ?? item.amount ?? item.value ?? null;
+      const normalizedAmount = typeof amount === 'number'
+        ? amount
+        : Number(String(amount || '').replace(/[^\d.,]/g, '').replace(',', '.')) || null;
+
+      return {
+        party: item.party || item.subject || null,
+        amount_uah: normalizedAmount,
+        note: item.note || null
+      };
     }
 
-    const oldest = geminiUsageWindow[0];
-    const waitMs = oldest
-      ? Math.max(1000, GEMINI_QUOTA_WINDOW_MS - (now - oldest.ts) + GEMINI_RETRY_BUFFER_MS)
-      : GEMINI_RETRY_BUFFER_MS;
-
-    console.log(
-      `Gemini quota throttle: waiting ${Math.ceil(waitMs / 1000)}s `
-      + `(usedRequests=${usedRequests}/${GEMINI_RPM_LIMIT}, `
-      + `usedInputTokens≈${usedTokens}/${GEMINI_TPM_LIMIT}, `
-      + `nextInputTokens≈${reservedTokens})`
-    );
-
-    await sleep(waitMs);
-  }
-}
-
-function parseGeminiRetryDelayMs(payload) {
-  const retryDelay =
-    payload?.error?.details?.find((d) => d?.['@type']?.includes('RetryInfo'))?.retryDelay;
-
-  if (typeof retryDelay === 'string') {
-    const seconds = retryDelay.match(/^([\d.]+)s$/i);
-    if (seconds) return Math.ceil(Number(seconds[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
-
-    const millis = retryDelay.match(/^([\d.]+)ms$/i);
-    if (millis) return Math.ceil(Number(millis[1])) + GEMINI_RETRY_BUFFER_MS;
-  }
-
-  const message = payload?.error?.message || '';
-  const m = String(message).match(/retry\s+in\s+([\d.]+)s/i);
-  if (m) return Math.ceil(Number(m[1]) * 1000) + GEMINI_RETRY_BUFFER_MS;
-
-  return 60_000 + GEMINI_RETRY_BUFFER_MS;
-}
-
-function isGeminiQuotaError(status, payload) {
-  return status === 429 || payload?.error?.status === 'RESOURCE_EXHAUSTED';
+    return null;
+  }).filter(Boolean);
 }
 
 function buildGeminiPrompt({ text, meta, fileName, resourceTitle }) {
-  return `Ти юрист у сфері конкурентної практики АМКУ.
+  const article50List = Object.entries(ZEK_ARTICLE_50_TAXONOMY)
+    .map(([point, label]) => `- zek:50:${point}: п. ${point} ст. 50 — ${label}`)
+    .join('\n');
 
-Проаналізуй текст рішення Антимонопольного комітету України.
+  const unfairList = Object.entries(UNFAIR_COMPETITION_TAXONOMY)
+    .map(([article, label]) => `- unfair:${article}: ст. ${article} — ${label}`)
+    .join('\n');
+
+  return `Ти юрист у сфері конкурентної практики Антимонопольного комітету України.
+
+Проаналізуй текст рішення АМКУ і сформуй структурований JSON для бази практики та майбутнього дашборду.
 
 Поверни виключно валідний JSON без Markdown, без коментарів і без пояснень поза JSON.
+
+Ключове правило класифікації:
+Класифікуй рішення за безпосереднім порушенням, за яке суб’єкта притягнуто до відповідальності / на яке накладено санкцію.
+
+Важливі уточнення:
+- Якщо рішення про неподання інформації у межах розслідування недобросовісної конкуренції, primary_code має бути "zek:50:13", а не "unfair:*".
+- Якщо рішення про подання інформації в неповному обсязі, primary_code має бути "zek:50:14".
+- Якщо рішення про подання недостовірної інформації, primary_code має бути "zek:50:15".
+- Якщо рішення про концентрацію без дозволу АМКУ, primary_code має бути "zek:50:12".
+- Якщо рішення про поширення інформації, що вводить в оману, primary_code має бути "unfair:15-1".
+- Якщо рішення містить кілька порушень, article_50_points або unfair_competition_articles мають містити всі знайдені норми, але primary_code постав за основним/першим порушенням, за яке накладена санкція.
+- Не вигадуй інформацію. Якщо певне поле не встановлюється з тексту — постав null або порожній масив.
+
+Довідник primary_code для ст. 50 Закону України «Про захист економічної конкуренції»:
+${article50List}
+
+Довідник primary_code для Закону України «Про захист від недобросовісної конкуренції»:
+${unfairList}
 
 Завдання:
 1. Визнач реквізити рішення: номер і дата.
 2. Визнач суб’єкта/суб’єктів, яких притягнуто до відповідальності.
-3. Коротко опиши суть порушення і вкажи порушену норму закону.
-4. Сформулюй ключовий висновок / правову кваліфікацію АМКУ. Зазвичай це розділ «Правова кваліфікація дій ...».
-5. Витягни позицію порушника, заперечення або зауваження, якщо вони є. Зазвичай це розділ «Заперечення та зауваження на подання ...».
-6. Витягни санкцію: розмір штрафу, зобов’язання, інші наслідки. Часто санкція є на початку і в резолютивній частині рішення.
-7. Якщо певної інформації немає в тексті — постав null.
-8. Не вигадуй інформацію. Якщо в тексті є прихована/обмежена інформація — так і зазнач.
-9. Якщо це не рішення про порушення законодавства про захист економічної конкуренції або законодавства про захист від недобросовісної конкуренції — постав is_relevant=false.
+3. Визнач чітку юридичну класифікацію за довідниками вище.
+4. Коротко опиши суть порушення і порушену норму.
+5. Сформулюй ключовий висновок / правову кваліфікацію АМКУ.
+6. Витягни позицію порушника, заперечення або зауваження, якщо вони є.
+7. Витягни санкцію: розмір штрафу, зобов’язання, інші наслідки.
+8. Сформуй 3-7 ключових практичних висновків для юриста.
+9. Витягни ключові докази / фактори, на які спирався АМКУ.
+10. Визнач ринок або сектор, якщо це можливо.
+11. Сформуй 10-20 search_keywords українською для пошуку по дашборду.
 
 Очікувана JSON-структура:
 {
   "is_relevant": true,
   "decision_number": "",
   "decision_date": "YYYY-MM-DD",
-  "law_area": "economic_competition | unfair_competition | other",
+  "classification": {
+    "law_family": "economic_competition | unfair_competition | other",
+    "primary_code": "zek:50:1 | zek:50:2 | ... | unfair:4 | unfair:15-1 | other",
+    "primary_article": "",
+    "primary_label": "",
+    "article_50_points": [],
+    "unfair_competition_articles": [],
+    "secondary_legal_basis": []
+  },
   "liable_parties": [""],
   "violation_summary": "",
   "legal_basis": [""],
   "amcu_reasoning": "",
   "respondent_position": "",
   "sanction": "",
-  "important_notes": [""],
+  "sanction_amounts": [
+    {
+      "party": "",
+      "amount_uah": 0,
+      "note": ""
+    }
+  ],
+  "key_takeaways": [""],
+  "evidence_factors": [""],
+  "market_or_sector": "",
+  "search_keywords": [""],
   "confidence": "high | medium | low"
 }
 
@@ -746,6 +1012,15 @@ async function analyzeWithGemini(input) {
       is_relevant: true,
       decision_number: input.meta.decision_number,
       decision_date: input.meta.decision_date,
+      classification: {
+        law_family: input.classification.lawArea || 'economic_competition',
+        primary_code: null,
+        primary_article: null,
+        primary_label: null,
+        article_50_points: [],
+        unfair_competition_articles: [],
+        secondary_legal_basis: []
+      },
       law_area: input.classification.lawArea || 'economic_competition',
       liable_parties: [],
       violation_summary: '[SKIP_GEMINI] Рішення відібрано regex-фільтром як потенційно релевантне.',
@@ -753,6 +1028,11 @@ async function analyzeWithGemini(input) {
       amcu_reasoning: null,
       respondent_position: null,
       sanction: null,
+      sanction_amounts: [],
+      key_takeaways: [],
+      evidence_factors: [],
+      market_or_sector: null,
+      search_keywords: [],
       important_notes: ['Gemini-аналіз пропущено, бо SKIP_GEMINI=true.'],
       confidence: 'low'
     };
@@ -764,14 +1044,11 @@ async function analyzeWithGemini(input) {
   const url =
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-  const promptText = buildGeminiPrompt(input);
-  const estimatedInputTokens = estimateGeminiInputTokens(promptText);
-
   const body = {
     contents: [
       {
         role: 'user',
-        parts: [{ text: promptText }]
+        parts: [{ text: buildGeminiPrompt(input) }]
       }
     ],
     generationConfig: {
@@ -780,45 +1057,22 @@ async function analyzeWithGemini(input) {
     }
   };
 
-  let lastError = null;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
 
-  for (let attempt = 0; attempt <= GEMINI_RETRY_MAX; attempt += 1) {
-    await waitForGeminiQuota(estimatedInputTokens);
+  const payload = await res.json().catch(() => null);
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    const payload = await res.json().catch(() => null);
-
-    if (res.ok) {
-      const rawText =
-        payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
-
-      return parseJsonLenient(rawText);
-    }
-
-    const message = `Gemini HTTP ${res.status}: ${JSON.stringify(payload).slice(0, 1200)}`;
-    lastError = new Error(message);
-
-    if (isGeminiQuotaError(res.status, payload) && attempt < GEMINI_RETRY_MAX) {
-      const waitMs = parseGeminiRetryDelayMs(payload);
-
-      console.warn(
-        `Gemini quota error. Retry ${attempt + 1}/${GEMINI_RETRY_MAX} `
-        + `after ${Math.ceil(waitMs / 1000)}s.`
-      );
-
-      await sleep(waitMs);
-      continue;
-    }
-
-    throw lastError;
+  if (!res.ok) {
+    throw new Error(`Gemini HTTP ${res.status}: ${JSON.stringify(payload).slice(0, 1200)}`);
   }
 
-  throw lastError || new Error('Gemini request failed');
+  const rawText =
+    payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
+
+  return parseJsonLenient(rawText);
 }
 
 function parseJsonLenient(rawText) {
@@ -840,26 +1094,74 @@ function parseJsonLenient(rawText) {
 }
 
 function normalizeAnalysis(analysis, meta, extra) {
+  const canonicalClassification = buildCanonicalClassification(
+    analysis,
+    extra.text || '',
+    extra.classification?.lawArea || analysis.law_area || null
+  );
+
+  const legalBasis = uniqueArray([
+    ...(Array.isArray(analysis.legal_basis) ? analysis.legal_basis : []),
+    ...(canonicalClassification.secondary_legal_basis || [])
+  ]);
+
   const out = {
+    decision_key: null,
     decision_number: analysis.decision_number || meta.decision_number || null,
     decision_date: normalizeDateValue(analysis.decision_date) || meta.decision_date || null,
-    law_area: analysis.law_area || extra.classification?.lawArea || null,
+    year: null,
+    month: null,
+
+    classification: canonicalClassification,
+    primary_code: canonicalClassification.primary_code,
+    primary_label: canonicalClassification.primary_label,
+
+    // Backward-compatible fields for older scripts / temporary views.
+    law_area: canonicalClassification.law_family || analysis.law_area || extra.classification?.lawArea || null,
+    legal_basis: legalBasis,
+
     liable_parties: Array.isArray(analysis.liable_parties) ? analysis.liable_parties.filter(Boolean) : [],
     violation_summary: analysis.violation_summary || null,
-    legal_basis: Array.isArray(analysis.legal_basis) ? analysis.legal_basis.filter(Boolean) : [],
     amcu_reasoning: analysis.amcu_reasoning || null,
     respondent_position: analysis.respondent_position || null,
     sanction: analysis.sanction || null,
+    sanction_amounts: normalizeSanctionAmounts(analysis.sanction_amounts),
+
+    key_takeaways: Array.isArray(analysis.key_takeaways) ? analysis.key_takeaways.filter(Boolean) : [],
+    evidence_factors: Array.isArray(analysis.evidence_factors) ? analysis.evidence_factors.filter(Boolean) : [],
+    market_or_sector: analysis.market_or_sector || null,
+    search_keywords: Array.isArray(analysis.search_keywords) ? uniqueArray(analysis.search_keywords) : [],
+
     important_notes: Array.isArray(analysis.important_notes) ? analysis.important_notes.filter(Boolean) : [],
     confidence: analysis.confidence || null,
+
     source_file: extra.fileName,
     source_resource: extra.resourceTitle,
     source_resource_id: extra.resourceId,
     source_url: extra.resourceUrl,
+    source: {
+      resource_id: extra.resourceId,
+      resource_title: extra.resourceTitle,
+      file: extra.fileName,
+      url: extra.resourceUrl
+    },
+
     file_sha256: extra.fileHash,
-    analyzed_at: new Date().toISOString()
+    analyzed_at: new Date().toISOString(),
+    analysis: {
+      model: GEMINI_MODEL,
+      prompt_version: PROMPT_VERSION,
+      analyzed_at: new Date().toISOString()
+    }
   };
 
+  if (out.decision_date) {
+    const [year, month] = out.decision_date.split('-').map((x) => Number.parseInt(x, 10));
+    out.year = Number.isFinite(year) ? year : null;
+    out.month = Number.isFinite(month) ? month : null;
+  }
+
+  out.decision_key = `${out.decision_date || 'unknown-date'}|${out.decision_number || extra.fileHash}`;
   out.sort_key = `${out.decision_date || '9999-99-99'}|${out.decision_number || ''}`;
 
   return out;
@@ -1083,6 +1385,11 @@ function renderDigestText(rows) {
 }
 
 async function sendDigest(rows, stats) {
+  if (EMAIL_DISABLED) {
+    console.log('Email disabled: EMAIL_DISABLED=true.');
+    return;
+  }
+
   const emailTo = process.env.EMAIL_TO;
   const emailForce = boolEnv('EMAIL_FORCE', false);
 
@@ -1134,19 +1441,7 @@ async function processResource(resource, state) {
   const signature = resourceSignature(resource);
   const prev = state.processed_resources[id];
 
-  const prevResourceClean =
-    prev?.state_version === RESOURCE_STATE_VERSION
-    && Number(prev?.errors || 0) === 0
-    && prev?.incomplete !== true;
-
-  if (
-    !LOCAL_ZIP
-    && !FORCE
-    && prevResourceClean
-    && prev?.signature
-    && signature
-    && prev.signature === signature
-  ) {
+  if (!LOCAL_ZIP && !FORCE && prev?.signature && signature && prev.signature === signature) {
     return {
       skippedResource: true,
       reason: 'metadata_signature_unchanged',
@@ -1167,7 +1462,7 @@ async function processResource(resource, state) {
     zipSha = await downloadFile(resource.url, zipPath);
   }
 
-  if (!FORCE && prevResourceClean && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
+  if (!FORCE && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
     return {
       skippedResource: true,
       reason: 'zip_hash_unchanged',
@@ -1268,7 +1563,8 @@ async function processResource(resource, state) {
         resourceTitle: title,
         resourceId: id,
         resourceUrl: resource.url,
-        fileHash
+        fileHash,
+        text
       });
 
       additions.push(row);
@@ -1306,16 +1602,13 @@ async function processResource(resource, state) {
   }
 
   state.processed_resources[id] = {
-    state_version: RESOURCE_STATE_VERSION,
     title,
     url: resource.url,
     signature,
     zip_sha256: zipSha,
     processed_at: new Date().toISOString(),
     docs_seen: stats.docsSeen,
-    docs_relevant: stats.docsRelevant,
-    errors: stats.errors,
-    incomplete: stats.errors > 0
+    docs_relevant: stats.docsRelevant
   };
 
   return { skippedResource: false, additions, stats };
@@ -1415,6 +1708,11 @@ async function main() {
   if (!DRY_RUN) {
     await writeJson(STATE_PATH, state);
     await writeJson(RESULTS_PATH, merged);
+
+    if (PRACTICE_DB_ENABLED) {
+      await writeJson(PRACTICE_RESULTS_PATH, merged);
+      console.log(`Practice DB written: ${PRACTICE_RESULTS_PATH}`);
+    }
   } else {
     console.log('DRY_RUN=true: state/results files were not written.');
   }
