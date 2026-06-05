@@ -83,6 +83,18 @@
       "docs_relevant": 0,
       "errors": 0,
       "incomplete": false
+    },
+    "cca13352-99b1-4085-b286-6f3fe1053b43": {
+      "state_version": 4,
+      "title": "Рішення АМКУ за жовтень 2025 (№ 596-р - №784-р)",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/cca13352-99b1-4085-b286-6f3fe1053b43/download/rishennia-amku-za-zovten-2025.zip",
+      "signature": "2025-11-27T13:34:07.438779|2025-10-15T14:55:59.596053|20228309|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/cca13352-99b1-4085-b286-6f3fe1053b43/download/rishennia-amku-za-zovten-2025.zip",
+      "zip_sha256": "87f2c3f52b4c03aec5d2d6ab92baf2d76987cd493caf362ef43e9922f602624a",
+      "processed_at": "2026-06-05T10:02:35.076Z",
+      "docs_seen": 189,
+      "docs_relevant": 19,
+      "errors": 19,
+      "incomplete": true
     }
   },
   "processed_decisions": {
@@ -7067,31 +7079,1723 @@
       "source_resource_id": "2c319a2c-a491-460a-8538-780f9614bb02",
       "source_file": "rishennia-amku-za-listopad/Рішення від 27.12.2025 № 920-р.docx",
       "updated_at": "2026-06-05T09:20:59.743Z"
+    },
+    "2025-10-02|596-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "596-р",
+      "decision_date": "2025-10-02",
+      "file_sha256": "301e7451dca57ca84c65cb363d27bad0822f37f8fe759fac7425c5db9aba87dc",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 02.10.2025 № 596-р.doc",
+      "updated_at": "2026-06-05T10:02:28.031Z"
+    },
+    "2025-10-02|597-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "597-р",
+      "decision_date": "2025-10-02",
+      "file_sha256": "500dd8e509157f5d3a86d9de9ea875f8fcc3b8a8c66d17712b2fb107644ee97a",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 02.10.2025 № 597-р.doc",
+      "updated_at": "2026-06-05T10:02:28.035Z"
+    },
+    "2025-10-02|598-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "598-р",
+      "decision_date": "2025-10-02",
+      "file_sha256": "8d3ada485e7063f2bbba4d79efe6350a2ba4adcd622d31f5b6688d807c71209d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 02.10.2025 № 598-р.doc",
+      "updated_at": "2026-06-05T10:02:28.039Z"
+    },
+    "2025-10-02|599-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "599-р",
+      "decision_date": "2025-10-02",
+      "file_sha256": "3366e3f24ccd2f9acb80b7d15e82bb208bd72f70cf0df214735a0623615bd766",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 02.10.2025 № 599-р.docx",
+      "updated_at": "2026-06-05T10:02:28.101Z"
+    },
+    "2025-10-02|603-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "603-р",
+      "decision_date": "2025-10-02",
+      "file_sha256": "bcdcfc9c8382224f7ffec1d1594fac0a62db06b15e09c079966c6c4ab31dfe11",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 02.10.2025 № 603-р.docx",
+      "updated_at": "2026-06-05T10:02:28.775Z"
+    },
+    "2025-10-09|604-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "604-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "51783edefd42ab048e0ceeb2661e3a7c7c46ce66084e7bbc49e4c3dd6517c6a2",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 604-р.doc",
+      "updated_at": "2026-06-05T10:02:28.780Z"
+    },
+    "2025-10-09|605-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "605-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "02cc99f4225df5fcccafad15f60376d5e5025eea19d7dced3a7c20f9eb19d9cd",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 605-р.doc",
+      "updated_at": "2026-06-05T10:02:28.783Z"
+    },
+    "2025-10-09|606-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "606-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "0b2b29a9623df79931b06a8e7f77c9bf2f68bdc03cd08164301d17737b9f6c6d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 606-р.doc",
+      "updated_at": "2026-06-05T10:02:28.787Z"
+    },
+    "2025-10-09|607-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "607-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "e2b70b46e7d8717c56bc8326898dc8fe3ec757566737e9c67916a3e9e00bb09c",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 607-р.docx",
+      "updated_at": "2026-06-05T10:02:28.853Z"
+    },
+    "2025-10-09|608-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "608-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "547df9268b98b00ed759337d77b3c86081bdaeb404f85981d2c75e51828b4dbb",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 608-р.doc",
+      "updated_at": "2026-06-05T10:02:28.858Z"
+    },
+    "2025-10-09|609-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "609-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "5bcaa04a4b28f7af68a4be266effcf0bcb418c95c5fc757ef77ffafe8119c70c",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 609-р.doc",
+      "updated_at": "2026-06-05T10:02:28.862Z"
+    },
+    "2025-10-09|610-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "610-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "c22fbfed6943207020a50d72c2d51396edd2738a4cd555aa618841db24b31626",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 610-р.doc",
+      "updated_at": "2026-06-05T10:02:28.866Z"
+    },
+    "2025-10-09|611-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "611-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "070a4f12a315388f0bb83f7ac2296bfca06661e644682551d465728e91f9eb95",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 611-р.doc",
+      "updated_at": "2026-06-05T10:02:28.870Z"
+    },
+    "2025-10-09|612-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "612-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "fc6cd49a32aeafcaf86a7fff2a9052c8ff37352cdb8e521c0e86ef82424fdf56",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 612-р.doc",
+      "updated_at": "2026-06-05T10:02:28.874Z"
+    },
+    "2025-10-09|613-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "613-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "a3c78f5d11880dca163344541019dbf14e555a18859fe5a9c0d2195a0bd1d92e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 613-р.doc",
+      "updated_at": "2026-06-05T10:02:28.877Z"
+    },
+    "2025-10-09|614-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "614-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "472e6fb8908838ecb862f12a693b12ca614263ec8776df0c0d0164188cc19446",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 614-р.doc",
+      "updated_at": "2026-06-05T10:02:28.881Z"
+    },
+    "2025-10-09|615-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "615-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "f75b78b3b1ba217e40a2feb95aa64ef2e59ba5a5e2a42ef14df38b2b1e90d424",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 615-р.doc",
+      "updated_at": "2026-06-05T10:02:28.885Z"
+    },
+    "2025-10-09|616-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "616-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "ff03e872daecab6ccec11c0101070eae84451b5f1c749b99b85126efed528157",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 616-р.doc",
+      "updated_at": "2026-06-05T10:02:28.889Z"
+    },
+    "2025-10-09|617-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "617-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "e035d3d2c772475050b61e65f3315b34cbead982b17bf7a4d2c46d6d213ea0b4",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 617-р.doc",
+      "updated_at": "2026-06-05T10:02:28.893Z"
+    },
+    "2025-10-09|618-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "618-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "a03df92c079dc0abb89aa5528e095dcb1f21b488791ff6f410af9423902bbce8",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 618-р.doc",
+      "updated_at": "2026-06-05T10:02:28.896Z"
+    },
+    "2025-10-09|621-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "621-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "dfa1a289adf7fd1ba76436bc6256ffe9f418f7a0fc22d93a69f36422376e22e6",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 621-р.doc",
+      "updated_at": "2026-06-05T10:02:29.941Z"
+    },
+    "2025-10-09|622-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "622-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "c8b6a53e0a6c3a1eb46f78d010d2fc48373acb5f62f4362ad5fe887b06d19fc8",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 622-р.doc",
+      "updated_at": "2026-06-05T10:02:29.945Z"
+    },
+    "2025-10-09|623-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "623-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "e92c6f3b6db9bbbe6596bab8af0957d6b292bd76ec6c5e522884d1cf505620c9",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 623-р.doc",
+      "updated_at": "2026-06-05T10:02:29.949Z"
+    },
+    "2025-10-09|624-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "624-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "1143f3e45866b41fcd899c7fe7939fb73b3333a2fa174052c0798a2576936a97",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 624-р.doc",
+      "updated_at": "2026-06-05T10:02:29.952Z"
+    },
+    "2025-10-09|625-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "625-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "d6fefa67eac11a58cbb43dc5c3b212bc26a5ddd65a2dd0b26e0b4228f5e9c7c0",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 625-р.doc",
+      "updated_at": "2026-06-05T10:02:29.956Z"
+    },
+    "2025-10-09|626-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "626-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "b010a522ded731c07db6d44ba6e976c2ffbeff10e883dc5af816572d796e2951",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 626-р.doc",
+      "updated_at": "2026-06-05T10:02:29.960Z"
+    },
+    "2025-10-09|627-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "627-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "f4c4e410428023060c9f04568686696bd8ed75796b9292a0bcce0df9d9b4c2dd",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 627-р.doc",
+      "updated_at": "2026-06-05T10:02:29.965Z"
+    },
+    "2025-10-09|628-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "628-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "8878f28d29ffce38e0a85256842f74ee5221df43866f0504507d292332ed9356",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 628-р.doc",
+      "updated_at": "2026-06-05T10:02:29.968Z"
+    },
+    "2025-10-09|629-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "629-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "93e3fac3a0e4e2b567d0434a4fb8ec3fc88784d5588a72b915c7a217c357c196",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 629-р.doc",
+      "updated_at": "2026-06-05T10:02:29.972Z"
+    },
+    "2025-10-09|630-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "630-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "f9753f2df13e21affe96c16a252c429404873aba3ea5a3e934f83418511092ba",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 630-р.doc",
+      "updated_at": "2026-06-05T10:02:29.976Z"
+    },
+    "2025-10-09|631-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "631-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "56fc7926fa2786937c9df3e9636fdea17d9e27f9e4a1bc32605d44d2749bb072",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 631-р.doc",
+      "updated_at": "2026-06-05T10:02:29.980Z"
+    },
+    "2025-10-09|632-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "632-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "877538c9c49c450b6757ba369f36d1d2798b7b0dd5b8ce8fbe328807bae98743",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 632-р.doc",
+      "updated_at": "2026-06-05T10:02:29.984Z"
+    },
+    "2025-10-09|634-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "634-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "b7b5be3d11b299e666d22f404f104c84c96b2afc57aa92faa90d55b584dc41ea",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 634-р.doc",
+      "updated_at": "2026-06-05T10:02:29.991Z"
+    },
+    "2025-10-09|635-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "635-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "afe6dad0e0ef0e5b2351503c6ee77752775992fb09ba0b3fa23c42fa807dd538",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 635-р.doc",
+      "updated_at": "2026-06-05T10:02:29.995Z"
+    },
+    "2025-10-09|636-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "636-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "c131fb60b4348a156652f16f37c27a7a0586c162f590ef3e73e2d89ed64cdeab",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 636-р.doc",
+      "updated_at": "2026-06-05T10:02:29.999Z"
+    },
+    "2025-10-09|637-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "637-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "cb89cab67274ff2030ed292c484ee8c4b7bdc9f471ba607d1273cfbd7d7a952b",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 637-р.doc",
+      "updated_at": "2026-06-05T10:02:30.003Z"
+    },
+    "2025-10-09|638-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "638-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "e6ecc8078b9a6a79203b9b990221c5f3c9a81893e3166803b71c2d19774b500b",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 638-р.doc",
+      "updated_at": "2026-06-05T10:02:30.007Z"
+    },
+    "2025-10-09|639-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "639-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "9d999a72c234ea1acabb21f6a2125ff5495ba09088c8316e7a7108abd34669b4",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 639-р.doc",
+      "updated_at": "2026-06-05T10:02:30.011Z"
+    },
+    "2025-10-09|640-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "640-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "8d765fdd18a65da2c654268a4d8bc40edc1bf71550796f835136ef514c07c50e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 640-р.doc",
+      "updated_at": "2026-06-05T10:02:30.015Z"
+    },
+    "2025-10-09|641-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "641-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "c20e6814a448401dad085b0c3e58aa0deb910764d128ff0fe2e5357c0707e140",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 641-р.doc",
+      "updated_at": "2026-06-05T10:02:30.020Z"
+    },
+    "2025-10-09|642-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "642-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "9d2e3a0974e48eb9d9ace1ebd3f27cf8c56f4a227b478b9c26121ccb2f611d0c",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 642-р.doc",
+      "updated_at": "2026-06-05T10:02:30.024Z"
+    },
+    "2025-10-09|643-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "643-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "c8b3bce105e5bc66289a3c5d76aa2d0e07c926d76f8deb2090763f7ac9a107ed",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 643-р.doc",
+      "updated_at": "2026-06-05T10:02:30.028Z"
+    },
+    "2025-10-09|644-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "644-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "ee4b1318a11cb8deb15530b79fdccb4712de4f84c6783d456a14935dfc1f8e79",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 644-р.doc",
+      "updated_at": "2026-06-05T10:02:30.032Z"
+    },
+    "2025-10-09|645-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "645-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "58a70f62e7e1072819d9e8ca3b3fd950eeae442e505c3f8fa96421c61b21ad7d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 645-р.doc",
+      "updated_at": "2026-06-05T10:02:30.036Z"
+    },
+    "2025-10-09|646-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "646-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "b096d8f41b9670c8f00bfe16909e9840d77d0334dd77a01cec0ced61df407c90",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 646-р.doc",
+      "updated_at": "2026-06-05T10:02:30.040Z"
+    },
+    "2025-10-09|647-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "647-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "610906197a3cf0d25dfffe4fe716bcd7ab7784dfd97ecfea88decce8b9157fe4",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 647-р.doc",
+      "updated_at": "2026-06-05T10:02:30.044Z"
+    },
+    "2025-10-09|648-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "648-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "3ed9f7ab4f126003995b98f4d4e84ded637af3c03419f0cab24ce5a9d0a82ee6",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 648-р.doc",
+      "updated_at": "2026-06-05T10:02:30.048Z"
+    },
+    "2025-10-09|649-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "649-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "ec1e6b2b6d4ba197d58c82f3560c3080b70dad508764d3553bbb9fc45e6453c0",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 649-р.doc",
+      "updated_at": "2026-06-05T10:02:30.052Z"
+    },
+    "2025-10-09|650-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "650-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "e49511a916e8937ea376a5c6fb3ddb534c1d51d9f7736255636c76d9be297dc5",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 650-р.doc",
+      "updated_at": "2026-06-05T10:02:30.056Z"
+    },
+    "2025-10-09|651-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "651-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "8be9e274d0f5f3743fc904fe9b5cc8002889fc5ba790cb2b1de76fe80db2643a",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 651-р.doc",
+      "updated_at": "2026-06-05T10:02:30.060Z"
+    },
+    "2025-10-09|652-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "652-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "50b13f30a46f2dad25e8bf7675ce4e5e7efe48f8581cf4c0d1ea3f08f26d3eda",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 652-р.doc",
+      "updated_at": "2026-06-05T10:02:30.063Z"
+    },
+    "2025-10-09|653-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "653-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "8ebe3e67fbb848469c3909c6a2a94068562cdbe373b34a307c3171ca7d000c6b",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 653-р.doc",
+      "updated_at": "2026-06-05T10:02:30.067Z"
+    },
+    "2025-10-09|654-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "654-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "03d0afc2109fa035b9b70180a461deb43c4935b2dbc6810c6bf1d765adf1fec6",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 654-р.doc",
+      "updated_at": "2026-06-05T10:02:30.071Z"
+    },
+    "2025-10-09|655-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "655-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "6aef09fa59823714316ea4a547adc216b432a17b212a10aee67c2dd91748f06e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 655-р.doc",
+      "updated_at": "2026-06-05T10:02:30.075Z"
+    },
+    "2025-10-09|656-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "656-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "a2e67dadd27c1a01adc589051394414c1c4fa15e323386a651c6bddd2aa3930d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 656-р.doc",
+      "updated_at": "2026-06-05T10:02:30.079Z"
+    },
+    "2025-10-09|657-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "657-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "207cda74f21168ff1ee50e16d0df80b4a8d2b83d030f2cb0b5c5a8543c9793d8",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 657-р.doc",
+      "updated_at": "2026-06-05T10:02:30.083Z"
+    },
+    "2025-10-09|658-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "658-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "65b223141dc07d68f588f3ebfc2e18a4ca3166389e20bd2b76140aa7c0204358",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 658-р.doc",
+      "updated_at": "2026-06-05T10:02:30.087Z"
+    },
+    "2025-10-09|659-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "659-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "143e61c0f1b41da3bceecabc59b9cfd1b3e3d7b6da446788ce2d3229f81ef791",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 659-р.doc",
+      "updated_at": "2026-06-05T10:02:30.091Z"
+    },
+    "2025-10-09|660-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "660-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "9eb834600cb81e726c6e366429b7279b3832c7d9683b6b24e0869debe7a4544d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 660-р.doc",
+      "updated_at": "2026-06-05T10:02:30.095Z"
+    },
+    "2025-10-09|661-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "661-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "77385987c23c52a1214a5f667c33b1f59e43b59ee4a548693ec6ba90fea4ee74",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 661-р.doc",
+      "updated_at": "2026-06-05T10:02:30.099Z"
+    },
+    "2025-10-09|662-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "662-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "70d09a196d9ab3bd99e35576c526c3b9d0c06e2b213ea0956a1e2781e676afcb",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 662-р.doc",
+      "updated_at": "2026-06-05T10:02:30.103Z"
+    },
+    "2025-10-09|663-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "663-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "4f58bd171434cbc18de170a7bb8b2baac04d7cfb2c60d0795edf072c958e0896",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 663-р.doc",
+      "updated_at": "2026-06-05T10:02:30.107Z"
+    },
+    "2025-10-09|664-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "664-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "7c2055d3afc11fa3fbebb6e0b48495c4972523cf36574ebe09bd8fdd4566374e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 664-р.doc",
+      "updated_at": "2026-06-05T10:02:30.110Z"
+    },
+    "2025-10-09|665-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "665-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "d4f971b79510b19089d9e62f42cfd39e3a97115fa9ce6f07edd7065c3eb89f9a",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 665-р.doc",
+      "updated_at": "2026-06-05T10:02:30.114Z"
+    },
+    "2025-10-09|666-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "666-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "301a494a22dd0f3d3bac90d0f53264d160f993a495a6fc1e0291b0c047b42126",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 666-р.doc",
+      "updated_at": "2026-06-05T10:02:30.118Z"
+    },
+    "2025-10-09|667-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "667-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "0b92f447a151194ef972e1f3f6a75d81da1718459cf91611759fce0f9883afd0",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 667-р.doc",
+      "updated_at": "2026-06-05T10:02:30.122Z"
+    },
+    "2025-10-09|668-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "668-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "ef3c1b6bc4e047b4851783e33aadafb41b82e95dea715941f7bb089beef47c6f",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 668-р.doc",
+      "updated_at": "2026-06-05T10:02:30.126Z"
+    },
+    "2025-10-09|669-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "669-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "a6ed81fc104c68dd909b86faa442809e58fd6f757936afefd16516b4fd04cca5",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 669-р.doc",
+      "updated_at": "2026-06-05T10:02:30.130Z"
+    },
+    "2025-10-09|670-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "670-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "073623b4757386105671189dcd982451f6cabfe358430e218878d297f75a7ca3",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 670-р.doc",
+      "updated_at": "2026-06-05T10:02:30.133Z"
+    },
+    "2025-10-09|671-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "671-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "3de0227d4fba0b1da01fa260fb7fe2a8111bc93ab9124bccfdf1bfc07acea3b7",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 671-р.doc",
+      "updated_at": "2026-06-05T10:02:30.137Z"
+    },
+    "2025-10-09|672-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "672-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "cef68a3d5ed5a23aad32b8a11fd354e381556e4d2ab62ff057a81ad3314310f0",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 672-р.doc",
+      "updated_at": "2026-06-05T10:02:30.141Z"
+    },
+    "2025-10-09|673-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "673-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "9f9cf7dd27be459c6cb14f7f61d64c31405498fd3b918d4345545f284fe73e55",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 673-р.doc",
+      "updated_at": "2026-06-05T10:02:30.145Z"
+    },
+    "2025-10-09|674-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "674-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "6760daec0b32100a093b068f7495cb05e5e6d2e04ca07a6e8c860f252633a17f",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 674-р.doc",
+      "updated_at": "2026-06-05T10:02:30.149Z"
+    },
+    "2025-10-09|675-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "675-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "3290c5291a7b9da5b2a6b9d816554dce070bfc84639719e0c25bcf28bf4eac08",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 675-р.doc",
+      "updated_at": "2026-06-05T10:02:30.153Z"
+    },
+    "2025-10-09|676-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "676-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "e25df4e2104012284e77cfb3eee108ac199d79ea72d1f8c3ca6e97da9a7f5f5e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 676-р.doc",
+      "updated_at": "2026-06-05T10:02:30.157Z"
+    },
+    "2025-10-09|677-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "677-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "5536e27427e971ef89057e03bf93831db25b1909f981fa93d62ddfd2f0b1c995",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 677-р.doc",
+      "updated_at": "2026-06-05T10:02:30.161Z"
+    },
+    "2025-10-09|678-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "678-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "a37c976c690f8cbffa24a75c6359fbc9e9d0b624492356a395e8c4f9cf3e1c44",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 678-р.doc",
+      "updated_at": "2026-06-05T10:02:30.164Z"
+    },
+    "2025-10-09|679-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "679-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "d438b87d260636d6129c27035e072aeb9ab9a5553220786c742c162a3a7a60c9",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 679-р.doc",
+      "updated_at": "2026-06-05T10:02:30.168Z"
+    },
+    "2025-10-09|680-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "680-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "ad685255796af757e55defe4316124a5976305f84dd2785bed5f614159a65691",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 680-р.doc",
+      "updated_at": "2026-06-05T10:02:30.172Z"
+    },
+    "2025-10-09|681-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "681-р",
+      "decision_date": "2025-10-09",
+      "file_sha256": "cc9f2277482ada5148a98a931e697d450c450978b570a7af1a313ee3ddefa611",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 09.10.2025 № 681-р.doc",
+      "updated_at": "2026-06-05T10:02:30.176Z"
+    },
+    "2025-10-16|682-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "682-р",
+      "decision_date": "2025-10-16",
+      "file_sha256": "5f374b7fa3ba295458e63ea943ac356be3f93a21d061e8587d832ad95d603a51",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 16.10.2025 № 682-р.doc",
+      "updated_at": "2026-06-05T10:02:30.180Z"
+    },
+    "2025-10-16|683-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "683-р",
+      "decision_date": "2025-10-16",
+      "file_sha256": "590dca49b2d4fc3112d7495caef220717faf6731c4b58166d14e24c70b41c140",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 16.10.2025 № 683-р.doc",
+      "updated_at": "2026-06-05T10:02:30.183Z"
+    },
+    "2025-10-16|684-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "684-р",
+      "decision_date": "2025-10-16",
+      "file_sha256": "c8d0e9bc9e87551862c6525abf78194f8392ea523388d26a8bf53be852cca71e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 16.10.2025 № 684-р.doc",
+      "updated_at": "2026-06-05T10:02:30.187Z"
+    },
+    "2025-10-16|685-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "685-р",
+      "decision_date": "2025-10-16",
+      "file_sha256": "5ca8d58b5930314b5f80312592ef01a7d957a3380143cd898113842c763844a5",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 16.10.2025 № 685-р.doc",
+      "updated_at": "2026-06-05T10:02:30.191Z"
+    },
+    "2025-10-16|686-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "686-р",
+      "decision_date": "2025-10-16",
+      "file_sha256": "8eb7af4a15df14cdc28e1b712bb06f95afdfa9777d64576c516a212e21cdfec2",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 16.10.2025 № 686-р.doc",
+      "updated_at": "2026-06-05T10:02:30.195Z"
+    },
+    "2025-10-16|687-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "687-р",
+      "decision_date": "2025-10-16",
+      "file_sha256": "fca83affd8ca58db81e2eb0bb2a0f09a0b35d1b6ca3609e5ba0c2d85a99ce5e2",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 16.10.2025 № 687-р.doc",
+      "updated_at": "2026-06-05T10:02:30.199Z"
+    },
+    "2025-10-23|688-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "688-р",
+      "decision_date": "2025-10-23",
+      "file_sha256": "c2014c612d8fa81b68d3ed10da3b89dd2b89d42ef903d4764aa508b7daf14fb1",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 23.10.2025 № 688-р.doc",
+      "updated_at": "2026-06-05T10:02:30.202Z"
+    },
+    "2025-10-23|692-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "692-р",
+      "decision_date": "2025-10-23",
+      "file_sha256": "555cc2a6de3d0ea26589c175a928fde6d50f2a2d3a885bfbf65f359bc6d411ef",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 23.10.2025 № 692-р.docx",
+      "updated_at": "2026-06-05T10:02:30.664Z"
+    },
+    "2025-10-23|693-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "693-р",
+      "decision_date": "2025-10-23",
+      "file_sha256": "242919190a74525dab25cc5581344fabf1bc81c9f37def22ffd222d2f4e8dec5",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 23.10.2025 № 693-р.doc",
+      "updated_at": "2026-06-05T10:02:30.671Z"
+    },
+    "2025-10-23|694-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "694-р",
+      "decision_date": "2025-10-23",
+      "file_sha256": "623ac125e0ee8a9d5c6d94614f2778797383032f2629fe72afd023a8372c1bd3",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 23.10.2025 № 694-р.docx",
+      "updated_at": "2026-06-05T10:02:31.004Z"
+    },
+    "2025-10-23|695-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "695-р",
+      "decision_date": "2025-10-23",
+      "file_sha256": "d670b8aa3f6c53d1b36845c2617ebf7e6daab58560cec4cd94c83f669cfb65bb",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 23.10.2025 № 695-р.docx",
+      "updated_at": "2026-06-05T10:02:31.142Z"
+    },
+    "2025-10-23|696-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "696-р",
+      "decision_date": "2025-10-23",
+      "file_sha256": "a840d50e894c3b936d9cc9a8cf722704365a03f66f2ebfc699a5e6edfcda171d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 23.10.2025 № 696-р.docx",
+      "updated_at": "2026-06-05T10:02:31.260Z"
+    },
+    "2025-10-30|698-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "698-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "5507b33ad34b39b4d2d8a6bd66b4948cc04baa4a3d7766320aedc7e87c38af4b",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 698-р.doc",
+      "updated_at": "2026-06-05T10:02:31.383Z"
+    },
+    "2025-10-30|699-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "699-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "216346035885ba908f7b481fa34a69647209dc25b2ab56386ce526137a876b47",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 699-р.doc",
+      "updated_at": "2026-06-05T10:02:31.387Z"
+    },
+    "2025-10-30|700-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "700-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "aedef5f90795e3d4d1906aaaf5693fe1b5ee806dca6afec68a936df0f7dd9a85",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 700-р.doc",
+      "updated_at": "2026-06-05T10:02:31.391Z"
+    },
+    "2025-10-30|701-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "701-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "c437de089edaa1b3e14464daf47c5080a3343d4566ee5cfe8dfb52698305d968",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 701-р.doc",
+      "updated_at": "2026-06-05T10:02:31.396Z"
+    },
+    "2025-10-30|702-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "702-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "f9493f235540c47ac0815f5837ce06282d6c1dee152dd71e222791934382f40d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 702-р.doc",
+      "updated_at": "2026-06-05T10:02:31.405Z"
+    },
+    "2025-10-30|703-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "703-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "21f8ad259b2f82581b6a6d8348857b91d696ab32c97e41e5a767a1c7ec3fd61d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 703-р.doc",
+      "updated_at": "2026-06-05T10:02:31.409Z"
+    },
+    "2025-10-30|704-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "704-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "e486740d7d37ae86d9deb2aa72988ccd5e91384a526961cc5bb276a1fc517dbf",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 704-р.doc",
+      "updated_at": "2026-06-05T10:02:31.413Z"
+    },
+    "2025-10-30|715-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "715-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "dcbb7a94d7aa0588d533645c7ca13be765cca81319b0859e8b3f4a1cc0b74ee0",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 715-р.doc",
+      "updated_at": "2026-06-05T10:02:34.799Z"
+    },
+    "2025-10-30|716-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "716-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "94cde7b840d72ed5675e9893a515dcad77eeaf290b81f57fb25b3dae70329541",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 716-р.doc",
+      "updated_at": "2026-06-05T10:02:34.804Z"
+    },
+    "2025-10-30|717-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "717-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "16220563515fe71c978cf03a51ca74385dd727d7b00f704ace7292e95bd03929",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 717-р.doc",
+      "updated_at": "2026-06-05T10:02:34.808Z"
+    },
+    "2025-10-30|718-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "718-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "9577a3d81d76501ad045476a2e305a6cffe62736aa4c99badacbaca0112b37a7",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 718-р.doc",
+      "updated_at": "2026-06-05T10:02:34.812Z"
+    },
+    "2025-10-30|719-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "719-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "a20c4aebcdec1e668b0f365e93a69b86d71c8ef608401224bf89c6ed9e330bb4",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 719-р.doc",
+      "updated_at": "2026-06-05T10:02:34.816Z"
+    },
+    "2025-10-30|720-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "720-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "866a985a8e8e370312148956b293bec09215d892acac5f004f7edd91e1309bf5",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 720-р.doc",
+      "updated_at": "2026-06-05T10:02:34.820Z"
+    },
+    "2025-10-30|721-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "721-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "707897709a691b0fcfaacb36a62ca6bc718d62a89a4efa5333cb2386f8e8a692",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 721-р.doc",
+      "updated_at": "2026-06-05T10:02:34.824Z"
+    },
+    "2025-10-30|722-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "722-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "6e0a64adedd301ad85138d6cc8abc62dbf5c92c95406bc19487848899fd3f121",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 722-р.doc",
+      "updated_at": "2026-06-05T10:02:34.828Z"
+    },
+    "2025-10-30|723-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "723-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "193b729148b3fac76f26a51fcfcaa22a7874f9c57f286cf7bbb887f1c6680912",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 723-р.doc",
+      "updated_at": "2026-06-05T10:02:34.832Z"
+    },
+    "2025-10-30|724-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "724-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "8c1822ac938975d0c70f306aeebeae7be2258c68874776b854711997daf66f76",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 724-р.doc",
+      "updated_at": "2026-06-05T10:02:34.836Z"
+    },
+    "2025-10-30|725-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "725-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "00320e5c157d4c2cfbd9ee26d3c8a482f1c7770733766addc3d45cba8da3d67c",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 725-р.doc",
+      "updated_at": "2026-06-05T10:02:34.840Z"
+    },
+    "2025-10-30|726-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "726-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "824cf69f46360024eca6f65550c41e3394aed13de8898bdc2fb43bbc588471af",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 726-р.doc",
+      "updated_at": "2026-06-05T10:02:34.844Z"
+    },
+    "2025-10-30|727-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "727-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "8f265f4f756b44e0543e1210734cfe95ae9bc7b3e6c62212629a9cffa39ee2a5",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 727-р.doc",
+      "updated_at": "2026-06-05T10:02:34.847Z"
+    },
+    "2025-10-30|728-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "728-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "e6f8273e16eb5887ed6129cb4e1a26ef062676a2be8c31537f4fb168e632250b",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 728-р.doc",
+      "updated_at": "2026-06-05T10:02:34.851Z"
+    },
+    "2025-10-30|729-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "729-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "34bbdb0ad2ed310adceb55d403513dca0de140324feff19d79966b4602ae0a46",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 729-р.doc",
+      "updated_at": "2026-06-05T10:02:34.855Z"
+    },
+    "2025-10-30|730-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "730-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "1e8ee900a72b9728f85fa090a0d0d727593e2dfce0296fa0e282efa5216733fb",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 730-р.doc",
+      "updated_at": "2026-06-05T10:02:34.859Z"
+    },
+    "2025-10-30|731-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "731-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "5da6a15f8f69771b487e4294e84438257604965c8d3e3f55f2f24f4c3631aaff",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 731-р.doc",
+      "updated_at": "2026-06-05T10:02:34.864Z"
+    },
+    "2025-10-30|732-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "732-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "6ebff167994dc3e6c4867289e2e0dde1686c17f30b885de5a6d0f7a2b8b54929",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 732-р.doc",
+      "updated_at": "2026-06-05T10:02:34.868Z"
+    },
+    "2025-10-30|733-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "733-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "009ad2153a128020050f79e79af9397cfabd601b7e1cb223741023b8ce015f5c",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 733-р.doc",
+      "updated_at": "2026-06-05T10:02:34.871Z"
+    },
+    "2025-10-30|734-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "734-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "87fd7e4a4a664a5e5f17b5c617836d749e2c9a6c51389d8f852d25a52ab89557",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 734-р.doc",
+      "updated_at": "2026-06-05T10:02:34.875Z"
+    },
+    "2025-10-30|735-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "735-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "bf3a43261af634d57b5c8971670c1330b9fa5fbc75804333adb33506f368b48e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 735-р.doc",
+      "updated_at": "2026-06-05T10:02:34.879Z"
+    },
+    "2025-10-30|736-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "736-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "bb8931045d9cc0b5852318f26822aca8b757d550043ff7e2dacc496de6a399c9",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 736-р.doc",
+      "updated_at": "2026-06-05T10:02:34.883Z"
+    },
+    "2025-10-30|737-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "737-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "09f10ad3f34d10ccde9f7fe9bf989fa70c12686be94d6058a1bc18f80eb58854",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 737-р.doc",
+      "updated_at": "2026-06-05T10:02:34.887Z"
+    },
+    "2025-10-30|738-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "738-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "4db843bea047421e2062aa9c9fc6a617f83fe3af9ab1760518345e715769884c",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 738-р.doc",
+      "updated_at": "2026-06-05T10:02:34.891Z"
+    },
+    "2025-10-30|739-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "739-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "2f3016bbeb2263e9169782299a71a4853efdd52b0eb157e423f0aaf9291dbc1b",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 739-р.doc",
+      "updated_at": "2026-06-05T10:02:34.895Z"
+    },
+    "2025-10-30|740-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "740-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "53a5d65372072007a9854b17a261db83a526ed927b1b9c4739783fbcdfb6e30d",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 740-р.doc",
+      "updated_at": "2026-06-05T10:02:34.899Z"
+    },
+    "2025-10-30|741-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "741-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "8410ea02ea7fa6eb00c5ec52193ebe8eedc99da954a639a9df92613a3224d039",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 741-р.doc",
+      "updated_at": "2026-06-05T10:02:34.903Z"
+    },
+    "2025-10-30|742-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "742-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "6b4b2ab39ae2b298bb5c6418c69b74d85b62461a10db0c2850e6f4df434831f0",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 742-р.doc",
+      "updated_at": "2026-06-05T10:02:34.907Z"
+    },
+    "2025-10-30|743-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "743-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "18b9c3dd0d228333665346daffe632017e2dcd556cd5d8a3d8834dd727927707",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 743-р.doc",
+      "updated_at": "2026-06-05T10:02:34.911Z"
+    },
+    "2025-10-30|744-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "744-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "6ed7c45e66bb8ba398190317daae980d68c232afe208aa04a1238d5a4cfa6df9",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 744-р.doc",
+      "updated_at": "2026-06-05T10:02:34.915Z"
+    },
+    "2025-10-30|745-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "745-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "c1049b1dfc3d1b1978c7b0d0e33506a065568a2208175fe764ca83b2ca4a6232",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 745-р.doc",
+      "updated_at": "2026-06-05T10:02:34.919Z"
+    },
+    "2025-10-30|746-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "746-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "3c7b8f39b3bb6614571b01b94b25caf5e57b6830f4b8e2a1fd970622ff9d5ad6",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 746-р.doc",
+      "updated_at": "2026-06-05T10:02:34.923Z"
+    },
+    "2025-10-30|747-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "747-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "20066b8cca91dbdc5e84f7fb1669edc219eee973bd1bb16099c86f2e4d6820db",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 747-р.doc",
+      "updated_at": "2026-06-05T10:02:34.927Z"
+    },
+    "2025-10-30|748-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "748-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "ff6f6a770fe4d17d1e97df4af6416a8c866ebaeb87995921919e6b695d403556",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 748-р.doc",
+      "updated_at": "2026-06-05T10:02:34.931Z"
+    },
+    "2025-10-30|749-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "749-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "476d6d7eb419aacd03490eca5e16c145fb0554ac7b1b16721a9fe4cdfee26c9a",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 749-р.doc",
+      "updated_at": "2026-06-05T10:02:34.935Z"
+    },
+    "2025-10-30|750-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "750-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "23bcb92e23edb1bb6ed7052053177615356e51bea5bf60cc5bd27ac57e81a78e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 750-р.doc",
+      "updated_at": "2026-06-05T10:02:34.939Z"
+    },
+    "2025-10-30|751-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "751-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "01a403763a5b1fcc0b2fb0b2bdcfc4f77b9a695fccb6e2ed4914f8251419f2a9",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 751-р.doc",
+      "updated_at": "2026-06-05T10:02:34.943Z"
+    },
+    "2025-10-30|752-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "752-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "4a3446c582685a58103f497c494e72c43bd55c61f990c2418fb92ba580db0250",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 752-р.doc",
+      "updated_at": "2026-06-05T10:02:34.947Z"
+    },
+    "2025-10-30|753-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "753-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "374ed9ee29864e5cc8adb6358a0c0d13a3e531642a0e3d598514e210c0602276",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 753-р.doc",
+      "updated_at": "2026-06-05T10:02:34.951Z"
+    },
+    "2025-10-30|754-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "754-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "67f0ab611b0e62c0464053bedc0b1799c1492bc8d5ee7f4997badea615f90157",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 754-р.doc",
+      "updated_at": "2026-06-05T10:02:34.955Z"
+    },
+    "2025-10-30|755-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "755-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "504a272c1136fee094b3ae8eb4cad0649cb1f2d4b45e37b1f767aa4a93e1cac8",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 755-р.doc",
+      "updated_at": "2026-06-05T10:02:34.959Z"
+    },
+    "2025-10-30|756-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "756-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "82ceecec9c74b91d1f147cf22650c1d898521553203c4158266dae8e930e96de",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 756-р.doc",
+      "updated_at": "2026-06-05T10:02:34.963Z"
+    },
+    "2025-10-30|757-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "757-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "1b88b5e51360872f3772c683b9398d15181fdd9af831e59f6245522fc0418136",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 757-р.doc",
+      "updated_at": "2026-06-05T10:02:34.967Z"
+    },
+    "2025-10-30|758-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "758-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "ecf93c2f631a9207b41157782719f37441cc32ac88aa1d17f2fe2b7fa2618f99",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 758-р.doc",
+      "updated_at": "2026-06-05T10:02:34.971Z"
+    },
+    "2025-10-30|759-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "759-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "27a455c9f06be8a07a6b1eaee21c41b202443c9b137cd0265185404e62987f78",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 759-р.doc",
+      "updated_at": "2026-06-05T10:02:34.974Z"
+    },
+    "2025-10-30|760-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "760-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "087fb8522e9b12af5e87910322d51f822c2914d32f150621dd7c6fbdc2f4ce40",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 760-р.doc",
+      "updated_at": "2026-06-05T10:02:34.978Z"
+    },
+    "2025-10-30|761-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "761-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "ff4e116fa91ed545688fa10c20b806fee58b4e45c75c729d68f9aa65271fa324",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 761-р.doc",
+      "updated_at": "2026-06-05T10:02:34.982Z"
+    },
+    "2025-10-30|762-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "762-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "f0fff52d80a35b8ee89d9c813194f910df00b2104833041becf21cadca70c353",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 762-р.doc",
+      "updated_at": "2026-06-05T10:02:34.986Z"
+    },
+    "2025-10-30|763-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "763-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "a6b0d5836557540d38c08b255f5738847567de9ffc2e60102cd771b7645c95ff",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 763-р.doc",
+      "updated_at": "2026-06-05T10:02:34.992Z"
+    },
+    "2025-10-30|764-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "764-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "bc7978c7e4c35ea0ca2c0032059a152a2a40d25f9cef1cc9933c6b41e243ca4a",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 764-р.doc",
+      "updated_at": "2026-06-05T10:02:34.996Z"
+    },
+    "2025-10-30|765-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "765-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "6cda24d1c637134163715c1918a13ff8bf5492f8107a75eed81d5ebb68ab2c65",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 765-р.doc",
+      "updated_at": "2026-06-05T10:02:35.000Z"
+    },
+    "2025-10-30|766-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "766-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "711e60ad872698b00e338b3e20e2c3e6e0d51524a24915f32564b6047d2bbb61",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 766-р.doc",
+      "updated_at": "2026-06-05T10:02:35.004Z"
+    },
+    "2025-10-30|767-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "767-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "81bf06276cc539a902e0031a3ae4f59e0382cd67a68d3d376672d884bbe4c5bf",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 767-р.doc",
+      "updated_at": "2026-06-05T10:02:35.008Z"
+    },
+    "2025-10-30|768-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "768-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "4c0fbe63ccb6a41e07cc2c89167b77055c55cd48abeca785c3375396c17f5f5a",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 768-р.doc",
+      "updated_at": "2026-06-05T10:02:35.012Z"
+    },
+    "2025-10-30|769-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "769-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "a97190cc7507d5cb8bb2ff0e1834d3ec8d5907711c0ac523857f6a6df88c2536",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 769-р.doc",
+      "updated_at": "2026-06-05T10:02:35.016Z"
+    },
+    "2025-10-30|770-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "770-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "3d7d7165685d4a82d1b1ae72882825fbae57943af1864f533edbfa250d50dde6",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 770-р.doc",
+      "updated_at": "2026-06-05T10:02:35.020Z"
+    },
+    "2025-10-30|771-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "771-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "87a2349db55c43d831a5e9f553b23cc6ed04ccacbddc39cd07b12eaed627440c",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 771-р.doc",
+      "updated_at": "2026-06-05T10:02:35.024Z"
+    },
+    "2025-10-30|772-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "772-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "9aba11a3790c2b3a1811c025a52abe6377677a70d68f989a455ee0ec61a3f7f0",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 772-р.doc",
+      "updated_at": "2026-06-05T10:02:35.028Z"
+    },
+    "2025-10-30|773-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "773-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "c8b0ba169d466192a146dda07a98b44dd479d70ededf743e4b08bcd6ba4166a3",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 773-р.doc",
+      "updated_at": "2026-06-05T10:02:35.032Z"
+    },
+    "2025-10-30|774-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "774-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "3199d75e5efe71e1e9b7ee20f856d8499725f5e69266062f919d94bb0a1084cf",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 774-р.doc",
+      "updated_at": "2026-06-05T10:02:35.036Z"
+    },
+    "2025-10-30|775-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "775-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "22c072cd4976ccd4227419fcba16df2341426803ff3f0a40b07030fddcca97c6",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 775-р.doc",
+      "updated_at": "2026-06-05T10:02:35.040Z"
+    },
+    "2025-10-30|776-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "776-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "5d67d4f2a39d3d7d4230a23e06894433b4727e7ec20b3f39b733f206a243e7f1",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 776-р.doc",
+      "updated_at": "2026-06-05T10:02:35.044Z"
+    },
+    "2025-10-30|777-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "777-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "ec2337ba7239e99add5aa97e1dba88124007175fe5f2a669ae3e88cf202426ae",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 777-р.doc",
+      "updated_at": "2026-06-05T10:02:35.048Z"
+    },
+    "2025-10-30|778-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "778-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "b5b3a587a46f5dbf50ea3cf2fcd6daec1184c4866fd74acf1c60bfaf826c7c61",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 778-р.doc",
+      "updated_at": "2026-06-05T10:02:35.052Z"
+    },
+    "2025-10-30|779-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "779-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "14d2c13389089b80e212229cfac96895dd6ab5cfa155dabc296e752e04a40fff",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 779-р.doc",
+      "updated_at": "2026-06-05T10:02:35.056Z"
+    },
+    "2025-10-30|780-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "780-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "83b69a242e7865fd5131c4cdc5a1a521084db9e0ec4a75dca1039b777a8bf041",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 780-р.doc",
+      "updated_at": "2026-06-05T10:02:35.060Z"
+    },
+    "2025-10-30|781-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "781-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "50d465260ba801efbe0b32cda376fa28e47fa752715ef0bfba3e2a6c4296b8a9",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 781-р.doc",
+      "updated_at": "2026-06-05T10:02:35.064Z"
+    },
+    "2025-10-30|782-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "782-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "b647b8d84efe33e0aa6bdbb79103b258dce2b6d28f370c9bcb7dc9e47de63614",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 782-р.doc",
+      "updated_at": "2026-06-05T10:02:35.068Z"
+    },
+    "2025-10-30|783-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "783-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "614383d45f8052522a96719d191a911ffc4e765e2b25f92120962bbf4fbfc7d7",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 783-р.doc",
+      "updated_at": "2026-06-05T10:02:35.072Z"
+    },
+    "2025-10-30|784-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "784-р",
+      "decision_date": "2025-10-30",
+      "file_sha256": "b5786684aa20c9d9e9faadf2b8e1329e727a245d8ee136abd5674d248cef149e",
+      "source_resource_id": "cca13352-99b1-4085-b286-6f3fe1053b43",
+      "source_file": "rishennia-amku-za-zovten-2025/Рішення від 30.10.2025 № 784-р.doc",
+      "updated_at": "2026-06-05T10:02:35.076Z"
     }
   },
   "last_run": {
-    "at": "2026-06-05T09:31:50.597Z",
-    "resources_considered": 7,
+    "at": "2026-06-05T10:02:35.077Z",
+    "resources_considered": 1,
     "additions": 0,
     "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 7,
-      "docsSeen": 707,
-      "docsRelevant": 0,
-      "docsSkipped": 707,
-      "errors": 0
+      "resourcesChecked": 1,
+      "docsSeen": 189,
+      "docsRelevant": 19,
+      "docsSkipped": 170,
+      "errors": 19
     },
-    "gemini_calls": 0,
+    "gemini_calls": 15,
     "settings": {
-      "force_resources": true,
+      "force_resources": false,
       "force_reanalyze_decisions": false,
       "max_gemini_calls": 15,
+      "resource_state_version": 4,
+      "backfill_enabled": true,
+      "backfill_months_per_run": 1,
       "gemini_rpm_limit": 5,
       "gemini_tpm_limit": 120000,
       "max_text_chars": 90000,
-      "gemini_token_estimate_chars_per_token": 2,
-      "resource_state_version": 4
+      "gemini_token_estimate_chars_per_token": 2
     }
   }
 }
