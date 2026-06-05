@@ -7,34 +7,42 @@ on:
         description: "How many recent months of AMCU decision ZIPs to scan"
         required: false
         default: "4"
+
       force:
         description: "Force resource recheck even if metadata/hash is unchanged; does not force Gemini reanalysis"
         required: false
         default: "false"
+
       force_reanalyze_decisions:
         description: "Force Gemini reanalysis for already analyzed decisions"
         required: false
         default: "false"
+
       skip_gemini:
         description: "Test mode: run extraction/filtering without Gemini calls"
         required: false
         default: "false"
+
       dry_run:
-        description: "Do not write state/results and do not commit changes"
+        description: "Do not write state/results/dashboard data and do not commit changes"
         required: false
         default: "false"
+
       max_gemini_calls:
         description: "Global max Gemini calls per run"
         required: false
         default: "20"
+
       gemini_rpm_limit:
         description: "Conservative Gemini requests-per-minute limit"
         required: false
         default: "10"
+
       gemini_tpm_limit:
         description: "Conservative Gemini input-tokens-per-minute limit"
         required: false
         default: "220000"
+
       include_concentration_p12:
         description: "Include p.12 Art.50 concentration-without-permit decisions in practice DB"
         required: false
@@ -53,9 +61,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: "24"
 
@@ -102,24 +112,29 @@ jobs:
 
         run: node scripts/amku_monitor.mjs
 
-      - name: Commit AMCU practice data
+      - name: Build AMCU dashboard data
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: node scripts/amku_build_dashboard.mjs
+
+      - name: Commit AMCU practice and dashboard data
         if: ${{ github.event.inputs.dry_run != 'true' }}
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
           mkdir -p data/practice
+          mkdir -p docs/amku/data
           touch data/amku_events.jsonl
 
-          git add data/amku_state.json data/amku_results.json data/amku_events.jsonl data/practice
-
-          if [ -d "docs/amku" ]; then
-            git add docs/amku
-          fi
+          git add data/amku_state.json
+          git add data/amku_results.json
+          git add data/amku_events.jsonl
+          git add data/practice
+          git add docs/amku
 
           if git diff --cached --quiet; then
-            echo "No AMCU practice data changes to commit."
+            echo "No AMCU practice/dashboard data changes to commit."
           else
-            git commit -m "Update AMCU practice data"
+            git commit -m "Update AMCU practice dashboard"
             git push
           fi
