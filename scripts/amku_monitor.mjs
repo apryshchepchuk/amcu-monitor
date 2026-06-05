@@ -32,15 +32,20 @@ const MAX_TEXT_CHARS = intEnv('MAX_TEXT_CHARS', 90000);
 const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 50);
 const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
 
-// Conservative Gemini quota guardrails.
-// The free-tier dashboard showed TPM=250k and RPM=15; defaults below keep a safety margin.
+// Gemini quota safety. Defaults are intentionally conservative for long Ukrainian legal texts.
 const GEMINI_RPM_LIMIT = intEnv('GEMINI_RPM_LIMIT', 5);
 const GEMINI_TPM_LIMIT = intEnv('GEMINI_TPM_LIMIT', 120000);
 const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 4);
-const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 2500);
-const GEMINI_QUOTA_WINDOW_MS = intEnv('GEMINI_QUOTA_WINDOW_MS', 60_000);
-const GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN = floatEnv('GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN', 2.0);
+const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
+const GEMINI_QUOTA_WINDOW_MS = intEnv('GEMINI_QUOTA_WINDOW_MS', 60000);
+const GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN = numberEnv('GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN', 2.0);
 const geminiUsageWindow = [];
+
+// Historical backfill mode: process only the next unprocessed/incomplete monthly resource.
+const BACKFILL_ENABLED = boolEnv('BACKFILL_ENABLED', false);
+const BACKFILL_MONTHS_PER_RUN = intEnv('BACKFILL_MONTHS_PER_RUN', 1);
+const BACKFILL_FROM_MONTH = env('BACKFILL_FROM_MONTH', ''); // YYYY-MM, optional lower bound
+const BACKFILL_TO_MONTH = env('BACKFILL_TO_MONTH', ''); // YYYY-MM, optional upper bound
 
 const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
 
@@ -151,7 +156,7 @@ function intEnv(name, fallback) {
   return Number.isFinite(n) ? n : fallback;
 }
 
-function floatEnv(name, fallback) {
+function numberEnv(name, fallback) {
   const raw = env(name, String(fallback));
   const n = Number.parseFloat(raw);
   return Number.isFinite(n) && n > 0 ? n : fallback;
@@ -458,7 +463,48 @@ function isWithinLookback(resource) {
   return diff >= 0 && diff <= LOOKBACK_MONTHS;
 }
 
-async function getCandidateResources() {
+function monthKeyToNumber(key) {
+  const m = String(key || '').match(/^(20\d{2})-(\d{2})$/);
+  if (!m) return null;
+
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) return null;
+
+  return year * 12 + month;
+}
+
+function isWithinBackfillRange(resource) {
+  const key = resourcePeriodKey(resource);
+  if (!key) return false;
+
+  const n = monthKeyToNumber(key);
+  if (n === null) return false;
+
+  const from = BACKFILL_FROM_MONTH ? monthKeyToNumber(BACKFILL_FROM_MONTH) : null;
+  const to = BACKFILL_TO_MONTH ? monthKeyToNumber(BACKFILL_TO_MONTH) : null;
+
+  if (from !== null && n < from) return false;
+  if (to !== null && n > to) return false;
+
+  return true;
+}
+
+function resourceId(resource) {
+  return resource?.id || resource?.url || resourceTitle(resource);
+}
+
+function isProcessedResourceClean(resource, state) {
+  const prev = state?.processed_resources?.[resourceId(resource)];
+
+  return Boolean(
+    prev?.state_version === RESOURCE_STATE_VERSION
+    && Number(prev?.errors || 0) === 0
+    && prev?.incomplete !== true
+  );
+}
+
+async function getCandidateResources(state = null) {
   if (LOCAL_ZIP) {
     return [{
       id: 'local-zip-sample',
@@ -474,10 +520,26 @@ async function getCandidateResources() {
   if (!pkg.success) throw new Error('CKAN package_show returned success=false');
 
   const resources = pkg.result?.resources || [];
+  const decisionResources = resources.filter(isDecisionZipResource);
 
-  const recentResources = resources
-    .filter(isDecisionZipResource)
-    .filter(isWithinLookback);
+  // data.gov.ua often has multiple ZIPs for the same month.
+  // We keep only the best/latest resource per month before selecting work.
+  const bestByMonthAll = selectBestResourcePerMonth(decisionResources);
+
+  if (BACKFILL_ENABLED) {
+    const candidates = bestByMonthAll
+      .filter(isWithinBackfillRange)
+      .filter((resource) => !isProcessedResourceClean(resource, state));
+
+    console.log(
+      `Backfill mode: ${candidates.length} monthly resource(s) still need processing; `
+      + `taking ${Math.max(0, BACKFILL_MONTHS_PER_RUN)} this run.`
+    );
+
+    return candidates.slice(0, Math.max(0, BACKFILL_MONTHS_PER_RUN));
+  }
+
+  const recentResources = decisionResources.filter(isWithinLookback);
 
   // data.gov.ua часто зберігає кілька ZIP за один місяць:
   // наприклад, частковий березень і пізніше повний березень.
@@ -671,9 +733,8 @@ function sleep(ms) {
 }
 
 function estimateGeminiInputTokens(text) {
-  // Conservative estimator for Ukrainian legal text.
-  // Previous /3.5 estimates were too optimistic and allowed TPM spikes.
-  return Math.ceil(String(text || '').length / GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN);
+  const charsPerToken = Math.max(1, GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN || 2);
+  return Math.ceil(String(text || '').length / charsPerToken);
 }
 
 function pruneGeminiUsageWindow(now = Date.now()) {
@@ -706,18 +767,10 @@ async function waitForGeminiQuota(estimatedInputTokens) {
       && usedTokens + reservedTokens > GEMINI_TPM_LIMIT;
 
     if (!wouldExceedRpm && !wouldExceedTpm) {
-      geminiUsageWindow.push({ ts: Date.now(), tokens: reservedTokens });
-      return;
-    }
-
-    // If one single prompt is estimated above our local TPM threshold, we cannot split it here.
-    // Allow it only when the window is otherwise empty; MAX_TEXT_CHARS should normally prevent this.
-    if (!wouldExceedRpm && usedRequests === 0 && reservedTokens > GEMINI_TPM_LIMIT) {
-      console.warn(
-        `Gemini prompt estimate ${reservedTokens} tokens exceeds local TPM guard ${GEMINI_TPM_LIMIT}. `
-        + `Proceeding because quota window is empty. Consider lowering MAX_TEXT_CHARS.`
-      );
-      geminiUsageWindow.push({ ts: Date.now(), tokens: reservedTokens });
+      geminiUsageWindow.push({
+        ts: Date.now(),
+        tokens: reservedTokens
+      });
       return;
     }
 
@@ -739,7 +792,7 @@ async function waitForGeminiQuota(estimatedInputTokens) {
 
 function parseGeminiRetryDelayMs(payload) {
   const retryDelay =
-    payload?.error?.details?.find((d) => String(d?.['@type'] || '').includes('RetryInfo'))?.retryDelay;
+    payload?.error?.details?.find((d) => d?.['@type']?.includes('RetryInfo'))?.retryDelay;
 
   if (typeof retryDelay === 'string') {
     const seconds = retryDelay.match(/^([\d.]+)s$/i);
@@ -1194,7 +1247,8 @@ async function analyzeWithGemini(input) {
 
     if (res.ok) {
       const rawText =
-        payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '';
+        payload?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('
+') || '';
 
       return parseJsonLenient(rawText);
     }
@@ -1204,11 +1258,12 @@ async function analyzeWithGemini(input) {
 
     if (isGeminiQuotaError(res.status, payload) && attempt < GEMINI_RETRY_MAX) {
       const waitMs = parseGeminiRetryDelayMs(payload);
+
       console.warn(
         `Gemini quota error. Retry ${attempt + 1}/${GEMINI_RETRY_MAX} `
-        + `after ${Math.ceil(waitMs / 1000)}s `
-        + `(estimatedInputTokens≈${estimatedInputTokens}).`
+        + `after ${Math.ceil(waitMs / 1000)}s.`
       );
+
       await sleep(waitMs);
       continue;
     }
@@ -1846,17 +1901,22 @@ async function main() {
 
   const existingResults = await readJson(RESULTS_PATH, []);
 
-  const resources = await getCandidateResources();
+  const resources = await getCandidateResources(state);
 
-  console.log(`Candidate resources: ${resources.length}`);
-  for (const r of resources) {
-    console.log(`- ${resourceTitle(r)} (${r.format || ''})`);
-  }
   console.log(
     `Gemini settings: model=${GEMINI_MODEL}, maxCalls=${MAX_GEMINI_CALLS}, `
     + `rpm=${GEMINI_RPM_LIMIT}, tpm≈${GEMINI_TPM_LIMIT}, `
     + `maxTextChars=${MAX_TEXT_CHARS}, charsPerToken≈${GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN}`
   );
+  console.log(
+    `Backfill settings: enabled=${BACKFILL_ENABLED}, monthsPerRun=${BACKFILL_MONTHS_PER_RUN}, `
+    + `from=${BACKFILL_FROM_MONTH || 'auto'}, to=${BACKFILL_TO_MONTH || 'auto'}`
+  );
+
+  console.log(`Candidate resources: ${resources.length}`);
+  for (const r of resources) {
+    console.log(`- ${resourceTitle(r)} (${r.format || ''})`);
+  }
 
   const additions = [];
   const totalStats = blankStats();
@@ -1906,11 +1966,15 @@ async function main() {
       force_resources: FORCE_RESOURCES,
       force_reanalyze_decisions: FORCE_REANALYZE_DECISIONS,
       max_gemini_calls: MAX_GEMINI_CALLS,
+      resource_state_version: RESOURCE_STATE_VERSION,
+      max_text_chars: MAX_TEXT_CHARS,
       gemini_rpm_limit: GEMINI_RPM_LIMIT,
       gemini_tpm_limit: GEMINI_TPM_LIMIT,
-      max_text_chars: MAX_TEXT_CHARS,
       gemini_token_estimate_chars_per_token: GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN,
-      resource_state_version: RESOURCE_STATE_VERSION
+      backfill_enabled: BACKFILL_ENABLED,
+      backfill_months_per_run: BACKFILL_MONTHS_PER_RUN,
+      backfill_from_month: BACKFILL_FROM_MONTH || null,
+      backfill_to_month: BACKFILL_TO_MONTH || null
     }
   };
 
