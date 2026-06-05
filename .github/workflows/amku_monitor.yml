@@ -8,7 +8,11 @@ on:
         required: false
         default: "4"
       force:
-        description: "Force reprocess resources even if metadata/hash is unchanged"
+        description: "Force resource recheck even if metadata/hash is unchanged; does not force Gemini reanalysis"
+        required: false
+        default: "false"
+      force_reanalyze_decisions:
+        description: "Force Gemini reanalysis for already analyzed decisions"
         required: false
         default: "false"
       skip_gemini:
@@ -20,7 +24,7 @@ on:
         required: false
         default: "false"
       max_gemini_calls:
-        description: "Max Gemini calls per run"
+        description: "Global max Gemini calls per run"
         required: false
         default: "20"
       gemini_rpm_limit:
@@ -66,12 +70,14 @@ jobs:
       - name: Run AMCU practice monitor
         env:
           LOOKBACK_MONTHS: ${{ github.event.inputs.lookback_months || '4' }}
-          FORCE: ${{ github.event.inputs.force || 'false' }}
+          FORCE_RESOURCES: ${{ github.event.inputs.force || 'false' }}
+          FORCE_REANALYZE_DECISIONS: ${{ github.event.inputs.force_reanalyze_decisions || 'false' }}
           SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
 
           # Practice DB mode
           EMAIL_DISABLED: "true"
+          PRACTICE_DB_ENABLED: "true"
           INCLUDE_CONCENTRATION_P12: ${{ github.event.inputs.include_concentration_p12 || 'true' }}
           INCLUDE_PROCEDURAL_DECISIONS: "false"
 
@@ -85,7 +91,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
 
-          # SMTP secrets залишені для сумісності, але email вимкнений через EMAIL_DISABLED=true
+          # SMTP secrets are kept for compatibility, but email is disabled via EMAIL_DISABLED=true.
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
