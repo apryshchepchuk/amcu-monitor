@@ -1080,17 +1080,66 @@ function parseJsonLenient(rawText) {
 
   try {
     return JSON.parse(raw);
-  } catch {
-    const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i);
-    if (fenced) return JSON.parse(fenced[1]);
+  } catch {}
 
-    const start = raw.indexOf('{');
-    const end = raw.lastIndexOf('}');
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fenced) {
+    const fencedText = fenced[1].trim();
 
-    if (start >= 0 && end > start) return JSON.parse(raw.slice(start, end + 1));
+    try {
+      return JSON.parse(fencedText);
+    } catch {}
 
-    throw new Error(`Could not parse Gemini JSON: ${raw.slice(0, 800)}`);
+    const firstFencedObject = extractFirstJsonObject(fencedText);
+    if (firstFencedObject) return JSON.parse(firstFencedObject);
   }
+
+  const firstObject = extractFirstJsonObject(raw);
+  if (firstObject) return JSON.parse(firstObject);
+
+  throw new Error(`Could not parse Gemini JSON: ${raw.slice(0, 800)}`);
+}
+
+function extractFirstJsonObject(text) {
+  const s = String(text || '');
+  const start = s.indexOf('{');
+  if (start < 0) return null;
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = start; i < s.length; i += 1) {
+    const ch = s[i];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (ch === '\\') {
+        escaped = true;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (ch === '"') {
+      inString = true;
+      continue;
+    }
+
+    if (ch === '{') depth += 1;
+
+    if (ch === '}') {
+      depth -= 1;
+
+      if (depth === 0) {
+        return s.slice(start, i + 1);
+      }
+    }
+  }
+
+  return null;
 }
 
 function normalizeAnalysis(analysis, meta, extra) {
