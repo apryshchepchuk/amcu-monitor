@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-06-05T18:09:48.365Z",
+  "updated_at": "2026-06-06T08:45:58.706Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 112,
-  "total_sanction_uah": 5225021168,
+  "total_decisions": 113,
+  "total_sanction_uah": 5226061960,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 95,
+    "economic_competition": 96,
     "unfair_competition": 17,
     "other": 0
   },
@@ -53,7 +53,7 @@
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 18
+      "count": 19
     },
     {
       "code": "zek:50:14",
