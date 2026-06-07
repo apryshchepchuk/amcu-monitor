@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-06-07T12:51:37.641Z",
+  "updated_at": "2026-06-07T17:41:07.964Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 146,
-  "total_sanction_uah": 10101080496,
+  "total_decisions": 156,
+  "total_sanction_uah": 10144370965,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 127,
-    "unfair_competition": 19,
+    "economic_competition": 136,
+    "unfair_competition": 20,
     "other": 0
   },
   "categories": [
@@ -18,7 +18,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 29
+      "count": 31
     },
     {
       "code": "zek:50:2",
@@ -46,14 +46,14 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 48
+      "count": 52
     },
     {
       "code": "zek:50:13",
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 24
+      "count": 27
     },
     {
       "code": "zek:50:14",
@@ -88,9 +88,9 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 15
+      "count": 16
     }
   ],
   "newest_decision_date": "2026-05-14",
-  "oldest_decision_date": "2025-07-03"
+  "oldest_decision_date": "2025-06-05"
 }
