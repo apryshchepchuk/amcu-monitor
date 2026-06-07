@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-06-07T09:32:44.439Z",
+  "updated_at": "2026-06-07T12:51:37.641Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 133,
-  "total_sanction_uah": 5261859202,
+  "total_decisions": 146,
+  "total_sanction_uah": 10101080496,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 114,
+    "economic_competition": 127,
     "unfair_competition": 19,
     "other": 0
   },
@@ -18,7 +18,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 23
+      "count": 29
     },
     {
       "code": "zek:50:2",
@@ -39,7 +39,7 @@
       "label": "п. 4 ст. 50 — невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
       "law_family": "economic_competition",
       "short_label": "невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
-      "count": 5
+      "count": 6
     },
     {
       "code": "zek:50:12",
@@ -53,21 +53,21 @@
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 20
+      "count": 24
     },
     {
       "code": "zek:50:14",
       "label": "п. 14 ст. 50 — подання інформації в неповному обсязі у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "подання інформації в неповному обсязі у встановлені строки",
-      "count": 5
+      "count": 6
     },
     {
       "code": "zek:50:15",
       "label": "п. 15 ст. 50 — подання недостовірної інформації",
       "law_family": "economic_competition",
       "short_label": "подання недостовірної інформації",
-      "count": 5
+      "count": 6
     },
     {
       "code": "unfair:4",
@@ -92,5 +92,5 @@
     }
   ],
   "newest_decision_date": "2026-05-14",
-  "oldest_decision_date": "2025-08-07"
+  "oldest_decision_date": "2025-07-03"
 }
