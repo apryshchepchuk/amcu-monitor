@@ -16,6 +16,31 @@ const PRIMARY_CODE_ORDER = [
   'unfair:15', 'unfair:15-1', 'unfair:16', 'unfair:17', 'unfair:18', 'unfair:19'
 ];
 
+const DECISION_OUTCOME_LABELS = {
+  violation_found: 'Порушення встановлено',
+  proceeding_closed_no_violation: 'Провадження закрито / порушення не доведено',
+  permit_granted: 'Дозвіл надано',
+  other: 'Інший результат'
+};
+
+function normalizeDecisionOutcome(value) {
+  const raw = String(value || '').toLowerCase().trim();
+
+  if (raw === 'proceeding_closed_no_violation' || raw === 'closed_no_violation' || raw === 'no_violation_found') {
+    return 'proceeding_closed_no_violation';
+  }
+
+  if (raw === 'permit_granted') return 'permit_granted';
+  if (raw === 'other') return 'other';
+
+  return 'violation_found';
+}
+
+function decisionOutcomeLabel(code, fallback = '') {
+  const normalized = normalizeDecisionOutcome(code);
+  return fallback || DECISION_OUTCOME_LABELS[normalized] || DECISION_OUTCOME_LABELS.other;
+}
+
 function lower(v) {
   return String(v || '').toLowerCase();
 }
@@ -58,6 +83,9 @@ function buildSearchBlob(row) {
     row.decision_date,
     row.primary_code,
     row.primary_label,
+    row.decision_outcome,
+    row.outcome_label,
+    row.outcome_summary,
     row.classification?.primary_label,
     listToSearch(row.liable_parties),
     row.violation_summary,
@@ -81,6 +109,7 @@ function normalizeRow(row) {
   const lawFamily = row.classification?.law_family || row.law_area || 'other';
   const primaryCode = row.primary_code || row.classification?.primary_code || 'other';
   const primaryLabel = row.primary_label || row.classification?.primary_label || 'Без класифікації';
+  const decisionOutcome = normalizeDecisionOutcome(row.decision_outcome);
   const article50Points = Array.isArray(row.classification?.article_50_points)
     ? row.classification.article_50_points
     : [];
@@ -97,6 +126,9 @@ function normalizeRow(row) {
     primary_code: primaryCode,
     primary_label: primaryLabel,
     law_family: lawFamily,
+    decision_outcome: decisionOutcome,
+    outcome_label: decisionOutcomeLabel(decisionOutcome, row.outcome_label),
+    outcome_summary: compactText(row.outcome_summary),
     classification: {
       primary_code: primaryCode,
       primary_label: primaryLabel,
