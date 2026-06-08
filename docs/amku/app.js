@@ -376,6 +376,44 @@ function renderPills(values, fallback = 'Не виявлено') {
   return values.map((value) => `<span class="tag">${escapeHtml(value)}</span>`).join('');
 }
 
+function renderPartyIdentity(row) {
+  const parties = Array.isArray(row.liable_parties)
+    ? row.liable_parties.filter(Boolean)
+    : [];
+
+  if (!parties.length) {
+    return `
+      <section class="party-identity">
+        <div class="party-identity-head">
+          <span class="detail-icon">${ICONS.party}</span>
+          <span>Суб’єкт порушення</span>
+        </div>
+        <div class="party-name-list">
+          <div class="party-name muted-party">Не виявлено</div>
+        </div>
+      </section>
+    `;
+  }
+
+  const label = parties.length > 1 ? 'Суб’єкти порушення' : 'Суб’єкт порушення';
+
+  const partyRows = parties.map((party) => `
+    <div class="party-name">${escapeHtml(party)}</div>
+  `).join('');
+
+  return `
+    <section class="party-identity">
+      <div class="party-identity-head">
+        <span class="detail-icon">${ICONS.party}</span>
+        <span>${escapeHtml(label)}</span>
+      </div>
+      <div class="party-name-list">
+        ${partyRows}
+      </div>
+    </section>
+  `;
+}
+
 function sourceTitle(row) {
   const resource = row.source?.resource_title || row.source_resource || 'джерело не визначено';
   return resource.replace(/Рішення Антимонопольного комітету України/g, 'Рішення АМКУ');
@@ -411,7 +449,6 @@ function renderDetail() {
   els.detailEmpty.classList.add('hidden');
   els.detailCard.classList.remove('hidden');
 
-  const parties = renderPills(row.liable_parties);
   const sanctions = row.sanction_amounts?.length
     ? row.sanction_amounts.map((item) => `
         <div class="detail-mini-card">
@@ -440,10 +477,7 @@ function renderDetail() {
       </div>
     </header>
 
-    <section class="detail-section compact">
-      <h3><span class="detail-icon">${ICONS.party}</span>Суб’єкт / суб’єкти</h3>
-      <div class="tag-row">${parties}</div>
-    </section>
+    ${renderPartyIdentity(row)}
 
     <section class="detail-section lead-section">
       <h3><span class="detail-icon">${ICONS.summary}</span>Суть порушення</h3>
