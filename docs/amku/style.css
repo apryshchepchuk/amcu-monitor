@@ -507,6 +507,46 @@ button { color: inherit; }
   color: var(--accent);
   font-weight: 700;
 }
+.outcome-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 25px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.outcome-badge.violation {
+  color: #0a66d8;
+  background: rgba(10, 102, 216, 0.09);
+  border-color: rgba(10, 102, 216, 0.16);
+}
+.outcome-badge.closed {
+  color: #8a5a00;
+  background: rgba(245, 158, 11, 0.13);
+  border-color: rgba(245, 158, 11, 0.22);
+}
+.outcome-badge.permit {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.11);
+  border-color: rgba(16, 185, 129, 0.20);
+}
+.outcome-badge.other {
+  color: var(--muted);
+  background: var(--surface-soft);
+  border-color: var(--border);
+}
+.result-outcome-row {
+  margin-top: 9px;
+}
+.decision-meta .outcome-badge {
+  min-height: 27px;
+  font-size: 13px;
+}
 .tag-row,
 .keyword-row {
   display: flex;
