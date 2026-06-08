@@ -575,6 +575,52 @@ button { color: inherit; }
   gap: 8px;
   max-width: 360px;
 }
+
+.party-identity {
+  margin: 18px 0 2px;
+  padding: 18px 20px;
+  border: 1px solid var(--accent-border);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(10,102,216,0.045));
+  box-shadow: 0 10px 24px rgba(10, 102, 216, 0.06);
+}
+
+.party-identity-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.party-name-list {
+  display: grid;
+  gap: 0;
+}
+
+.party-name {
+  padding: 9px 0;
+  color: var(--text);
+  font-size: 21px;
+  line-height: 1.32;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.party-name + .party-name {
+  border-top: 1px solid rgba(22, 28, 45, 0.08);
+}
+
+.party-name.muted-party {
+  color: var(--muted);
+  font-weight: 650;
+}
+
 .detail-section {
   padding: 19px 0;
   border-bottom: 1px solid var(--border);
@@ -785,4 +831,14 @@ body.reading-mode .detail-card {
   .detail-section h3 { font-size: 18px; }
   .detail-section p,
   .lead-section p { font-size: 16px; }
+
+  .party-identity {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .party-name {
+    font-size: 18px;
+    line-height: 1.35;
+  }
 }
