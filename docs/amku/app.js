@@ -52,6 +52,8 @@ function setupEls() {
     heroFacts: document.getElementById('heroFacts'),
     economicCards: document.getElementById('economicCards'),
     unfairCards: document.getElementById('unfairCards'),
+    economicCount: document.getElementById('economicCount'),
+    unfairCount: document.getElementById('unfairCount'),
     searchInput: document.getElementById('searchInput'),
     yearFilter: document.getElementById('yearFilter'),
     sortSelect: document.getElementById('sortSelect'),
@@ -157,7 +159,9 @@ function outcomeMeta(row) {
 
 function sanctionDisplay(row) {
   if (row?.sanction) return row.sanction;
-  if (row?.decision_outcome === 'proceeding_closed_no_violation') return 'Санкція не застосовувалась: провадження закрито / порушення не доведено.';
+  if (row?.decision_outcome === 'proceeding_closed_no_violation') {
+    return 'Санкція не застосовувалась: провадження закрито / порушення не доведено.';
+  }
   if (row?.decision_outcome === 'permit_granted') return 'Санкція не застосовувалась.';
   return 'Не виявлено';
 }
@@ -172,14 +176,20 @@ function shortCodeBadge(code) {
     .replace(/^unfair:/, 'НДК ');
 }
 
-function categoryIcon(code, family) {
-  if (code === 'zek:50:1') return ICONS.collusion;
-  if (code === 'zek:50:2') return ICONS.dominance;
-  if (code === 'zek:50:12') return ICONS.concentration;
-  if (code === 'zek:50:13' || code === 'zek:50:14' || code === 'zek:50:15') return ICONS.info;
-  if (family === 'unfair_competition') return ICONS.unfair;
-  if (family === 'economic_competition') return ICONS.economic;
-  return ICONS.default;
+function categoryCodeLabel(code) {
+  const value = String(code || '');
+
+  const zek = value.match(/^zek:50:(\d+)$/);
+  if (zek) return `п. ${zek[1]} ст. 50`;
+
+  const unfair = value.match(/^unfair:(.+)$/);
+  if (unfair) return `ст. ${unfair[1]}`;
+
+  return shortCodeBadge(value);
+}
+
+function categoryCountLabel(count) {
+  return `${count} ріш.`;
 }
 
 function pluralize(n, forms) {
@@ -248,15 +258,26 @@ function renderCategoryPills() {
   const economic = categories.filter((c) => c.law_family === 'economic_competition');
   const unfair = categories.filter((c) => c.law_family === 'unfair_competition');
 
+  if (els.economicCount) {
+    els.economicCount.textContent = `${economic.length} ${pluralize(economic.length, ['категорія', 'категорії', 'категорій'])}`;
+  }
+
+  if (els.unfairCount) {
+    els.unfairCount.textContent = `${unfair.length} ${pluralize(unfair.length, ['категорія', 'категорії', 'категорій'])}`;
+  }
+
   const render = (list) => list.map((item) => {
     const active = state.activeCode === item.code ? 'active' : '';
-    const codeLabel = shortCodeBadge(item.code);
+    const codeLabel = categoryCodeLabel(item.code);
+    const title = item.short_label || item.label;
+    const familyClass = item.law_family === 'unfair_competition' ? 'unfair' : 'economic';
+
     return `
-      <button class="category-pill ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
-        <span class="category-pill-icon">${categoryIcon(item.code, item.law_family)}</span>
-        <span class="category-pill-code">${escapeHtml(codeLabel)}</span>
-        <span class="category-pill-title">${escapeHtml(item.short_label || item.label)}</span>
-        <span class="category-pill-count">${item.count}</span>
+      <button class="category-row ${familyClass} ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
+        <span class="category-row-code">${escapeHtml(codeLabel)}</span>
+        <span class="category-row-title">${escapeHtml(title)}</span>
+        <span class="category-row-count">${escapeHtml(categoryCountLabel(item.count))}</span>
+        <span class="category-row-arrow" aria-hidden="true">›</span>
       </button>
     `;
   }).join('');
@@ -264,7 +285,7 @@ function renderCategoryPills() {
   els.economicCards.innerHTML = render(economic) || '<div class="empty-state small">Поки що немає даних.</div>';
   els.unfairCards.innerHTML = render(unfair) || '<div class="empty-state small">Поки що немає даних.</div>';
 
-  document.querySelectorAll('.category-pill').forEach((button) => {
+  document.querySelectorAll('.category-row').forEach((button) => {
     button.addEventListener('click', () => {
       const code = button.dataset.code;
       state.activeCode = state.activeCode === code ? null : code;
@@ -351,9 +372,10 @@ function renderResults() {
   els.resultsList.innerHTML = rows.map((row) => {
     const active = row.decision_key === state.selectedKey ? 'active' : '';
     const party = firstParty(row);
-    const extra = row.liable_parties.length > 1 ? ` +${row.liable_parties.length - 1}` : '';
+    const extra = row.liable_parties?.length > 1 ? ` +${row.liable_parties.length - 1}` : '';
     const amount = row.sanction_total_uah ? formatMoney(row.sanction_total_uah) : null;
     const outcome = outcomeMeta(row);
+
     return `
       <button class="result-item ${active}" data-key="${escapeHtml(row.decision_key)}">
         <div class="result-title-row">
@@ -396,6 +418,44 @@ function renderPills(values, fallback = 'Не виявлено') {
   return values.map((value) => `<span class="tag">${escapeHtml(value)}</span>`).join('');
 }
 
+function renderPartyIdentity(row) {
+  const parties = Array.isArray(row.liable_parties)
+    ? row.liable_parties.filter(Boolean)
+    : [];
+
+  if (!parties.length) {
+    return `
+      <section class="party-identity">
+        <div class="party-identity-head">
+          <span class="detail-icon">${ICONS.party}</span>
+          <span>Суб’єкт порушення</span>
+        </div>
+        <div class="party-name-list">
+          <div class="party-name muted-party">Не виявлено</div>
+        </div>
+      </section>
+    `;
+  }
+
+  const label = parties.length > 1 ? 'Суб’єкти порушення' : 'Суб’єкт порушення';
+
+  const partyRows = parties.map((party) => `
+    <div class="party-name">${escapeHtml(party)}</div>
+  `).join('');
+
+  return `
+    <section class="party-identity">
+      <div class="party-identity-head">
+        <span class="detail-icon">${ICONS.party}</span>
+        <span>${escapeHtml(label)}</span>
+      </div>
+      <div class="party-name-list">
+        ${partyRows}
+      </div>
+    </section>
+  `;
+}
+
 function sourceTitle(row) {
   const resource = row.source?.resource_title || row.source_resource || 'джерело не визначено';
   return resource.replace(/Рішення Антимонопольного комітету України/g, 'Рішення АМКУ');
@@ -431,7 +491,6 @@ function renderDetail() {
   els.detailEmpty.classList.add('hidden');
   els.detailCard.classList.remove('hidden');
 
-  const parties = renderPills(row.liable_parties);
   const outcome = outcomeMeta(row);
 
   const sanctions = row.sanction_amounts?.length
@@ -463,10 +522,7 @@ function renderDetail() {
       </div>
     </header>
 
-    <section class="detail-section compact">
-      <h3><span class="detail-icon">${ICONS.party}</span>Суб’єкт / суб’єкти</h3>
-      <div class="tag-row">${parties}</div>
-    </section>
+    ${renderPartyIdentity(row)}
 
     <section class="detail-section lead-section">
       <h3><span class="detail-icon">${ICONS.summary}</span>Суть порушення</h3>
@@ -540,14 +596,17 @@ function wireEvents() {
       applyFilters();
     }, 120);
   });
+
   els.yearFilter.addEventListener('change', (event) => {
     state.activeYear = event.target.value;
     applyFilters();
   });
+
   els.sortSelect.addEventListener('change', (event) => {
     state.sort = event.target.value;
     applyFilters();
   });
+
   els.clearFiltersBtn.addEventListener('click', () => {
     state.activeCode = null;
     state.activeFamily = 'all';
@@ -561,6 +620,7 @@ function wireEvents() {
     els.sortSelect.value = 'date_desc';
     applyFilters();
   });
+
   document.querySelectorAll('.segmented-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.activeFamily = btn.dataset.family;
