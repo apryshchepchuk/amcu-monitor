@@ -48,17 +48,25 @@
       <div class="section-head">
         <div>
           <h2>Категорії практики</h2>
-          <p class="section-note">Основна навігація за безпосереднім видом порушення.</p>
+          <p class="section-note">Оберіть статтю або пункт для фільтрації бази.</p>
         </div>
       </div>
+
       <div class="category-groups">
-        <div class="category-group">
-          <div class="group-title">Захист економічної конкуренції</div>
-          <div id="economicCards" class="category-pills"></div>
+        <div class="category-group category-group-economic">
+          <div class="category-group-head">
+            <h3>Захист економічної конкуренції</h3>
+            <span id="economicCount" class="category-group-count economic">0 категорій</span>
+          </div>
+          <div id="economicCards" class="category-list category-list-economic"></div>
         </div>
-        <div class="category-group">
-          <div class="group-title">Недобросовісна конкуренція</div>
-          <div id="unfairCards" class="category-pills"></div>
+
+        <div class="category-group category-group-unfair">
+          <div class="category-group-head">
+            <h3>Недобросовісна конкуренція</h3>
+            <span id="unfairCount" class="category-group-count unfair">0 категорій</span>
+          </div>
+          <div id="unfairCards" class="category-list category-list-unfair"></div>
         </div>
       </div>
     </section>
