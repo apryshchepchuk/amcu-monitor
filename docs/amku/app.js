@@ -52,6 +52,8 @@ function setupEls() {
     heroFacts: document.getElementById('heroFacts'),
     economicCards: document.getElementById('economicCards'),
     unfairCards: document.getElementById('unfairCards'),
+    economicCount: document.getElementById('economicCount'),
+    unfairCount: document.getElementById('unfairCount'),
     searchInput: document.getElementById('searchInput'),
     yearFilter: document.getElementById('yearFilter'),
     sortSelect: document.getElementById('sortSelect'),
@@ -125,6 +127,22 @@ function shortCodeBadge(code) {
   return String(code || '')
     .replace(/^zek:/, '')
     .replace(/^unfair:/, 'НДК ');
+}
+
+function categoryCodeLabel(code) {
+  const value = String(code || '');
+
+  const zek = value.match(/^zek:50:(\d+)$/);
+  if (zek) return `п. ${zek[1]} ст. 50`;
+
+  const unfair = value.match(/^unfair:(.+)$/);
+  if (unfair) return `ст. ${unfair[1]}`;
+
+  return shortCodeBadge(value);
+}
+
+function categoryCountLabel(count) {
+  return `${count} ріш.`;
 }
 
 function categoryIcon(code, family) {
@@ -203,15 +221,26 @@ function renderCategoryPills() {
   const economic = categories.filter((c) => c.law_family === 'economic_competition');
   const unfair = categories.filter((c) => c.law_family === 'unfair_competition');
 
+  if (els.economicCount) {
+    els.economicCount.textContent = `${economic.length} ${pluralize(economic.length, ['категорія', 'категорії', 'категорій'])}`;
+  }
+
+  if (els.unfairCount) {
+    els.unfairCount.textContent = `${unfair.length} ${pluralize(unfair.length, ['категорія', 'категорії', 'категорій'])}`;
+  }
+
   const render = (list) => list.map((item) => {
     const active = state.activeCode === item.code ? 'active' : '';
-    const codeLabel = shortCodeBadge(item.code);
+    const codeLabel = categoryCodeLabel(item.code);
+    const title = item.short_label || item.label;
+    const familyClass = item.law_family === 'unfair_competition' ? 'unfair' : 'economic';
+
     return `
-      <button class="category-pill ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
-        <span class="category-pill-icon">${categoryIcon(item.code, item.law_family)}</span>
-        <span class="category-pill-code">${escapeHtml(codeLabel)}</span>
-        <span class="category-pill-title">${escapeHtml(item.short_label || item.label)}</span>
-        <span class="category-pill-count">${item.count}</span>
+      <button class="category-row ${familyClass} ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
+        <span class="category-row-code">${escapeHtml(codeLabel)}</span>
+        <span class="category-row-title">${escapeHtml(title)}</span>
+        <span class="category-row-count">${escapeHtml(categoryCountLabel(item.count))}</span>
+        <span class="category-row-arrow" aria-hidden="true">›</span>
       </button>
     `;
   }).join('');
@@ -219,7 +248,7 @@ function renderCategoryPills() {
   els.economicCards.innerHTML = render(economic) || '<div class="empty-state small">Поки що немає даних.</div>';
   els.unfairCards.innerHTML = render(unfair) || '<div class="empty-state small">Поки що немає даних.</div>';
 
-  document.querySelectorAll('.category-pill').forEach((button) => {
+  document.querySelectorAll('.category-row').forEach((button) => {
     button.addEventListener('click', () => {
       const code = button.dataset.code;
       state.activeCode = state.activeCode === code ? null : code;
