@@ -52,8 +52,6 @@ function setupEls() {
     heroFacts: document.getElementById('heroFacts'),
     economicCards: document.getElementById('economicCards'),
     unfairCards: document.getElementById('unfairCards'),
-    economicCount: document.getElementById('economicCount'),
-    unfairCount: document.getElementById('unfairCount'),
     searchInput: document.getElementById('searchInput'),
     yearFilter: document.getElementById('yearFilter'),
     sortSelect: document.getElementById('sortSelect'),
@@ -119,6 +117,51 @@ function formatMoney(value) {
   return new Intl.NumberFormat('uk-UA', { maximumFractionDigits: 0 }).format(n) + ' грн';
 }
 
+function outcomeMeta(row) {
+  const code = row?.decision_outcome || 'violation_found';
+
+  if (code === 'proceeding_closed_no_violation') {
+    return {
+      code,
+      label: row.outcome_label || 'Провадження закрито',
+      summary: row.outcome_summary || 'Провадження закрито / порушення не доведено.',
+      className: 'closed'
+    };
+  }
+
+  if (code === 'permit_granted') {
+    return {
+      code,
+      label: row.outcome_label || 'Дозвіл надано',
+      summary: row.outcome_summary || 'Дозвіл надано.',
+      className: 'permit'
+    };
+  }
+
+  if (code === 'other') {
+    return {
+      code,
+      label: row.outcome_label || 'Інший результат',
+      summary: row.outcome_summary || 'Результат потребує перевірки.',
+      className: 'other'
+    };
+  }
+
+  return {
+    code: 'violation_found',
+    label: row?.outcome_label || 'Порушення встановлено',
+    summary: row?.outcome_summary || 'АМКУ встановив порушення / застосував наслідки.',
+    className: 'violation'
+  };
+}
+
+function sanctionDisplay(row) {
+  if (row?.sanction) return row.sanction;
+  if (row?.decision_outcome === 'proceeding_closed_no_violation') return 'Санкція не застосовувалась: провадження закрито / порушення не доведено.';
+  if (row?.decision_outcome === 'permit_granted') return 'Санкція не застосовувалась.';
+  return 'Не виявлено';
+}
+
 function getCodeMeta(code) {
   return state.index.categories.find((c) => c.code === code) || null;
 }
@@ -127,22 +170,6 @@ function shortCodeBadge(code) {
   return String(code || '')
     .replace(/^zek:/, '')
     .replace(/^unfair:/, 'НДК ');
-}
-
-function categoryCodeLabel(code) {
-  const value = String(code || '');
-
-  const zek = value.match(/^zek:50:(\d+)$/);
-  if (zek) return `п. ${zek[1]} ст. 50`;
-
-  const unfair = value.match(/^unfair:(.+)$/);
-  if (unfair) return `ст. ${unfair[1]}`;
-
-  return shortCodeBadge(value);
-}
-
-function categoryCountLabel(count) {
-  return `${count} ріш.`;
 }
 
 function categoryIcon(code, family) {
@@ -221,26 +248,15 @@ function renderCategoryPills() {
   const economic = categories.filter((c) => c.law_family === 'economic_competition');
   const unfair = categories.filter((c) => c.law_family === 'unfair_competition');
 
-  if (els.economicCount) {
-    els.economicCount.textContent = `${economic.length} ${pluralize(economic.length, ['категорія', 'категорії', 'категорій'])}`;
-  }
-
-  if (els.unfairCount) {
-    els.unfairCount.textContent = `${unfair.length} ${pluralize(unfair.length, ['категорія', 'категорії', 'категорій'])}`;
-  }
-
   const render = (list) => list.map((item) => {
     const active = state.activeCode === item.code ? 'active' : '';
-    const codeLabel = categoryCodeLabel(item.code);
-    const title = item.short_label || item.label;
-    const familyClass = item.law_family === 'unfair_competition' ? 'unfair' : 'economic';
-
+    const codeLabel = shortCodeBadge(item.code);
     return `
-      <button class="category-row ${familyClass} ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
-        <span class="category-row-code">${escapeHtml(codeLabel)}</span>
-        <span class="category-row-title">${escapeHtml(title)}</span>
-        <span class="category-row-count">${escapeHtml(categoryCountLabel(item.count))}</span>
-        <span class="category-row-arrow" aria-hidden="true">›</span>
+      <button class="category-pill ${active}" data-code="${escapeHtml(item.code)}" aria-pressed="${state.activeCode === item.code}">
+        <span class="category-pill-icon">${categoryIcon(item.code, item.law_family)}</span>
+        <span class="category-pill-code">${escapeHtml(codeLabel)}</span>
+        <span class="category-pill-title">${escapeHtml(item.short_label || item.label)}</span>
+        <span class="category-pill-count">${item.count}</span>
       </button>
     `;
   }).join('');
@@ -248,7 +264,7 @@ function renderCategoryPills() {
   els.economicCards.innerHTML = render(economic) || '<div class="empty-state small">Поки що немає даних.</div>';
   els.unfairCards.innerHTML = render(unfair) || '<div class="empty-state small">Поки що немає даних.</div>';
 
-  document.querySelectorAll('.category-row').forEach((button) => {
+  document.querySelectorAll('.category-pill').forEach((button) => {
     button.addEventListener('click', () => {
       const code = button.dataset.code;
       state.activeCode = state.activeCode === code ? null : code;
@@ -337,6 +353,7 @@ function renderResults() {
     const party = firstParty(row);
     const extra = row.liable_parties.length > 1 ? ` +${row.liable_parties.length - 1}` : '';
     const amount = row.sanction_total_uah ? formatMoney(row.sanction_total_uah) : null;
+    const outcome = outcomeMeta(row);
     return `
       <button class="result-item ${active}" data-key="${escapeHtml(row.decision_key)}">
         <div class="result-title-row">
@@ -347,6 +364,9 @@ function renderResults() {
         <div class="result-meta-row">
           <span>${escapeHtml(row.primary_label)}</span>
           ${amount ? `<strong>${escapeHtml(amount)}</strong>` : ''}
+        </div>
+        <div class="result-outcome-row">
+          <span class="outcome-badge ${outcome.className}">${escapeHtml(outcome.label)}</span>
         </div>
         <div class="result-summary">${escapeHtml(row.violation_summary || '')}</div>
       </button>
@@ -374,44 +394,6 @@ function renderListItems(values, fallback = 'Не виявлено') {
 function renderPills(values, fallback = 'Не виявлено') {
   if (!Array.isArray(values) || !values.length) return `<span class="tag">${escapeHtml(fallback)}</span>`;
   return values.map((value) => `<span class="tag">${escapeHtml(value)}</span>`).join('');
-}
-
-function renderPartyIdentity(row) {
-  const parties = Array.isArray(row.liable_parties)
-    ? row.liable_parties.filter(Boolean)
-    : [];
-
-  if (!parties.length) {
-    return `
-      <section class="party-identity">
-        <div class="party-identity-head">
-          <span class="detail-icon">${ICONS.party}</span>
-          <span>Суб’єкт порушення</span>
-        </div>
-        <div class="party-name-list">
-          <div class="party-name muted-party">Не виявлено</div>
-        </div>
-      </section>
-    `;
-  }
-
-  const label = parties.length > 1 ? 'Суб’єкти порушення' : 'Суб’єкт порушення';
-
-  const partyRows = parties.map((party) => `
-    <div class="party-name">${escapeHtml(party)}</div>
-  `).join('');
-
-  return `
-    <section class="party-identity">
-      <div class="party-identity-head">
-        <span class="detail-icon">${ICONS.party}</span>
-        <span>${escapeHtml(label)}</span>
-      </div>
-      <div class="party-name-list">
-        ${partyRows}
-      </div>
-    </section>
-  `;
 }
 
 function sourceTitle(row) {
@@ -449,6 +431,9 @@ function renderDetail() {
   els.detailEmpty.classList.add('hidden');
   els.detailCard.classList.remove('hidden');
 
+  const parties = renderPills(row.liable_parties);
+  const outcome = outcomeMeta(row);
+
   const sanctions = row.sanction_amounts?.length
     ? row.sanction_amounts.map((item) => `
         <div class="detail-mini-card">
@@ -457,7 +442,7 @@ function renderDetail() {
           ${item.note ? `<small>${escapeHtml(item.note)}</small>` : ''}
         </div>
       `).join('')
-    : `<div class="detail-mini-card"><span>Санкція</span><strong>${escapeHtml(row.sanction || 'Не виявлено')}</strong></div>`;
+    : `<div class="detail-mini-card"><span>Санкція</span><strong>${escapeHtml(sanctionDisplay(row))}</strong></div>`;
 
   els.detailCard.innerHTML = `
     <header class="decision-hero">
@@ -467,6 +452,7 @@ function renderDetail() {
         <div class="decision-meta">
           <span>${escapeHtml(formatDate(row.decision_date))}</span>
           <span>${escapeHtml(row.law_family === 'unfair_competition' ? 'Недобросовісна конкуренція' : 'Захист економічної конкуренції')}</span>
+          <span class="outcome-badge ${outcome.className}">${escapeHtml(outcome.label)}</span>
           ${row.sanction_total_uah ? `<span>${escapeHtml(formatMoney(row.sanction_total_uah))}</span>` : ''}
         </div>
       </div>
@@ -477,13 +463,17 @@ function renderDetail() {
       </div>
     </header>
 
-    ${renderPartyIdentity(row)}
+    <section class="detail-section compact">
+      <h3><span class="detail-icon">${ICONS.party}</span>Суб’єкт / суб’єкти</h3>
+      <div class="tag-row">${parties}</div>
+    </section>
 
     <section class="detail-section lead-section">
       <h3><span class="detail-icon">${ICONS.summary}</span>Суть порушення</h3>
       <p>${escapeHtml(row.violation_summary || 'Не виявлено')}</p>
       <div class="info-grid">
         <div class="info-card"><span>Категорія</span><strong>${escapeHtml(row.primary_label)}</strong></div>
+        <div class="info-card"><span>Результат рішення</span><strong>${escapeHtml(outcome.summary || outcome.label)}</strong></div>
         <div class="info-card"><span>Ринок / сектор</span><strong>${escapeHtml(row.market_or_sector || 'Не виявлено')}</strong></div>
       </div>
     </section>
