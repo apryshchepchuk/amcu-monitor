@@ -37,7 +37,7 @@ const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
 const EMAIL_DISABLED = boolEnv('EMAIL_DISABLED', true);
 const PRACTICE_DB_ENABLED = boolEnv('PRACTICE_DB_ENABLED', true);
 const INCLUDE_CONCENTRATION_P12 = boolEnv('INCLUDE_CONCENTRATION_P12', true);
-const PROMPT_VERSION = intEnv('PROMPT_VERSION', 4);
+const PROMPT_VERSION = intEnv('PROMPT_VERSION', 5);
 
 
 // Historical backfill mode: process only the next unfinished month(s), skipping fully clean months.
@@ -45,6 +45,14 @@ const BACKFILL_ENABLED = boolEnv('BACKFILL_ENABLED', false);
 const BACKFILL_MONTHS_PER_RUN = intEnv('BACKFILL_MONTHS_PER_RUN', 1);
 const BACKFILL_FROM_MONTH = env('BACKFILL_FROM_MONTH', ''); // YYYY-MM, optional lower bound
 const BACKFILL_TO_MONTH = env('BACKFILL_TO_MONTH', '');     // YYYY-MM, optional upper bound
+
+// Gentle audit mode for already processed months:
+// re-open ZIPs and analyze only missed closure/no-violation decisions,
+// without forcing reanalysis of existing analyzed records and without changing main resource state.
+const CLOSURE_BACKFILL_ENABLED = boolEnv('CLOSURE_BACKFILL_ENABLED', false);
+const CLOSURE_BACKFILL_MONTHS_PER_RUN = intEnv('CLOSURE_BACKFILL_MONTHS_PER_RUN', BACKFILL_MONTHS_PER_RUN);
+const CLOSURE_BACKFILL_FROM_MONTH = env('CLOSURE_BACKFILL_FROM_MONTH', BACKFILL_FROM_MONTH);
+const CLOSURE_BACKFILL_TO_MONTH = env('CLOSURE_BACKFILL_TO_MONTH', BACKFILL_TO_MONTH);
 
 // Conservative Gemini quota controls.
 // Free-tier observed limits can be around 15 RPM / 250k input TPM, so defaults keep a buffer.
@@ -58,8 +66,9 @@ const GEMINI_TOKEN_ESTIMATE_CHARS_PER_TOKEN = Number.parseFloat(
 const GEMINI_QUOTA_WINDOW_MS = 60_000;
 const geminiUsageWindow = [];
 
-// Resource-level state version. Increment when resource skip / classification logic changes.
+// Resource-level state version. Keep stable to avoid reprocessing the existing clean base.
 const RESOURCE_STATE_VERSION = 4;
+const CLOSURE_BACKFILL_STATE_VERSION = 1;
 
 const UA_MONTHS = new Map([
   ['січень', 1], ['січня', 1],
@@ -146,6 +155,27 @@ const RESOURCE_EXCLUDE_PATTERNS = [
   /рекомендац/i,
   /список/i,
   /розпоряджен/i
+];
+
+const DECISION_OUTCOME_LABELS = {
+  violation_found: 'Порушення встановлено',
+  proceeding_closed_no_violation: 'Провадження закрито / порушення не доведено',
+  permit_granted: 'Дозвіл надано',
+  other: 'Інший результат'
+};
+
+const CLOSURE_DECISION_PATTERNS = [
+  /про\s+закриття\s+провадження/i,
+  /закрит(?:и|тя)\s+провадження/i,
+  /закрити\s+провадження[\s\S]{0,300}?без\s+прийняття\s+рішення\s+по\s+суті/i,
+  /не\s+доведено\s+вчинення[\s\S]{0,180}?порушення/i,
+  /порушення[\s\S]{0,180}?не\s+доведено/i
+];
+
+const PERMIT_ONLY_DECISION_PATTERNS = [
+  /про\s+надання\s+дозволу\s+на\s+концентраці[юї]/i,
+  /надати\s+дозвіл[\s\S]{0,250}?на\s+концентраці[юї]/i,
+  /надати\s+дозвіл[\s\S]{0,250}?на\s+створення/i
 ];
 
 function env(name, fallback) {
@@ -498,6 +528,31 @@ function isResourceCleanInState(resource, state) {
   );
 }
 
+function isClosureResourceCleanInState(resource, state) {
+  const id = resource.id || resource.url || resourceTitle(resource);
+  const prev = state?.closure_backfill?.processed_resources?.[id];
+
+  return Boolean(
+    prev?.state_version === CLOSURE_BACKFILL_STATE_VERSION
+    && Number(prev?.errors || 0) === 0
+    && prev?.incomplete !== true
+  );
+}
+
+function isWithinClosureBackfillMonthRange(resource) {
+  const key = resourcePeriodKey(resource);
+  if (!key) return false;
+
+  const current = monthKeyValue(key);
+  const from = CLOSURE_BACKFILL_FROM_MONTH ? monthKeyValue(CLOSURE_BACKFILL_FROM_MONTH) : null;
+  const to = CLOSURE_BACKFILL_TO_MONTH ? monthKeyValue(CLOSURE_BACKFILL_TO_MONTH) : null;
+
+  if (from !== null && current < from) return false;
+  if (to !== null && current > to) return false;
+
+  return true;
+}
+
 async function getCandidateResources(state = null) {
   if (LOCAL_ZIP) {
     return [{
@@ -515,6 +570,14 @@ async function getCandidateResources(state = null) {
 
   const resources = pkg.result?.resources || [];
   const decisionZipResources = resources.filter(isDecisionZipResource);
+
+  if (CLOSURE_BACKFILL_ENABLED) {
+    const closureResources = selectBestResourcePerMonth(decisionZipResources)
+      .filter(isWithinClosureBackfillMonthRange)
+      .filter((resource) => !isClosureResourceCleanInState(resource, state));
+
+    return closureResources.slice(0, Math.max(1, CLOSURE_BACKFILL_MONTHS_PER_RUN));
+  }
 
   if (BACKFILL_ENABLED) {
     const backfillResources = selectBestResourcePerMonth(decisionZipResources)
@@ -582,7 +645,8 @@ async function extractText(filePath) {
       });
       return normalizeSpaces(stdout);
     } catch (err) {
-      if (boolEnv('USE_LIBREOFFICE_FALLBACK', false)) {
+      if (boolEnv('USE_LIBREOFFICE_FALLBACK', true)) {
+        console.warn(`antiword failed for ${filePath}; trying LibreOffice → DOCX → pandoc fallback.`);
         return await extractTextViaLibreOffice(filePath);
       }
       throw err;
@@ -604,16 +668,20 @@ async function extractTextViaLibreOffice(filePath) {
 
   await runCmd(
     'libreoffice',
-    ['--headless', '--convert-to', 'txt:Text', '--outdir', outDir, filePath],
+    ['--headless', '--convert-to', 'docx', '--outdir', outDir, filePath],
     { maxBuffer: 1024 * 1024 * 20 }
   );
 
   const files = await fs.readdir(outDir);
-  const txt = files.find((f) => f.toLowerCase().endsWith('.txt'));
+  const docx = files.find((f) => f.toLowerCase().endsWith('.docx'));
 
-  if (!txt) throw new Error(`LibreOffice did not create txt for ${filePath}`);
+  if (!docx) throw new Error(`LibreOffice did not create docx for ${filePath}`);
 
-  return normalizeSpaces(await fs.readFile(path.join(outDir, txt), 'utf8'));
+  const { stdout } = await runCmd('pandoc', ['-t', 'plain', path.join(outDir, docx)], {
+    maxBuffer: 1024 * 1024 * 50
+  });
+
+  return normalizeSpaces(stdout);
 }
 
 function isConcentrationWithoutPermitP12(text) {
@@ -637,16 +705,112 @@ function isConcentrationWithoutPermitP12(text) {
   return hasPoint12 && hasConcentration && hasWithoutPermit;
 }
 
+function hasViolationNormMention(text) {
+  const normalized = normalizeSpaces(text);
+
+  return (
+    extractArticle50Points(normalized).length > 0
+    || extractUnfairCompetitionArticles(normalized).length > 0
+    || isConcentrationWithoutPermitP12(normalized)
+    || /законодавства\s+про\s+захист\s+економічної\s+конкуренції/i.test(normalized)
+    || /законодавства\s+про\s+захист\s+від\s+недобросовісної\s+конкуренції/i.test(normalized)
+  );
+}
+
+function isClosureViolationPractice(text) {
+  const normalized = normalizeSpaces(text);
+  const head = normalized.slice(0, 45000);
+
+  const hasClosureSignal = CLOSURE_DECISION_PATTERNS.some((re) => re.test(head));
+  if (!hasClosureSignal) return false;
+
+  return hasViolationNormMention(head);
+}
+
+function isPermitOnlyDecision(text) {
+  const normalized = normalizeSpaces(text);
+  const head = normalized.slice(0, 18000);
+
+  const hasPermitSignal = PERMIT_ONLY_DECISION_PATTERNS.some((re) => re.test(head));
+  if (!hasPermitSignal) return false;
+
+  // A closure decision may also grant a permit in the operative part; do not skip it.
+  if (isClosureViolationPractice(normalized)) return false;
+
+  return !/справ[аи]\s+про\s+порушення/i.test(head)
+    && !/провадженн[яі]\s+у\s+справ[іи]/i.test(head)
+    && !/пункт(?:ом|у)?\s*\d{1,2}\s+статті\s*50/i.test(head)
+    && !/п\.\s*\d{1,2}\s*ст\.\s*50/i.test(head);
+}
+
+function inferDecisionOutcomeFromText(text) {
+  const normalized = normalizeSpaces(text);
+  const headTail = `${normalized.slice(0, 45000)}\n${normalized.slice(-18000)}`;
+
+  if (isClosureViolationPractice(headTail)) return 'proceeding_closed_no_violation';
+  if (isPermitOnlyDecision(headTail)) return 'permit_granted';
+
+  if (
+    /визнати[^\n.]{0,250}порушення/i.test(headTail)
+    || /накласти\s+штраф/i.test(headTail)
+    || /штраф\s+у\s+розмірі/i.test(headTail)
+  ) {
+    return 'violation_found';
+  }
+
+  return 'violation_found';
+}
+
+function normalizeDecisionOutcome(value, text = '') {
+  const raw = String(value || '').toLowerCase().trim();
+
+  const aliases = new Map([
+    ['violation_found', 'violation_found'],
+    ['порушення встановлено', 'violation_found'],
+    ['proceeding_closed_no_violation', 'proceeding_closed_no_violation'],
+    ['closed_no_violation', 'proceeding_closed_no_violation'],
+    ['no_violation_found', 'proceeding_closed_no_violation'],
+    ['провадження закрито', 'proceeding_closed_no_violation'],
+    ['порушення не доведено', 'proceeding_closed_no_violation'],
+    ['permit_granted', 'permit_granted'],
+    ['дозвіл надано', 'permit_granted'],
+    ['other', 'other']
+  ]);
+
+  if (aliases.has(raw)) return aliases.get(raw);
+
+  if (text) return inferDecisionOutcomeFromText(text);
+
+  return 'violation_found';
+}
+
+function decisionOutcomeLabel(code, fallback = '') {
+  const normalized = normalizeDecisionOutcome(code);
+  return fallback || DECISION_OUTCOME_LABELS[normalized] || DECISION_OUTCOME_LABELS.other;
+}
+
 function classifyDecision(text) {
   const normalized = normalizeSpaces(text);
   const head = normalized.slice(0, 25000);
 
-  const include = INCLUDE_PATTERNS.some((re) => re.test(head));
+  const closurePractice = isClosureViolationPractice(normalized);
+
+  // Closure backfill is deliberately narrow: it audits old months only for missed closure/no-violation practice.
+  // It should not cause a broad reanalysis of already processed periods.
+  if (CLOSURE_BACKFILL_ENABLED && !closurePractice) {
+    return { relevant: false, reason: 'closure_backfill_non_closure' };
+  }
+
+  if (isPermitOnlyDecision(normalized)) {
+    return { relevant: false, reason: 'permit_only_concentration_or_clearance' };
+  }
+
+  const include = INCLUDE_PATTERNS.some((re) => re.test(head)) || closurePractice;
 
   if (!include) return { relevant: false, reason: 'not_violation_decision' };
 
   const procedural = PROCEDURAL_PATTERNS.some((re) => re.test(head));
-  if (procedural && !INCLUDE_PROCEDURAL_DECISIONS) {
+  if (procedural && !INCLUDE_PROCEDURAL_DECISIONS && !closurePractice) {
     return { relevant: false, reason: 'procedural_decision' };
   }
 
@@ -659,7 +823,12 @@ function classifyDecision(text) {
   let lawArea = 'economic_competition';
   if (/недобросовісної\s+конкуренції/i.test(head)) lawArea = 'unfair_competition';
 
-  return { relevant: true, reason: 'included_by_regex', lawArea };
+  return {
+    relevant: true,
+    reason: closurePractice ? 'closure_practice' : 'included_by_regex',
+    lawArea,
+    decisionOutcome: closurePractice ? 'proceeding_closed_no_violation' : inferDecisionOutcomeFromText(normalized)
+  };
 }
 
 function parseDecisionMeta(text, fileName = '') {
@@ -1093,7 +1262,16 @@ function buildGeminiPrompt({ text, meta, fileName, resourceTitle }) {
 Поверни виключно валідний JSON без Markdown, без коментарів і без пояснень поза JSON.
 
 Ключове правило класифікації:
-Класифікуй рішення за безпосереднім порушенням, за яке суб’єкта притягнуто до відповідальності / на яке накладено санкцію.
+Класифікуй рішення за безпосереднім порушенням або ймовірним порушенням, яке є предметом справи.
+Якщо порушення встановлено або накладено санкцію — primary_code відповідає порушенню.
+Якщо провадження закрито / порушення не доведено — primary_code відповідає нормі, за якою розглядалися ознаки порушення.
+
+До релевантної практики належать:
+- рішення, якими встановлено порушення та/або накладено санкцію;
+- рішення про закриття провадження у справі про можливе порушення, якщо рішення аналізує конкретну норму порушення;
+- рішення, де АМКУ не довів порушення, але сформулював правову позицію щодо відповідного виду порушення.
+
+Не включай звичайні рішення про надання дозволу на концентрацію / узгоджені дії, якщо це не справа про порушення і немає аналізу ознак конкретного порушення.
 
 Важливі уточнення:
 - Якщо рішення про неподання інформації у межах розслідування недобросовісної конкуренції, primary_code має бути "zek:50:13", а не "unfair:*".
@@ -1101,7 +1279,9 @@ function buildGeminiPrompt({ text, meta, fileName, resourceTitle }) {
 - Якщо рішення про подання недостовірної інформації, primary_code має бути "zek:50:15".
 - Якщо рішення про концентрацію без дозволу АМКУ, primary_code має бути "zek:50:12".
 - Якщо рішення про поширення інформації, що вводить в оману, primary_code має бути "unfair:15-1".
-- Якщо рішення містить кілька порушень, article_50_points або unfair_competition_articles мають містити всі знайдені норми, але primary_code постав за основним/першим порушенням, за яке накладена санкція.
+- Якщо рішення містить кілька порушень, article_50_points або unfair_competition_articles мають містити всі знайдені норми, але primary_code постав за основним/першим порушенням або за основним предметом закритого провадження.
+- Для рішень про закриття провадження визнач decision_outcome як "proceeding_closed_no_violation", а санкцію описуй як таку, що не застосовувалась, якщо штрафу немає.
+- Для звичайних рішень про надання дозволу без справи про порушення визнач is_relevant=false.
 - Не вигадуй інформацію. Якщо певне поле не встановлюється з тексту — постав null або порожній масив.
 
 Довідник primary_code для ст. 50 Закону України «Про захист економічної конкуренції»:
@@ -1112,10 +1292,11 @@ ${unfairList}
 
 Завдання:
 1. Визнач реквізити рішення: номер і дата.
-2. Визнач суб’єкта/суб’єктів, яких притягнуто до відповідальності.
-3. Визнач чітку юридичну класифікацію за довідниками вище.
-4. Коротко опиши суть порушення і порушену норму.
-5. Сформулюй ключовий висновок / правову кваліфікацію АМКУ.
+2. Визнач суб’єкта/суб’єктів, яких притягнуто до відповідальності або щодо яких розглядалося питання про порушення.
+3. Визнач результат рішення: порушення встановлено, провадження закрито / порушення не доведено, дозвіл надано, інше.
+4. Визнач чітку юридичну класифікацію за довідниками вище.
+5. Коротко опиши суть порушення / ймовірного порушення і відповідну норму.
+6. Сформулюй ключовий висновок / правову кваліфікацію АМКУ.
 6. Витягни позицію порушника, заперечення або зауваження, якщо вони є.
 7. Витягни санкцію: розмір штрафу, зобов’язання, інші наслідки.
 8. Сформуй 3-7 ключових практичних висновків для юриста.
@@ -1128,6 +1309,9 @@ ${unfairList}
   "is_relevant": true,
   "decision_number": "",
   "decision_date": "YYYY-MM-DD",
+  "decision_outcome": "violation_found | proceeding_closed_no_violation | permit_granted | other",
+  "outcome_label": "",
+  "outcome_summary": "",
   "classification": {
     "law_family": "economic_competition | unfair_competition | other",
     "primary_code": "zek:50:1 | zek:50:2 | ... | unfair:4 | unfair:15-1 | other",
@@ -1173,6 +1357,9 @@ async function analyzeWithGemini(input) {
       is_relevant: true,
       decision_number: input.meta.decision_number,
       decision_date: input.meta.decision_date,
+      decision_outcome: input.classification.decisionOutcome || 'violation_found',
+      outcome_label: decisionOutcomeLabel(input.classification.decisionOutcome || 'violation_found'),
+      outcome_summary: '[SKIP_GEMINI] Результат рішення не аналізувався моделлю.',
       classification: {
         law_family: input.classification.lawArea || 'economic_competition',
         primary_code: null,
@@ -1339,12 +1526,21 @@ function normalizeAnalysis(analysis, meta, extra) {
     ...(canonicalClassification.secondary_legal_basis || [])
   ]);
 
+  const decisionOutcome = normalizeDecisionOutcome(
+    analysis.decision_outcome || extra.classification?.decisionOutcome,
+    extra.text || ''
+  );
+
   const out = {
     decision_key: null,
     decision_number: analysis.decision_number || meta.decision_number || null,
     decision_date: normalizeDateValue(analysis.decision_date) || meta.decision_date || null,
     year: null,
     month: null,
+
+    decision_outcome: decisionOutcome,
+    outcome_label: decisionOutcomeLabel(decisionOutcome, analysis.outcome_label || ''),
+    outcome_summary: analysis.outcome_summary || null,
 
     classification: canonicalClassification,
     primary_code: canonicalClassification.primary_code,
@@ -1680,7 +1876,7 @@ async function processResource(resource, state, runBudget) {
     && Number(prev?.errors || 0) === 0
     && prev?.incomplete !== true;
 
-  if (!LOCAL_ZIP && !FORCE_RESOURCES && prevResourceClean && prev?.signature && signature && prev.signature === signature) {
+  if (!CLOSURE_BACKFILL_ENABLED && !LOCAL_ZIP && !FORCE_RESOURCES && prevResourceClean && prev?.signature && signature && prev.signature === signature) {
     return {
       skippedResource: true,
       reason: 'metadata_signature_unchanged',
@@ -1701,7 +1897,7 @@ async function processResource(resource, state, runBudget) {
     zipSha = await downloadFile(resource.url, zipPath);
   }
 
-  if (!FORCE_RESOURCES && prevResourceClean && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
+  if (!CLOSURE_BACKFILL_ENABLED && !FORCE_RESOURCES && prevResourceClean && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
     return {
       skippedResource: true,
       reason: 'zip_hash_unchanged',
@@ -1841,8 +2037,8 @@ async function processResource(resource, state, runBudget) {
     }
   }
 
-  state.processed_resources[id] = {
-    state_version: RESOURCE_STATE_VERSION,
+  const resourceRecord = {
+    state_version: CLOSURE_BACKFILL_ENABLED ? CLOSURE_BACKFILL_STATE_VERSION : RESOURCE_STATE_VERSION,
     title,
     url: resource.url,
     signature,
@@ -1853,6 +2049,14 @@ async function processResource(resource, state, runBudget) {
     errors: stats.errors,
     incomplete: stats.errors > 0
   };
+
+  if (CLOSURE_BACKFILL_ENABLED) {
+    state.closure_backfill ||= {};
+    state.closure_backfill.processed_resources ||= {};
+    state.closure_backfill.processed_resources[id] = resourceRecord;
+  } else {
+    state.processed_resources[id] = resourceRecord;
+  }
 
   return { skippedResource: false, additions, stats };
 }
@@ -1886,6 +2090,8 @@ async function main() {
 
   state.processed_resources ||= {};
   state.processed_decisions ||= {};
+  state.closure_backfill ||= { processed_resources: {} };
+  state.closure_backfill.processed_resources ||= {};
 
   const existingResults = await readJson(RESULTS_PATH, []);
 
@@ -1900,6 +2106,10 @@ async function main() {
   console.log(
     `Backfill settings: enabled=${BACKFILL_ENABLED}, monthsPerRun=${BACKFILL_MONTHS_PER_RUN}, `
     + `from=${BACKFILL_FROM_MONTH || '-'}, to=${BACKFILL_TO_MONTH || '-'}`
+  );
+  console.log(
+    `Closure backfill settings: enabled=${CLOSURE_BACKFILL_ENABLED}, monthsPerRun=${CLOSURE_BACKFILL_MONTHS_PER_RUN}, `
+    + `from=${CLOSURE_BACKFILL_FROM_MONTH || '-'}, to=${CLOSURE_BACKFILL_TO_MONTH || '-'}`
   );
   for (const r of resources) {
     console.log(`- ${resourceTitle(r)} (${r.format || ''})`);
@@ -1956,6 +2166,9 @@ async function main() {
       resource_state_version: RESOURCE_STATE_VERSION,
       backfill_enabled: BACKFILL_ENABLED,
       backfill_months_per_run: BACKFILL_MONTHS_PER_RUN,
+      closure_backfill_enabled: CLOSURE_BACKFILL_ENABLED,
+      closure_backfill_months_per_run: CLOSURE_BACKFILL_MONTHS_PER_RUN,
+      closure_backfill_state_version: CLOSURE_BACKFILL_STATE_VERSION,
       gemini_rpm_limit: GEMINI_RPM_LIMIT,
       gemini_tpm_limit: GEMINI_TPM_LIMIT,
       max_text_chars: MAX_TEXT_CHARS,
