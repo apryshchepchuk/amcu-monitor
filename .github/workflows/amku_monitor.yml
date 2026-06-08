@@ -23,6 +23,26 @@ on:
         required: false
         default: ""
 
+      closure_backfill_enabled:
+        description: "Audit already processed months only for missed closure/no-violation decisions"
+        required: false
+        default: "false"
+
+      closure_backfill_months_per_run:
+        description: "How many months to audit in closure backfill mode"
+        required: false
+        default: "1"
+
+      closure_backfill_from_month:
+        description: "Optional lower bound for closure backfill, YYYY-MM"
+        required: false
+        default: ""
+
+      closure_backfill_to_month:
+        description: "Optional upper bound for closure backfill, YYYY-MM"
+        required: false
+        default: ""
+
       lookback_months:
         description: "Fallback recent-month scan when backfill_enabled=false"
         required: false
@@ -107,7 +127,7 @@ jobs:
       - name: Install document tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y unzip antiword pandoc
+          sudo apt-get install -y unzip antiword pandoc libreoffice-writer
 
       - name: Install Node dependencies
         run: npm install
@@ -123,6 +143,12 @@ jobs:
           BACKFILL_MONTHS_PER_RUN: ${{ github.event.inputs.backfill_months_per_run || '1' }}
           BACKFILL_FROM_MONTH: ${{ github.event.inputs.backfill_from_month || '' }}
           BACKFILL_TO_MONTH: ${{ github.event.inputs.backfill_to_month || '' }}
+
+          CLOSURE_BACKFILL_ENABLED: ${{ github.event.inputs.closure_backfill_enabled || 'false' }}
+          CLOSURE_BACKFILL_MONTHS_PER_RUN: ${{ github.event.inputs.closure_backfill_months_per_run || '1' }}
+          CLOSURE_BACKFILL_FROM_MONTH: ${{ github.event.inputs.closure_backfill_from_month || '' }}
+          CLOSURE_BACKFILL_TO_MONTH: ${{ github.event.inputs.closure_backfill_to_month || '' }}
+          USE_LIBREOFFICE_FALLBACK: "true"
 
           LOOKBACK_MONTHS: ${{ github.event.inputs.lookback_months || '4' }}
           FORCE_RESOURCES: ${{ github.event.inputs.force || 'false' }}
