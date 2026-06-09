@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-06-09T13:49:02.114Z",
+  "updated_at": "2026-06-09T18:22:39.876Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 175,
-  "total_sanction_uah": 10166340832,
+  "total_decisions": 190,
+  "total_sanction_uah": 10168706221,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 152,
+    "economic_competition": 167,
     "unfair_competition": 23,
     "other": 0
   },
@@ -39,21 +39,21 @@
       "label": "п. 4 ст. 50 — невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
       "law_family": "economic_competition",
       "short_label": "невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
-      "count": 7
+      "count": 8
     },
     {
       "code": "zek:50:12",
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 53
+      "count": 63
     },
     {
       "code": "zek:50:13",
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 36
+      "count": 38
     },
     {
       "code": "zek:50:14",
@@ -67,7 +67,7 @@
       "label": "п. 15 ст. 50 — подання недостовірної інформації",
       "law_family": "economic_competition",
       "short_label": "подання недостовірної інформації",
-      "count": 6
+      "count": 8
     },
     {
       "code": "unfair:4",
@@ -92,5 +92,5 @@
     }
   ],
   "newest_decision_date": "2026-05-14",
-  "oldest_decision_date": "2025-05-01"
+  "oldest_decision_date": "2025-04-03"
 }
