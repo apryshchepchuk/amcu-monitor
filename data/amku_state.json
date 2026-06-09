@@ -12583,93 +12583,93 @@
     },
     "2025-05-01|177-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "177-р",
       "decision_date": "2025-05-01",
       "file_sha256": "7753692498e313e7b75942c8843cca61a640efd9ec3080fe0a5728f67d754760",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 177-р.doc",
-      "updated_at": "2026-06-09T13:47:53.659Z"
+      "updated_at": "2026-06-09T20:13:18.843Z"
     },
     "2025-05-01|178-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "178-р",
       "decision_date": "2025-05-01",
       "file_sha256": "88a1f7579004e79a56f87b3ebdc5dca208e341a0d30e972ad487ef36e41682e3",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 178-р.docx",
-      "updated_at": "2026-06-09T13:47:53.736Z"
+      "updated_at": "2026-06-09T20:13:18.898Z"
     },
     "2025-05-01|179-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "179-р",
       "decision_date": "2025-05-01",
       "file_sha256": "2d7c80ab39a26b1c25c925eab2f68bbd9eb4f24d05349731ce49f2b91ac45b0c",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 179-р.doc",
-      "updated_at": "2026-06-09T13:47:53.741Z"
+      "updated_at": "2026-06-09T20:13:18.902Z"
     },
     "2025-05-01|180-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "180-р",
       "decision_date": "2025-05-01",
       "file_sha256": "b5cbf73fe69b22902ec6eda5bc4c888ccbffccb3871cdc44aa516fc53bd53cb0",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 180-р.doc",
-      "updated_at": "2026-06-09T13:47:53.745Z"
+      "updated_at": "2026-06-09T20:13:18.905Z"
     },
     "2025-05-01|181-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "181-р",
       "decision_date": "2025-05-01",
       "file_sha256": "b09672691a3d8a9040177cb12499bd6e374cd14f8e60100087919f525016d682",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 181-р.doc",
-      "updated_at": "2026-06-09T13:47:53.749Z"
+      "updated_at": "2026-06-09T20:13:18.908Z"
     },
     "2025-05-01|182-р": {
       "status": "skipped",
-      "reason": "not_violation_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "182-р",
       "decision_date": "2025-05-01",
       "file_sha256": "71474a1d99e53b33388d89829c78182278fb60be2c03ab47be064dcfcb9d9bde",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 182-р.doc",
-      "updated_at": "2026-06-09T13:47:53.753Z"
+      "updated_at": "2026-06-09T20:13:18.911Z"
     },
     "2025-05-01|183-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "183-р",
       "decision_date": "2025-05-01",
       "file_sha256": "172797a622a9bc8aa21becb2ff097b96dd7d0e80632af3c537dc0a4ee0fcc2a1",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 183-р.doc",
-      "updated_at": "2026-06-09T13:47:53.757Z"
+      "updated_at": "2026-06-09T20:13:18.914Z"
     },
     "2025-05-01|184-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "184-р",
       "decision_date": "2025-05-01",
       "file_sha256": "d7bb3885fc8efa3cd996e42040fe45d6f16e9f7889b0be6cb1339c49bf37949c",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 184-р.doc",
-      "updated_at": "2026-06-09T13:47:53.761Z"
+      "updated_at": "2026-06-09T20:13:18.917Z"
     },
     "2025-05-01|185-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "185-р",
       "decision_date": "2025-05-01",
       "file_sha256": "4149cae0719717fa89a38bcced0200794bc189860a8d639bc4974a13e10d4c92",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 185-р.doc",
-      "updated_at": "2026-06-09T13:47:53.765Z"
+      "updated_at": "2026-06-09T20:13:18.920Z"
     },
     "2025-05-01|186-р": {
       "status": "analyzed",
@@ -12718,23 +12718,23 @@
     },
     "2025-05-01|191-р": {
       "status": "skipped",
-      "reason": "procedural_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "191-р",
       "decision_date": "2025-05-01",
       "file_sha256": "b7b8682392caa6119c9c8585d1c07ccface12ee54d77c82f717ccc9870b165da",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 191-р.docx",
-      "updated_at": "2026-06-09T13:47:54.492Z"
+      "updated_at": "2026-06-09T20:13:19.479Z"
     },
     "2025-05-01|192-р": {
       "status": "skipped",
-      "reason": "procedural_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "192-р",
       "decision_date": "2025-05-01",
       "file_sha256": "31388676ddf717812232efc46cb8547a6f9afa07654a433d7a1548b56313ecf9",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 01.05.2025 № 192-р.doc",
-      "updated_at": "2026-06-09T13:47:54.504Z"
+      "updated_at": "2026-06-09T20:13:19.488Z"
     },
     "2025-05-08|193-р": {
       "status": "analyzed",
@@ -12747,43 +12747,43 @@
     },
     "2025-05-08|194-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "194-р",
       "decision_date": "2025-05-08",
       "file_sha256": "5c4b2c172eb3f70174ae7982031720b7a9eeb611afc498a6f5a94b3baf82c699",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 08.05.2025 № 194-р.doc",
-      "updated_at": "2026-06-09T13:47:54.677Z"
+      "updated_at": "2026-06-09T20:13:19.619Z"
     },
     "2025-05-08|195-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "195-р",
       "decision_date": "2025-05-08",
       "file_sha256": "ea01e9151871ae27729ef483e857df0bd3a9bab539edbb0ce810808986d7d337",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 08.05.2025 № 195-р.doc",
-      "updated_at": "2026-06-09T13:47:54.681Z"
+      "updated_at": "2026-06-09T20:13:19.623Z"
     },
     "2025-05-08|196-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "196-р",
       "decision_date": "2025-05-08",
       "file_sha256": "a7971c11eaa1bd78896d7e30a5ee34463a99429e604fa239227500d80082a5d0",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 08.05.2025 № 196-р.doc",
-      "updated_at": "2026-06-09T13:47:54.686Z"
+      "updated_at": "2026-06-09T20:13:19.626Z"
     },
     "2025-05-08|197-р": {
       "status": "skipped",
-      "reason": "not_violation_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "197-р",
       "decision_date": "2025-05-08",
       "file_sha256": "175819a5bec9da4229239fcd7dcf4ab29e50d2d342dfcfd2996dedec9d43bcd9",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 08.05.2025 № 197-р.doc",
-      "updated_at": "2026-06-09T13:47:54.689Z"
+      "updated_at": "2026-06-09T20:13:19.629Z"
     },
     "2025-05-08|198-р": {
       "status": "analyzed",
@@ -12796,83 +12796,83 @@
     },
     "2025-05-15|199-р": {
       "status": "skipped",
-      "reason": "not_violation_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "199-р",
       "decision_date": "2025-05-15",
       "file_sha256": "70d8036169409de452915ec0a1f7dd9301f6aa9f062dae0fc4ac0da721970ec7",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 199-р.doc",
-      "updated_at": "2026-06-09T13:47:54.698Z"
+      "updated_at": "2026-06-09T20:13:19.637Z"
     },
     "2025-05-15|200-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "200-р",
       "decision_date": "2025-05-15",
       "file_sha256": "dddf45f18d7ce46e85334cd1d4a4949bd97a83179428edbe2158570bec973150",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 200-р.doc",
-      "updated_at": "2026-06-09T13:47:54.702Z"
+      "updated_at": "2026-06-09T20:13:19.639Z"
     },
     "2025-06-15|201-р": {
       "status": "skipped",
-      "reason": "not_violation_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "201-р",
       "decision_date": "2025-06-15",
       "file_sha256": "c20ddd43fc6e1d1f76849468815778fb3533588e74fd9938bf2b789de03ef1c8",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 201-р.doc",
-      "updated_at": "2026-06-09T13:47:54.706Z"
+      "updated_at": "2026-06-09T20:13:19.642Z"
     },
     "2025-05-15|202-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "202-р",
       "decision_date": "2025-05-15",
       "file_sha256": "7d78618349ca089840b5571c366fea3e7ced1f21dc428b089941d26507601948",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 202-р.doc",
-      "updated_at": "2026-06-09T13:47:54.710Z"
+      "updated_at": "2026-06-09T20:13:19.646Z"
     },
     "2025-05-15|203-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "203-р",
       "decision_date": "2025-05-15",
       "file_sha256": "4d1c3cbf207e07bde1f3de0805998511f62e8b9b0d9824122a5e38012a8fda1d",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 203-р.doc",
-      "updated_at": "2026-06-09T13:47:54.714Z"
+      "updated_at": "2026-06-09T20:13:19.649Z"
     },
     "2025-05-15|204-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "204-р",
       "decision_date": "2025-05-15",
       "file_sha256": "87b7ad2811762a074fd51ab5296d0d36961e5a142da6f7f92b861422285966ee",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 204-р.doc",
-      "updated_at": "2026-06-09T13:47:54.717Z"
+      "updated_at": "2026-06-09T20:13:19.652Z"
     },
     "2025-05-15|205-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "205-р",
       "decision_date": "2025-05-15",
       "file_sha256": "289376ee6a492ad68f180a4b7000ae75a2537c9d5d248ab8646b6021609499e5",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 205-р.doc",
-      "updated_at": "2026-06-09T13:47:54.722Z"
+      "updated_at": "2026-06-09T20:13:19.655Z"
     },
     "2025-05-15|206-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "206-р",
       "decision_date": "2025-05-15",
       "file_sha256": "9dc3cb4892b6f1e6a0b192c1fb9e250387d20685fe3f065e2efe5d28a58b2676",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 206-р.doc",
-      "updated_at": "2026-06-09T13:47:54.725Z"
+      "updated_at": "2026-06-09T20:13:19.658Z"
     },
     "2025-05-15|207-р": {
       "status": "analyzed",
@@ -12885,43 +12885,43 @@
     },
     "2025-05-15|208-р": {
       "status": "skipped",
-      "reason": "procedural_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "208-р",
       "decision_date": "2025-05-15",
       "file_sha256": "8d696183ed5de2e5f00cc0ec2ebf143675ac5248c68fcc4bf64c54ca3446173a",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 208-р.docx",
-      "updated_at": "2026-06-09T13:47:55.021Z"
+      "updated_at": "2026-06-09T20:13:19.892Z"
     },
     "2025-05-15|209-р": {
       "status": "skipped",
-      "reason": "procedural_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "209-р",
       "decision_date": "2025-05-15",
       "file_sha256": "956c1aa20133b37bc2f8a7044d2badb57aa03a44b6f1342bd0ec49fbdba1766b",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 15.05.2025 № 209-р.docx",
-      "updated_at": "2026-06-09T13:47:55.200Z"
+      "updated_at": "2026-06-09T20:13:20.029Z"
     },
     "2025-05-22|210-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "210-р",
       "decision_date": "2025-05-22",
       "file_sha256": "257891a502f928f272193bb7456a0a05da00c8efcecd625d5295d5aecddcf451",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 22.05.2025 № 210-р.docx",
-      "updated_at": "2026-06-09T13:47:55.257Z"
+      "updated_at": "2026-06-09T20:13:20.085Z"
     },
     "2025-05-22|211-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "211-р",
       "decision_date": "2025-05-22",
       "file_sha256": "d93fbd3de3192aa2e76a68ac4d4751aec580e99e9c4d0f11d2a1fcf5ef3fa2ce",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 22.05.2025 № 211-р.doc",
-      "updated_at": "2026-06-09T13:47:55.261Z"
+      "updated_at": "2026-06-09T20:13:20.088Z"
     },
     "2025-05-22|212-р": {
       "status": "analyzed",
@@ -12979,103 +12979,103 @@
     },
     "2025-05-29|219-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "219-р",
       "decision_date": "2025-05-29",
       "file_sha256": "a6e1de139f666dc44650a4707c2c3102a1e886365b72ee9fede460a858dab86e",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 219-р.doc",
-      "updated_at": "2026-06-09T13:48:00.895Z"
+      "updated_at": "2026-06-09T20:13:21.049Z"
     },
     "2025-05-29|220-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "220-р",
       "decision_date": "2025-05-29",
       "file_sha256": "67d4bf16f0b1bfa57f9d626b2d3690f2f08b4cf7a5e3ec109318ffeede1e40d4",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 220-р.doc",
-      "updated_at": "2026-06-09T13:48:00.899Z"
+      "updated_at": "2026-06-09T20:13:21.052Z"
     },
     "2025-05-29|221-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "221-р",
       "decision_date": "2025-05-29",
       "file_sha256": "46c4c56c717256d63873517c2bf9d2b10a669175babdb390066a1af8694b59a1",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 221-р.doc",
-      "updated_at": "2026-06-09T13:48:00.902Z"
+      "updated_at": "2026-06-09T20:13:21.055Z"
     },
     "2025-05-29|222-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "222-р",
       "decision_date": "2025-05-29",
       "file_sha256": "e1a7edc3ca16c1119fc47a0745f7b4a7c602a7f3eb7958f15e3a4493515d7601",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 222-р.docx",
-      "updated_at": "2026-06-09T13:48:00.968Z"
+      "updated_at": "2026-06-09T20:13:21.110Z"
     },
     "2025-05-29|223-р": {
       "status": "skipped",
-      "reason": "permit_only_concentration_or_clearance",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "223-р",
       "decision_date": "2025-05-29",
       "file_sha256": "ea1519ce6b5cefa348516f080f24407c0088bbce03e381f33e65ecb9780dfb03",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 223-р.doc",
-      "updated_at": "2026-06-09T13:48:00.973Z"
+      "updated_at": "2026-06-09T20:13:21.114Z"
     },
     "2025-05-29|224-р": {
       "status": "skipped",
-      "reason": "not_violation_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "224-р",
       "decision_date": "2025-05-29",
       "file_sha256": "bca59344f516d38db09289bf141112f8c29e4e2ed029098d92e6fd3325c1a679",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 224-р.doc",
-      "updated_at": "2026-06-09T13:48:00.977Z"
+      "updated_at": "2026-06-09T20:13:21.117Z"
     },
     "2025-05-29|225-р": {
       "status": "skipped",
-      "reason": "not_violation_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "225-р",
       "decision_date": "2025-05-29",
       "file_sha256": "9e3cb4b2cc52c896c72f62e131ea547d5c29bf67cf79d59bd4ccb0753d4159eb",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 225-р.docx",
-      "updated_at": "2026-06-09T13:48:01.933Z"
+      "updated_at": "2026-06-09T20:13:21.895Z"
     },
     "2025-05-29|228-р": {
       "status": "skipped",
-      "reason": "procedural_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "228-р",
       "decision_date": "2025-05-29",
       "file_sha256": "d9b388c26a1b480a23f93d07a18d6366c6fb5a372e1a14d434140e409a2a969d",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 228-р.docx",
-      "updated_at": "2026-06-09T13:49:01.927Z"
+      "updated_at": "2026-06-09T20:13:22.899Z"
     },
     "2025-05-29|229-р": {
       "status": "skipped",
-      "reason": "procedural_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "229-р",
       "decision_date": "2025-05-29",
       "file_sha256": "f57da05b4eaf63e0ceb2c1cf2f5992d97e1557654d2e4d294aa4a5429e059b53",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 229-р.doc",
-      "updated_at": "2026-06-09T13:49:01.940Z"
+      "updated_at": "2026-06-09T20:13:22.908Z"
     },
     "2025-05-29|230-р": {
       "status": "skipped",
-      "reason": "procedural_decision",
+      "reason": "closure_backfill_non_closure",
       "decision_number": "230-р",
       "decision_date": "2025-05-29",
       "file_sha256": "81203ff6ed8c58b84c462fab09478623a7c7db6816d5ea1ba3c2909e255359a2",
       "source_resource_id": "ac858473-793f-46f4-acb4-479697988a18",
       "source_file": "rish_traven/Рішення від 29.05.2025 № 230-р.docx",
-      "updated_at": "2026-06-09T13:49:02.007Z"
+      "updated_at": "2026-06-09T20:13:22.963Z"
     },
     "2025-05-22|213-р": {
       "status": "analyzed",
@@ -13801,28 +13801,28 @@
     }
   },
   "last_run": {
-    "at": "2026-06-09T20:08:05.004Z",
-    "resources_considered": 3,
-    "additions": 1,
-    "raw_additions": 1,
+    "at": "2026-06-09T20:13:22.964Z",
+    "resources_considered": 1,
+    "additions": 0,
+    "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 3,
-      "docsSeen": 335,
-      "docsRelevant": 1,
-      "docsSkipped": 334,
+      "resourcesChecked": 1,
+      "docsSeen": 54,
+      "docsRelevant": 0,
+      "docsSkipped": 54,
       "errors": 0
     },
-    "gemini_calls": 1,
+    "gemini_calls": 0,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
       "max_gemini_calls": 15,
       "resource_state_version": 4,
       "backfill_enabled": false,
-      "backfill_months_per_run": 3,
+      "backfill_months_per_run": 1,
       "closure_backfill_enabled": true,
-      "closure_backfill_months_per_run": 3,
+      "closure_backfill_months_per_run": 1,
       "closure_backfill_state_version": 1,
       "gemini_rpm_limit": 5,
       "gemini_tpm_limit": 120000,
@@ -13972,6 +13972,18 @@
         "zip_sha256": "5cd389177501a17548afdfae77a05fb502a430803742b1e55014bbcc8c5add29",
         "processed_at": "2026-06-09T20:08:05.003Z",
         "docs_seen": 110,
+        "docs_relevant": 0,
+        "errors": 0,
+        "incomplete": false
+      },
+      "ac858473-793f-46f4-acb4-479697988a18": {
+        "state_version": 1,
+        "title": "Рішення АМКУ за травень 2025 ",
+        "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/ac858473-793f-46f4-acb4-479697988a18/download/rish_traven_11_06_2025.zip",
+        "signature": "2025-06-11T12:56:02.047987|2025-05-14T13:22:54.466644|9376878|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/ac858473-793f-46f4-acb4-479697988a18/download/rish_traven_11_06_2025.zip",
+        "zip_sha256": "29b4dc95e3599cd24c174adaa957ed31bdeb4edb0ed56e8e5a56369b91feb4f0",
+        "processed_at": "2026-06-09T20:13:22.963Z",
+        "docs_seen": 54,
         "docs_relevant": 0,
         "errors": 0,
         "incomplete": false
