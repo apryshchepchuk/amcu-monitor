@@ -125,8 +125,8 @@ function outcomeMeta(row) {
   if (code === 'proceeding_closed_no_violation') {
     return {
       code,
-      label: row.outcome_label || 'Провадження закрито',
-      summary: row.outcome_summary || 'Провадження закрито / порушення не доведено.',
+      label: 'Провадження закрито',
+      summary: row.outcome_summary || row.outcome_label || 'Провадження закрито / порушення не доведено.',
       className: 'closed'
     };
   }
