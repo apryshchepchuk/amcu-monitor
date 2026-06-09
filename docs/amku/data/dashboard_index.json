@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-06-09T18:22:39.876Z",
+  "updated_at": "2026-06-09T20:04:36.431Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 190,
-  "total_sanction_uah": 10168706221,
+  "total_decisions": 192,
+  "total_sanction_uah": 10236786475,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 167,
+    "economic_competition": 169,
     "unfair_competition": 23,
     "other": 0
   },
@@ -25,7 +25,7 @@
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 8
+      "count": 9
     },
     {
       "code": "zek:50:3",
@@ -53,7 +53,7 @@
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 38
+      "count": 39
     },
     {
       "code": "zek:50:14",
