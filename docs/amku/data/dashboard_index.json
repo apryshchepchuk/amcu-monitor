@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-06-09T20:04:36.431Z",
+  "updated_at": "2026-06-09T20:08:05.132Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 192,
+  "total_decisions": 193,
   "total_sanction_uah": 10236786475,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 169,
+    "economic_competition": 170,
     "unfair_competition": 23,
     "other": 0
   },
@@ -46,7 +46,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 63
+      "count": 64
     },
     {
       "code": "zek:50:13",
