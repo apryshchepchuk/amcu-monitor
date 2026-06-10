@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-06-10T12:24:51.807Z",
+  "updated_at": "2026-06-10T14:29:01.054Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 200,
-  "total_sanction_uah": 10237042660,
+  "total_decisions": 204,
+  "total_sanction_uah": 10237994843,
   "years": [
     2026,
     2025
   ],
   "by_law_family": {
-    "economic_competition": 177,
+    "economic_competition": 181,
     "unfair_competition": 23,
     "other": 0
   },
@@ -53,14 +53,14 @@
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 42
+      "count": 45
     },
     {
       "code": "zek:50:14",
       "label": "п. 14 ст. 50 — подання інформації в неповному обсязі у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "подання інформації в неповному обсязі у встановлені строки",
-      "count": 8
+      "count": 9
     },
     {
       "code": "zek:50:15",
@@ -92,5 +92,5 @@
     }
   ],
   "newest_decision_date": "2026-05-14",
-  "oldest_decision_date": "2025-03-27"
+  "oldest_decision_date": "2025-03-20"
 }
