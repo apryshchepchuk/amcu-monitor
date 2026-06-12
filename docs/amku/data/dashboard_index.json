@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-06-12T10:42:44.736Z",
+  "updated_at": "2026-06-12T14:14:58.487Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 250,
+  "total_decisions": 251,
   "total_sanction_uah": 10560117362,
   "years": [
     2026,
@@ -10,7 +10,7 @@
   ],
   "by_law_family": {
     "economic_competition": 218,
-    "unfair_competition": 32,
+    "unfair_competition": 33,
     "other": 0
   },
   "categories": [
@@ -90,6 +90,13 @@
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
       "count": 27
+    },
+    {
+      "code": "unfair:16",
+      "label": "ст. 16 — неправомірне збирання комерційної таємниці",
+      "law_family": "unfair_competition",
+      "short_label": "неправомірне збирання комерційної таємниці",
+      "count": 1
     }
   ],
   "newest_decision_date": "2026-05-14",
