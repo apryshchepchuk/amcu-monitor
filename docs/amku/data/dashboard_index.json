@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-06-13T17:45:24.065Z",
+  "updated_at": "2026-06-14T09:55:00.002Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 297,
-  "total_sanction_uah": 10607605222.970001,
+  "total_decisions": 300,
+  "total_sanction_uah": 10608120718.970001,
   "years": [
     2026,
     2025,
     2024
   ],
   "by_law_family": {
-    "economic_competition": 260,
-    "unfair_competition": 37,
+    "economic_competition": 262,
+    "unfair_competition": 38,
     "other": 0
   },
   "categories": [
@@ -54,7 +54,7 @@
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 64
+      "count": 66
     },
     {
       "code": "zek:50:14",
@@ -82,7 +82,7 @@
       "label": "ст. 8 — дискредитація суб’єкта господарювання",
       "law_family": "unfair_competition",
       "short_label": "дискредитація суб’єкта господарювання",
-      "count": 2
+      "count": 3
     },
     {
       "code": "unfair:15-1",
