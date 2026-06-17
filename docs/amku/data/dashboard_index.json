@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-06-16T19:52:57.121Z",
+  "updated_at": "2026-06-17T11:17:17.391Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 331,
-  "total_sanction_uah": 10659065785.970001,
+  "total_decisions": 337,
+  "total_sanction_uah": 10662615785.970001,
   "years": [
     2026,
     2025,
     2024
   ],
   "by_law_family": {
-    "economic_competition": 292,
+    "economic_competition": 298,
     "unfair_competition": 39,
     "other": 0
   },
@@ -19,14 +19,14 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 71
+      "count": 72
     },
     {
       "code": "zek:50:2",
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 14
+      "count": 15
     },
     {
       "code": "zek:50:3",
@@ -47,14 +47,14 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 104
+      "count": 107
     },
     {
       "code": "zek:50:13",
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 66
+      "count": 67
     },
     {
       "code": "zek:50:14",
