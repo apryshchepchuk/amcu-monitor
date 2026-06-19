@@ -390,11 +390,11 @@
       "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c/download/rish_zhovten_09_11_2023.zip",
       "signature": "2023-11-09T07:22:39.476471|2023-10-17T14:53:18.048402|2810569|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c/download/rish_zhovten_09_11_2023.zip",
       "zip_sha256": "d883547e5907562434912f9592f7a629b1b82c40e1ac915fccdd1f272ec29b62",
-      "processed_at": "2026-06-19T14:21:44.148Z",
+      "processed_at": "2026-06-19T18:07:51.767Z",
       "docs_seen": 51,
-      "docs_relevant": 21,
-      "errors": 6,
-      "incomplete": true
+      "docs_relevant": 6,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -21538,7 +21538,7 @@
       "file_sha256": "c03850cd269b691fb9c9440ad951f00a0f971bd78fcf6c1ec985e832e8125092",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 255-р.docx",
-      "updated_at": "2026-06-19T14:19:16.873Z"
+      "updated_at": "2026-06-19T18:06:30.591Z"
     },
     "2023-10-05|256-р": {
       "status": "skipped",
@@ -21548,7 +21548,7 @@
       "file_sha256": "2bde47fd3b6d9fae1055edf877bec87ef8fd3c55745ff447f3d3a8471b99ca67",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 256-р.docx",
-      "updated_at": "2026-06-19T14:19:16.921Z"
+      "updated_at": "2026-06-19T18:06:30.638Z"
     },
     "2023-10-05|257-р": {
       "status": "skipped",
@@ -21558,7 +21558,7 @@
       "file_sha256": "0404eb17c18046175faf527f7ecd139745120d22f4328b393200547d13a5441e",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 257-р.doc",
-      "updated_at": "2026-06-19T14:19:16.926Z"
+      "updated_at": "2026-06-19T18:06:30.643Z"
     },
     "2023-10-05|258-р": {
       "status": "skipped",
@@ -21568,7 +21568,7 @@
       "file_sha256": "031869f6a4e7181984d729c2b092b0e6804c613b18967fef774076ae61875861",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 258-р.doc",
-      "updated_at": "2026-06-19T14:19:16.930Z"
+      "updated_at": "2026-06-19T18:06:30.647Z"
     },
     "2023-10-05|259-р": {
       "status": "skipped",
@@ -21578,7 +21578,7 @@
       "file_sha256": "81db5ab58e79bd76baa7978e104212f72ddc2cec3393ee8ef9d2d70cffc1b95b",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 259-р.doc",
-      "updated_at": "2026-06-19T14:19:16.934Z"
+      "updated_at": "2026-06-19T18:06:30.652Z"
     },
     "2023-10-05|260-р": {
       "status": "skipped",
@@ -21588,7 +21588,7 @@
       "file_sha256": "bc26080668023eaf5f6e87f2fdeaa198048fe116137f3db33261f4b3b124d5a1",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 260-р.doc",
-      "updated_at": "2026-06-19T14:19:16.939Z"
+      "updated_at": "2026-06-19T18:06:30.656Z"
     },
     "2023-10-05|261-р": {
       "status": "skipped",
@@ -21598,7 +21598,7 @@
       "file_sha256": "f47f0acb2fc732d0261187768dcf234626d6c209744c6ac4c0eebac185024560",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 261-р.doc",
-      "updated_at": "2026-06-19T14:19:16.943Z"
+      "updated_at": "2026-06-19T18:06:30.660Z"
     },
     "2023-10-05|262-р": {
       "status": "skipped",
@@ -21608,7 +21608,7 @@
       "file_sha256": "abe4df99c0fc9ba76317779267b6051f7a7f5f45b8cd7b87b9fd7e951b252075",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 262-р.doc",
-      "updated_at": "2026-06-19T14:19:16.947Z"
+      "updated_at": "2026-06-19T18:06:30.664Z"
     },
     "2023-10-05|263-р": {
       "status": "skipped",
@@ -21618,7 +21618,7 @@
       "file_sha256": "0b39f52eafddbde07575c4d9d5177fecf028b2c04ed6d5b495fad8d18256407c",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 263-р.doc",
-      "updated_at": "2026-06-19T14:19:16.952Z"
+      "updated_at": "2026-06-19T18:06:30.668Z"
     },
     "2023-10-05|264-р": {
       "status": "skipped",
@@ -21628,7 +21628,7 @@
       "file_sha256": "cab3171a1fe90e42adf3ad6eef6dc80bfe185f1914579bcb79f3184c05aa13ee",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 264-р.doc",
-      "updated_at": "2026-06-19T14:19:16.956Z"
+      "updated_at": "2026-06-19T18:06:30.672Z"
     },
     "2023-10-05|265-р": {
       "status": "skipped",
@@ -21638,7 +21638,7 @@
       "file_sha256": "11a9b8363515c625d28b978eb2389de88a4acfc3677cc40399360c6974500e61",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 265-р.doc",
-      "updated_at": "2026-06-19T14:19:16.960Z"
+      "updated_at": "2026-06-19T18:06:30.676Z"
     },
     "2023-10-05|266-р": {
       "status": "skipped",
@@ -21648,7 +21648,7 @@
       "file_sha256": "d0137b73faa918527eff171181eeaf2de7322c28304b2f1d0e79c16a8f4f1046",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 266-р.doc",
-      "updated_at": "2026-06-19T14:19:16.964Z"
+      "updated_at": "2026-06-19T18:06:30.680Z"
     },
     "2023-10-05|267-р": {
       "status": "skipped",
@@ -21658,7 +21658,7 @@
       "file_sha256": "71968d538e96ebb886c0ec34da21f4b07742c8206a8d025fb706a1ab47ef1de4",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 05.10.2023 № 267-р.doc",
-      "updated_at": "2026-06-19T14:19:16.969Z"
+      "updated_at": "2026-06-19T18:06:30.685Z"
     },
     "2023-10-05|268-р": {
       "status": "analyzed",
@@ -21686,7 +21686,7 @@
       "file_sha256": "e26dbffe23f77a5be6e8dbbcc9a523c6ab2bdcb0ba6852db1bc3562ff5466a21",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 270-р.doc",
-      "updated_at": "2026-06-19T14:19:26.545Z"
+      "updated_at": "2026-06-19T18:06:30.701Z"
     },
     "2023-10-12|271-р": {
       "status": "skipped",
@@ -21696,7 +21696,7 @@
       "file_sha256": "77290cb3f75ce10767a162b50f806ddbbbab82ad3231a9fb413b8a37e3a65a9a",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 271-р.doc",
-      "updated_at": "2026-06-19T14:19:26.549Z"
+      "updated_at": "2026-06-19T18:06:30.705Z"
     },
     "2023-10-12|272-р": {
       "status": "skipped",
@@ -21706,7 +21706,7 @@
       "file_sha256": "90b0ef55e6a24fbc7ae6107e703c8ee98d6e70491aee3ff52cd5941cea301781",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 272-р.doc",
-      "updated_at": "2026-06-19T14:19:26.553Z"
+      "updated_at": "2026-06-19T18:06:30.709Z"
     },
     "2023-10-12|273-р": {
       "status": "skipped",
@@ -21716,7 +21716,7 @@
       "file_sha256": "65f89498b4c43e20b36d74c3260a1eaa67c86aeb4104646885d7e37301f47ba6",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 273-р.doc",
-      "updated_at": "2026-06-19T14:19:26.556Z"
+      "updated_at": "2026-06-19T18:06:30.713Z"
     },
     "2023-10-12|274-р": {
       "status": "skipped",
@@ -21726,7 +21726,7 @@
       "file_sha256": "8ed1e0c26954976c0d027a16ec3fdbbe03f41b0982d2aa38c554164ec61e9179",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 274-р.doc",
-      "updated_at": "2026-06-19T14:19:26.560Z"
+      "updated_at": "2026-06-19T18:06:30.717Z"
     },
     "2023-10-12|275-р": {
       "status": "skipped",
@@ -21736,7 +21736,7 @@
       "file_sha256": "c37566fbbe46a362bbfcf83e5b510a8a1126f29557009c0f6f06ce32ad8535f5",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 275-р.docx",
-      "updated_at": "2026-06-19T14:19:26.769Z"
+      "updated_at": "2026-06-19T18:06:30.895Z"
     },
     "2023-10-12|276-р": {
       "status": "skipped",
@@ -21746,7 +21746,7 @@
       "file_sha256": "0742381cc13a42475b131a33e11606f628c966b6fadaf0fea466dabb4fca38b8",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 276-р.docx",
-      "updated_at": "2026-06-19T14:19:26.999Z"
+      "updated_at": "2026-06-19T18:06:31.105Z"
     },
     "2023-10-12|277-р": {
       "status": "skipped",
@@ -21756,7 +21756,7 @@
       "file_sha256": "015825d478825ecd2574bbe451fa7792a12348572c5984c5b883854f5399ca3e",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 277-р.docx",
-      "updated_at": "2026-06-19T14:19:27.249Z"
+      "updated_at": "2026-06-19T18:06:31.315Z"
     },
     "2023-10-12|278-р": {
       "status": "skipped",
@@ -21766,7 +21766,7 @@
       "file_sha256": "d1b132a23d4b1c62cd8f3d3883eeed8a1ebb3393fba179ea5cfb5c4c98ebf527",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 12.10.2023 № 278-р.docx",
-      "updated_at": "2026-06-19T14:19:27.366Z"
+      "updated_at": "2026-06-19T18:06:31.422Z"
     },
     "2023-10-19|279-р": {
       "status": "skipped",
@@ -21776,7 +21776,7 @@
       "file_sha256": "39770be7ab52429ec2bbacf5cc7ef36531461a3bc0d5f4f826a69e604f25c864",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 19.10.2023 № 279-р.doc",
-      "updated_at": "2026-06-19T14:19:27.370Z"
+      "updated_at": "2026-06-19T18:06:31.427Z"
     },
     "2023-10-19|280-р": {
       "status": "skipped",
@@ -21786,7 +21786,7 @@
       "file_sha256": "c8711b736117366134e81c1f44480ac9a7cd47364e1a960a3142cd46c12072c8",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 19.10.2023 № 280-р.doc",
-      "updated_at": "2026-06-19T14:19:27.373Z"
+      "updated_at": "2026-06-19T18:06:31.431Z"
     },
     "2023-10-19|281-р": {
       "status": "skipped",
@@ -21796,7 +21796,7 @@
       "file_sha256": "a3483d2cc483ea47cc0837c055f6b4b76fb951ea3221e752708d51afd0beabf5",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 19.10.2023 № 281-р.doc",
-      "updated_at": "2026-06-19T14:19:27.377Z"
+      "updated_at": "2026-06-19T18:06:31.435Z"
     },
     "2023-10-19|282-р": {
       "status": "skipped",
@@ -21806,7 +21806,7 @@
       "file_sha256": "ead25d677f333996b6fd40b043e899dc52383f78e8eccc522e851fa03b3e09a5",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 19.10.2023 № 282-р.doc",
-      "updated_at": "2026-06-19T14:19:27.393Z"
+      "updated_at": "2026-06-19T18:06:31.452Z"
     },
     "2023-10-19|283-р": {
       "status": "analyzed",
@@ -21933,7 +21933,7 @@
       "file_sha256": "954b0ed439e26757ed232ea2e54d99b67a8734a3c0dbf20e4eef483d5980dd17",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 298-р.doc",
-      "updated_at": "2026-06-19T14:21:43.346Z"
+      "updated_at": "2026-06-19T18:06:41.397Z"
     },
     "2023-10-26|299-р": {
       "status": "skipped",
@@ -21943,7 +21943,7 @@
       "file_sha256": "6c6c2459b0c8a21934c229e775c283121ead2f12c350eadf8a5d6e983f176113",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 299-р.doc",
-      "updated_at": "2026-06-19T14:21:43.349Z"
+      "updated_at": "2026-06-19T18:06:41.401Z"
     },
     "2023-10-26|304-р": {
       "status": "skipped",
@@ -21953,7 +21953,7 @@
       "file_sha256": "eabbaa9bf103c2bd7e1d3b695bde6f8cf2a946ee02ea75203e42d801d946155a",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 304-р.docx",
-      "updated_at": "2026-06-19T14:21:44.000Z"
+      "updated_at": "2026-06-19T18:07:51.619Z"
     },
     "2023-10-26|305-р": {
       "status": "skipped",
@@ -21963,23 +21963,77 @@
       "file_sha256": "fdf70acb726b72f6918694243d3c0f2f715445ebf431323a10f3e9aa9915593f",
       "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
       "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 305-р.docx",
-      "updated_at": "2026-06-19T14:21:44.148Z"
+      "updated_at": "2026-06-19T18:07:51.767Z"
+    },
+    "2023-10-19|296-р": {
+      "status": "analyzed",
+      "decision_number": "296-р",
+      "decision_date": "2023-10-19",
+      "file_sha256": "4e1d5104f301844832362dd0074ffd776363e732ebe429c5808f43653a22b1e4",
+      "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
+      "source_file": "rish_zhovten_2023/Рішення від 19.10.2023 № 296-р.docx",
+      "updated_at": "2026-06-19T18:06:37.766Z"
+    },
+    "2023-10-19|297-р": {
+      "status": "analyzed",
+      "decision_number": "297-р",
+      "decision_date": "2023-10-19",
+      "file_sha256": "6fe2318032b5ed814074e92ab415aa923fc1a12a9fa0f6cae1591e6d8dc98cf1",
+      "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
+      "source_file": "rish_zhovten_2023/Рішення від 19.10.2023 № 297-р.docx",
+      "updated_at": "2026-06-19T18:06:41.392Z"
+    },
+    "2023-10-26|300-р": {
+      "status": "analyzed",
+      "decision_number": "300-р",
+      "decision_date": "2023-10-26",
+      "file_sha256": "81753442f1412c3b60d76c6bbb72106b7755845197fab34aa3739ffcc88dfaff",
+      "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
+      "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 300-р.doc",
+      "updated_at": "2026-06-19T18:06:45.236Z"
+    },
+    "2023-10-26|301-р": {
+      "status": "analyzed",
+      "decision_number": "301-р",
+      "decision_date": "2023-10-26",
+      "file_sha256": "e6fb05058687d2553b1bf1121188c14af5fff7a790a9271141377fcf77d05772",
+      "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
+      "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 301-р.doc",
+      "updated_at": "2026-06-19T18:06:49.211Z"
+    },
+    "2023-10-26|302-р": {
+      "status": "analyzed",
+      "decision_number": "302-р",
+      "decision_date": "2023-10-26",
+      "file_sha256": "3909b124fa6f0a282eee823d916ffbfdf325fb5028b38988267e7e339a52de57",
+      "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
+      "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 302-р.doc",
+      "updated_at": "2026-06-19T18:06:53.384Z"
+    },
+    "2023-10-26|303-р": {
+      "status": "analyzed",
+      "decision_number": "303-р",
+      "decision_date": "2023-10-26",
+      "file_sha256": "e2d4f06c8d91406c340d612fc7f6a86dcf70fae6123e242dc23d688912f40189",
+      "source_resource_id": "952a166a-d4f6-4d8f-bb9d-1a89ee8c1a0c",
+      "source_file": "rish_zhovten_2023/Рішення від 26.10.2023 № 303-р.docx",
+      "updated_at": "2026-06-19T18:07:51.469Z"
     }
   },
   "last_run": {
-    "at": "2026-06-19T14:21:44.149Z",
+    "at": "2026-06-19T18:07:51.768Z",
     "resources_considered": 1,
-    "additions": 15,
-    "raw_additions": 15,
+    "additions": 6,
+    "raw_additions": 6,
     "duplicates_in_run": 0,
     "stats": {
       "resourcesChecked": 1,
       "docsSeen": 51,
-      "docsRelevant": 21,
-      "docsSkipped": 30,
-      "errors": 6
+      "docsRelevant": 6,
+      "docsSkipped": 45,
+      "errors": 0
     },
-    "gemini_calls": 15,
+    "gemini_calls": 6,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
