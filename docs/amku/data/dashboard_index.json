@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-06-20T17:45:13.729Z",
+  "updated_at": "2026-06-21T10:06:20.487Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 407,
-  "total_sanction_uah": 12792655305.24,
+  "total_decisions": 416,
+  "total_sanction_uah": 12822214476.24,
   "years": [
     2026,
     2025,
@@ -10,7 +10,7 @@
     2023
   ],
   "by_law_family": {
-    "economic_competition": 358,
+    "economic_competition": 367,
     "unfair_competition": 49,
     "other": 0
   },
@@ -20,14 +20,14 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 87
+      "count": 90
     },
     {
       "code": "zek:50:2",
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 21
+      "count": 22
     },
     {
       "code": "zek:50:3",
@@ -41,21 +41,21 @@
       "label": "п. 4 ст. 50 — невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
       "law_family": "economic_competition",
       "short_label": "невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
-      "count": 9
+      "count": 10
     },
     {
       "code": "zek:50:10",
       "label": "п. 10 ст. 50 — недотримання умов, передбачених пунктами 2, 5 та 6 ч. 3 ст. 22 Закону",
       "law_family": "economic_competition",
       "short_label": "недотримання умов, передбачених пунктами 2, 5 та 6 ч. 3 ст. 22 Закону",
-      "count": 2
+      "count": 3
     },
     {
       "code": "zek:50:12",
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 137
+      "count": 140
     },
     {
       "code": "zek:50:13",
@@ -108,5 +108,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2023-07-06"
+  "oldest_decision_date": "2023-06-01"
 }
