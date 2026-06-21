@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-06-21T10:06:20.487Z",
+  "updated_at": "2026-06-21T13:17:07.624Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 416,
-  "total_sanction_uah": 12822214476.24,
+  "total_decisions": 417,
+  "total_sanction_uah": 12827654460.24,
   "years": [
     2026,
     2025,
@@ -10,7 +10,7 @@
     2023
   ],
   "by_law_family": {
-    "economic_competition": 367,
+    "economic_competition": 368,
     "unfair_competition": 49,
     "other": 0
   },
@@ -20,7 +20,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 90
+      "count": 91
     },
     {
       "code": "zek:50:2",
