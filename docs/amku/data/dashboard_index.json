@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-06-22T12:24:35.652Z",
+  "updated_at": "2026-06-22T19:40:16.461Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 423,
+  "total_decisions": 424,
   "total_sanction_uah": 12842041183.24,
   "years": [
     2026,
@@ -11,7 +11,7 @@
   ],
   "by_law_family": {
     "economic_competition": 372,
-    "unfair_competition": 51,
+    "unfair_competition": 52,
     "other": 0
   },
   "categories": [
@@ -104,7 +104,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 34
+      "count": 35
     },
     {
       "code": "unfair:16",
@@ -115,5 +115,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2023-04-13"
+  "oldest_decision_date": "2023-03-30"
 }
