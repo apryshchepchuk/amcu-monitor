@@ -1,17 +1,18 @@
 {
-  "updated_at": "2026-06-23T13:46:38.611Z",
+  "updated_at": "2026-06-23T18:12:31.819Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 426,
-  "total_sanction_uah": 12842381183.24,
+  "total_decisions": 441,
+  "total_sanction_uah": 12934098330.24,
   "years": [
     2026,
     2025,
     2024,
-    2023
+    2023,
+    2022
   ],
   "by_law_family": {
-    "economic_competition": 374,
-    "unfair_competition": 52,
+    "economic_competition": 384,
+    "unfair_competition": 57,
     "other": 0
   },
   "categories": [
@@ -20,14 +21,14 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 94
+      "count": 97
     },
     {
       "code": "zek:50:2",
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 22
+      "count": 24
     },
     {
       "code": "zek:50:3",
@@ -55,7 +56,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 143
+      "count": 148
     },
     {
       "code": "zek:50:13",
@@ -83,7 +84,7 @@
       "label": "ст. 4 — неправомірне використання позначень",
       "law_family": "unfair_competition",
       "short_label": "неправомірне використання позначень",
-      "count": 12
+      "count": 13
     },
     {
       "code": "unfair:8",
@@ -104,7 +105,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 35
+      "count": 39
     },
     {
       "code": "unfair:16",
@@ -115,5 +116,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2023-01-26"
+  "oldest_decision_date": "2022-12-01"
 }
