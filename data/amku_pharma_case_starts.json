@@ -1,1 +1,158 @@
-[]
+[
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264116-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-15",
+    "period_to": "2026-06-21",
+    "publication_date": "2026-06-18",
+    "publication_datetime": "2026-06-18 16:54:24",
+    "timeline_day": "18.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/116-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/116-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264116-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/116-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «ВАЛАРТІН ФАРМА»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «ВАЛАРТІН ФАРМА» відомостей про властивості дієтичної добавки «ГЕПАРИЗИН», які не мають належного підтвердження, що містить ознаки введення споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "f7078830096917c303b343b51c4d1a857b2130481361fffb8b03acd8404a5e4f",
+    "analyzed_at": "2026-06-24T06:30:49.054Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-24T06:30:49.054Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264117-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-15",
+    "period_to": "2026-06-21",
+    "publication_date": "2026-06-18",
+    "publication_datetime": "2026-06-18 15:37:15",
+    "timeline_day": "18.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/117-26",
+    "timeline_title": "Розпочато розгляд справи  № 127-26.4/117-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264117-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/117-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «ВІНАРА»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «ВІНАРА» відомостей про властивості дієтичної добавки «ГепаРеал», які не мають належного підтвердження, що вводить споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "a7ce00e83c42fbfa89c1505197679d4c15758785bd20466f378d8ee1bd8d50d8",
+    "analyzed_at": "2026-06-24T06:30:55.270Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-24T06:30:55.270Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264115-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-15",
+    "period_to": "2026-06-21",
+    "publication_date": "2026-06-17",
+    "publication_datetime": "2026-06-17 19:29:27",
+    "timeline_day": "17.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/115-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/115-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264115-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/115-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «Актіфарм»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «Актіфарм» на упакованні, у листку-вкладиші та на вебсайті дієтичної добавки «Кадван» неправдивих, неточних або неповних відомостей про продукцію.",
+    "confidence": "high",
+    "page_text_sha256": "ecbc99f9b53ac5e57c5300c329ef6c1465f799de990f4bee469a91e165eabccc",
+    "analyzed_at": "2026-06-24T06:30:59.551Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-24T06:30:59.551Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264114-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-15",
+    "period_to": "2026-06-21",
+    "publication_date": "2026-06-16",
+    "publication_datetime": "2026-06-16 11:20:55",
+    "timeline_day": "16.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/114-26",
+    "timeline_title": "Розпочато розгляд справи  № 127-26.4/114-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264114-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/114-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «Асіно Україна»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «Асіно Україна» неправдивих, неточних або неповних відомостей щодо дієтичної добавки «Колонзак тм» у листку-вкладиші та на вебсайтах (colonzac.com.ua, tabletki.ua).",
+    "confidence": "high",
+    "page_text_sha256": "2b73c465da624b9f26eee8b9199ceab45e547a085f36932890bfb88186805247",
+    "analyzed_at": "2026-06-24T06:31:08.327Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-24T06:31:08.327Z"
+    }
+  }
+]
