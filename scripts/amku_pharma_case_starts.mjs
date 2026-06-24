@@ -283,15 +283,23 @@ async function fetchWithRetry(url, options = {}) {
     try {
       const res = await fetch(url, {
         headers: {
-          'User-Agent': 'amku-pharma-case-starts/0.1',
-          'Accept': options.accept || '*/*',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+          'Accept': options.accept || 'application/json, text/plain, */*',
+          'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Referer': 'https://amcu.gov.ua/timeline',
+          'Origin': 'https://amcu.gov.ua',
           ...(options.headers || {})
         }
       });
 
       if (res.ok) return res;
 
-      const message = `HTTP ${res.status} for ${label}`;
+      const bodyText = await res.text().catch(() => '');
+      const message =
+        `HTTP ${res.status} for ${label}. `
+        + `URL: ${url}. `
+        + `Body: ${bodyText.slice(0, 500)}`;
 
       if (res.status >= 400 && res.status < 500 && res.status !== 429) {
         throw new Error(message);
@@ -306,7 +314,7 @@ async function fetchWithRetry(url, options = {}) {
       const delayMs = baseDelayMs * attempt;
       console.warn(
         `Fetch failed (${attempt}/${attempts}) for ${label}: `
-        + `${String(lastError?.message || lastError).slice(0, 500)}. `
+        + `${String(lastError?.message || lastError).slice(0, 900)}. `
         + `Retrying in ${Math.ceil(delayMs / 1000)}s...`
       );
       await sleep(delayMs);
@@ -319,7 +327,7 @@ async function fetchWithRetry(url, options = {}) {
 async function fetchJson(url, label) {
   const res = await fetchWithRetry(url, {
     label,
-    accept: 'application/json'
+    accept: 'application/json, text/plain, */*'
   });
 
   return await res.json();
@@ -365,6 +373,7 @@ async function fetchTimelineItems(period) {
 
   while (page <= lastPage) {
     const url = buildTimelineUrl(page, period);
+    console.log(`Timeline request URL: ${url}`);
     const payload = await fetchJson(url, `AMCU timeline page ${page}`);
 
     const currentPage = Number(firstValue(payload.current_page, page)) || page;
