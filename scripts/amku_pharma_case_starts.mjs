@@ -39,7 +39,7 @@ const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
 const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 3);
 const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
 
-const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'Weekly digest нових справ АМКУ у фармсекторі');
+const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'Щотижневий дайджест нових справ АМКУ у фармсекторі');
 
 const PHARMA_PATTERNS = [
   /фармац/i,
@@ -1085,13 +1085,23 @@ function formatCaseNumbers(values) {
     .join(', ');
 }
 
+function sourceLinkLabel() {
+  return 'Відкрити повідомлення АМКУ';
+}
+
 function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }) {
   const header =
     `${periodIntro(period)} Антимонопольним комітетом України розпочато `
-    + `${caseCountPhrase(relevantRows.length)}, які стосуються фармацевтичного ринку:`;
+    + `${caseCountPhrase(relevantRows.length)}, які стосуються фармацевтичного ринку.`;
 
   if (!relevantRows.length) {
-    return `${EMAIL_SUBJECT_PREFIX}\n\n${header}\n\nДеталі відсутні.`;
+    return [
+      EMAIL_SUBJECT_PREFIX,
+      '',
+      header,
+      '',
+      'Релевантних повідомлень за цей період не виявлено.'
+    ].join('\n');
   }
 
   const body = relevantRows.map((row, index) => {
@@ -1102,19 +1112,32 @@ function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }
     const caseNumbers = formatCaseNumbers(row.case_numbers);
 
     return [
-      `${index + 1}. ${formatDateUk(row.publication_date)} повідомлено про початок розгляду справи ${caseNumbers} відносно: ${subjects}, яка стосується сфери: ${sector} з попередньою кваліфікацією: ${qualification}.`,
-      `Короткий опис: ${description}.`,
-      `Джерело: ${row.url}.`
+      `${index + 1}. ${formatDateUk(row.publication_date)} — справа ${caseNumbers}`,
+      '',
+      `Суб’єкт: ${subjects}`,
+      `Сектор: ${sector}`,
+      `Попередня кваліфікація: ${qualification}`,
+      '',
+      'Короткий опис:',
+      description,
+      '',
+      `Джерело: ${row.url}`
     ].join('\n');
-  }).join('\n\n');
+  }).join('\n\n---\n\n');
 
-  return `${EMAIL_SUBJECT_PREFIX}\n\n${header}\n\n${body}`;
+  return [
+    EMAIL_SUBJECT_PREFIX,
+    '',
+    header,
+    '',
+    body
+  ].join('\n');
 }
 
 function renderEmailHtml({ period, relevantRows, allItemsCount, candidateCount }) {
   const header =
     `${periodIntro(period)} Антимонопольним комітетом України розпочато `
-    + `${caseCountPhrase(relevantRows.length)}, які стосуються фармацевтичного ринку:`;
+    + `${caseCountPhrase(relevantRows.length)}, які стосуються фармацевтичного ринку.`;
 
   const body = relevantRows.length
     ? relevantRows.map((row, index) => {
@@ -1125,32 +1148,53 @@ function renderEmailHtml({ period, relevantRows, allItemsCount, candidateCount }
       const caseNumbers = formatCaseNumbers(row.case_numbers);
 
       return `
-        <p style="margin:0 0 14px 0;">
-          ${index + 1}. ${htmlEscape(formatDateUk(row.publication_date))}
-          повідомлено про початок розгляду справи ${htmlEscape(caseNumbers)}
-          відносно: <strong>${htmlEscape(subjects)}</strong>,
-          яка стосується сфери: <strong>${htmlEscape(sector)}</strong>
-          з попередньою кваліфікацією:
-          <strong>${htmlEscape(qualification)}</strong>.
-          <br>
-          Короткий опис: ${htmlEscape(description)}.
-          <br>
-          Джерело:
-          <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener">${htmlEscape(row.url)}</a>.
-        </p>
+        <div style="margin:22px 0 0 0;padding:0 0 18px 0;border-bottom:1px solid #e5e7eb;">
+          <p style="margin:0 0 10px 0;font-size:15px;line-height:1.45;">
+            <strong>${index + 1}. ${htmlEscape(formatDateUk(row.publication_date))} — справа ${htmlEscape(caseNumbers)}</strong>
+          </p>
+
+          <p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;">
+            <strong>Суб’єкт:</strong> <strong>${htmlEscape(subjects)}</strong>
+          </p>
+
+          <p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;">
+            <strong>Сектор:</strong> <strong>${htmlEscape(sector)}</strong>
+          </p>
+
+          <p style="margin:0 0 12px 0;font-size:14px;line-height:1.5;">
+            <strong>Попередня кваліфікація:</strong> <strong>${htmlEscape(qualification)}</strong>
+          </p>
+
+          <p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;">
+            <strong>Короткий опис:</strong>
+          </p>
+
+          <p style="margin:0 0 12px 0;font-size:14px;line-height:1.5;">
+            ${htmlEscape(description)}
+          </p>
+
+          <p style="margin:0;font-size:14px;line-height:1.5;">
+            <strong>Джерело:</strong>
+            <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener">${htmlEscape(sourceLinkLabel())}</a>
+          </p>
+        </div>
       `;
     }).join('\n')
-    : `<p style="margin:0;">Деталі відсутні.</p>`;
+    : `
+      <p style="margin:18px 0 0 0;font-size:14px;line-height:1.5;">
+        Релевантних повідомлень за цей період не виявлено.
+      </p>
+    `;
 
   return `<!doctype html>
 <html>
 <body style="font-family:Arial,sans-serif;color:#111827;line-height:1.5;background:#ffffff;padding:0;margin:0;">
-  <div style="max-width:900px;margin:0 auto;padding:20px;">
-    <h2 style="margin:0 0 16px 0;font-size:18px;line-height:1.35;">
+  <div style="max-width:860px;margin:0 auto;padding:22px 20px;">
+    <h2 style="margin:0 0 14px 0;font-size:18px;line-height:1.35;font-weight:700;">
       ${htmlEscape(EMAIL_SUBJECT_PREFIX)}
     </h2>
 
-    <p style="margin:0 0 16px 0;">
+    <p style="margin:0 0 18px 0;font-size:14px;line-height:1.5;">
       ${htmlEscape(header)}
     </p>
 
