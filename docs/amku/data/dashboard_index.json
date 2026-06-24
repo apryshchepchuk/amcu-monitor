@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-06-23T18:12:31.819Z",
+  "updated_at": "2026-06-24T09:52:21.493Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 441,
-  "total_sanction_uah": 12934098330.24,
+  "total_decisions": 456,
+  "total_sanction_uah": 12966647030.24,
   "years": [
     2026,
     2025,
@@ -11,7 +11,7 @@
     2022
   ],
   "by_law_family": {
-    "economic_competition": 384,
+    "economic_competition": 399,
     "unfair_competition": 57,
     "other": 0
   },
@@ -21,7 +21,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 97
+      "count": 99
     },
     {
       "code": "zek:50:2",
@@ -49,14 +49,14 @@
       "label": "п. 10 ст. 50 — недотримання умов, передбачених пунктами 2, 5 та 6 ч. 3 ст. 22 Закону",
       "law_family": "economic_competition",
       "short_label": "недотримання умов, передбачених пунктами 2, 5 та 6 ч. 3 ст. 22 Закону",
-      "count": 3
+      "count": 4
     },
     {
       "code": "zek:50:12",
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 148
+      "count": 160
     },
     {
       "code": "zek:50:13",
@@ -116,5 +116,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2022-12-01"
+  "oldest_decision_date": "2022-11-03"
 }
