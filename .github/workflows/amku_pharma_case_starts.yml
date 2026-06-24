@@ -1,0 +1,133 @@
+name: AMCU Pharma Case Starts Digest
+
+on:
+  workflow_dispatch:
+    inputs:
+      period_mode:
+        description: "Digest period: weekly, monthly, or custom"
+        required: false
+        default: "weekly"
+
+      date_from:
+        description: "Only for custom mode: YYYY-MM-DD"
+        required: false
+        default: ""
+
+      date_to:
+        description: "Only for custom mode: YYYY-MM-DD"
+        required: false
+        default: ""
+
+      send_email:
+        description: "Send email digest"
+        required: false
+        default: "true"
+
+      send_empty_email:
+        description: "Send email even if no pharma cases found"
+        required: false
+        default: "true"
+
+      force_send:
+        description: "Resend digest even if this period was already sent"
+        required: false
+        default: "false"
+
+      skip_gemini:
+        description: "Test mode: skip Gemini and use only basic extraction"
+        required: false
+        default: "false"
+
+      dry_run:
+        description: "Do not write data/state and do not send email"
+        required: false
+        default: "false"
+
+      max_gemini_calls:
+        description: "Max Gemini calls per run"
+        required: false
+        default: "20"
+
+  schedule:
+    # Weekly digest: every Monday at 06:30 UTC
+    # Kyiv: 09:30 during UTC+3, 08:30 during UTC+2.
+    - cron: "30 6 * * 1"
+
+    # Monthly digest: first day of month at 06:45 UTC.
+    # The script will cover the previous calendar month.
+    - cron: "45 6 1 * *"
+
+concurrency:
+  group: amku-pharma-case-starts
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Check script syntax
+        run: node --check scripts/amku_pharma_case_starts.mjs
+
+      - name: Run AMCU pharma case starts digest
+        env:
+          PERIOD_MODE: ${{ github.event.inputs.period_mode || (github.event.schedule == '45 6 1 * *' && 'monthly' || 'weekly') }}
+          DATE_FROM: ${{ github.event.inputs.date_from || '' }}
+          DATE_TO: ${{ github.event.inputs.date_to || '' }}
+
+          SEND_EMAIL: ${{ github.event.inputs.send_email || 'true' }}
+          SEND_EMPTY_EMAIL: ${{ github.event.inputs.send_empty_email || 'true' }}
+          FORCE_SEND: ${{ github.event.inputs.force_send || 'false' }}
+          SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          MAX_GEMINI_CALLS: ${{ github.event.inputs.max_gemini_calls || '20' }}
+
+          TIMELINE_TAG: "про початок розгляду справи"
+          TIMELINE_LANG: "uk"
+
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+        run: node scripts/amku_pharma_case_starts.mjs
+
+      - name: Commit AMCU pharma case starts data
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          mkdir -p data
+          touch data/amku_pharma_case_starts_events.jsonl
+
+          git add data/amku_pharma_case_starts.json
+          git add data/amku_pharma_case_starts_state.json
+          git add data/amku_pharma_case_starts_events.jsonl
+
+          if git diff --cached --quiet; then
+            echo "No AMCU pharma case starts data changes to commit."
+          else
+            git commit -m "Update AMCU pharma case starts digest data"
+            git push
+          fi
