@@ -5,6 +5,12 @@
       "relevant_count": 1,
       "timeline_items": 25,
       "pharma_candidates": 2
+    },
+    "weekly:2026-06-15:2026-06-21": {
+      "sent_at": "2026-06-24T05:48:20.172Z",
+      "relevant_count": 4,
+      "timeline_items": 5,
+      "pharma_candidates": 4
     }
   },
   "seen_urls": {
@@ -157,29 +163,59 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/traven-2026/rozpochato-rozghliad-spravy-126-261374-26-loral-australia-pty-ltd-m-melburn-shtat-viktoriia-avstraliia",
       "first_seen_at": "2026-06-24T05:28:45.591Z",
       "last_seen_at": "2026-06-24T05:28:45.591Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264116-26": {
+      "title": "Розпочато розгляд справи № 127-26.4/116-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264116-26",
+      "first_seen_at": "2026-06-24T05:48:06.392Z",
+      "last_seen_at": "2026-06-24T05:48:06.392Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264117-26": {
+      "title": "Розпочато розгляд справи  № 127-26.4/117-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264117-26",
+      "first_seen_at": "2026-06-24T05:48:09.321Z",
+      "last_seen_at": "2026-06-24T05:48:09.321Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264115-26": {
+      "title": "Розпочато розгляд справи № 127-26.4/115-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264115-26",
+      "first_seen_at": "2026-06-24T05:48:12.063Z",
+      "last_seen_at": "2026-06-24T05:48:12.063Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264114-26": {
+      "title": "Розпочато розгляд справи  № 127-26.4/114-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264114-26",
+      "first_seen_at": "2026-06-24T05:48:14.844Z",
+      "last_seen_at": "2026-06-24T05:48:14.844Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-sprav-126-2613112-26-126-2613113-26": {
+      "title": "Розпочато розгляд справ № 126-26.13/112-26, № 126-26.13/113-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-sprav-126-2613112-26-126-2613113-26",
+      "first_seen_at": "2026-06-24T05:48:18.993Z",
+      "last_seen_at": "2026-06-24T05:48:18.993Z"
     }
   },
   "last_run": {
-    "at": "2026-06-24T05:28:46.748Z",
+    "at": "2026-06-24T05:48:20.172Z",
     "period": {
-      "mode": "custom",
-      "from": "2026-05-01",
-      "to": "2026-05-31",
-      "label": "2026-05-01 — 2026-05-31"
+      "mode": "weekly",
+      "from": "2026-06-15",
+      "to": "2026-06-21",
+      "label": "2026-06-15 — 2026-06-21"
     },
-    "digest_key": "custom:2026-05-01:2026-05-31",
-    "timeline_items": 25,
-    "pharma_candidates": 2,
-    "relevant_rows": 1,
-    "gemini_calls": 2,
+    "digest_key": "weekly:2026-06-15:2026-06-21",
+    "timeline_items": 5,
+    "pharma_candidates": 4,
+    "relevant_rows": 4,
+    "gemini_calls": 4,
     "email_sent": true,
     "settings": {
-      "period_mode": "custom",
+      "period_mode": "weekly",
       "skip_gemini": false,
       "max_gemini_calls": 20,
       "send_email": true,
       "send_empty_email": true,
-      "force_send": true
+      "force_send": false
     }
   }
 }
