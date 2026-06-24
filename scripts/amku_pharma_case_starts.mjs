@@ -13,6 +13,14 @@ const TIMELINE_API_URL = env('TIMELINE_API_URL', 'https://amcu.gov.ua/api/timeli
 const TIMELINE_TAG = env('TIMELINE_TAG', 'про початок розгляду справи');
 const TIMELINE_LANG = env('TIMELINE_LANG', 'uk');
 
+const AMCU_ORIGIN = new URL(TIMELINE_API_URL).origin;
+
+const AMCU_SESSION = {
+  bootstrapped: false,
+  cookies: new Map(),
+  csrfToken: null
+};
+
 const PERIOD_MODE = env('PERIOD_MODE', 'weekly'); // weekly | monthly | custom
 const DATE_FROM = env('DATE_FROM', '');
 const DATE_TO = env('DATE_TO', '');
@@ -272,26 +280,236 @@ function buildTimelineUrl(page, period) {
   return url.toString();
 }
 
+function isAmcuUrl(url) {
+  try {
+    return new URL(url).origin === AMCU_ORIGIN;
+  } catch {
+    return false;
+  }
+}
+
+function splitSetCookieHeader(value) {
+  if (!value) return [];
+
+  return String(value)
+    .split(/,(?=\s*[^;,]+=)/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function getSetCookieHeaders(headers) {
+  if (typeof headers.getSetCookie === 'function') {
+    return headers.getSetCookie();
+  }
+
+  const combined = headers.get('set-cookie');
+  return splitSetCookieHeader(combined);
+}
+
+function storeResponseCookies(res) {
+  const setCookies = getSetCookieHeaders(res.headers);
+
+  for (const header of setCookies) {
+    const firstPart = String(header).split(';')[0];
+    const eq = firstPart.indexOf('=');
+    if (eq <= 0) continue;
+
+    const name = firstPart.slice(0, eq).trim();
+    const value = firstPart.slice(eq + 1).trim();
+
+    if (name) AMCU_SESSION.cookies.set(name, value);
+  }
+}
+
+function buildCookieHeader() {
+  return [...AMCU_SESSION.cookies.entries()]
+    .map(([name, value]) => `${name}=${value}`)
+    .join('; ');
+}
+
+function getCookieValue(name) {
+  return AMCU_SESSION.cookies.get(name) || null;
+}
+
+function decodeCookieValue(value) {
+  if (!value) return null;
+
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function extractCsrfFromHtml(html) {
+  const s = String(html || '');
+
+  const meta = s.match(/<meta[^>]+name=["']csrf-token["'][^>]+content=["']([^"']+)["']/i);
+  if (meta?.[1]) return meta[1];
+
+  const input = s.match(/<input[^>]+name=["']_token["'][^>]+value=["']([^"']+)["']/i);
+  if (input?.[1]) return input[1];
+
+  return null;
+}
+
+function extractCsrfFromJsonOrText(text) {
+  const raw = String(text || '').trim();
+
+  try {
+    const json = JSON.parse(raw);
+    return (
+      json.csrfToken
+      || json.csrf_token
+      || json.token
+      || json._token
+      || json.data?.csrfToken
+      || json.data?.csrf_token
+      || null
+    );
+  } catch {}
+
+  const cleaned = raw.replace(/^"+|"+$/g, '').trim();
+
+  if (cleaned && cleaned.length >= 20 && !cleaned.includes('<')) {
+    return cleaned;
+  }
+
+  return null;
+}
+
+async function rawAmcuFetch(url, options = {}) {
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+    'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
+    ...(options.headers || {})
+  };
+
+  const cookie = buildCookieHeader();
+  if (cookie) headers.Cookie = cookie;
+
+  const res = await fetch(url, {
+    method: options.method || 'GET',
+    headers
+  });
+
+  storeResponseCookies(res);
+  return res;
+}
+
+async function bootstrapAmcuSession() {
+  if (AMCU_SESSION.bootstrapped) return;
+
+  console.log('Bootstrapping AMCU CSRF session...');
+
+  const timelinePageUrl = `${AMCU_ORIGIN}/timeline`;
+
+  const timelineRes = await rawAmcuFetch(timelinePageUrl, {
+    headers: {
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    }
+  });
+
+  const timelineHtml = await timelineRes.text().catch(() => '');
+  const htmlToken = extractCsrfFromHtml(timelineHtml);
+
+  if (htmlToken) {
+    AMCU_SESSION.csrfToken = htmlToken;
+  }
+
+  const csrfCandidateUrls = [
+    `${AMCU_ORIGIN}/api/csrf-token`,
+    `${AMCU_ORIGIN}/csrf-token`,
+    `${AMCU_ORIGIN}/sanctum/csrf-cookie`
+  ];
+
+  for (const csrfUrl of csrfCandidateUrls) {
+    try {
+      const res = await rawAmcuFetch(csrfUrl, {
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          Referer: timelinePageUrl,
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+
+      const body = await res.text().catch(() => '');
+
+      if (!res.ok) {
+        console.log(`CSRF candidate skipped: ${csrfUrl} -> HTTP ${res.status}`);
+        continue;
+      }
+
+      const tokenFromBody = extractCsrfFromJsonOrText(body);
+      const tokenFromCookie = decodeCookieValue(getCookieValue('XSRF-TOKEN'));
+
+      AMCU_SESSION.csrfToken = tokenFromBody || tokenFromCookie || AMCU_SESSION.csrfToken;
+
+      console.log(`CSRF candidate accepted: ${csrfUrl}`);
+      break;
+    } catch (err) {
+      console.log(`CSRF candidate failed: ${csrfUrl}: ${String(err.message || err).slice(0, 300)}`);
+    }
+  }
+
+  const tokenFromCookie = decodeCookieValue(getCookieValue('XSRF-TOKEN'));
+  if (!AMCU_SESSION.csrfToken && tokenFromCookie) {
+    AMCU_SESSION.csrfToken = tokenFromCookie;
+  }
+
+  AMCU_SESSION.bootstrapped = true;
+
+  console.log(
+    `AMCU session ready: cookies=${AMCU_SESSION.cookies.size}, `
+    + `csrf=${AMCU_SESSION.csrfToken ? 'yes' : 'no'}`
+  );
+}
+
+function resetAmcuSession() {
+  AMCU_SESSION.bootstrapped = false;
+  AMCU_SESSION.cookies = new Map();
+  AMCU_SESSION.csrfToken = null;
+}
+
 async function fetchWithRetry(url, options = {}) {
   const attempts = options.attempts || MAX_FETCH_RETRIES;
   const baseDelayMs = options.baseDelayMs || 3500;
   const label = options.label || url;
+  const amcuRequest = isAmcuUrl(url);
 
   let lastError = null;
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
-      const res = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
-          'Accept': options.accept || 'application/json, text/plain, */*',
-          'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
-          'X-Requested-With': 'XMLHttpRequest',
-          'Referer': 'https://amcu.gov.ua/timeline',
-          'Origin': 'https://amcu.gov.ua',
-          ...(options.headers || {})
-        }
-      });
+      if (amcuRequest) {
+        await bootstrapAmcuSession();
+      }
+
+      const headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+        'Accept': options.accept || 'application/json, text/plain, */*',
+        'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
+        ...(options.headers || {})
+      };
+
+      if (amcuRequest) {
+        headers.Referer = `${AMCU_ORIGIN}/timeline`;
+        headers.Origin = AMCU_ORIGIN;
+        headers['X-Requested-With'] = 'XMLHttpRequest';
+
+        const cookie = buildCookieHeader();
+        if (cookie) headers.Cookie = cookie;
+
+        const xsrfToken = decodeCookieValue(getCookieValue('XSRF-TOKEN'));
+        if (AMCU_SESSION.csrfToken) headers['X-CSRF-TOKEN'] = AMCU_SESSION.csrfToken;
+        if (xsrfToken || AMCU_SESSION.csrfToken) headers['X-XSRF-TOKEN'] = xsrfToken || AMCU_SESSION.csrfToken;
+      }
+
+      const res = await fetch(url, { headers });
+
+      if (amcuRequest) {
+        storeResponseCookies(res);
+      }
 
       if (res.ok) return res;
 
@@ -299,13 +517,17 @@ async function fetchWithRetry(url, options = {}) {
       const message =
         `HTTP ${res.status} for ${label}. `
         + `URL: ${url}. `
-        + `Body: ${bodyText.slice(0, 500)}`;
+        + `Body: ${bodyText.slice(0, 700)}`;
 
-      if (res.status >= 400 && res.status < 500 && res.status !== 429) {
+      if (/CSRF token mismatch/i.test(bodyText) && attempt < attempts) {
+        console.warn('AMCU CSRF mismatch detected. Resetting session and retrying...');
+        resetAmcuSession();
+        lastError = new Error(message);
+      } else if (res.status >= 400 && res.status < 500 && res.status !== 429) {
         throw new Error(message);
+      } else {
+        lastError = new Error(message);
       }
-
-      lastError = new Error(message);
     } catch (err) {
       lastError = err;
     }
@@ -314,7 +536,7 @@ async function fetchWithRetry(url, options = {}) {
       const delayMs = baseDelayMs * attempt;
       console.warn(
         `Fetch failed (${attempt}/${attempts}) for ${label}: `
-        + `${String(lastError?.message || lastError).slice(0, 900)}. `
+        + `${String(lastError?.message || lastError).slice(0, 1000)}. `
         + `Retrying in ${Math.ceil(delayMs / 1000)}s...`
       );
       await sleep(delayMs);
