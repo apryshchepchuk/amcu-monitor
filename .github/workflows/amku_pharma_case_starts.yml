@@ -49,13 +49,10 @@ on:
         default: "20"
 
   schedule:
-    # Weekly digest: every Monday at 06:30 UTC
+    # Weekly digest: every Monday at 06:30 UTC.
     # Kyiv: 09:30 during UTC+3, 08:30 during UTC+2.
+    # The script covers the previous full calendar week: Monday-Sunday.
     - cron: "30 6 * * 1"
-
-    # Monthly digest: first day of month at 06:45 UTC.
-    # The script will cover the previous calendar month.
-    - cron: "45 6 1 * *"
 
 concurrency:
   group: amku-pharma-case-starts
@@ -85,7 +82,9 @@ jobs:
 
       - name: Run AMCU pharma case starts digest
         env:
-          PERIOD_MODE: ${{ github.event.inputs.period_mode || (github.event.schedule == '45 6 1 * *' && 'monthly' || 'weekly') }}
+          # Scheduled runs are always weekly.
+          # Manual runs can override this through workflow_dispatch inputs.
+          PERIOD_MODE: ${{ github.event.inputs.period_mode || 'weekly' }}
           DATE_FROM: ${{ github.event.inputs.date_from || '' }}
           DATE_TO: ${{ github.event.inputs.date_to || '' }}
 
@@ -113,7 +112,7 @@ jobs:
         run: node scripts/amku_pharma_case_starts.mjs
 
       - name: Commit AMCU pharma case starts data
-        if: ${{ github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true' }}
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
