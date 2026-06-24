@@ -1,0 +1,42 @@
+[
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/traven-2026/rozpochato-rozghliad-spravy-127-26480-26",
+    "period_mode": "custom",
+    "period_from": "2026-05-01",
+    "period_to": "2026-05-31",
+    "publication_date": "2026-05-13",
+    "publication_datetime": "2026-05-13 18:30:00",
+    "timeline_day": "13.05.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/80-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/80-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/traven-2026/rozpochato-rozghliad-spravy-127-26480-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/80-26"
+    ],
+    "potential_violation_subjects": [
+      "ПрАТ «Фармацевтична фірма «Дарниця»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ПрАТ «Фармацевтична фірма «Дарниця» неправдивих, неточних або неповних відомостей про властивості продукції «Оксолін-Дарниця», «Оксолін-Дарниця з евкаліптом» та «Оксолін-Дарниця з ментолом» на упаковках, в інструкціях та на офіційному вебсайті.",
+    "risk_comment": "Високий ризик для виробника. Справа стосується промоції та маркування лікарських засобів. Порушення ст. 15-1 часто призводять до значних штрафів (до 5% доходу) та зобов'язань змінити маркетингові матеріали або упаковку продукції.",
+    "confidence": "high",
+    "page_text_sha256": "baf751e4a48d1851dca7dd2f42e1f2066399962df393a7619f8be8ee32b24dfa",
+    "analyzed_at": "2026-06-24T05:28:37.698Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-24T05:28:37.698Z"
+    }
+  }
+]
