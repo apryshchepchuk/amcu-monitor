@@ -39,7 +39,7 @@ const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
 const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 3);
 const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
 
-const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'АМКУ: нові справи у фармсекторі');
+const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'Weekly digest нових справ АМКУ у фармсекторі');
 
 const PHARMA_PATTERNS = [
   /фармац/i,
@@ -756,8 +756,7 @@ function buildGeminiPrompt(page) {
 3. Витягни номер/номери справ.
 4. Витягни попередню кваліфікацію: закон, стаття, пункт, якщо це прямо зазначено.
 5. Коротко опиши суть потенційного порушення.
-6. Дай короткий коментар щодо ризику/важливості для моніторингу.
-7. Не вигадуй. Якщо норма або суб'єкт прямо не визначені — так і напиши.
+6. Не вигадуй. Якщо норма або суб'єкт прямо не визначені — так і напиши.
 
 Поверни виключно валідний JSON без Markdown.
 
@@ -774,7 +773,6 @@ function buildGeminiPrompt(page) {
     "text": ""
   },
   "short_description": "",
-  "risk_comment": "",
   "confidence": "high | medium | low"
 }
 
@@ -798,7 +796,6 @@ async function analyzeWithGemini(page) {
       potential_violation_subjects: [],
       preliminary_qualification: page.qualification_basic,
       short_description: page.summary_basic || '',
-      risk_comment: '[SKIP_GEMINI] AI-аналіз пропущено.',
       confidence: 'low'
     };
   }
@@ -983,7 +980,6 @@ function normalizeAnalysis(analysis, page, period) {
       text: qualification?.text || 'Не зазначено в повідомленні'
     },
     short_description: analysis?.short_description || page.summary_basic || null,
-    risk_comment: analysis?.risk_comment || null,
     confidence: analysis?.confidence || null,
 
     page_text_sha256: page.text_sha256,
@@ -1047,95 +1043,118 @@ function sectorLabel(value) {
   return map[value] || value || 'інше / потребує перевірки';
 }
 
-function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }) {
-  const header = [
-    `${EMAIL_SUBJECT_PREFIX}`,
-    `Період: ${period.label}`,
-    `Усього повідомлень про початок розгляду справи: ${allItemsCount}`,
-    `Фарм-кандидатів після keyword-фільтра: ${candidateCount}`,
-    `Релевантних справ: ${relevantRows.length}`,
-    ''
-  ].join('\n');
+function caseWordUk(n) {
+  const value = Math.abs(Number(n) || 0);
+  const lastTwo = value % 100;
+  const last = value % 10;
 
-  if (!relevantRows.length) {
-    return `${header}За період не виявлено релевантних повідомлень щодо учасників фармринку.`;
+  if (lastTwo >= 11 && lastTwo <= 14) return 'справ';
+  if (last === 1) return 'справу';
+  if (last >= 2 && last <= 4) return 'справи';
+  return 'справ';
+}
+
+function caseCountPhrase(n) {
+  return `${n} ${caseWordUk(n)}`;
+}
+
+function periodIntro(period) {
+  const from = formatDateUk(period.from);
+  const to = formatDateUk(period.to);
+
+  if (period.mode === 'monthly') {
+    return `За місяць з ${from} по ${to}`;
   }
 
-  const body = relevantRows.map((row, index) => [
-    `${index + 1}. ${row.title || row.timeline_title || 'Без назви'}`,
-    `Дата публікації: ${formatDateUk(row.publication_date)}`,
-    `Справи: ${plainList(row.case_numbers)}`,
-    `Суб'єкти: ${plainList(row.potential_violation_subjects)}`,
-    `Сектор: ${sectorLabel(row.sector)}`,
-    `Попередня кваліфікація: ${qualificationText(row)}`,
-    `Короткий опис: ${row.short_description || 'Не зазначено'}`,
-    `Коментар: ${row.risk_comment || '—'}`,
-    `Джерело: ${row.url}`
-  ].join('\n')).join('\n\n---\n\n');
+  if (period.mode === 'custom') {
+    return `За період з ${from} по ${to}`;
+  }
 
-  return header + body;
+  return `За тиждень з ${from} по ${to}`;
+}
+
+function formatCaseNumbers(values) {
+  if (!Array.isArray(values) || !values.length) return '№ не зазначено';
+
+  return values
+    .filter(Boolean)
+    .map((value) => {
+      const s = String(value).trim();
+      return s.startsWith('№') ? s : `№ ${s}`;
+    })
+    .join(', ');
+}
+
+function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }) {
+  const header =
+    `${periodIntro(period)} Антимонопольним комітетом України розпочато `
+    + `${caseCountPhrase(relevantRows.length)}, які стосуються фармацевтичного ринку:`;
+
+  if (!relevantRows.length) {
+    return `${EMAIL_SUBJECT_PREFIX}\n\n${header}\n\nДеталі відсутні.`;
+  }
+
+  const body = relevantRows.map((row, index) => {
+    const subjects = plainList(row.potential_violation_subjects);
+    const sector = sectorLabel(row.sector);
+    const qualification = qualificationText(row);
+    const description = row.short_description || 'Не зазначено';
+    const caseNumbers = formatCaseNumbers(row.case_numbers);
+
+    return [
+      `${index + 1}. ${formatDateUk(row.publication_date)} повідомлено про початок розгляду справи ${caseNumbers} відносно: ${subjects}, яка стосується сфери: ${sector} з попередньою кваліфікацією: ${qualification}.`,
+      `Короткий опис: ${description}.`,
+      `Джерело: ${row.url}.`
+    ].join('\n');
+  }).join('\n\n');
+
+  return `${EMAIL_SUBJECT_PREFIX}\n\n${header}\n\n${body}`;
 }
 
 function renderEmailHtml({ period, relevantRows, allItemsCount, candidateCount }) {
-  const cards = relevantRows.length
-    ? relevantRows.map((row, index) => `
-      <div style="border:1px solid #d9e2ef;border-radius:12px;padding:14px 16px;margin:14px 0;background:#fff;">
-        <h3 style="margin:0 0 8px 0;font-size:16px;line-height:1.35;">${index + 1}. ${htmlEscape(row.title || row.timeline_title || 'Без назви')}</h3>
+  const header =
+    `${periodIntro(period)} Антимонопольним комітетом України розпочато `
+    + `${caseCountPhrase(relevantRows.length)}, які стосуються фармацевтичного ринку:`;
 
-        <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:13px;line-height:1.45;">
-          <tr>
-            <td style="width:190px;color:#6b7280;padding:4px 0;">Дата публікації</td>
-            <td style="padding:4px 0;"><b>${htmlEscape(formatDateUk(row.publication_date))}</b></td>
-          </tr>
-          <tr>
-            <td style="color:#6b7280;padding:4px 0;">Справи</td>
-            <td style="padding:4px 0;">${htmlEscape(plainList(row.case_numbers))}</td>
-          </tr>
-          <tr>
-            <td style="color:#6b7280;padding:4px 0;">Суб'єкти</td>
-            <td style="padding:4px 0;"><b>${htmlEscape(plainList(row.potential_violation_subjects))}</b></td>
-          </tr>
-          <tr>
-            <td style="color:#6b7280;padding:4px 0;">Сектор</td>
-            <td style="padding:4px 0;">${htmlEscape(sectorLabel(row.sector))}</td>
-          </tr>
-          <tr>
-            <td style="color:#6b7280;padding:4px 0;">Попередня кваліфікація</td>
-            <td style="padding:4px 0;">${htmlEscape(qualificationText(row))}</td>
-          </tr>
-        </table>
+  const body = relevantRows.length
+    ? relevantRows.map((row, index) => {
+      const subjects = plainList(row.potential_violation_subjects);
+      const sector = sectorLabel(row.sector);
+      const qualification = qualificationText(row);
+      const description = row.short_description || 'Не зазначено';
+      const caseNumbers = formatCaseNumbers(row.case_numbers);
 
-        <p style="margin:12px 0 4px 0;"><b>Короткий опис</b></p>
-        <p style="margin:0 0 10px 0;">${htmlEscape(row.short_description || 'Не зазначено')}</p>
-
-        ${row.risk_comment ? `
-          <p style="margin:10px 0 4px 0;"><b>Коментар щодо ризику / моніторингу</b></p>
-          <p style="margin:0 0 10px 0;">${htmlEscape(row.risk_comment)}</p>
-        ` : ''}
-
-        <p style="margin:10px 0 0 0;">
-          <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener">Відкрити повідомлення на сайті АМКУ</a>
+      return `
+        <p style="margin:0 0 14px 0;">
+          ${index + 1}. ${htmlEscape(formatDateUk(row.publication_date))}
+          повідомлено про початок розгляду справи ${htmlEscape(caseNumbers)}
+          відносно: <strong>${htmlEscape(subjects)}</strong>,
+          яка стосується сфери: <strong>${htmlEscape(sector)}</strong>
+          з попередньою кваліфікацією:
+          <strong>${htmlEscape(qualification)}</strong>.
+          <br>
+          Короткий опис: ${htmlEscape(description)}.
+          <br>
+          Джерело:
+          <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener">${htmlEscape(row.url)}</a>.
         </p>
-      </div>
-    `).join('\n')
-    : `<p>За період не виявлено релевантних повідомлень щодо учасників фармринку.</p>`;
+      `;
+    }).join('\n')
+    : `<p style="margin:0;">Деталі відсутні.</p>`;
 
   return `<!doctype html>
 <html>
-<body style="font-family:Arial,sans-serif;color:#111827;line-height:1.45;background:#f8fafc;padding:0;margin:0;">
-  <div style="max-width:860px;margin:0 auto;background:#ffffff;padding:22px;">
-    <h2 style="margin:0 0 10px 0;">${htmlEscape(EMAIL_SUBJECT_PREFIX)}</h2>
-    <p style="margin:0 0 14px 0;color:#4b5563;">
-      Період: <b>${htmlEscape(period.label)}</b>
+<body style="font-family:Arial,sans-serif;color:#111827;line-height:1.5;background:#ffffff;padding:0;margin:0;">
+  <div style="max-width:900px;margin:0 auto;padding:20px;">
+    <h2 style="margin:0 0 16px 0;font-size:18px;line-height:1.35;">
+      ${htmlEscape(EMAIL_SUBJECT_PREFIX)}
+    </h2>
+
+    <p style="margin:0 0 16px 0;">
+      ${htmlEscape(header)}
     </p>
 
-    <div style="border:1px solid #e5e7eb;border-radius:12px;padding:12px 14px;margin:0 0 18px 0;background:#f9fafb;">
-      <div>Усього повідомлень про початок розгляду справи: <b>${allItemsCount}</b></div>
-      <div>Фарм-кандидатів після keyword-фільтра: <b>${candidateCount}</b></div>
-      <div>Релевантних справ: <b>${relevantRows.length}</b></div>
-    </div>
-
-    ${cards}
+    ${body}
   </div>
 </body>
 </html>`;
@@ -1175,9 +1194,7 @@ async function sendEmailDigest({ period, relevantRows, allItemsCount, candidateC
     }
   });
 
-  const subject = relevantRows.length
-    ? `${EMAIL_SUBJECT_PREFIX}: ${relevantRows.length} за ${period.label}`
-    : `${EMAIL_SUBJECT_PREFIX}: не виявлено за ${period.label}`;
+  const subject = EMAIL_SUBJECT_PREFIX;
 
   await transporter.sendMail({
     from: env('EMAIL_FROM', process.env.SMTP_USER || ''),
