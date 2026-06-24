@@ -358,15 +358,25 @@ function extractCsrfFromJsonOrText(text) {
 
   try {
     const json = JSON.parse(raw);
-    return (
-      json.csrfToken
-      || json.csrf_token
-      || json.token
-      || json._token
-      || json.data?.csrfToken
-      || json.data?.csrf_token
-      || null
-    );
+
+    if (typeof json === 'string') {
+      return json.trim() || null;
+    }
+
+    if (json && typeof json === 'object') {
+      return (
+        json.csrfToken
+        || json.csrf_token
+        || json.csrf
+        || json.token
+        || json._token
+        || json.data?.csrfToken
+        || json.data?.csrf_token
+        || json.data?.csrf
+        || json.data?.token
+        || null
+      );
+    }
   } catch {}
 
   const cleaned = raw.replace(/^"+|"+$/g, '').trim();
@@ -418,8 +428,8 @@ async function bootstrapAmcuSession() {
   }
 
   const csrfCandidateUrls = [
-    `${AMCU_ORIGIN}/api/csrf-token`,
     `${AMCU_ORIGIN}/csrf-token`,
+    `${AMCU_ORIGIN}/api/csrf-token`,
     `${AMCU_ORIGIN}/sanctum/csrf-cookie`
   ];
 
@@ -445,8 +455,12 @@ async function bootstrapAmcuSession() {
 
       AMCU_SESSION.csrfToken = tokenFromBody || tokenFromCookie || AMCU_SESSION.csrfToken;
 
-      console.log(`CSRF candidate accepted: ${csrfUrl}`);
-      break;
+      if (AMCU_SESSION.csrfToken) {
+        console.log(`CSRF candidate accepted with token: ${csrfUrl}`);
+        break;
+      }
+
+      console.log(`CSRF candidate responded but no token found: ${csrfUrl}`);
     } catch (err) {
       console.log(`CSRF candidate failed: ${csrfUrl}: ${String(err.message || err).slice(0, 300)}`);
     }
