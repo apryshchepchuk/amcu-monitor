@@ -606,6 +606,21 @@ async function extractZip(zipPath, outDir) {
   });
 }
 
+function isJunkArchiveEntry(filePathOrName) {
+  const normalized = String(filePathOrName || '').replaceAll('\\', '/');
+  const base = path.basename(normalized);
+
+  if (!base) return true;
+
+  return (
+    base.startsWith('~$') ||
+    base.startsWith('._') ||
+    base === '.DS_Store' ||
+    base.toLowerCase() === 'thumbs.db' ||
+    normalized.includes('/__MACOSX/')
+  );
+}
+
 async function listDocumentFiles(dir) {
   const found = [];
 
@@ -1921,6 +1936,12 @@ async function processResource(resource, state, runBudget) {
   for (const file of files) {
     const decodedFileName = decodeHashUnicodeName(path.relative(extractDir, file));
 
+    if (isJunkArchiveEntry(decodedFileName) || isJunkArchiveEntry(file)) {
+      stats.docsSkipped += 1;
+      console.log(`Skipping junk/archive temp file: ${decodedFileName}`);
+      continue;
+    }
+    
     try {
       const fileHash = await sha256File(file);
       const text = await extractText(file);
