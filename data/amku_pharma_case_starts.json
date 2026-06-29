@@ -1,5 +1,162 @@
 [
   {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264109-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-22",
+    "period_to": "2026-06-28",
+    "publication_date": "2026-06-24",
+    "publication_datetime": "2026-06-24 11:18:31",
+    "timeline_day": "24.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/109-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/109-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264109-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/109-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «ПрімаВак»",
+      "ДП «ЕНЗИМ»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «ПрімаВак» та ДП «ЕНЗИМ» неправдивих, неточних або неповних відомостей щодо продукції (бактеріофагів) на пакуваннях, інструкціях та вебсайті, що може вводити споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "e6740e71d72e1d94c4424eb31e2fb7bb70d86e96ede2f0c20e84776892c84be4",
+    "analyzed_at": "2026-06-29T11:28:47.933Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-29T11:28:47.933Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264120-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-22",
+    "period_to": "2026-06-28",
+    "publication_date": "2026-06-23",
+    "publication_datetime": "2026-06-23 10:30:19",
+    "timeline_day": "23.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/120-26",
+    "timeline_title": "Розпочато розгляд справи  № 127-26.4/120-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264120-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/120-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «Ананта Медікеар Україна»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення на упакованні дієтичної добавки «Лів-Кер» та в листі-вкладиші до неї неправдивих, неточних або неповних відомостей щодо продукції.",
+    "confidence": "high",
+    "page_text_sha256": "94dcb40c5d2bbd767fee5aac348ee77cd9c9663fa91482421b25dde727a0600f",
+    "analyzed_at": "2026-06-29T11:28:50.125Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-29T11:28:50.125Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264118-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-22",
+    "period_to": "2026-06-28",
+    "publication_date": "2026-06-22",
+    "publication_datetime": "2026-06-22 17:34:05",
+    "timeline_day": "22.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/118-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/118-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264118-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/118-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «МАКЛЕОДС ФАРМАСЬЮТІКАЛЗ ЛІМІТЕД»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «МАКЛЕОДС ФАРМАСЬЮТІКАЛЗ ЛІМІТЕД» відомостей щодо дієтичної добавки «ДЕБРІЛІЗ», які не мають належного підтвердження та можуть вводити споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "9c001d40cfc1153048e42f3a4b5194722e0c8470b0c5a1b17bc9f05655e7855c",
+    "analyzed_at": "2026-06-29T11:28:52.515Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-29T11:28:52.515Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264119-26",
+    "period_mode": "weekly",
+    "period_from": "2026-06-22",
+    "period_to": "2026-06-28",
+    "publication_date": "2026-06-22",
+    "publication_datetime": "2026-06-22 17:32:36",
+    "timeline_day": "22.06.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/119-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/119-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264119-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/119-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «Софарма Україна»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «Софарма Україна» відомостей щодо дієтичної добавки «Бронхолітин фіто», які за відсутності належного підтвердження містять ознаки введення споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "c6226ca953c69bf76c68af0cd4934662e7bc36365bf854d0e575f88cc0fbaa16",
+    "analyzed_at": "2026-06-29T11:28:54.434Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-06-29T11:28:54.434Z"
+    }
+  },
+  {
     "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264116-26",
     "period_mode": "weekly",
     "period_from": "2026-06-15",
