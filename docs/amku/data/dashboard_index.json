@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-01T10:09:25.813Z",
+  "updated_at": "2026-07-01T13:40:08.174Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 477,
-  "total_sanction_uah": 13079029572.24,
+  "total_decisions": 480,
+  "total_sanction_uah": 13080052022.24,
   "years": [
     2026,
     2025,
@@ -11,8 +11,8 @@
     2022
   ],
   "by_law_family": {
-    "economic_competition": 416,
-    "unfair_competition": 61,
+    "economic_competition": 418,
+    "unfair_competition": 62,
     "other": 0
   },
   "categories": [
@@ -21,7 +21,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 102
+      "count": 104
     },
     {
       "code": "zek:50:2",
@@ -91,7 +91,7 @@
       "label": "ст. 8 — дискредитація суб’єкта господарювання",
       "law_family": "unfair_competition",
       "short_label": "дискредитація суб’єкта господарювання",
-      "count": 3
+      "count": 4
     },
     {
       "code": "unfair:15",
@@ -116,5 +116,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2022-07-07"
+  "oldest_decision_date": "2022-02-03"
 }
