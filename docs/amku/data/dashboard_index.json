@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-02T13:09:32.688Z",
+  "updated_at": "2026-07-02T18:04:33.311Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 495,
-  "total_sanction_uah": 13567456744.24,
+  "total_decisions": 502,
+  "total_sanction_uah": 13604449323.24,
   "years": [
     2026,
     2025,
@@ -12,8 +12,8 @@
     2021
   ],
   "by_law_family": {
-    "economic_competition": 428,
-    "unfair_competition": 67,
+    "economic_competition": 434,
+    "unfair_competition": 68,
     "other": 0
   },
   "categories": [
@@ -22,7 +22,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 106
+      "count": 109
     },
     {
       "code": "zek:50:2",
@@ -57,7 +57,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 177
+      "count": 180
     },
     {
       "code": "zek:50:13",
@@ -92,7 +92,7 @@
       "label": "ст. 8 — дискредитація суб’єкта господарювання",
       "law_family": "unfair_competition",
       "short_label": "дискредитація суб’єкта господарювання",
-      "count": 4
+      "count": 5
     },
     {
       "code": "unfair:15",
