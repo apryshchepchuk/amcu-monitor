@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-03T13:05:54.057Z",
+  "updated_at": "2026-07-03T17:45:07.263Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 506,
-  "total_sanction_uah": 13828997253.24,
+  "total_decisions": 511,
+  "total_sanction_uah": 13844294852.24,
   "years": [
     2026,
     2025,
@@ -12,8 +12,8 @@
     2021
   ],
   "by_law_family": {
-    "economic_competition": 438,
-    "unfair_competition": 68,
+    "economic_competition": 442,
+    "unfair_competition": 69,
     "other": 0
   },
   "categories": [
@@ -22,7 +22,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 112
+      "count": 114
     },
     {
       "code": "zek:50:2",
@@ -36,7 +36,7 @@
       "label": "п. 3 ст. 50 — антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
-      "count": 7
+      "count": 8
     },
     {
       "code": "zek:50:4",
@@ -57,7 +57,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 180
+      "count": 181
     },
     {
       "code": "zek:50:13",
@@ -95,6 +95,13 @@
       "count": 5
     },
     {
+      "code": "unfair:10",
+      "label": "ст. 10 — схилення до бойкоту суб’єкта господарювання",
+      "law_family": "unfair_competition",
+      "short_label": "схилення до бойкоту суб’єкта господарювання",
+      "count": 1
+    },
+    {
       "code": "unfair:15",
       "label": "ст. 15 — досягнення неправомірних переваг у конкуренції",
       "law_family": "unfair_competition",
@@ -117,5 +124,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2021-10-07"
+  "oldest_decision_date": "2021-09-16"
 }
