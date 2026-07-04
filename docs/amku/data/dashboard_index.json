@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-04T12:15:51.603Z",
+  "updated_at": "2026-07-04T17:17:36.627Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 521,
-  "total_sanction_uah": 13914064132.24,
+  "total_decisions": 525,
+  "total_sanction_uah": 13914914132.24,
   "years": [
     2026,
     2025,
@@ -12,7 +12,7 @@
     2021
   ],
   "by_law_family": {
-    "economic_competition": 452,
+    "economic_competition": 456,
     "unfair_competition": 69,
     "other": 0
   },
@@ -36,7 +36,7 @@
       "label": "п. 3 ст. 50 — антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
-      "count": 8
+      "count": 9
     },
     {
       "code": "zek:50:4",
@@ -57,7 +57,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 191
+      "count": 194
     },
     {
       "code": "zek:50:13",
@@ -124,5 +124,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2021-06-03"
+  "oldest_decision_date": "2021-05-27"
 }
