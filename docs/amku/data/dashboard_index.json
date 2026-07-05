@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-04T17:17:36.627Z",
+  "updated_at": "2026-07-05T09:21:30.528Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 525,
-  "total_sanction_uah": 13914914132.24,
+  "total_decisions": 530,
+  "total_sanction_uah": 14755163152.24,
   "years": [
     2026,
     2025,
@@ -12,7 +12,7 @@
     2021
   ],
   "by_law_family": {
-    "economic_competition": 456,
+    "economic_competition": 461,
     "unfair_competition": 69,
     "other": 0
   },
@@ -22,14 +22,14 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 114
+      "count": 115
     },
     {
       "code": "zek:50:2",
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 29
+      "count": 30
     },
     {
       "code": "zek:50:3",
@@ -46,6 +46,13 @@
       "count": 10
     },
     {
+      "code": "zek:50:7",
+      "label": "п. 7 ст. 50 — вчинення дій, заборонених ст. 17 Закону",
+      "law_family": "economic_competition",
+      "short_label": "вчинення дій, заборонених ст. 17 Закону",
+      "count": 1
+    },
+    {
       "code": "zek:50:10",
       "label": "п. 10 ст. 50 — недотримання умов, передбачених пунктами 2, 5 та 6 ч. 3 ст. 22 Закону",
       "law_family": "economic_competition",
@@ -57,7 +64,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 194
+      "count": 196
     },
     {
       "code": "zek:50:13",
@@ -124,5 +131,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2021-05-27"
+  "oldest_decision_date": "2021-04-08"
 }
