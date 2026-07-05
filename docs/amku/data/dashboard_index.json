@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-05T09:21:30.528Z",
+  "updated_at": "2026-07-05T12:24:39.331Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 530,
-  "total_sanction_uah": 14755163152.24,
+  "total_decisions": 532,
+  "total_sanction_uah": 15029390372.240002,
   "years": [
     2026,
     2025,
@@ -12,7 +12,7 @@
     2021
   ],
   "by_law_family": {
-    "economic_competition": 461,
+    "economic_competition": 463,
     "unfair_competition": 69,
     "other": 0
   },
@@ -22,7 +22,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 115
+      "count": 116
     },
     {
       "code": "zek:50:2",
@@ -43,7 +43,7 @@
       "label": "п. 4 ст. 50 — невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
       "law_family": "economic_competition",
       "short_label": "невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
-      "count": 10
+      "count": 11
     },
     {
       "code": "zek:50:7",
@@ -131,5 +131,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2021-04-08"
+  "oldest_decision_date": "2021-03-17"
 }

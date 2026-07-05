@@ -719,6 +719,18 @@
       "docs_relevant": 5,
       "errors": 0,
       "incomplete": false
+    },
+    "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca": {
+      "state_version": 4,
+      "title": "Рішення АМКУ № 124-178-р за березень 2021 р.",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca/download/rish_berezen_2021.zip",
+      "signature": "2021-06-22T13:00:17.283137|2021-03-22T07:47:30.295764|29109404|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca/download/rish_berezen_2021.zip",
+      "zip_sha256": "b4d7afd5127c8bdceee94097151a3b63b11465efa8d1c46cd22d0c42c83e9382",
+      "processed_at": "2026-07-05T12:24:39.133Z",
+      "docs_seen": 72,
+      "docs_relevant": 5,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -33698,9 +33710,9 @@
       "decision_number": "13-рп",
       "decision_date": "2021-06-17",
       "file_sha256": "d932353c22d69d8adb6c374e7cf545aa72e1cd89b7cc8fc1ad102660e0c84801",
-      "source_resource_id": "1ee19bac-7905-4297-bf95-edbe85f54d39",
-      "source_file": "rish_cherven_2021/Розпорядження від 17.06.2021 № 13-рп про виправлення описки в рішенні від  30.03.2021 №178-р.docx",
-      "updated_at": "2026-07-04T12:15:51.475Z"
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Розпорядження від 17.06.2021 № 13-рп про виправлення описки в рішенні від  30.03.2021 №178-р.docx",
+      "updated_at": "2026-07-05T12:24:39.133Z"
     },
     "2021-05-07|243-р": {
       "status": "skipped",
@@ -34961,19 +34973,616 @@
       "source_resource_id": "2459e1fa-7ee5-430d-b72f-de75edfdda29",
       "source_file": "rish_kviten_2021/Рішення від 29.04.2021 № 242-р.docx",
       "updated_at": "2026-07-05T09:21:30.339Z"
+    },
+    "unknown-date|10до": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "10до",
+      "decision_date": null,
+      "file_sha256": "6c0332496bbfeee9203fe510858bc839e405ca0f3fee1f51d527c3bae170fae3",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Додаток № 10 до рішення від 30.03.2021 № 178-р.docx",
+      "updated_at": "2026-07-05T12:23:30.607Z"
+    },
+    "unknown-date|178-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "178-р",
+      "decision_date": null,
+      "file_sha256": "83b9b670e7b7d0606b3eb88211b3050fe0c34df7db3d5f62fed91f4e0b9d5168",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Додаток № 9 до рішення від 30.03.2021 № 178-р.docx",
+      "updated_at": "2026-07-05T12:23:39.171Z"
+    },
+    "2021-03-04|124-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "124-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "9d9cc1cc8feb3384ffd8918e01a46eeeff87a5c0aca83359846a7f202d673aad",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 124-р.docx",
+      "updated_at": "2026-07-05T12:23:39.228Z"
+    },
+    "2021-03-04|125-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "125-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "391ad39bb6d1396e48be495344603e06eecd2da9b73b058920b8fa96fd0c0aa6",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 125-р.docx",
+      "updated_at": "2026-07-05T12:23:39.295Z"
+    },
+    "2021-03-04|126-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "126-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "26fc10275d8d1a367f09bbd1910262c043180f678f6f1e6830ee8df915ccf7e4",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 126-р.docx",
+      "updated_at": "2026-07-05T12:23:39.351Z"
+    },
+    "2021-03-04|127-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "127-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "ae189f973666ad81656d743893dc94e5a4f0b6b98b43fdc0d72c9a0192605b9a",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 127-р.docx",
+      "updated_at": "2026-07-05T12:23:39.399Z"
+    },
+    "2021-03-04|128-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "128-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "34f8f816d2b3922640f338c3f917f7775e10192b85901b0877122cb8e2c3b0cd",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 128-р.docx",
+      "updated_at": "2026-07-05T12:23:39.456Z"
+    },
+    "2021-03-04|129-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "129-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "92898dc90ac9c5505b9db5bb29d1fd1f3750cd02d872a39b01bf6dee607805e0",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 129-р.docx",
+      "updated_at": "2026-07-05T12:23:39.512Z"
+    },
+    "2021-03-04|130-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "130-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "a2ab32575f809d2e42ad458988d367af15c214f828a1f287e0f730e95ef41882",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 130-р.docx",
+      "updated_at": "2026-07-05T12:23:39.558Z"
+    },
+    "2021-03-04|131-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "131-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "74cd3500f1d8dbdc3ca96906c97774faa30309f2d3038faf495e62840c9cfce3",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 131-р.docx",
+      "updated_at": "2026-07-05T12:23:39.605Z"
+    },
+    "2021-03-04|132-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "132-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "d49a5c750f7ed2df211420cd6a8a32ab4ce38f7d0eee29e1fe4dbcf336108e8b",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 132-р.docx",
+      "updated_at": "2026-07-05T12:23:39.652Z"
+    },
+    "2021-03-04|133-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "133-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "f4a927dbd0948f3b51515ed657b36c237c8669881d8295f2e2236f66ec13c620",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 133-р.docx",
+      "updated_at": "2026-07-05T12:23:39.719Z"
+    },
+    "2021-03-04|134-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "134-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "460e5c366f3d3c7c4f162cdd6f5736eccff3fc65f8bd72b5f6ccdfbdc7792804",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 134-р.docx",
+      "updated_at": "2026-07-05T12:23:39.764Z"
+    },
+    "2021-03-04|135-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "135-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "4c6167c3862431e22f7461500fe40e47ae705edee405c62240ab437c9c839b65",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 135-р.docx",
+      "updated_at": "2026-07-05T12:23:39.821Z"
+    },
+    "2021-03-04|136-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "136-р",
+      "decision_date": "2021-03-04",
+      "file_sha256": "6ddfc583440931c71eff81a2e1e94de571b0a86779f28abfd7d8e7f240fa74df",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 04.03.2021 № 136-р.docx",
+      "updated_at": "2026-07-05T12:23:39.879Z"
+    },
+    "2021-03-11|137-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "137-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "eae3dc5df5882f354501323473012752df19ab9437722006de3452662476f87d",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 137-р.docx",
+      "updated_at": "2026-07-05T12:23:39.934Z"
+    },
+    "2021-03-11|138-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "138-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "7f129259eb9912dfd2d7068b65ccf1cea02b25f2867f5f51633a5befb54bbfd6",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 138-р.docx",
+      "updated_at": "2026-07-05T12:23:39.990Z"
+    },
+    "2021-03-11|139-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "139-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "07ed397a74db98cc803715900d11b0847af8ae524008ecdbd24da38efb189d0c",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 139-р.docx",
+      "updated_at": "2026-07-05T12:23:40.047Z"
+    },
+    "2021-03-11|140-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "140-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "c49617e78df20af0b31459687a9bb8fcb0521fc887b285633489f2767c1d1e95",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 140-р.docx",
+      "updated_at": "2026-07-05T12:23:40.105Z"
+    },
+    "2021-03-11|141-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "141-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "c978faf9f76def5132f6d26d24bf56830c070a66a6b079fcbbca7a07623144d7",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 141-р.docx",
+      "updated_at": "2026-07-05T12:23:40.151Z"
+    },
+    "2021-03-11|142-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "142-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "b5b78b4bcad7f8b16ade340795286c3a3ff31ad08fc19bb789ca02cbb5a71c04",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 142-р.docx",
+      "updated_at": "2026-07-05T12:23:40.199Z"
+    },
+    "2021-03-11|143-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "143-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "c36217ef4e4619cc2e705818a9f67a00cbe0d965fcc216f9a72c1f69b4ef8916",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 143-р.docx",
+      "updated_at": "2026-07-05T12:23:40.277Z"
+    },
+    "2021-03-11|144-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "144-р",
+      "decision_date": "2021-03-11",
+      "file_sha256": "1c5f36f742b810f12a7022a4eb0dafbe7611c9a6a2efd26cc8069aee55468f8d",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 11.03.2021 № 144-р.docx",
+      "updated_at": "2026-07-05T12:23:40.343Z"
+    },
+    "2021-03-16|145-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "145-р",
+      "decision_date": "2021-03-16",
+      "file_sha256": "72969bcbcfd60d51ba4b68a274ca8b7c222784aac032f6483ef11fdf1e54461a",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 16.03.2021 № 145-р.docx",
+      "updated_at": "2026-07-05T12:23:40.399Z"
+    },
+    "2021-03-16|146-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "146-р",
+      "decision_date": "2021-03-16",
+      "file_sha256": "db254b195728e2bbd1f8129aa958b0f7edd3917553f7b7b9d8a3bc1a81003665",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 16.03.2021 № 146-р.docx",
+      "updated_at": "2026-07-05T12:23:40.456Z"
+    },
+    "2021-03-16|147-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "147-р",
+      "decision_date": "2021-03-16",
+      "file_sha256": "1fa55043282c92c00278307c36b0a4f3fb984ba7b9dedfa591fb833a0678e7e9",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 16.03.2021 № 147-р.docx",
+      "updated_at": "2026-07-05T12:23:40.502Z"
+    },
+    "2021-03-16|148-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "148-р",
+      "decision_date": "2021-03-16",
+      "file_sha256": "15b447d02ced254231f7f256a931334ff158bb74bd35b9758276a754a5c4e705",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 16.03.2021 № 148-р.docx",
+      "updated_at": "2026-07-05T12:23:40.550Z"
+    },
+    "2021-03-16|149-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "149-р",
+      "decision_date": "2021-03-16",
+      "file_sha256": "64e502f5bc2b099ce14335bf0072eb7189034e80b618ad3f89ff3be095cc10dd",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 16.03.2021 № 149-р.docx",
+      "updated_at": "2026-07-05T12:23:40.607Z"
+    },
+    "2021-03-16|150-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "150-р",
+      "decision_date": "2021-03-16",
+      "file_sha256": "1409923cdd5bbc8854154da12a8ad41ce739907d96b539644e1a1ccb9d1f11a8",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 16.03.2021 № 150-р.docx",
+      "updated_at": "2026-07-05T12:23:40.653Z"
+    },
+    "2021-03-17|151-р": {
+      "status": "analyzed",
+      "decision_number": "151-р",
+      "decision_date": "2021-03-17",
+      "file_sha256": "22eacc3b16dcf74128f4e159e273082b8bd3d07a7abf31da12663827143224aa",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 17.03.2021 № 151-р.docx",
+      "updated_at": "2026-07-05T12:23:44.878Z"
+    },
+    "2021-03-18|152-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "152-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "98bcabeb797c31c561e53f93734385f41c76e78240c3bd791c17977aa01848dd",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 152-р.docx",
+      "updated_at": "2026-07-05T12:23:44.924Z"
+    },
+    "2021-03-18|153-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "153-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "c8bedb97677b4a0d02fc62dedc10871ce8c8a1b9312dd3414599b0f4cd3a7d53",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 153-р.docx",
+      "updated_at": "2026-07-05T12:23:44.981Z"
+    },
+    "2021-03-18|154-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "154-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "299f0a8f10be571c340903648d16b17fef2a7acad12385255015997c29ec98fd",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 154-р.docx",
+      "updated_at": "2026-07-05T12:23:45.038Z"
+    },
+    "2021-03-18|155-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "155-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "66684dc651b41c85f1e8c6a76e6e00fbad2ccce04b5ed61054b64d0f00b60cb3",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 155-р.docx",
+      "updated_at": "2026-07-05T12:23:45.105Z"
+    },
+    "2021-03-18|156-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "156-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "53086bbb6f33d6b2f73fdec16531d4f5150982aa696cbdfa5c7f4a15e1203341",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 156-р.docx",
+      "updated_at": "2026-07-05T12:23:45.171Z"
+    },
+    "2021-03-18|157-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "157-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "69b12b8686b429c88faa38869680adff5753126b00bc9901e5b6f1d5112486cc",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 157-р.docx",
+      "updated_at": "2026-07-05T12:23:45.228Z"
+    },
+    "2021-03-18|158-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "158-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "62a58dcde90713fb2b2334b7e3d6acde7e1c4043fc8ae605f408eb946f80fcd0",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 158-р.docx",
+      "updated_at": "2026-07-05T12:23:45.295Z"
+    },
+    "2021-03-18|159-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "159-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "e6cbcc456a6af9a26b5fcbe17ea52f830b0f9a67e3cfdae6bb33cc33716d178f",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 159-р.docx",
+      "updated_at": "2026-07-05T12:23:45.621Z"
+    },
+    "2021-03-18|160-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "160-р",
+      "decision_date": "2021-03-18",
+      "file_sha256": "664d1de229a65cf053b57c515d953bfe8c738ba13a4b0d87d5f7f957cdff8807",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 18.03.2021 № 160-р.docx",
+      "updated_at": "2026-07-05T12:23:45.792Z"
+    },
+    "2021-03-25|161-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "161-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "337d5e9608970f3ab69791c0759f0018a8ee43a7100cb757421a5adccb67c448",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 161-р.docx",
+      "updated_at": "2026-07-05T12:23:45.848Z"
+    },
+    "2021-03-25|162-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "162-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "e933b906a785de344617446095e62bb1d047da455750c0092ee411b95a1ac7e1",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 162-р.docx",
+      "updated_at": "2026-07-05T12:23:45.895Z"
+    },
+    "2021-03-25|163-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "163-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "6a52eed65c50c9e5a24146225970e045e8a2428c16b8a17b8776ae99830af366",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 163-р.docx",
+      "updated_at": "2026-07-05T12:23:45.952Z"
+    },
+    "2021-03-25|164-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "164-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "3257184b8c3c12dc5dfa9d597d9c407fea3408db02311c5bf4ed2ddf35873353",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 164-р.docx",
+      "updated_at": "2026-07-05T12:23:45.999Z"
+    },
+    "2021-03-25|165-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "165-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "690dc9f4774410ff32ae6308e77913c4a82c7112a01ff0b6ef488b07325359a3",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 165-р.docx",
+      "updated_at": "2026-07-05T12:23:46.047Z"
+    },
+    "2021-03-25|166-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "166-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "74dcf51c0c4da72d16b35f63f89383e50fbf494b23853e7040071f6470209c85",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 166-р.docx",
+      "updated_at": "2026-07-05T12:23:46.104Z"
+    },
+    "2021-03-25|167-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "167-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "b0e9e4595d39a15e336f8336901de149f517c6bb451e3769a27ea83c445b3294",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 167-р.docx",
+      "updated_at": "2026-07-05T12:23:46.162Z"
+    },
+    "2021-03-25|168-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "168-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "469749d303949e5f33254001e13aa912f1a47fea116e056e1a3ffc842485797f",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 168-р.docx",
+      "updated_at": "2026-07-05T12:23:46.209Z"
+    },
+    "2021-03-25|169-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "169-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "144276977576f2e032d8ca3b86b9ecec0e470a56bee4428340c2a6b33e99b060",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 169-р.docx",
+      "updated_at": "2026-07-05T12:23:46.265Z"
+    },
+    "2021-03-25|170-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "170-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "ac7073f4cc54011262d390349d564886a0bae42a2bc25faaf1d4cb737ef1939e",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 170-р.docx",
+      "updated_at": "2026-07-05T12:23:46.322Z"
+    },
+    "2021-03-25|171-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "171-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "21e1cf2a789aa0a49e9185514dccc4734675ae833fd9afbb74e021e1877871ac",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 171-р.docx",
+      "updated_at": "2026-07-05T12:23:46.379Z"
+    },
+    "2021-03-25|172-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "172-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "723b5e11539c7146aec2bc22e1d71fe111fa7002ca8990f1660aa970ac5101a7",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 172-р.docx",
+      "updated_at": "2026-07-05T12:23:46.425Z"
+    },
+    "2021-03-25|173-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "173-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "e8f3808fe0d7815a837b0b0090095112328ed58c948d6bccd60de62419432e05",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 173-р.docx",
+      "updated_at": "2026-07-05T12:23:46.493Z"
+    },
+    "2021-03-25|174-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "174-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "df6ba61877bfed0a447f6a11c5312b4d51f74fd71e76b276da45c9fb96ed7ad6",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 174-р.docx",
+      "updated_at": "2026-07-05T12:23:46.551Z"
+    },
+    "2021-03-25|175-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "175-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "1a603ab1984c4ae8d05b4c7882db8617404086593c6906f12be2ca66573534f5",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 175-р.docx",
+      "updated_at": "2026-07-05T12:23:46.597Z"
+    },
+    "2021-03-25|176-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "176-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "0965647f1ee34dd09d11e86a9c6b1aef9e9b06e50d97a7e5c2737460e5aeaeca",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 176-р.docx",
+      "updated_at": "2026-07-05T12:23:46.654Z"
+    },
+    "2021-03-25|177-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "177-р",
+      "decision_date": "2021-03-25",
+      "file_sha256": "cf5f2a50262d596346166464f7a9b7e48c8494e847e5f5850f6d763d81da1033",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 25.03.2021 № 177-р.docx",
+      "updated_at": "2026-07-05T12:23:46.918Z"
+    },
+    "2021-03-30|178-р": {
+      "status": "analyzed",
+      "decision_number": "178-р",
+      "decision_date": "2021-03-30",
+      "file_sha256": "afa15715f24c313f6b138cbe95d4a96514bb5290a6eea2706c25fa8502d08d7f",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Рішення від 30.03.2021 № 178-р.docx",
+      "updated_at": "2026-07-05T12:23:53.445Z"
+    },
+    "2021-03-04|4-рп": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "4-рп",
+      "decision_date": "2021-03-04",
+      "file_sha256": "e03e953b429a7f1ebd78e10d614d44640f1ed31a02bff0ad96fb4fbd54d0eb49",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Розпорядження від 04.03.2021 № 4-рп про виправлення описки в рішенні від 22.12.2020 № 805-р.docx",
+      "updated_at": "2026-07-05T12:23:53.493Z"
+    },
+    "2021-03-04|5-рп": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "5-рп",
+      "decision_date": "2021-03-04",
+      "file_sha256": "096ad4ccc4d3f33d5bd8b223c132f4e7dc721ed0a8bb24e1c5685fad16c8fa08",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Розпорядження від 04.03.2021 № 5-рп про виправлення описки в рішенні від 22.12.2020 № 806-р.docx",
+      "updated_at": "2026-07-05T12:23:53.540Z"
+    },
+    "2021-03-11|6-рп": {
+      "status": "skipped_by_gemini",
+      "decision_number": "6-рп",
+      "decision_date": "2021-03-11",
+      "file_sha256": "4d43860b20b89f93f97f92ff5b1c79a80c89ee29b7912f2311a3c36b1b7f9774",
+      "source_resource_id": "8c2c45d9-8c0e-4a80-8dbe-3cee3d76baca",
+      "source_file": "rish_berezen_2021/Розпорядження від 11.03.2021 № 6-рп про виправлення описки в рішенні від 03.12.2020 № 757-р.docx",
+      "updated_at": "2026-07-05T12:24:36.611Z"
     }
   },
   "last_run": {
-    "at": "2026-07-05T09:21:30.340Z",
+    "at": "2026-07-05T12:24:39.134Z",
     "resources_considered": 1,
-    "additions": 5,
-    "raw_additions": 5,
-    "duplicates_in_run": 0,
+    "additions": 2,
+    "raw_additions": 3,
+    "duplicates_in_run": 1,
     "stats": {
       "resourcesChecked": 1,
-      "docsSeen": 66,
+      "docsSeen": 72,
       "docsRelevant": 5,
-      "docsSkipped": 61,
+      "docsSkipped": 69,
       "errors": 0
     },
     "gemini_calls": 5,
