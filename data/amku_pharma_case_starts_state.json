@@ -11,6 +11,12 @@
       "relevant_count": 4,
       "timeline_items": 5,
       "pharma_candidates": 4
+    },
+    "weekly:2026-06-29:2026-07-05": {
+      "sent_at": "2026-07-06T11:09:24.770Z",
+      "relevant_count": 0,
+      "timeline_items": 3,
+      "pharma_candidates": 0
     }
   },
   "seen_urls": {
@@ -73,21 +79,39 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264119-26",
       "first_seen_at": "2026-06-29T11:28:53.404Z",
       "last_seen_at": "2026-06-29T11:28:53.404Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-128-2613124-26": {
+      "title": "Розпочато розгляд справи № 128-26.13/124-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-128-2613124-26",
+      "first_seen_at": "2026-07-06T11:09:20.783Z",
+      "last_seen_at": "2026-07-06T11:09:20.783Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-128-261381-26-ta-128-261382-26": {
+      "title": "Розпочато розгляд справ № 128-26.13/81-26 та № 128-26.13/82-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-128-261381-26-ta-128-261382-26",
+      "first_seen_at": "2026-07-06T11:09:21.730Z",
+      "last_seen_at": "2026-07-06T11:09:21.730Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-130-2613122-26": {
+      "title": "Розпочато розгляд справи № 130-26.13/122-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-130-2613122-26",
+      "first_seen_at": "2026-07-06T11:09:22.564Z",
+      "last_seen_at": "2026-07-06T11:09:22.564Z"
     }
   },
   "last_run": {
-    "at": "2026-06-29T11:28:56.082Z",
+    "at": "2026-07-06T11:09:24.770Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-06-22",
-      "to": "2026-06-28",
-      "label": "2026-06-22 — 2026-06-28"
+      "from": "2026-06-29",
+      "to": "2026-07-05",
+      "label": "2026-06-29 — 2026-07-05"
     },
-    "digest_key": "weekly:2026-06-22:2026-06-28",
-    "timeline_items": 5,
-    "pharma_candidates": 4,
-    "relevant_rows": 4,
-    "gemini_calls": 4,
+    "digest_key": "weekly:2026-06-29:2026-07-05",
+    "timeline_items": 3,
+    "pharma_candidates": 0,
+    "relevant_rows": 0,
+    "gemini_calls": 0,
     "email_sent": true,
     "settings": {
       "period_mode": "weekly",
