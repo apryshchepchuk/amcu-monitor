@@ -105,7 +105,7 @@ on:
     - cron: "10 6,11,16 * * *"
 
 concurrency:
-  group: amku-practice-backfill
+  group: amku-repo-writes
   cancel-in-progress: false
 
 jobs:
@@ -118,6 +118,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -207,7 +209,23 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No AMCU practice/dashboard data changes to commit."
-          else
-            git commit -m "Update AMCU practice dashboard"
-            git push
+            exit 0
           fi
+
+          git commit -m "Update AMCU practice dashboard"
+
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "Push succeeded."
+              exit 0
+            fi
+
+            echo "Push failed. Rebasing on latest origin/main. Attempt ${attempt}/3..."
+
+            git pull --rebase origin main
+
+            sleep $((attempt * 5))
+          done
+
+          echo "Push failed after 3 attempts."
+          exit 1
