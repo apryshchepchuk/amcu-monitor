@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-07T10:00:38.806Z",
+  "updated_at": "2026-07-07T13:29:00.857Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 570,
-  "total_sanction_uah": 15936584390.240002,
+  "total_decisions": 585,
+  "total_sanction_uah": 16161528125.240002,
   "years": [
     2026,
     2025,
@@ -13,8 +13,8 @@
     2020
   ],
   "by_law_family": {
-    "economic_competition": 491,
-    "unfair_competition": 79,
+    "economic_competition": 499,
+    "unfair_competition": 86,
     "other": 0
   },
   "categories": [
@@ -23,7 +23,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 123
+      "count": 126
     },
     {
       "code": "zek:50:2",
@@ -37,14 +37,14 @@
       "label": "п. 3 ст. 50 — антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
-      "count": 11
+      "count": 12
     },
     {
       "code": "zek:50:4",
       "label": "п. 4 ст. 50 — невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
       "law_family": "economic_competition",
       "short_label": "невиконання рішення, попереднього рішення органів АМКУ або їх виконання не в повному обсязі",
-      "count": 11
+      "count": 12
     },
     {
       "code": "zek:50:7",
@@ -65,7 +65,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 205
+      "count": 208
     },
     {
       "code": "zek:50:13",
@@ -93,7 +93,7 @@
       "label": "ст. 4 — неправомірне використання позначень",
       "law_family": "unfair_competition",
       "short_label": "неправомірне використання позначень",
-      "count": 20
+      "count": 22
     },
     {
       "code": "unfair:8",
@@ -121,7 +121,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 51
+      "count": 56
     },
     {
       "code": "unfair:16",
@@ -132,5 +132,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2020-12-03"
+  "oldest_decision_date": "2020-11-03"
 }
