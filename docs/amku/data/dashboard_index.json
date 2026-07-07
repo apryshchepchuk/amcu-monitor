@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-07T13:29:00.857Z",
+  "updated_at": "2026-07-07T18:15:32.284Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 585,
-  "total_sanction_uah": 16161528125.240002,
+  "total_decisions": 587,
+  "total_sanction_uah": 16162235125.240002,
   "years": [
     2026,
     2025,
@@ -13,8 +13,8 @@
     2020
   ],
   "by_law_family": {
-    "economic_competition": 499,
-    "unfair_competition": 86,
+    "economic_competition": 500,
+    "unfair_competition": 87,
     "other": 0
   },
   "categories": [
@@ -30,7 +30,7 @@
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 33
+      "count": 34
     },
     {
       "code": "zek:50:3",
@@ -121,7 +121,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 56
+      "count": 57
     },
     {
       "code": "unfair:16",
