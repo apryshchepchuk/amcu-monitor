@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-08T12:49:45.071Z",
+  "updated_at": "2026-07-08T17:51:42.914Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 605,
-  "total_sanction_uah": 16249423278.57,
+  "total_decisions": 611,
+  "total_sanction_uah": 16268012678.57,
   "years": [
     2026,
     2025,
@@ -13,8 +13,8 @@
     2020
   ],
   "by_law_family": {
-    "economic_competition": 512,
-    "unfair_competition": 93,
+    "economic_competition": 515,
+    "unfair_competition": 96,
     "other": 0
   },
   "categories": [
@@ -30,7 +30,7 @@
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 34
+      "count": 35
     },
     {
       "code": "zek:50:3",
@@ -65,7 +65,7 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 216
+      "count": 217
     },
     {
       "code": "zek:50:13",
@@ -86,14 +86,14 @@
       "label": "п. 15 ст. 50 — подання недостовірної інформації",
       "law_family": "economic_competition",
       "short_label": "подання недостовірної інформації",
-      "count": 17
+      "count": 18
     },
     {
       "code": "unfair:4",
       "label": "ст. 4 — неправомірне використання позначень",
       "law_family": "unfair_competition",
       "short_label": "неправомірне використання позначень",
-      "count": 23
+      "count": 24
     },
     {
       "code": "unfair:7",
@@ -107,7 +107,7 @@
       "label": "ст. 8 — дискредитація суб’єкта господарювання",
       "law_family": "unfair_competition",
       "short_label": "дискредитація суб’єкта господарювання",
-      "count": 5
+      "count": 6
     },
     {
       "code": "unfair:10",
@@ -128,7 +128,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 61
+      "count": 62
     },
     {
       "code": "unfair:16",
@@ -139,5 +139,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2020-09-10"
+  "oldest_decision_date": "2020-08-06"
 }
