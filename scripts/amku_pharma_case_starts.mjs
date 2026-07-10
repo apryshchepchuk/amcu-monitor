@@ -40,6 +40,7 @@ const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 3);
 const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
 
 const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'Щотижневий дайджест нових справ АМКУ у фармсекторі');
+const PRACTICE_DB_URL = env('PRACTICE_DB_URL', 'https://apryshchepchuk.github.io/amcu-monitor/amku/');
 
 const PHARMA_PATTERNS = [
   /фармац/i,
@@ -1089,6 +1090,28 @@ function sourceLinkLabel() {
   return 'Відкрити повідомлення АМКУ';
 }
 
+function practiceDbFooterText() {
+  return [
+    'Цей дайджест інформує про нові відкриті справи АМКУ.',
+    'Для аналізу вже прийнятих рішень та сформованої практики доступна База практики АМКУ:',
+    PRACTICE_DB_URL
+  ].join('\n');
+}
+
+function practiceDbFooterHtml() {
+  return `
+    <div style="margin:24px 0 0 0;padding:14px 0 0 0;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:13px;line-height:1.5;color:#374151;">
+        Цей дайджест інформує про нові відкриті справи АМКУ.
+        Для аналізу вже прийнятих рішень та сформованої практики доступна
+        <a href="${htmlEscape(PRACTICE_DB_URL)}" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:none;">
+          База практики АМКУ
+        </a>.
+      </p>
+    </div>
+  `;
+}
+
 function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }) {
   const header =
     `${periodIntro(period)} Антимонопольним комітетом України розпочато `
@@ -1100,7 +1123,9 @@ function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }
       '',
       header,
       '',
-      'Релевантних повідомлень за цей період не виявлено.'
+      'Релевантних повідомлень за цей період не виявлено.',
+      '',
+      practiceDbFooterText()
     ].join('\n');
   }
 
@@ -1130,9 +1155,10 @@ function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }
     '',
     header,
     '',
-    body
+    body,
+    '',
+    practiceDbFooterText()
   ].join('\n');
-}
 
 function renderEmailHtml({ period, relevantRows, allItemsCount, candidateCount }) {
   const header =
@@ -1199,6 +1225,8 @@ function renderEmailHtml({ period, relevantRows, allItemsCount, candidateCount }
     </p>
 
     ${body}
+
+    ${practiceDbFooterHtml()}
   </div>
 </body>
 </html>`;
