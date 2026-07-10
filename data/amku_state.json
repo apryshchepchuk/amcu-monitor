@@ -863,6 +863,18 @@
       "docs_relevant": 0,
       "errors": 0,
       "incomplete": false
+    },
+    "9425f725-c72a-4349-b9f9-0266b708a2cd": {
+      "state_version": 4,
+      "title": "Рішення АМКУ № 151-194 за березень 2020 р.",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/9425f725-c72a-4349-b9f9-0266b708a2cd/download/rish_berezen_2020.zip",
+      "signature": "2020-04-02T13:19:18.621306|2020-03-16T13:45:57.625830|3992065|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/9425f725-c72a-4349-b9f9-0266b708a2cd/download/rish_berezen_2020.zip",
+      "zip_sha256": "f9b03a82d9fcf329b139bf928460dcf62203f20ea3874a22b04c8a47f632c718",
+      "processed_at": "2026-07-10T17:58:35.264Z",
+      "docs_seen": 44,
+      "docs_relevant": 6,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -43305,22 +43317,456 @@
       "source_resource_id": "64703bea-fe2b-4ebf-a325-6cd59d08d73d",
       "source_file": "rish_kviten_2020_na_29_07_2025/Rish 2020.04.30 № 270-р.docx",
       "updated_at": "2026-07-10T13:18:31.035Z"
+    },
+    "2020-03-05|151-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "151-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "12a06464127171891039a3df98b92beb23b53f14ffc87dd9c5d64df612cf9876",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 151-р.docx",
+      "updated_at": "2026-07-10T17:57:24.126Z"
+    },
+    "2020-03-05|152-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "152-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "d703b235e26411492e4c241e20126a3a76eccb24c2bb377614ac1a18e92d7c13",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 152-р.docx",
+      "updated_at": "2026-07-10T17:57:24.226Z"
+    },
+    "2020-03-05|153-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "153-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "cb7040734ab6e5e3896559dab2083d5b622c15cd885cd0c10d829827ac37deb3",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 153-р.docx",
+      "updated_at": "2026-07-10T17:57:24.314Z"
+    },
+    "2020-03-05|154-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "154-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "847b3dbfd2708667ccb853b632cd2df6e56ee1b4484b67b2ce8ba465e0f4725e",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 154-р.docx",
+      "updated_at": "2026-07-10T17:57:24.537Z"
+    },
+    "2020-03-05|155-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "155-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "1a5fa6876a7131ecac21d826f6077ace6ac6acd010c0052ff8d3715c16e9b344",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 155-р.docx",
+      "updated_at": "2026-07-10T17:57:24.904Z"
+    },
+    "2020-03-05|156-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "156-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "690034898d88ac72c1dc914fce72d6f315eb6b119b756f9686912009018477fb",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 156-р.docx",
+      "updated_at": "2026-07-10T17:57:25.302Z"
+    },
+    "2020-03-05|157-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "157-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "b628e572ce194e4f8bf134858e981e46a1ddc80f7b39fbf89324e53ed1783bdf",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 157-р.docx",
+      "updated_at": "2026-07-10T17:57:25.492Z"
+    },
+    "2020-03-05|158-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "158-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "1ca5de9ec8f4f45ffe0b9dd1d7ea4bd70338781fc6f1fb74450d9d8ea577582f",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 158-р.docx",
+      "updated_at": "2026-07-10T17:57:25.641Z"
+    },
+    "2020-03-05|159-р": {
+      "status": "analyzed",
+      "decision_number": "159-р",
+      "decision_date": "2020-03-05",
+      "file_sha256": "13eb1a88d91b1c8538e3ff9818518b4b89a70728757cec4c53f4901334cd417d",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.05_№ 159-р.docx",
+      "updated_at": "2026-07-10T17:57:30.258Z"
+    },
+    "2020-03-11|160-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "160-р",
+      "decision_date": "2020-03-11",
+      "file_sha256": "a674b90b03a4ccfea1ee12ef5827b0d859e9197d18bed0e5fbf114ecffd354b5",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.11_№ 160-р.docx",
+      "updated_at": "2026-07-10T17:57:30.841Z"
+    },
+    "2020-03-12|161-р": {
+      "status": "analyzed",
+      "decision_number": "161-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "c7d21967b6ba1c96828d874a5fda28100c8a5f29417f6b0fa9ce5cdca284aadb",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 161-р.docx",
+      "updated_at": "2026-07-10T17:57:33.999Z"
+    },
+    "2020-03-12|162-р": {
+      "status": "analyzed",
+      "decision_number": "162-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "7a549c2a8f5587355668394272962db3271a2c0ff034e6db7f26a700bcceef66",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 162-р.docx",
+      "updated_at": "2026-07-10T17:57:37.716Z"
+    },
+    "2020-03-12|163-р": {
+      "status": "analyzed",
+      "decision_number": "163-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "37e4c4d3607e250b6131c053c52dddfec33b0f20e2d6e493e003156ac3dd441c",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 163-р.docx",
+      "updated_at": "2026-07-10T17:57:41.524Z"
+    },
+    "2020-03-12|164-р": {
+      "status": "analyzed",
+      "decision_number": "164-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "ac4fab452323f453294b0002201927516b6f925aaf420ce58830e993530502db",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 164-р.docx",
+      "updated_at": "2026-07-10T17:57:45.185Z"
+    },
+    "2020-03-12|165-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "165-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "1eeee87857c1588324e801994ece534c1b75a083990aeb26b674c37bda892750",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 165-р.docx",
+      "updated_at": "2026-07-10T17:57:45.335Z"
+    },
+    "2020-03-12|166-р": {
+      "status": "analyzed",
+      "decision_number": "166-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "aede12e372268c3fda0138ec1b363f24003b45a5eac099b91680af9111b6adf5",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 166-р.docx",
+      "updated_at": "2026-07-10T17:58:31.391Z"
+    },
+    "2020-03-12|167-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "167-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "eb48b73e0365baae1200f489f1eb7fc45013078191c312e46fbcf49f17e3c848",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 167-р.docx",
+      "updated_at": "2026-07-10T17:58:31.480Z"
+    },
+    "2020-03-12|168-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "168-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "a7ec22a8e2e33280f5142b5ce9bb5f26306c1347df9e07e4242963ef8a65da11",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 168-р.docx",
+      "updated_at": "2026-07-10T17:58:31.609Z"
+    },
+    "2020-03-12|169-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "169-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "08a8b982ad7a38a2b7974fd07555b0d5d70c00de124312c8e76a0c91ee8a0cc4",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 169-р.docx",
+      "updated_at": "2026-07-10T17:58:31.799Z"
+    },
+    "2020-03-12|170-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "170-р",
+      "decision_date": "2020-03-12",
+      "file_sha256": "336ac524bc44707feb7e34086752a48cb93e18684572b6dd127ac72efc012247",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.12_№ 170-р.docx",
+      "updated_at": "2026-07-10T17:58:32.011Z"
+    },
+    "2020-03-19|171-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "171-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "cedc4c150a0af3917517a2f9a4de91076788340cab033f24b1806468d376cebe",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 171-р.docx",
+      "updated_at": "2026-07-10T17:58:32.078Z"
+    },
+    "2020-03-19|172-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "172-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "1b3238cc8882632ccc24c099da6fb438ae0679550fdb545a7bfd957c874cf871",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 172-р.docx",
+      "updated_at": "2026-07-10T17:58:32.106Z"
+    },
+    "2020-03-19|173-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "173-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "cc2c98316e67c63fb2b813ea23f2fd88884d63001abddb7c77fb112f592a059d",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 173-р.docx",
+      "updated_at": "2026-07-10T17:58:32.132Z"
+    },
+    "2020-03-19|174-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "174-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "d2ff5092ec11c1ac51641455d1ed9a2d42e050d4a61979699149f771ca87a97c",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 174-р.docx",
+      "updated_at": "2026-07-10T17:58:32.190Z"
+    },
+    "2020-03-19|175-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "175-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "d0475ac080ddaf2b40b0df76fe1527672248cd67e6f8efec78b4ebcf764ae0b2",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 175-р.docx",
+      "updated_at": "2026-07-10T17:58:32.248Z"
+    },
+    "2020-03-19|176-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "176-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "010523619441d01bbe17a230e9eaf037c14f9b1759af98243c03ff4a2abd2bb7",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 176-р.docx",
+      "updated_at": "2026-07-10T17:58:32.305Z"
+    },
+    "2020-03-19|177-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "177-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "08d3a15ab2960a29cb4a8a9d4362d0dd049c36fa00d1d61ebfc329745d0e2988",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 177-р.docx",
+      "updated_at": "2026-07-10T17:58:32.373Z"
+    },
+    "2020-03-19|178-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "178-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "0275525d8d24ce9c578acfb3a6b573121931430377133d28017004bc11f22650",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 178-р.docx",
+      "updated_at": "2026-07-10T17:58:32.430Z"
+    },
+    "2020-03-19|179-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "179-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "61046a9f1fb406fd7ce0cfe77c438c7e872f8b5d991a486b0881be85dd386678",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 179-р.docx",
+      "updated_at": "2026-07-10T17:58:32.589Z"
+    },
+    "2020-03-19|180-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "180-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "8a10d11b793307b037be560033a02babfe3787e36899429c5aa98d52217c1626",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 180-р.docx",
+      "updated_at": "2026-07-10T17:58:32.790Z"
+    },
+    "2020-03-19|181-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "181-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "6e518f438e53327578691c33dec830200cb7c957d0938733e00815ec813078ec",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 181-р.docx",
+      "updated_at": "2026-07-10T17:58:33.019Z"
+    },
+    "2020-03-19|182-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "182-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "9b99ec72dbe02f93f92910d4780be8e422122ab7dfcebcdf411cd814b2e39881",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 182-р.docx",
+      "updated_at": "2026-07-10T17:58:33.281Z"
+    },
+    "2020-03-19|183-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "183-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "a56c03f6fdacf54916e68662a497b7e13e3510f7bff9b699436212d8c3056740",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 183-р.docx",
+      "updated_at": "2026-07-10T17:58:33.410Z"
+    },
+    "2020-03-19|184-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "184-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "f515f86956842c5eb0853dace5cfcc716b9265d562404d7dd29f36a77261bd9d",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 184-р.docx",
+      "updated_at": "2026-07-10T17:58:33.682Z"
+    },
+    "2020-03-19|185-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "185-р",
+      "decision_date": "2020-03-19",
+      "file_sha256": "4d5b4f52ecdf6a6cf202a49a0ad16668f8a285b861ceef1f766ec624515a21a0",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.19_№ 185-р.docx",
+      "updated_at": "2026-07-10T17:58:33.861Z"
+    },
+    "2020-03-26|186-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "186-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "1bf754a9ac85a142f01a5aa7ff207e14bb7ffd9bf17feb24634b267d983e6617",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 186-р.docx",
+      "updated_at": "2026-07-10T17:58:33.937Z"
+    },
+    "2020-03-26|187-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "187-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "80b5fd4b7b74e637c04df82418255135eb03e7b6a05c48b7190dda4977323bbc",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 187-р.docx",
+      "updated_at": "2026-07-10T17:58:34.014Z"
+    },
+    "2020-03-26|188-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "188-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "2df21a6f68ea9b7b41caae0e035769dd64b3430b76501a343364c9558d9f8767",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 188-р.docx",
+      "updated_at": "2026-07-10T17:58:34.091Z"
+    },
+    "2020-03-26|189-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "189-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "a899393571160a79f2d6860a0f730f3c7fa19b68071d86d910b25a4b40a7fb8f",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 189-р.docx",
+      "updated_at": "2026-07-10T17:58:34.332Z"
+    },
+    "2020-03-26|190-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "190-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "65a4d157f1c5e218d9cf55d9a3a922e970407356243d744e30d82846c135ce06",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 190-р.docx",
+      "updated_at": "2026-07-10T17:58:34.481Z"
+    },
+    "2020-03-26|191-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "191-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "a0c6470fc8add7494f68cc5a0f4110796f0772bcd08577bba4c28c3c8f8df96f",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 191-р.docx",
+      "updated_at": "2026-07-10T17:58:34.610Z"
+    },
+    "2020-03-26|192-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "192-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "6a86ab96aaf96aea075ea90cbebd88ccd51df36482e37e6cd4d2e259d913e5a0",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 192-р.docx",
+      "updated_at": "2026-07-10T17:58:34.864Z"
+    },
+    "2020-03-26|193-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "193-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "6969b20546fda4652e3fb49a8be13c7d0c4335ad5eb8d3104b03e34fcd6786b3",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 193-р.docx",
+      "updated_at": "2026-07-10T17:58:35.043Z"
+    },
+    "2020-03-26|194-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "194-р",
+      "decision_date": "2020-03-26",
+      "file_sha256": "4be9853cdb5f4f0cb526659a20879133425656664ceba134670ca5065591144c",
+      "source_resource_id": "9425f725-c72a-4349-b9f9-0266b708a2cd",
+      "source_file": "rish_berezen_2020/Rish 2020.03.26_№ 194-р.docx",
+      "updated_at": "2026-07-10T17:58:35.264Z"
     }
   },
   "last_run": {
-    "at": "2026-07-10T13:18:31.036Z",
+    "at": "2026-07-10T17:58:35.266Z",
     "resources_considered": 1,
-    "additions": 0,
-    "raw_additions": 0,
+    "additions": 6,
+    "raw_additions": 6,
     "duplicates_in_run": 0,
     "stats": {
       "resourcesChecked": 1,
-      "docsSeen": 76,
-      "docsRelevant": 0,
-      "docsSkipped": 76,
+      "docsSeen": 44,
+      "docsRelevant": 6,
+      "docsSkipped": 38,
       "errors": 0
     },
-    "gemini_calls": 0,
+    "gemini_calls": 6,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
