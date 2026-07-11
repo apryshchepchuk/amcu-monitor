@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-07-10T17:58:35.481Z",
+  "updated_at": "2026-07-11T08:10:10.204Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 653,
+  "total_decisions": 654,
   "total_sanction_uah": 16280624738.57,
   "years": [
     2026,
@@ -13,7 +13,7 @@
     2020
   ],
   "by_law_family": {
-    "economic_competition": 549,
+    "economic_competition": 550,
     "unfair_competition": 104,
     "other": 0
   },
@@ -37,7 +37,7 @@
       "label": "п. 3 ст. 50 — антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
-      "count": 12
+      "count": 13
     },
     {
       "code": "zek:50:4",
@@ -139,5 +139,5 @@
     }
   ],
   "newest_decision_date": "2026-06-11",
-  "oldest_decision_date": "2020-03-05"
+  "oldest_decision_date": "2020-02-06"
 }
