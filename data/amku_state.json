@@ -911,6 +911,18 @@
       "docs_relevant": 13,
       "errors": 0,
       "incomplete": false
+    },
+    "17bb245e-949f-4a74-b5a1-0f4e2a07e5fb": {
+      "state_version": 4,
+      "title": "Рішення АМКУ від 28.11.2019 № 776-779-р",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/17bb245e-949f-4a74-b5a1-0f4e2a07e5fb/download/2019-11-28.zip",
+      "signature": "2019-12-11T08:00:23.000323|2019-12-11T08:00:23.598106|212298|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/17bb245e-949f-4a74-b5a1-0f4e2a07e5fb/download/2019-11-28.zip",
+      "zip_sha256": "479f7db6c97ce197a529c5bff5643803346fe46ee2bc4c4b712fc87b9b906f69",
+      "processed_at": "2026-07-12T17:13:02.604Z",
+      "docs_seen": 4,
+      "docs_relevant": 1,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -46254,22 +46266,61 @@
       "source_resource_id": "0707e70c-0f66-4d75-b9ce-5400f3185946",
       "source_file": "Rish_Gruden_2019_na_29_07_2025/Rish 2019.12.24_№ 842-р.docx",
       "updated_at": "2026-07-12T12:09:58.813Z"
+    },
+    "2019-11-28|776-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "776-р",
+      "decision_date": "2019-11-28",
+      "file_sha256": "2d84d6d0c8db5628d4cff95f06d7bcf86062d258a02379802aaf287b4b3e0e2e",
+      "source_resource_id": "17bb245e-949f-4a74-b5a1-0f4e2a07e5fb",
+      "source_file": "2019-11-28/Rish 2019.11.28_№ 776-р.docx",
+      "updated_at": "2026-07-12T17:12:58.727Z"
+    },
+    "2019-11-28|777-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "777-р",
+      "decision_date": "2019-11-28",
+      "file_sha256": "8ee261a23e869662a654d54fcba874c1b4bf1d017b40c08d0b86e4d749ad0a67",
+      "source_resource_id": "17bb245e-949f-4a74-b5a1-0f4e2a07e5fb",
+      "source_file": "2019-11-28/Rish 2019.11.28_№ 777-р.docx",
+      "updated_at": "2026-07-12T17:12:58.800Z"
+    },
+    "2019-11-28|778-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "778-р",
+      "decision_date": "2019-11-28",
+      "file_sha256": "ffbe4e182385b93814830ff0700f523290fc354020547f006a419e7b9004d142",
+      "source_resource_id": "17bb245e-949f-4a74-b5a1-0f4e2a07e5fb",
+      "source_file": "2019-11-28/Rish 2019.11.28_№ 778-р.docx",
+      "updated_at": "2026-07-12T17:12:58.858Z"
+    },
+    "2019-11-28|779-р": {
+      "status": "analyzed",
+      "decision_number": "779-р",
+      "decision_date": "2019-11-28",
+      "file_sha256": "aa2e0cce84bdf4469891c5c0a99df459c32c33dd6589df01fd83b85bd177d1b1",
+      "source_resource_id": "17bb245e-949f-4a74-b5a1-0f4e2a07e5fb",
+      "source_file": "2019-11-28/Rish 2019.11.28_№ 779-р.docx",
+      "updated_at": "2026-07-12T17:13:02.603Z"
     }
   },
   "last_run": {
-    "at": "2026-07-12T12:10:02.442Z",
+    "at": "2026-07-12T17:13:02.605Z",
     "resources_considered": 1,
-    "additions": 11,
-    "raw_additions": 13,
-    "duplicates_in_run": 2,
+    "additions": 1,
+    "raw_additions": 1,
+    "duplicates_in_run": 0,
     "stats": {
       "resourcesChecked": 1,
-      "docsSeen": 104,
-      "docsRelevant": 13,
-      "docsSkipped": 91,
+      "docsSeen": 4,
+      "docsRelevant": 1,
+      "docsSkipped": 3,
       "errors": 0
     },
-    "gemini_calls": 13,
+    "gemini_calls": 1,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
