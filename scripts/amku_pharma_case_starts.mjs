@@ -1159,6 +1159,7 @@ function renderEmailText({ period, relevantRows, allItemsCount, candidateCount }
     '',
     practiceDbFooterText()
   ].join('\n');
+}
 
 function renderEmailHtml({ period, relevantRows, allItemsCount, candidateCount }) {
   const header =
