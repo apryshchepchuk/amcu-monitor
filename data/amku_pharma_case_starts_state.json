@@ -17,6 +17,12 @@
       "relevant_count": 0,
       "timeline_items": 3,
       "pharma_candidates": 0
+    },
+    "weekly:2026-07-06:2026-07-12": {
+      "sent_at": "2026-07-13T10:05:23.452Z",
+      "relevant_count": 0,
+      "timeline_items": 3,
+      "pharma_candidates": 0
     }
   },
   "seen_urls": {
@@ -97,17 +103,35 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-130-2613122-26",
       "first_seen_at": "2026-07-06T11:09:22.564Z",
       "last_seen_at": "2026-07-06T11:09:22.564Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613123-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/123-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613123-26",
+      "first_seen_at": "2026-07-13T10:05:18.939Z",
+      "last_seen_at": "2026-07-13T10:05:18.939Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-fizychnoi-osoby-pidpryiemtsia-bykovoi-oleny-oleksandrivny-ta-fizychnoi-osobypidpryiemtsia-elison-nadii-viktorivny": {
+      "title": "До уваги фізичної особи-підприємця Бикової Олени Олександрівни та фізичної особи-підприємця Елісон Надії Вікторівни",
+      "url": "https://amcu.gov.ua/news/do-uvahy-fizychnoi-osoby-pidpryiemtsia-bykovoi-oleny-oleksandrivny-ta-fizychnoi-osobypidpryiemtsia-elison-nadii-viktorivny",
+      "first_seen_at": "2026-07-13T10:05:20.705Z",
+      "last_seen_at": "2026-07-13T10:05:20.705Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-2613125-26": {
+      "title": "Розпочато розгляд справи № 127-26.13/125-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-2613125-26",
+      "first_seen_at": "2026-07-13T10:05:22.129Z",
+      "last_seen_at": "2026-07-13T10:05:22.129Z"
     }
   },
   "last_run": {
-    "at": "2026-07-06T11:09:24.770Z",
+    "at": "2026-07-13T10:05:23.452Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-06-29",
-      "to": "2026-07-05",
-      "label": "2026-06-29 — 2026-07-05"
+      "from": "2026-07-06",
+      "to": "2026-07-12",
+      "label": "2026-07-06 — 2026-07-12"
     },
-    "digest_key": "weekly:2026-06-29:2026-07-05",
+    "digest_key": "weekly:2026-07-06:2026-07-12",
     "timeline_items": 3,
     "pharma_candidates": 0,
     "relevant_rows": 0,
