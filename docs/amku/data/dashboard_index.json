@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-13T18:05:09.328Z",
+  "updated_at": "2026-07-14T08:25:57.175Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 689,
-  "total_sanction_uah": 16496892462.57,
+  "total_decisions": 692,
+  "total_sanction_uah": 16497001262.57,
   "years": [
     2026,
     2025,
@@ -14,8 +14,8 @@
     2019
   ],
   "by_law_family": {
-    "economic_competition": 585,
-    "unfair_competition": 104,
+    "economic_competition": 586,
+    "unfair_competition": 106,
     "other": 0
   },
   "categories": [
@@ -73,7 +73,7 @@
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 73
+      "count": 74
     },
     {
       "code": "zek:50:14",
@@ -94,7 +94,7 @@
       "label": "ст. 4 — неправомірне використання позначень",
       "law_family": "unfair_competition",
       "short_label": "неправомірне використання позначень",
-      "count": 27
+      "count": 28
     },
     {
       "code": "unfair:7",
@@ -129,7 +129,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 66
+      "count": 67
     },
     {
       "code": "unfair:16",
@@ -140,5 +140,5 @@
     }
   ],
   "newest_decision_date": "2026-07-02",
-  "oldest_decision_date": "2019-11-28"
+  "oldest_decision_date": "2019-06-27"
 }
