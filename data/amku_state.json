@@ -983,6 +983,18 @@
       "docs_relevant": 0,
       "errors": 0,
       "incomplete": false
+    },
+    "44a21fa3-ee43-4c26-8dc0-b2e8b9789e1b": {
+      "state_version": 4,
+      "title": "Рішення АМКУ від 26.04.2019 №292-293-р.zip",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/44a21fa3-ee43-4c26-8dc0-b2e8b9789e1b/download/26-04-2019.zip",
+      "signature": "2019-05-14T14:21:04.968210|2019-05-14T14:21:05.251387|87910|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/44a21fa3-ee43-4c26-8dc0-b2e8b9789e1b/download/26-04-2019.zip",
+      "zip_sha256": "094546e6ae979554022b38644433ef220966b786d2511a5cfcfa5a32271a2d65",
+      "processed_at": "2026-07-14T17:32:56.504Z",
+      "docs_seen": 2,
+      "docs_relevant": 0,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -47045,19 +47057,39 @@
       "source_resource_id": "02301a54-2cdb-4089-b72c-46733c7262fd",
       "source_file": "16 05 2019/Рішення від 16.05.2019 № 348-р.doc",
       "updated_at": "2026-07-14T12:20:51.031Z"
+    },
+    "2019-04-26|292-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "292-р",
+      "decision_date": "2019-04-26",
+      "file_sha256": "c758892a957cb1b46fe31d7f13361c9e33c01ff7d081d4743325bc2b433219c6",
+      "source_resource_id": "44a21fa3-ee43-4c26-8dc0-b2e8b9789e1b",
+      "source_file": "26 04 2019/Рішення 26.04.2019 №292-р.doc",
+      "updated_at": "2026-07-14T17:32:56.495Z"
+    },
+    "2019-04-26|293-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "293-р",
+      "decision_date": "2019-04-26",
+      "file_sha256": "4f961b7b32c613b37bfad5d6e9ac292b6284153db154b7f4fb0863d42f84186c",
+      "source_resource_id": "44a21fa3-ee43-4c26-8dc0-b2e8b9789e1b",
+      "source_file": "26 04 2019/Рішення 26.04.2019 №293-р.doc",
+      "updated_at": "2026-07-14T17:32:56.504Z"
     }
   },
   "last_run": {
-    "at": "2026-07-14T12:20:51.031Z",
+    "at": "2026-07-14T17:32:56.506Z",
     "resources_considered": 1,
     "additions": 0,
     "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
       "resourcesChecked": 1,
-      "docsSeen": 13,
+      "docsSeen": 2,
       "docsRelevant": 0,
-      "docsSkipped": 13,
+      "docsSkipped": 2,
       "errors": 0
     },
     "gemini_calls": 0,
