@@ -995,6 +995,18 @@
       "docs_relevant": 0,
       "errors": 0,
       "incomplete": false
+    },
+    "d66d85a6-7795-4757-a47a-476343a6c724": {
+      "state_version": 4,
+      "title": "Рішення АМКУ від 28.03.2019 №178-188-р",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/d66d85a6-7795-4757-a47a-476343a6c724/download/28-03-2019.zip",
+      "signature": "2019-04-10T14:43:35.858330|2019-04-10T14:43:36.186982|207846|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/d66d85a6-7795-4757-a47a-476343a6c724/download/28-03-2019.zip",
+      "zip_sha256": "4ea018d539a43731c5f0fcdd9922aff85080f2df0b63e8d198ea9ae459efdab1",
+      "processed_at": "2026-07-15T08:32:28.739Z",
+      "docs_seen": 11,
+      "docs_relevant": 0,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -47077,19 +47089,129 @@
       "source_resource_id": "44a21fa3-ee43-4c26-8dc0-b2e8b9789e1b",
       "source_file": "26 04 2019/Рішення 26.04.2019 №293-р.doc",
       "updated_at": "2026-07-14T17:32:56.504Z"
+    },
+    "2019-03-28|178-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "178-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "e4d1563a98551d96e3cf012f45547a8a8b6c7fae4563f8c78412b7cc044ce612",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення  від 28 03 2019 № 178-р.doc",
+      "updated_at": "2026-07-15T08:32:28.664Z"
+    },
+    "2019-03-28|181-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "181-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "0a2128987d08542c0038210b6bbba5fa0709f4c1260a1223e1d20772c3a7694c",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28 03 2018 № 181-р.doc",
+      "updated_at": "2026-07-15T08:32:28.669Z"
+    },
+    "2019-03-28|180-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "180-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "a04bfb59b3d99257fd100430e53f26e2aa3f5d9509155d0dcdcbd9696b84b220",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28 03 2019 № 180-р.doc",
+      "updated_at": "2026-07-15T08:32:28.674Z"
+    },
+    "2019-03-28|182-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "182-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "4851616675db2d195940d6729635d4e750c92ef134678c65d9cfe10ca13e985e",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28 03 2019 №182-р.doc",
+      "updated_at": "2026-07-15T08:32:28.686Z"
+    },
+    "2019-03-28|183-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "183-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "b8f0c6795eb38f821bcece026ac7881d400db37316e4dab21eba594254ed0443",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28 03 2019 №183-р.doc",
+      "updated_at": "2026-07-15T08:32:28.690Z"
+    },
+    "2019-03-28|184-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "184-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "88b773bb616827c3f596afa9b03d29882c4775dd9243a397d4d9f5aaee0a9d7b",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28 03 2019 №184-р.doc",
+      "updated_at": "2026-07-15T08:32:28.700Z"
+    },
+    "2019-03-28|185-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "185-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "7ced51bdaa747537d7d907b6af37a451a98c93e46c03ed454696741cccae5eb3",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28 03 2019 №185-р.doc",
+      "updated_at": "2026-07-15T08:32:28.710Z"
+    },
+    "2019-03-28|179-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "179-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "c925a5d20d6e4cb6e02f4f1e5d8f85168d622c00f06e9b3c95a80dabaf0b1e56",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28.03.2019 №179-р.doc",
+      "updated_at": "2026-07-15T08:32:28.714Z"
+    },
+    "2019-03-28|186-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "186-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "fe9a10b0bc475ef8599a1779adfdaa65c305842cb18c560020f504f8f3a69cd4",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28.03.2019 №186-р.doc",
+      "updated_at": "2026-07-15T08:32:28.721Z"
+    },
+    "2019-03-28|187-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "187-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "d5f107e3a13b076eceaf9c3350e85040fb16121a7c9a4298d4a4936531352a0e",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28.03.2019 №187-р.doc",
+      "updated_at": "2026-07-15T08:32:28.731Z"
+    },
+    "2019-03-28|188-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "188-р",
+      "decision_date": "2019-03-28",
+      "file_sha256": "86fbd084a78c5fd7b33ac378f97af2dfdefa40ef6f6005e1ebb672b58b0259aa",
+      "source_resource_id": "d66d85a6-7795-4757-a47a-476343a6c724",
+      "source_file": "28 03 2019/Рішення від 28.03.2019 №188-р.doc",
+      "updated_at": "2026-07-15T08:32:28.738Z"
     }
   },
   "last_run": {
-    "at": "2026-07-14T17:32:56.506Z",
+    "at": "2026-07-15T08:32:28.740Z",
     "resources_considered": 1,
     "additions": 0,
     "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
       "resourcesChecked": 1,
-      "docsSeen": 2,
+      "docsSeen": 11,
       "docsRelevant": 0,
-      "docsSkipped": 2,
+      "docsSkipped": 11,
       "errors": 0
     },
     "gemini_calls": 0,
