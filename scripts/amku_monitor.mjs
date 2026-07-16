@@ -33,6 +33,18 @@ const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 50);
 const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
 const LOCAL_ZIP = process.env.LOCAL_ZIP || '';
 
+// Explicit, manual recovery mode. When resource IDs are provided, only those
+// CKAN resources are opened. Existing decisions/results remain untouched when
+// RECOVERY_ADD_ONLY=true.
+const RECOVERY_RESOURCE_IDS = new Set(
+  env('RECOVERY_RESOURCE_IDS', '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+);
+const RECOVERY_MODE = RECOVERY_RESOURCE_IDS.size > 0;
+const RECOVERY_ADD_ONLY = boolEnv('RECOVERY_ADD_ONLY', true);
+
 // Practice database mode: by default we do not send email and do not exclude p.12 ст. 50.
 const EMAIL_DISABLED = boolEnv('EMAIL_DISABLED', true);
 const PRACTICE_DB_ENABLED = boolEnv('PRACTICE_DB_ENABLED', true);
@@ -521,10 +533,22 @@ function isResourceCleanInState(resource, state) {
   const id = resource.id || resource.url || resourceTitle(resource);
   const prev = state.processed_resources[id];
 
-  return Boolean(
+  const clean = Boolean(
     prev?.state_version === RESOURCE_STATE_VERSION
     && Number(prev?.errors || 0) === 0
     && prev?.incomplete !== true
+  );
+
+  if (!clean) return false;
+
+  // A resource is current only when its CKAN metadata signature still matches.
+  // This allows a ZIP updated under the same resource ID to be processed again.
+  const currentSignature = resourceSignature(resource);
+
+  return Boolean(
+    prev?.signature
+    && currentSignature
+    && prev.signature === currentSignature
   );
 }
 
@@ -532,10 +556,20 @@ function isClosureResourceCleanInState(resource, state) {
   const id = resource.id || resource.url || resourceTitle(resource);
   const prev = state?.closure_backfill?.processed_resources?.[id];
 
-  return Boolean(
+  const clean = Boolean(
     prev?.state_version === CLOSURE_BACKFILL_STATE_VERSION
     && Number(prev?.errors || 0) === 0
     && prev?.incomplete !== true
+  );
+
+  if (!clean) return false;
+
+  const currentSignature = resourceSignature(resource);
+
+  return Boolean(
+    prev?.signature
+    && currentSignature
+    && prev.signature === currentSignature
   );
 }
 
@@ -569,6 +603,51 @@ async function getCandidateResources(state = null) {
   if (!pkg.success) throw new Error('CKAN package_show returned success=false');
 
   const resources = pkg.result?.resources || [];
+
+  if (RECOVERY_MODE) {
+    const resourcesById = new Map(
+      resources
+        .filter((resource) => resource?.id)
+        .map((resource) => [resource.id, resource])
+    );
+
+    const selected = [];
+    const missingIds = [];
+
+    for (const id of RECOVERY_RESOURCE_IDS) {
+      const resource = resourcesById.get(id);
+
+      if (!resource) {
+        missingIds.push(id);
+        continue;
+      }
+
+      const format = String(resource.format || '').toLowerCase();
+      const url = String(resource.url || '').toLowerCase();
+
+      if (!format.includes('zip') && !url.endsWith('.zip')) {
+        throw new Error(
+          `Recovery resource is not ZIP: ${id} — ${resourceTitle(resource)}`
+        );
+      }
+
+      selected.push(resource);
+    }
+
+    if (missingIds.length) {
+      throw new Error(
+        `Recovery resource IDs not found in CKAN dataset: ${missingIds.join(', ')}`
+      );
+    }
+
+    console.log(
+      `Recovery mode: explicitly selected ${selected.length} resource(s); `
+      + `addOnly=${RECOVERY_ADD_ONLY}`
+    );
+
+    return selected;
+  }
+
   const decisionZipResources = resources.filter(isDecisionZipResource);
 
   if (CLOSURE_BACKFILL_ENABLED) {
@@ -1891,7 +1970,16 @@ async function processResource(resource, state, runBudget) {
     && Number(prev?.errors || 0) === 0
     && prev?.incomplete !== true;
 
-  if (!CLOSURE_BACKFILL_ENABLED && !LOCAL_ZIP && !FORCE_RESOURCES && prevResourceClean && prev?.signature && signature && prev.signature === signature) {
+  const incrementalResourceRefresh = Boolean(
+    !RECOVERY_MODE
+    && !CLOSURE_BACKFILL_ENABLED
+    && prevResourceClean
+    && prev?.signature
+    && signature
+    && prev.signature !== signature
+  );
+
+  if (!RECOVERY_MODE && !CLOSURE_BACKFILL_ENABLED && !LOCAL_ZIP && !FORCE_RESOURCES && prevResourceClean && prev?.signature && signature && prev.signature === signature) {
     return {
       skippedResource: true,
       reason: 'metadata_signature_unchanged',
@@ -1912,7 +2000,18 @@ async function processResource(resource, state, runBudget) {
     zipSha = await downloadFile(resource.url, zipPath);
   }
 
-  if (!CLOSURE_BACKFILL_ENABLED && !FORCE_RESOURCES && prevResourceClean && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
+  if (!RECOVERY_MODE && !CLOSURE_BACKFILL_ENABLED && !FORCE_RESOURCES && prevResourceClean && prev?.zip_sha256 && prev.zip_sha256 === zipSha) {
+    // CKAN metadata may change even when the ZIP bytes do not. Refresh the
+    // saved signature so the same resource is not downloaded on every run.
+    state.processed_resources[id] = {
+      ...prev,
+      title,
+      url: resource.url,
+      signature,
+      zip_sha256: zipSha,
+      processed_at: new Date().toISOString()
+    };
+
     return {
       skippedResource: true,
       reason: 'zip_hash_unchanged',
@@ -1948,6 +2047,23 @@ async function processResource(resource, state, runBudget) {
       const meta = parseDecisionMeta(text, decodedFileName);
       const key = decisionKey(meta, fileHash);
       const known = state.processed_decisions[key];
+      const existingResultKey = `${meta.decision_date || ''}|${meta.decision_number || ''}`;
+      const resultAlreadyExists =
+        existingResultKey !== '|'
+        && runBudget.existingResultKeys?.has(existingResultKey);
+
+      const preserveExistingDecision =
+        (RECOVERY_MODE && RECOVERY_ADD_ONLY)
+        || incrementalResourceRefresh;
+
+      if (preserveExistingDecision && (known || resultAlreadyExists)) {
+        stats.docsSkipped += 1;
+        console.log(
+          `${RECOVERY_MODE ? 'Recovery add-only' : 'Incremental resource refresh'}: `
+          + `existing decision skipped: ${key}`
+        );
+        continue;
+      }
 
       if (!FORCE_REANALYZE_DECISIONS && known?.file_sha256 === fileHash && known?.status === 'analyzed') {
         stats.docsSkipped += 1;
@@ -2025,6 +2141,7 @@ async function processResource(resource, state, runBudget) {
       });
 
       additions.push(row);
+      runBudget.existingResultKeys?.add(resultKey(row));
 
       state.processed_decisions[key] = {
         status: 'analyzed',
@@ -2103,6 +2220,12 @@ function addStats(a, b) {
 async function main() {
   await fs.mkdir(DATA_DIR, { recursive: true });
 
+  if (RECOVERY_MODE && CLOSURE_BACKFILL_ENABLED) {
+    throw new Error(
+      'RECOVERY_RESOURCE_IDS cannot be combined with CLOSURE_BACKFILL_ENABLED=true'
+    );
+  }
+
   const state = await readJson(STATE_PATH, {
     processed_resources: {},
     processed_decisions: {},
@@ -2132,13 +2255,24 @@ async function main() {
     `Closure backfill settings: enabled=${CLOSURE_BACKFILL_ENABLED}, monthsPerRun=${CLOSURE_BACKFILL_MONTHS_PER_RUN}, `
     + `from=${CLOSURE_BACKFILL_FROM_MONTH || '-'}, to=${CLOSURE_BACKFILL_TO_MONTH || '-'}`
   );
+  console.log(
+    `Recovery settings: enabled=${RECOVERY_MODE}, addOnly=${RECOVERY_ADD_ONLY}, `
+    + `resourceIds=${[...RECOVERY_RESOURCE_IDS].join(',') || '-'}`
+  );
   for (const r of resources) {
     console.log(`- ${resourceTitle(r)} (${r.format || ''})`);
   }
 
   const additions = [];
   const totalStats = blankStats();
-  const runBudget = { geminiCalls: 0 };
+  const runBudget = {
+    geminiCalls: 0,
+    existingResultKeys: new Set(
+      existingResults
+        .map(resultKey)
+        .filter((key) => key && key !== '|')
+    )
+  };
 
   for (const resource of resources) {
     console.log(`Processing: ${resourceTitle(resource)}`);
@@ -2190,6 +2324,9 @@ async function main() {
       closure_backfill_enabled: CLOSURE_BACKFILL_ENABLED,
       closure_backfill_months_per_run: CLOSURE_BACKFILL_MONTHS_PER_RUN,
       closure_backfill_state_version: CLOSURE_BACKFILL_STATE_VERSION,
+      recovery_mode: RECOVERY_MODE,
+      recovery_add_only: RECOVERY_ADD_ONLY,
+      recovery_resource_ids: [...RECOVERY_RESOURCE_IDS],
       gemini_rpm_limit: GEMINI_RPM_LIMIT,
       gemini_tpm_limit: GEMINI_TPM_LIMIT,
       max_text_chars: MAX_TEXT_CHARS,
