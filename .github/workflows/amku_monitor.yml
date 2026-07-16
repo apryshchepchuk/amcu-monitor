@@ -43,6 +43,16 @@ on:
         required: false
         default: ""
 
+      recovery_resource_ids:
+        description: "Comma-separated CKAN resource IDs for explicit add-only recovery"
+        required: false
+        default: ""
+
+      recovery_add_only:
+        description: "In recovery mode, preserve all existing decisions/results and process only missing ones"
+        required: false
+        default: "true"
+
       lookback_months:
         description: "Fallback recent-month scan when backfill_enabled=false"
         required: false
@@ -139,6 +149,12 @@ jobs:
           node --check scripts/amku_monitor.mjs
           node --check scripts/amku_build_dashboard.mjs
 
+      - name: Snapshot AMCU data before recovery
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.recovery_resource_ids != '' && github.event.inputs.dry_run != 'true' }}
+        run: |
+          cp data/amku_results.json /tmp/amku_results_before_recovery.json
+          cp data/amku_state.json /tmp/amku_state_before_recovery.json
+
       - name: Run AMCU practice backfill
         env:
           BACKFILL_ENABLED: ${{ github.event.inputs.backfill_enabled || 'true' }}
@@ -150,6 +166,9 @@ jobs:
           CLOSURE_BACKFILL_MONTHS_PER_RUN: ${{ github.event.inputs.closure_backfill_months_per_run || '1' }}
           CLOSURE_BACKFILL_FROM_MONTH: ${{ github.event.inputs.closure_backfill_from_month || '' }}
           CLOSURE_BACKFILL_TO_MONTH: ${{ github.event.inputs.closure_backfill_to_month || '' }}
+
+          RECOVERY_RESOURCE_IDS: ${{ github.event.inputs.recovery_resource_ids || '' }}
+          RECOVERY_ADD_ONLY: ${{ github.event.inputs.recovery_add_only || 'true' }}
           USE_LIBREOFFICE_FALLBACK: "true"
 
           LOOKBACK_MONTHS: ${{ github.event.inputs.lookback_months || '4' }}
@@ -186,6 +205,89 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
 
         run: node scripts/amku_monitor.mjs
+
+      - name: Validate add-only recovery integrity
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.recovery_resource_ids != '' && github.event.inputs.dry_run != 'true' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const beforeResults = JSON.parse(
+            fs.readFileSync('/tmp/amku_results_before_recovery.json', 'utf8')
+          );
+          const afterResults = JSON.parse(
+            fs.readFileSync('data/amku_results.json', 'utf8')
+          );
+          const beforeState = JSON.parse(
+            fs.readFileSync('/tmp/amku_state_before_recovery.json', 'utf8')
+          );
+          const afterState = JSON.parse(
+            fs.readFileSync('data/amku_state.json', 'utf8')
+          );
+
+          const resultKey = (row) =>
+            `${row?.decision_date || ''}|${row?.decision_number || ''}`;
+
+          const beforeResultMap = new Map(
+            beforeResults.map((row) => [resultKey(row), row])
+          );
+          const afterResultMap = new Map(
+            afterResults.map((row) => [resultKey(row), row])
+          );
+
+          for (const [key, oldRow] of beforeResultMap) {
+            const currentRow = afterResultMap.get(key);
+
+            if (!currentRow) {
+              throw new Error(
+                `Recovery integrity error: old result disappeared: ${key}`
+              );
+            }
+
+            if (JSON.stringify(currentRow) !== JSON.stringify(oldRow)) {
+              throw new Error(
+                `Recovery integrity error: old result changed: ${key}`
+              );
+            }
+          }
+
+          const beforeDecisions = beforeState.processed_decisions || {};
+          const afterDecisions = afterState.processed_decisions || {};
+
+          for (const [key, oldEntry] of Object.entries(beforeDecisions)) {
+            const currentEntry = afterDecisions[key];
+
+            if (!currentEntry) {
+              throw new Error(
+                `Recovery integrity error: old state decision disappeared: ${key}`
+              );
+            }
+
+            if (JSON.stringify(currentEntry) !== JSON.stringify(oldEntry)) {
+              throw new Error(
+                `Recovery integrity error: old state decision changed: ${key}`
+              );
+            }
+          }
+
+          const beforeResourceIds = Object.keys(
+            beforeState.processed_resources || {}
+          );
+          const afterResources = afterState.processed_resources || {};
+
+          for (const id of beforeResourceIds) {
+            if (!afterResources[id]) {
+              throw new Error(
+                `Recovery integrity error: old resource state disappeared: ${id}`
+              );
+            }
+          }
+
+          console.log(
+            `Recovery validation passed: results ${beforeResults.length} -> ${afterResults.length}; `
+            + `state decisions ${Object.keys(beforeDecisions).length} -> ${Object.keys(afterDecisions).length}`
+          );
+          NODE
 
       - name: Build AMCU dashboard data
         if: ${{ github.event.inputs.dry_run != 'true' }}
