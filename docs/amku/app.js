@@ -89,14 +89,117 @@ function normalizeSearchText(value) {
     .trim();
 }
 
-function queryTerms(query) {
-  return normalizeSearchText(query).split(' ').filter((term) => term.length > 1);
+function exactSearchFields(row) {
+  return [
+    row.decision_number,
+    row.decision_date,
+
+    row.primary_code,
+    row.primary_label,
+    row.outcome_label,
+    row.outcome_summary,
+
+    ...(Array.isArray(row.liable_parties) ? row.liable_parties : []),
+
+    row.violation_summary,
+    row.amcu_reasoning,
+    row.respondent_position,
+    row.sanction,
+
+    ...(Array.isArray(row.key_takeaways) ? row.key_takeaways : []),
+    ...(Array.isArray(row.evidence_factors) ? row.evidence_factors : []),
+    ...(Array.isArray(row.legal_basis) ? row.legal_basis : []),
+
+    row.market_or_sector,
+  ]
+    .map(normalizeSearchText)
+    .filter(Boolean);
 }
 
-function rowMatchesQuery(row, terms) {
-  if (!terms.length) return true;
-  const blob = row.normalized_search_blob || normalizeSearchText(row.search_blob || '');
-  return terms.every((term) => blob.includes(term));
+function parseSearchQuery(rawQuery) {
+  const exactPhrases = [];
+  let remainder = String(rawQuery || '');
+
+  /*
+   * Підтримує:
+   * "Фармак"
+   * «Фармак»
+   * “Фармак”
+   */
+  const quotePattern = /"([^"]+)"|«([^»]+)»|“([^”]+)”/gu;
+
+  remainder = remainder.replace(
+    quotePattern,
+    (fullMatch, straight, angle, curly) => {
+      const phrase = straight || angle || curly || '';
+      const normalizedPhrase = normalizeSearchText(phrase);
+
+      if (normalizedPhrase) {
+        exactPhrases.push(normalizedPhrase);
+      }
+
+      return ' ';
+    }
+  );
+
+  const broadTerms = normalizeSearchText(remainder)
+    .split(' ')
+    .filter((term) => term.length > 1);
+
+  return {
+    exactPhrases,
+    broadTerms,
+  };
+}
+
+function exactPhraseMatches(fields, phrase) {
+  if (!phrase) return true;
+
+  const needle = ` ${phrase} `;
+
+  return fields.some((field) =>
+    (` ${field} `).includes(needle)
+  );
+}
+
+function rowMatchesQuery(row, parsedQuery) {
+  const {
+    exactPhrases = [],
+    broadTerms = [],
+  } = parsedQuery || {};
+
+  if (!exactPhrases.length && !broadTerms.length) {
+    return true;
+  }
+
+  /*
+   * Звичайні слова шукаємо у широкому search_blob,
+   * як і раніше.
+   */
+  const broadBlob =
+    row.normalized_search_blob
+    || normalizeSearchText(row.search_blob || '');
+
+  const broadMatches = broadTerms.every((term) =>
+    broadBlob.includes(term)
+  );
+
+  if (!broadMatches) {
+    return false;
+  }
+
+  /*
+   * Запити в лапках шукаємо лише у змістовних полях.
+   * search_keywords, source_file та source_resource сюди
+   * навмисно не включаються.
+   */
+  const fields =
+    row.normalized_exact_search_fields
+    || exactSearchFields(row);
+
+  return exactPhrases.every((phrase) =>
+    exactPhraseMatches(fields, phrase)
+  );
 }
 
 function formatDate(iso) {
@@ -320,13 +423,15 @@ function renderActiveContext() {
 }
 
 function applyFilters(options = {}) {
-  const terms = queryTerms(state.query);
+  const parsedQuery = parseSearchQuery(state.query);
   let rows = [...state.practice];
 
   if (state.activeFamily !== 'all') rows = rows.filter((row) => row.law_family === state.activeFamily);
   if (state.activeYear !== 'all') rows = rows.filter((row) => String(row.year) === String(state.activeYear));
   if (state.activeCode) rows = rows.filter((row) => row.primary_code === state.activeCode);
-  rows = rows.filter((row) => rowMatchesQuery(row, terms));
+  rows = rows.filter((row) =>
+    rowMatchesQuery(row, parsedQuery)
+  );
 
   rows.sort((a, b) => {
     switch (state.sort) {
@@ -636,7 +741,12 @@ async function init() {
   state.index = index;
   state.practice = practice.map((row) => ({
     ...row,
-    normalized_search_blob: normalizeSearchText(row.search_blob || '')
+
+    normalized_search_blob:
+      normalizeSearchText(row.search_blob || ''),
+
+    normalized_exact_search_fields:
+      exactSearchFields(row),
   }));
   renderHeroFacts();
   renderYearFilter();
