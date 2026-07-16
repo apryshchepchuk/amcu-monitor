@@ -136,6 +136,23 @@ button { color: inherit; }
   border-color: var(--accent-border);
   box-shadow: 0 0 0 4px rgba(10, 102, 216, 0.11);
 }
+
+.search-hint {
+  margin: 7px 5px 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.search-hint code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-family: inherit;
+  font-weight: 700;
+}
+
 .search-icon {
   position: absolute;
   left: 17px;
