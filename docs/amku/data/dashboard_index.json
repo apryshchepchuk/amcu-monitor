@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-17T07:55:10.464Z",
+  "updated_at": "2026-07-17T08:17:29.502Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 735,
-  "total_sanction_uah": 17566959334.57,
+  "total_decisions": 741,
+  "total_sanction_uah": 17569317334.57,
   "years": [
     2026,
     2025,
@@ -14,8 +14,8 @@
     2019
   ],
   "by_law_family": {
-    "economic_competition": 621,
-    "unfair_competition": 114,
+    "economic_competition": 623,
+    "unfair_competition": 118,
     "other": 0
   },
   "categories": [
@@ -31,7 +31,7 @@
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 55
+      "count": 56
     },
     {
       "code": "zek:50:3",
@@ -87,14 +87,14 @@
       "label": "п. 15 ст. 50 — подання недостовірної інформації",
       "law_family": "economic_competition",
       "short_label": "подання недостовірної інформації",
-      "count": 18
+      "count": 19
     },
     {
       "code": "unfair:4",
       "label": "ст. 4 — неправомірне використання позначень",
       "law_family": "unfair_competition",
       "short_label": "неправомірне використання позначень",
-      "count": 29
+      "count": 31
     },
     {
       "code": "unfair:7",
@@ -115,7 +115,7 @@
       "label": "ст. 10 — схилення до бойкоту суб’єкта господарювання",
       "law_family": "unfair_competition",
       "short_label": "схилення до бойкоту суб’єкта господарювання",
-      "count": 1
+      "count": 2
     },
     {
       "code": "unfair:15",
@@ -129,7 +129,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 74
+      "count": 75
     },
     {
       "code": "unfair:16",
