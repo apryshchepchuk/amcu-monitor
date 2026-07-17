@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-17T07:23:57.545Z",
+  "updated_at": "2026-07-17T07:31:15.569Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 723,
-  "total_sanction_uah": 17377289605.57,
+  "total_decisions": 726,
+  "total_sanction_uah": 17377969603.57,
   "years": [
     2026,
     2025,
@@ -14,7 +14,7 @@
     2019
   ],
   "by_law_family": {
-    "economic_competition": 611,
+    "economic_competition": 614,
     "unfair_competition": 112,
     "other": 0
   },
@@ -24,21 +24,21 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 146
+      "count": 147
     },
     {
       "code": "zek:50:2",
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 53
+      "count": 54
     },
     {
       "code": "zek:50:3",
       "label": "п. 3 ст. 50 — антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
-      "count": 14
+      "count": 15
     },
     {
       "code": "zek:50:4",
