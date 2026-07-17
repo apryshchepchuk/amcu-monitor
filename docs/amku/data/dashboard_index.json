@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-17T07:41:35.000Z",
+  "updated_at": "2026-07-17T07:44:45.282Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 728,
-  "total_sanction_uah": 17391959248.57,
+  "total_decisions": 732,
+  "total_sanction_uah": 17392409248.57,
   "years": [
     2026,
     2025,
@@ -14,8 +14,8 @@
     2019
   ],
   "by_law_family": {
-    "economic_competition": 615,
-    "unfair_competition": 113,
+    "economic_competition": 618,
+    "unfair_competition": 114,
     "other": 0
   },
   "categories": [
@@ -24,7 +24,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 148
+      "count": 150
     },
     {
       "code": "zek:50:2",
@@ -38,7 +38,7 @@
       "label": "п. 3 ст. 50 — антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні дії органів влади, органів місцевого самоврядування, органів адміністративно-господарського управління та контролю",
-      "count": 15
+      "count": 16
     },
     {
       "code": "zek:50:4",
@@ -94,7 +94,7 @@
       "label": "ст. 4 — неправомірне використання позначень",
       "law_family": "unfair_competition",
       "short_label": "неправомірне використання позначень",
-      "count": 28
+      "count": 29
     },
     {
       "code": "unfair:7",

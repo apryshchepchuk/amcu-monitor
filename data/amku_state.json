@@ -1367,6 +1367,30 @@
       "docs_relevant": 0,
       "errors": 0,
       "incomplete": false
+    },
+    "a4959376-0b57-426f-9622-1c61037b841e": {
+      "state_version": 4,
+      "title": "Рішення АМКУ 2019.07.25 №500-527-р (без №526-р).zip",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/a4959376-0b57-426f-9622-1c61037b841e/download/2019-07-25-bez-526.zip",
+      "signature": "2019-08-06T06:54:21.525515|2019-08-06T05:57:05.864260|1494777|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/a4959376-0b57-426f-9622-1c61037b841e/download/2019-07-25-bez-526.zip",
+      "zip_sha256": "953a25981d7eef1c1ae1227976056a843c7c84a9c7e3ab4d68f2e88f4c4730b4",
+      "processed_at": "2026-07-17T07:44:42.558Z",
+      "docs_seen": 27,
+      "docs_relevant": 4,
+      "errors": 0,
+      "incomplete": false
+    },
+    "3e965fc3-7649-4b7c-87e8-b6ea8edcdb8e": {
+      "state_version": 4,
+      "title": "РішенняАМКУ 2019.07.25 №526-р.zip",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/3e965fc3-7649-4b7c-87e8-b6ea8edcdb8e/download/rish-526.zip",
+      "signature": "2019-08-12T08:19:51.016383|2019-08-12T08:19:51.402417|5531452|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/3e965fc3-7649-4b7c-87e8-b6ea8edcdb8e/download/rish-526.zip",
+      "zip_sha256": "912a3b3348d689ff2f90c00f66751716f51def3e61be5d237e04e695586abbde",
+      "processed_at": "2026-07-17T07:44:44.787Z",
+      "docs_seen": 2,
+      "docs_relevant": 0,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -51133,22 +51157,308 @@
       "source_resource_id": "c3707968-9783-4d12-aea7-9a22fa92322e",
       "source_file": "2019 07 16/Рішення 2019.07.16 № 499-р.doc",
       "updated_at": "2026-07-17T07:41:34.541Z"
+    },
+    "2019-07-25|500-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "500-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "ac9a012816d80eefa47ccf1a3ddf9bb7bb4ae9a95f606b19aec49fb6b64c8d5f",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 500-р.docx",
+      "updated_at": "2026-07-17T07:44:22.792Z"
+    },
+    "2019-07-25|501-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "501-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "49e5371502cf8aae4065b023a59916b34a043bb98ecdb86914a64516d70a91cf",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 501-р.docx",
+      "updated_at": "2026-07-17T07:44:22.985Z"
+    },
+    "2019-07-25|502-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "502-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "2aa0768e6e8e34f968f6e7ba7f21b9a589068ed48961f083f4393a3d4b79c70a",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 502-р.docx",
+      "updated_at": "2026-07-17T07:44:23.186Z"
+    },
+    "2019-07-25|503-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "503-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "ce763156422be774dce3212bfc967021922f6904c557af03a045d83fc426d270",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 503-р.docx",
+      "updated_at": "2026-07-17T07:44:23.369Z"
+    },
+    "2019-07-25|504-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "504-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "63c0ea1e5397d86188b9fd8ba22f727e06ea39365ee230294e335a97e39a2a64",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 504-р.docx",
+      "updated_at": "2026-07-17T07:44:23.420Z"
+    },
+    "2019-07-25|505-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "505-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "5c1daacdf1cb708e781f41d9d680616cee1ea6aae8b80d10b733ba080b5505d1",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 505-р.docx",
+      "updated_at": "2026-07-17T07:44:23.478Z"
+    },
+    "2019-07-25|506-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "506-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "14ab4f9985808c67a26966ec3421b4a9133bffc2a550306630ad65f506bf313c",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 506-р.docx",
+      "updated_at": "2026-07-17T07:44:23.533Z"
+    },
+    "2019-07-25|507-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "507-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "26e6571202e1f0610e4bf13be77be36fc926327888478aa772c1690e02eee427",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 507-р.docx",
+      "updated_at": "2026-07-17T07:44:23.601Z"
+    },
+    "2019-07-25|508-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "508-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "49f319353d5afe27b5ce71f5c36ea5ba262ca6eeaf4cebc331352d490f8533ea",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 508-р.docx",
+      "updated_at": "2026-07-17T07:44:23.658Z"
+    },
+    "2019-07-25|509-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "509-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "645f393bbd5ab1c5159fdda8f1d562cb146bf8d42052485016ce811e3c7c8203",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 509-р.docx",
+      "updated_at": "2026-07-17T07:44:23.727Z"
+    },
+    "2019-07-25|510-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "510-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "0cf7e0e93c7e179e5d48912cfeaf343c77b5244e7a9a184446b0691e5f20bb06",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 510-р.docx",
+      "updated_at": "2026-07-17T07:44:23.784Z"
+    },
+    "2019-07-25|511-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "511-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "0df6de12dbd5750f396668b35f719977dcf81c30e6e88ada9ecff203544ff465",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 511-р.docx",
+      "updated_at": "2026-07-17T07:44:23.842Z"
+    },
+    "2019-07-25|512-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "512-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "26bd31a53ad969534d3c566069f9ad4b7087c9ac47ecce8587d468b3fceb9833",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 512-р.docx",
+      "updated_at": "2026-07-17T07:44:23.897Z"
+    },
+    "2019-07-25|513-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "513-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "b6e7fbc02a5c83399e0534f845ffd20832665bfe4e56d99eff5bf1fc5fc316a0",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 513-р.docx",
+      "updated_at": "2026-07-17T07:44:23.955Z"
+    },
+    "2019-07-25|514-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "514-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "c4b18914a506bf39f3be9c40bcd36d4315a9fc10d32ab32e1d1f61b804324dc3",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 514-р.docx",
+      "updated_at": "2026-07-17T07:44:24.002Z"
+    },
+    "2019-07-25|515-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "515-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "267aa7d5afc9621273be1e807234c682d8443cc5a4bf266f5fd887697b1b0569",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 515-р.docx",
+      "updated_at": "2026-07-17T07:44:24.061Z"
+    },
+    "2019-07-25|516-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "516-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "bb1c3af1d18eaab1b203dde855344cb60b9e27c0b1569268966afeb64f7364cd",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 516-р.docx",
+      "updated_at": "2026-07-17T07:44:24.118Z"
+    },
+    "2019-07-25|517-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "517-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "636657b6f5225f29567813d91869c9eacc031f2d49829dd0205795329368ef9c",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 517-р.docx",
+      "updated_at": "2026-07-17T07:44:24.175Z"
+    },
+    "2019-07-25|518-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "518-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "8c72899e735e8ca52dda89c29fac25b463bc2df02ee459e342bb5815faadd5d6",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 518-р.docx",
+      "updated_at": "2026-07-17T07:44:24.233Z"
+    },
+    "2019-07-25|519-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "519-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "c819d1074be3e9376a1bd8d6e35783e5e36df8989e42521d2a15db8f89431c7e",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 519-р.docx",
+      "updated_at": "2026-07-17T07:44:24.290Z"
+    },
+    "2019-07-25|520-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "520-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "f20244f97e3f3015b86380877511dd94d3ad10386eb5b9b785111059e63ed5ae",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 520-р.docx",
+      "updated_at": "2026-07-17T07:44:24.349Z"
+    },
+    "2019-07-25|521-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "521-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "18679f3b0fbf25f5802bb14702c10b926faac1c3674e6dc8a96052e96e137775",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 521-р.docx",
+      "updated_at": "2026-07-17T07:44:24.397Z"
+    },
+    "2019-07-25|522-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "522-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "b4f9b4f92bac40a561654a7bcb4185b97f9819e7736ceac33dd0788942e7bcfd",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 522-р.docx",
+      "updated_at": "2026-07-17T07:44:24.455Z"
+    },
+    "2019-07-25|523-р": {
+      "status": "analyzed",
+      "decision_number": "523-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "d65338abba3b1beaa47aa2015b6086ef8379a957270ec5abec5a7761e7efcb0b",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 523-р.docx",
+      "updated_at": "2026-07-17T07:44:28.547Z"
+    },
+    "2019-07-25|524-р": {
+      "status": "analyzed",
+      "decision_number": "524-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "a8af30c21fa86abe98740973e4219212f4acef6a749b7879264f2a021c920c95",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 524-р.docx",
+      "updated_at": "2026-07-17T07:44:32.514Z"
+    },
+    "2019-07-25|525-р": {
+      "status": "analyzed",
+      "decision_number": "525-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "829c35cf6f89cd2d2b6af26691bd389c9e05a88d5e7bfb65b86f7d9c5ea57dd5",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 525-р.docx",
+      "updated_at": "2026-07-17T07:44:37.303Z"
+    },
+    "2019-07-25|527-р": {
+      "status": "analyzed",
+      "decision_number": "527-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "aff4d416de57586d8bbc751c828688771a45e22d0a7171ccfea5fd14479e9362",
+      "source_resource_id": "a4959376-0b57-426f-9622-1c61037b841e",
+      "source_file": "2019 07 25 (без 526)/Rish2019.07.25 № 527-р.docx",
+      "updated_at": "2026-07-17T07:44:42.558Z"
+    },
+    "unknown-date|526-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "526-р",
+      "decision_date": null,
+      "file_sha256": "cfcc8dd68b943b1e69156a178db249841acb4d42456d95f437843b799a275564",
+      "source_resource_id": "3e965fc3-7649-4b7c-87e8-b6ea8edcdb8e",
+      "source_file": "Rish 526/DodDoRish2019.07.25 №526-р.docx",
+      "updated_at": "2026-07-17T07:44:44.274Z"
+    },
+    "2019-07-25|526-р": {
+      "status": "skipped",
+      "reason": "procedural_decision",
+      "decision_number": "526-р",
+      "decision_date": "2019-07-25",
+      "file_sha256": "d1579aea14c549a5cab5d64257848713dd658ee2f9e3d3bb9357274ca864548e",
+      "source_resource_id": "3e965fc3-7649-4b7c-87e8-b6ea8edcdb8e",
+      "source_file": "Rish 526/Rish2019.07.25 №526-р.docx",
+      "updated_at": "2026-07-17T07:44:44.787Z"
     }
   },
   "last_run": {
-    "at": "2026-07-17T07:41:34.542Z",
-    "resources_considered": 3,
-    "additions": 0,
-    "raw_additions": 0,
+    "at": "2026-07-17T07:44:44.788Z",
+    "resources_considered": 2,
+    "additions": 4,
+    "raw_additions": 4,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 3,
-      "docsSeen": 18,
-      "docsRelevant": 0,
-      "docsSkipped": 18,
+      "resourcesChecked": 2,
+      "docsSeen": 29,
+      "docsRelevant": 4,
+      "docsSkipped": 25,
       "errors": 0
     },
-    "gemini_calls": 0,
+    "gemini_calls": 4,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
@@ -51162,9 +51472,8 @@
       "recovery_mode": true,
       "recovery_add_only": true,
       "recovery_resource_ids": [
-        "39fe666c-3bf9-4b93-8e58-fdd7743c3632",
-        "c6ca3e03-5524-4c4d-b19b-dc1a639f08f0",
-        "c3707968-9783-4d12-aea7-9a22fa92322e"
+        "a4959376-0b57-426f-9622-1c61037b841e",
+        "3e965fc3-7649-4b7c-87e8-b6ea8edcdb8e"
       ],
       "gemini_rpm_limit": 5,
       "gemini_tpm_limit": 120000,
