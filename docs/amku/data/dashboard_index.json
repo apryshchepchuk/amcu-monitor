@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-17T06:35:59.290Z",
+  "updated_at": "2026-07-17T06:39:12.716Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 706,
-  "total_sanction_uah": 16606641816.57,
+  "total_decisions": 709,
+  "total_sanction_uah": 17185255481.57,
   "years": [
     2026,
     2025,
@@ -14,8 +14,8 @@
     2019
   ],
   "by_law_family": {
-    "economic_competition": 599,
-    "unfair_competition": 107,
+    "economic_competition": 601,
+    "unfair_competition": 108,
     "other": 0
   },
   "categories": [
@@ -24,7 +24,7 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 143
+      "count": 145
     },
     {
       "code": "zek:50:2",
@@ -129,7 +129,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 68
+      "count": 69
     },
     {
       "code": "unfair:16",
@@ -140,5 +140,5 @@
     }
   ],
   "newest_decision_date": "2026-07-02",
-  "oldest_decision_date": "2019-06-27"
+  "oldest_decision_date": "2019-03-21"
 }
