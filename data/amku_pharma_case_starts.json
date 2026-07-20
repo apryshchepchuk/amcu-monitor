@@ -1,5 +1,203 @@
 [
   {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613127-26",
+    "period_mode": "weekly",
+    "period_from": "2026-07-13",
+    "period_to": "2026-07-19",
+    "publication_date": "2026-07-17",
+    "publication_datetime": "2026-07-17 15:32:41",
+    "timeline_day": "17.07.2026",
+    "title": "Розпочато розгляд справи № 145-26.13/127-26",
+    "timeline_title": "Розпочато розгляд справи № 145-26.13/127-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613127-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "medical_devices",
+    "case_numbers": [
+      "145-26.13/127-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «ПРОТЕК СОЛЮШНЗ УКРАЇНА»",
+      "ТОВ «ПІКСЕЛМЕД»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "ст. 6, ст. 50",
+      "point": "п. 4 ч. 2 ст. 6, п. 1 ст. 50",
+      "text": "Антиконкурентні узгоджені дії, які стосуються спотворення результатів торгів"
+    },
+    "short_description": "АМКУ розпочав розгляд справи щодо можливих антиконкурентних узгоджених дій між ТОВ «ПРОТЕК СОЛЮШНЗ УКРАЇНА» та ТОВ «ПІКСЕЛМЕД», що полягають у спотворенні результатів низки публічних закупівель медичного обладнання (рентгенівські системи, комп'ютерні томографи, дозиметричне обладнання тощо).",
+    "confidence": "high",
+    "page_text_sha256": "ccb3e5d9b7617b56e69fbb2ee17c365fe3a52023b4463fec1cb23b688f9ba1f4",
+    "analyzed_at": "2026-07-20T09:39:34.699Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-07-20T09:39:34.699Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264139-26",
+    "period_mode": "weekly",
+    "period_from": "2026-07-13",
+    "period_to": "2026-07-19",
+    "publication_date": "2026-07-17",
+    "publication_datetime": "2026-07-17 12:01:33",
+    "timeline_day": "17.07.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/139-26",
+    "timeline_title": "Розпочато розгляд справи  № 127-26.4/139-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264139-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/139-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «Польфарма ЮА»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «Польфарма ЮА» інформації, що вводить в оману, щодо дієтичних добавок «Фітолізин Нефрокапсули» та «Фітолізин Актив».",
+    "confidence": "high",
+    "page_text_sha256": "50bfc4fc7293670b0a89805ab03c2df8ba0397485cb385f32e23ef598fc2aa5c",
+    "analyzed_at": "2026-07-20T09:39:36.192Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-07-20T09:39:36.192Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264140-26",
+    "period_mode": "weekly",
+    "period_from": "2026-07-13",
+    "period_to": "2026-07-19",
+    "publication_date": "2026-07-17",
+    "publication_datetime": "2026-07-17 10:28:46",
+    "timeline_day": "17.07.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/140-26",
+    "timeline_title": "Розпочато розгляд справи  № 127-26.4/140-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264140-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/140-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «Мові Хелс»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": "не зазначено",
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «Мові Хелс» інформації, що вводить в оману, щодо дієтичної добавки «Остеоцитрат Макс».",
+    "confidence": "high",
+    "page_text_sha256": "8d742fbf87153010abc3f021a5eaaf7b412be39f1cbb17b7dfe3b0174e5038e4",
+    "analyzed_at": "2026-07-20T09:39:39.144Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-07-20T09:39:39.144Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613134-26-ta-126-2613135-26",
+    "period_mode": "weekly",
+    "period_from": "2026-07-13",
+    "period_to": "2026-07-19",
+    "publication_date": "2026-07-16",
+    "publication_datetime": "2026-07-16 17:12:07",
+    "timeline_day": "16.07.2026",
+    "title": "Розпочато розгляд справ № 126-26.13/134-26 та № 126-26.13/135-26",
+    "timeline_title": "Розпочато розгляд справ № 126-26.13/134-26 та № 126-26.13/135-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613134-26-ta-126-2613135-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "manufacturing",
+    "case_numbers": [
+      "126-26.13/134-26",
+      "126-26.13/135-26"
+    ],
+    "potential_violation_subjects": [
+      "фізична особа – громадянин України"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу органів Антимонопольного комітету України"
+    },
+    "short_description": "Фізична особа здійснила концентрацію шляхом набуття часток у статутних капіталах ТОВ «СЛОБОЖАНСЬКА ФАРМАЦЕВТИЧНА КОМПАНІЯ», ТОВ «КРЕМЕНЧУЦЬКА ФАРМАЦЕВТИЧНА КОМПАНІЯ», ТОВ «БЕРДЯНСЬКА ФАРМАЦЕВТИЧНА КОМПАНІЯ» та ТОВ «ОЛЕКСАНДРІВСЬКА ФАРМАЦЕВТИЧНА КОМПАНІЯ», що забезпечило перевищення 25 відсотків голосів у вищих органах управління без отримання дозволу АМКУ.",
+    "confidence": "high",
+    "page_text_sha256": "90b10296a80c6aadfa5a320e38aa707452684e16dc1c69fea14fea332eeaec43",
+    "analyzed_at": "2026-07-20T09:39:41.354Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-07-20T09:39:41.354Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613133-26-ta-126-2613136-26",
+    "period_mode": "weekly",
+    "period_from": "2026-07-13",
+    "period_to": "2026-07-19",
+    "publication_date": "2026-07-16",
+    "publication_datetime": "2026-07-16 17:09:31",
+    "timeline_day": "16.07.2026",
+    "title": "Розпочато розгляд справ № 126-26.13/133-26 та № 126-26.13/136-26",
+    "timeline_title": "Розпочато розгляд справ № 126-26.13/133-26 та № 126-26.13/136-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613133-26-ta-126-2613136-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "manufacturing",
+    "case_numbers": [
+      "126-26.13/133-26",
+      "126-26.13/136-26"
+    ],
+    "potential_violation_subjects": [
+      "фізична особа – громадянин України (інформація, доступ до якої обмежено)"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "50",
+      "point": "12",
+      "text": "вчинення концентрації без отримання відповідного дозволу органів Антимонопольного комітету України"
+    },
+    "short_description": "Здійснення концентрації шляхом набуття фізичною особою часток у статутних капіталах ТОВ «Кременчуцька фармацевтична компанія», ТОВ «Бердянська фармацевтична компанія», ТОВ «Олександрівська фармацевтична компанія» та ТОВ «Слобожанська фармацевтична компанія», що забезпечило перевищення 25 відсотків голосів у вищих органах управління без отримання необхідного дозволу АМКУ.",
+    "confidence": "high",
+    "page_text_sha256": "9fb53f04e2134728ec09f937faeb37cadd65e01bf9500c594b5004b68f29a192",
+    "analyzed_at": "2026-07-20T09:39:43.518Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-07-20T09:39:43.518Z"
+    }
+  },
+  {
     "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/cherven-2026/rozpochato-rozghliad-spravy-127-264109-26",
     "period_mode": "weekly",
     "period_from": "2026-06-22",

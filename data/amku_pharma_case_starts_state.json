@@ -23,6 +23,12 @@
       "relevant_count": 0,
       "timeline_items": 3,
       "pharma_candidates": 0
+    },
+    "weekly:2026-07-13:2026-07-19": {
+      "sent_at": "2026-07-20T09:39:48.202Z",
+      "relevant_count": 5,
+      "timeline_items": 11,
+      "pharma_candidates": 5
     }
   },
   "seen_urls": {
@@ -121,21 +127,87 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-2613125-26",
       "first_seen_at": "2026-07-13T10:05:22.129Z",
       "last_seen_at": "2026-07-13T10:05:22.129Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613127-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/127-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613127-26",
+      "first_seen_at": "2026-07-20T09:39:33.396Z",
+      "last_seen_at": "2026-07-20T09:39:33.396Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264139-26": {
+      "title": "Розпочато розгляд справи  № 127-26.4/139-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264139-26",
+      "first_seen_at": "2026-07-20T09:39:35.343Z",
+      "last_seen_at": "2026-07-20T09:39:35.343Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-spetstreid-ukraina-ta-tovarystva-z-obmezhenoiu-vidpovidalnistiu-proslent-hrup": {
+      "title": "До уваги товариства з обмеженою відповідальністю «СПЕЦТРЕЙД УКРАЇНА» та товариства з обмеженою відповідальністю «ПРОСЛЕНТ ГРУП»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-spetstreid-ukraina-ta-tovarystva-z-obmezhenoiu-vidpovidalnistiu-proslent-hrup",
+      "first_seen_at": "2026-07-20T09:39:36.982Z",
+      "last_seen_at": "2026-07-20T09:39:36.982Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-261397-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/97-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-261397-26",
+      "first_seen_at": "2026-07-20T09:39:37.660Z",
+      "last_seen_at": "2026-07-20T09:39:37.660Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264140-26": {
+      "title": "Розпочато розгляд справи  № 127-26.4/140-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-127-264140-26",
+      "first_seen_at": "2026-07-20T09:39:38.310Z",
+      "last_seen_at": "2026-07-20T09:39:38.310Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613134-26-ta-126-2613135-26": {
+      "title": "Розпочато розгляд справ № 126-26.13/134-26 та № 126-26.13/135-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613134-26-ta-126-2613135-26",
+      "first_seen_at": "2026-07-20T09:39:40.201Z",
+      "last_seen_at": "2026-07-20T09:39:40.201Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613133-26-ta-126-2613136-26": {
+      "title": "Розпочато розгляд справ № 126-26.13/133-26 та № 126-26.13/136-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613133-26-ta-126-2613136-26",
+      "first_seen_at": "2026-07-20T09:39:42.393Z",
+      "last_seen_at": "2026-07-20T09:39:42.393Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613137-26": {
+      "title": "Розпочато розгляд справи 145-26.13/137-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613137-26",
+      "first_seen_at": "2026-07-20T09:39:44.237Z",
+      "last_seen_at": "2026-07-20T09:39:44.237Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-261347-26": {
+      "title": "Розпочато розгляд справи 145-26.13/47-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-261347-26",
+      "first_seen_at": "2026-07-20T09:39:44.901Z",
+      "last_seen_at": "2026-07-20T09:39:44.901Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613129-26-126-2613130-26-126-2613131-26-126-2613132-26": {
+      "title": "Розпочато розгляд справ № 126-26.13/129-26, № 126-26.13/130-26, № 126-26.13/131-26, № 126-26.13/132-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613129-26-126-2613130-26-126-2613131-26-126-2613132-26",
+      "first_seen_at": "2026-07-20T09:39:45.866Z",
+      "last_seen_at": "2026-07-20T09:39:45.866Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613128-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/128-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613128-26",
+      "first_seen_at": "2026-07-20T09:39:46.757Z",
+      "last_seen_at": "2026-07-20T09:39:46.757Z"
     }
   },
   "last_run": {
-    "at": "2026-07-13T10:05:23.452Z",
+    "at": "2026-07-20T09:39:48.202Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-07-06",
-      "to": "2026-07-12",
-      "label": "2026-07-06 — 2026-07-12"
+      "from": "2026-07-13",
+      "to": "2026-07-19",
+      "label": "2026-07-13 — 2026-07-19"
     },
-    "digest_key": "weekly:2026-07-06:2026-07-12",
-    "timeline_items": 3,
-    "pharma_candidates": 0,
-    "relevant_rows": 0,
-    "gemini_calls": 0,
+    "digest_key": "weekly:2026-07-13:2026-07-19",
+    "timeline_items": 11,
+    "pharma_candidates": 5,
+    "relevant_rows": 5,
+    "gemini_calls": 5,
     "email_sent": true,
     "settings": {
       "period_mode": "weekly",
