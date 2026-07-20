@@ -54903,16 +54903,16 @@
     }
   },
   "last_run": {
-    "at": "2026-07-20T14:01:53.448Z",
-    "resources_considered": 3,
+    "at": "2026-07-20T18:14:27.196Z",
+    "resources_considered": 0,
     "additions": 0,
     "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 3,
-      "docsSeen": 34,
+      "resourcesChecked": 0,
+      "docsSeen": 0,
       "docsRelevant": 0,
-      "docsSkipped": 34,
+      "docsSkipped": 0,
       "errors": 0
     },
     "gemini_calls": 0,
@@ -54921,18 +54921,14 @@
       "force_reanalyze_decisions": false,
       "max_gemini_calls": 15,
       "resource_state_version": 4,
-      "backfill_enabled": false,
+      "backfill_enabled": true,
       "backfill_months_per_run": 1,
       "closure_backfill_enabled": false,
       "closure_backfill_months_per_run": 1,
       "closure_backfill_state_version": 1,
-      "recovery_mode": true,
+      "recovery_mode": false,
       "recovery_add_only": true,
-      "recovery_resource_ids": [
-        "e81002b3-6c0f-4a56-b87c-1abbb92e0330",
-        "423e5662-06e9-4e03-862b-d1d30e4b333d",
-        "c3703a2b-95e1-44c7-b6da-58fdb8bc7942"
-      ],
+      "recovery_resource_ids": [],
       "gemini_rpm_limit": 5,
       "gemini_tpm_limit": 120000,
       "max_text_chars": 90000,
