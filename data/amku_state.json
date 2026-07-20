@@ -1643,6 +1643,30 @@
       "docs_relevant": 0,
       "errors": 0,
       "incomplete": false
+    },
+    "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4": {
+      "state_version": 4,
+      "title": "Рішення від 30.01.2019 №50-63-р.zip",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/be3a2f8c-2659-402d-9da4-3ce23bdf8ed4/download/rishennia-vid-30-01-2019-no-50-63r.zip",
+      "signature": "2019-02-14T10:51:25.013132|2019-02-12T14:26:21.097413|540518|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/be3a2f8c-2659-402d-9da4-3ce23bdf8ed4/download/rishennia-vid-30-01-2019-no-50-63r.zip",
+      "zip_sha256": "1e114423ef80df7641c86063c26248f379dc23581d5c4b71ace72cf24cf4d0f0",
+      "processed_at": "2026-07-20T13:59:54.590Z",
+      "docs_seen": 14,
+      "docs_relevant": 0,
+      "errors": 0,
+      "incomplete": false
+    },
+    "44a4e3fa-cc27-4765-b5f0-f7542986b549": {
+      "state_version": 4,
+      "title": "Рішення від 31.01.2019 №64-73-р.zip",
+      "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/44a4e3fa-cc27-4765-b5f0-f7542986b549/download/rishennia-vid-31-01-2019-no-64-73-r.zip",
+      "signature": "2019-02-12T14:30:08.033525|2019-02-12T14:30:08.234856|305746|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/44a4e3fa-cc27-4765-b5f0-f7542986b549/download/rishennia-vid-31-01-2019-no-64-73-r.zip",
+      "zip_sha256": "ff1beba5e1801147d0a2f61d611486ff382ceb36a0d95884a0e50cda8405f319",
+      "processed_at": "2026-07-20T13:59:56.222Z",
+      "docs_seen": 10,
+      "docs_relevant": 0,
+      "errors": 0,
+      "incomplete": false
     }
   },
   "processed_decisions": {
@@ -54270,19 +54294,259 @@
       "source_resource_id": "3fdc0f93-06df-4f8d-8703-ddd35319703f",
       "source_file": "24.01.2019/Рішення від 24.01.2019 №49-р.doc",
       "updated_at": "2026-07-20T13:57:44.069Z"
+    },
+    "2019-01-30|50-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "50-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "e13b316cae0b3335dd4e1c897b0b9414b2fbf2a385c6d6095b049e70571f0ee0",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/рішення від 30.01.2019 № 50-р.docx",
+      "updated_at": "2026-07-20T13:59:53.196Z"
+    },
+    "2019-01-30|53-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "53-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "782f887652d6b802e927fba706e8da45c85712d95b2ace9ca9e933d133a7d429",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/рішення від 30.01.2019 № 53-р.docx",
+      "updated_at": "2026-07-20T13:59:53.387Z"
+    },
+    "2019-01-30|55-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "55-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "82886444d1760324db9877690ab2dac6ce40df5484c145546c3156c204ba6d51",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 № 55-р.doc",
+      "updated_at": "2026-07-20T13:59:53.403Z"
+    },
+    "2019-01-30|63-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "63-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "aa001b4da74545f5e1cad94d514a97821935202bb3e48b9eef788274f4f3e3fa",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 № 63-р.docx",
+      "updated_at": "2026-07-20T13:59:53.554Z"
+    },
+    "2019-01-30|51-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "51-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "07494519cbdbbc2b145b267c7ea8be98242198512fa11a09fda5fb3210c7b86e",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/рішення від 30.01.2019 №51-р.docx",
+      "updated_at": "2026-07-20T13:59:53.704Z"
+    },
+    "2019-01-30|52-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "52-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "e6ee9a0e7c7d6a150726f9910ed8bcebb2fa5a7cfd609bcd2480668f46bf3641",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/рішення від 30.01.2019 №52-р.docx",
+      "updated_at": "2026-07-20T13:59:53.846Z"
+    },
+    "2019-01-30|54-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "54-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "ca6619cc2948ce7fb3fa1f6264a748acf0015c10449749ceed8d3123993fb5c5",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 №54-р.doc",
+      "updated_at": "2026-07-20T13:59:53.854Z"
+    },
+    "2019-01-30|56-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "56-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "fd5c6dbae30c667cdc7ed789c471bc893bc66dfd6147e5dd8d497382195e71c4",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/рішення від 30.01.2019 №56-р.docx",
+      "updated_at": "2026-07-20T13:59:53.992Z"
+    },
+    "2019-01-30|57-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "57-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "cc2320b4d3c0d0bebf8e0b36ee976dc3c7b49a0e64740d517d45bb5b3f8b66cc",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 №57-р.doc",
+      "updated_at": "2026-07-20T13:59:54.000Z"
+    },
+    "2019-01-30|58-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "58-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "62e878467396464bcaf31a9eae2a0ba06cdfaa66087093df37865582a4aa33fb",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 №58-р.docx",
+      "updated_at": "2026-07-20T13:59:54.149Z"
+    },
+    "2019-01-30|59-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "59-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "59130dd8a026ddf6cda07d354bbe0547899a05c87f587cc56fb10f8411afc6ff",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 №59-р.docx",
+      "updated_at": "2026-07-20T13:59:54.410Z"
+    },
+    "unknown-date|60-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "60-р",
+      "decision_date": null,
+      "file_sha256": "03c322cec0ad92cd0d43f0a270b1a2972b61174001a29d3b0627c9765f213158",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 №60-р.doc",
+      "updated_at": "2026-07-20T13:59:54.418Z"
+    },
+    "unknown-date|61-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "61-р",
+      "decision_date": null,
+      "file_sha256": "b86b528ae5f1dddbd0fd0353d952b2fb2419825bdba040d1e7ccc1856d0f8ea4",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 №61-р.doc",
+      "updated_at": "2026-07-20T13:59:54.435Z"
+    },
+    "2019-01-30|62-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "62-р",
+      "decision_date": "2019-01-30",
+      "file_sha256": "d5a27e380e67a79e0169c59cdd67a07bd76e8e8b3d20707c859c804f7a513877",
+      "source_resource_id": "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+      "source_file": "30.01.2019/Рішення від 30.01.2019 №62-р.docx",
+      "updated_at": "2026-07-20T13:59:54.590Z"
+    },
+    "2019-01-31|64-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "64-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "ae581ab47772f4554f0635a1889fdfd792a9b7aedd3b4f95d8989855f64f4b7b",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 № 64-р.docx",
+      "updated_at": "2026-07-20T13:59:55.538Z"
+    },
+    "2019-01-31|65-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "65-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "ef87375c713cfd02adf23503655622339696f22ef69fab0795d337853e87219e",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 № 65-р.docx",
+      "updated_at": "2026-07-20T13:59:55.717Z"
+    },
+    "2019-01-31|66-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "66-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "48ceacfc31abe6c2478a9a84e1c6145fcbf8d3274a09ca9c772c2d5bd112259a",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 № 66-р.docx",
+      "updated_at": "2026-07-20T13:59:55.887Z"
+    },
+    "2019-01-31|68-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "68-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "9358537af158c71d23c4a7515904a8576a42d78c7afd20b70d145eca18166ccd",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 № 68-р.docx",
+      "updated_at": "2026-07-20T13:59:56.047Z"
+    },
+    "2019-01-31|69-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "69-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "508e5419a29de9bb818c31c68e9d97da9273778d848dedd686c3d47c57d89921",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 № 69-р.doc",
+      "updated_at": "2026-07-20T13:59:56.052Z"
+    },
+    "2019-01-31|70-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "70-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "98e2511bae7de09c1ddfcc3362cb5716fd757dd379e0bac980a89a71064ae10a",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 № 70-р.doc",
+      "updated_at": "2026-07-20T13:59:56.056Z"
+    },
+    "2019-01-31|71-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "71-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "7651d1519bcceb97870c8e26db8a7eb4e8ac7714404945251d3f1cfaacd7dc74",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/рішення від 31.01.2019 № 71-р.doc",
+      "updated_at": "2026-07-20T13:59:56.059Z"
+    },
+    "2019-01-31|72-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "72-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "64fbf636e8ac28ccc16c39358a22481bd9643b696ea76e07d9e3a1dfc5873f77",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/рішення від 31.01.2019 № 72-р.doc",
+      "updated_at": "2026-07-20T13:59:56.063Z"
+    },
+    "2019-01-31|67-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "67-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "4e9a3eb8a2ed03ee08a0c9c65f45368960e13c072dc4c03c27704f800b3a3aa9",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 №67-р.docx",
+      "updated_at": "2026-07-20T13:59:56.214Z"
+    },
+    "2019-01-31|73-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "73-р",
+      "decision_date": "2019-01-31",
+      "file_sha256": "50613fc68fe489d8c16ed00aa4650a6bb5ee72f0ef8e5e81f2c8961bfdd9cb75",
+      "source_resource_id": "44a4e3fa-cc27-4765-b5f0-f7542986b549",
+      "source_file": "31.01.2019/Рішення від 31.01.2019 №73-р.doc",
+      "updated_at": "2026-07-20T13:59:56.222Z"
     }
   },
   "last_run": {
-    "at": "2026-07-20T13:57:44.070Z",
-    "resources_considered": 1,
+    "at": "2026-07-20T13:59:56.224Z",
+    "resources_considered": 2,
     "additions": 0,
     "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 1,
-      "docsSeen": 23,
+      "resourcesChecked": 2,
+      "docsSeen": 24,
       "docsRelevant": 0,
-      "docsSkipped": 23,
+      "docsSkipped": 24,
       "errors": 0
     },
     "gemini_calls": 0,
@@ -54299,7 +54563,8 @@
       "recovery_mode": true,
       "recovery_add_only": true,
       "recovery_resource_ids": [
-        "3fdc0f93-06df-4f8d-8703-ddd35319703f"
+        "be3a2f8c-2659-402d-9da4-3ce23bdf8ed4",
+        "44a4e3fa-cc27-4765-b5f0-f7542986b549"
       ],
       "gemini_rpm_limit": 5,
       "gemini_tpm_limit": 120000,
