@@ -55057,19 +55057,19 @@
     }
   },
   "last_run": {
-    "at": "2026-07-27T10:07:56.769Z",
-    "resources_considered": 1,
-    "additions": 6,
-    "raw_additions": 6,
+    "at": "2026-07-27T17:52:31.816Z",
+    "resources_considered": 0,
+    "additions": 0,
+    "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 1,
-      "docsSeen": 32,
-      "docsRelevant": 6,
-      "docsSkipped": 26,
+      "resourcesChecked": 0,
+      "docsSeen": 0,
+      "docsRelevant": 0,
+      "docsSkipped": 0,
       "errors": 0
     },
-    "gemini_calls": 6,
+    "gemini_calls": 0,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
