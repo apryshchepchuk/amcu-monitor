@@ -950,13 +950,13 @@
     },
     "54e5f9a1-7d1e-435a-97c9-79f872f24578": {
       "state_version": 4,
-      "title": "Рішення АМКУ за липень 2026 станом на 13.07.2026",
+      "title": "Рішення АМКУ за липень 2026 станом на 27.07.2026",
       "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/54e5f9a1-7d1e-435a-97c9-79f872f24578/download/rish_lipen_2026.zip",
-      "signature": "2026-07-13T14:08:56.649903|2026-07-13T14:08:57.901296|377537|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/54e5f9a1-7d1e-435a-97c9-79f872f24578/download/rish_lipen_2026.zip",
-      "zip_sha256": "d176eee09c4f2be6334ce2c8ea3eb066347fee492f7a8ac3eb045fb0b6a16b64",
-      "processed_at": "2026-07-13T18:05:09.090Z",
-      "docs_seen": 15,
-      "docs_relevant": 7,
+      "signature": "2026-07-27T07:27:07.038818|2026-07-13T14:08:57.901296|1123442|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/54e5f9a1-7d1e-435a-97c9-79f872f24578/download/rish_lipen_2026.zip",
+      "zip_sha256": "228e493e782f5a34925ecc6aa31d5ae6cb6516c5c1b92c20990220b2d7267d53",
+      "processed_at": "2026-07-27T10:07:56.768Z",
+      "docs_seen": 32,
+      "docs_relevant": 6,
       "errors": 0,
       "incomplete": false
     },
@@ -54900,22 +54900,176 @@
       "source_resource_id": "c3703a2b-95e1-44c7-b6da-58fdb8bc7942",
       "source_file": "13.02.2019/Рішення від 13.02.2019 №99-p.docx",
       "updated_at": "2026-07-20T14:01:53.447Z"
+    },
+    "2026-07-02|481-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "481-р",
+      "decision_date": "2026-07-02",
+      "file_sha256": "0d415922ad4f9acde49d9d4412f982b7846ae4270df16b6d80d887d616fec333",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 02.07.2026 № 481-р.doc",
+      "updated_at": "2026-07-27T10:06:22.562Z"
+    },
+    "unknown-date|496-р": {
+      "status": "analyzed",
+      "decision_number": "496-р",
+      "decision_date": "2026-07-02",
+      "file_sha256": "bf07b2a6f9552edfe128b5870939b87eceee90b55db97d129dd1911eaba59604",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 02.07.2026 № 496-р.docx",
+      "updated_at": "2026-07-27T10:06:35.543Z"
+    },
+    "2026-07-09|497-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "497-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "32d1b31e2477bc8cb245fc76eb795f947cc994ee683ce65978c4ecc4ee6e4605",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 497-р.doc",
+      "updated_at": "2026-07-27T10:06:35.548Z"
+    },
+    "2026-07-09|498-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "498-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "d3381364dde4e8945b13371d2cd42fb7b316242d851e26355f48bca88b472303",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 498-р.doc",
+      "updated_at": "2026-07-27T10:06:35.553Z"
+    },
+    "2026-07-09|499-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "499-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "702cbb90b21e506b204d84cce2a46abf5048bc81cb07c30c957192cba4251099",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 499-р.doc",
+      "updated_at": "2026-07-27T10:06:35.556Z"
+    },
+    "2026-07-09|500-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "500-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "5a66af19a4957b64e949042314366a6761f302b13b74b6887c099d34c5d232bd",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 500-р.doc",
+      "updated_at": "2026-07-27T10:06:35.560Z"
+    },
+    "2026-07-09|501-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "501-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "6a9ba4fb5d738db27eec2db786d59bcc9a9562b3594ff8121f5e21c60700c38c",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 501-р.doc",
+      "updated_at": "2026-07-27T10:06:35.564Z"
+    },
+    "2026-07-09|504-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "504-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "95186e12bf6006fb60fa0c3d5bada77cea18638c841598dd002349a388535212",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 504-р.doc",
+      "updated_at": "2026-07-27T10:06:35.571Z"
+    },
+    "2026-07-09|505-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "505-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "e23615480cf9272f47561d926696e1b0bd67c49214d11bfff631841c950d900f",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 505-р.doc",
+      "updated_at": "2026-07-27T10:06:35.575Z"
+    },
+    "2026-07-09|506-р": {
+      "status": "skipped",
+      "reason": "permit_only_concentration_or_clearance",
+      "decision_number": "506-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "e1b75026d0861d75cb28171707e3f28884597e16cd4b8e3aa5d8ee615b563a8b",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 506-р.doc",
+      "updated_at": "2026-07-27T10:06:35.579Z"
+    },
+    "2026-07-09|508-р": {
+      "status": "analyzed",
+      "decision_number": "508-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "c11dcf2135d3a15aa9a8e95782b34a50e20deaf6c51fa364509083fc15d915ee",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 508-р.doc",
+      "updated_at": "2026-07-27T10:06:48.249Z"
+    },
+    "2026-07-09|509-р": {
+      "status": "analyzed",
+      "decision_number": "509-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "fdb9a89563ee6da890ab47beff20f086fdbbea31224607f2cd33b9f711b31026",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 509 -р.docx",
+      "updated_at": "2026-07-27T10:06:57.846Z"
+    },
+    "2026-07-09|510-р": {
+      "status": "analyzed",
+      "decision_number": "510-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "bf77564ffd4d1202e316fea71959837e97503e801d68863aca79a1d508145330",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 510-р.docx",
+      "updated_at": "2026-07-27T10:07:08.481Z"
+    },
+    "2026-07-09|511-р": {
+      "status": "analyzed",
+      "decision_number": "511-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "d08911c023f4528d9a74274d2f4ffbb952e89b73fb98d96780dfd7b028f9867b",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 511-р.docx",
+      "updated_at": "2026-07-27T10:07:16.098Z"
+    },
+    "2026-07-09|512-р": {
+      "status": "analyzed",
+      "decision_number": "512-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "6f920021ae9e3b1cf5c92853da12fbc9ecc8f7a25a991e434d442a0f39dbd6b8",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 512-р.doc",
+      "updated_at": "2026-07-27T10:07:56.754Z"
+    },
+    "2026-07-09|513-р": {
+      "status": "skipped",
+      "reason": "not_violation_decision",
+      "decision_number": "513-р",
+      "decision_date": "2026-07-09",
+      "file_sha256": "b3d223484e5f8d79a67cbb7ebd1ef9028f749180a2017dad333c478e0a1730ca",
+      "source_resource_id": "54e5f9a1-7d1e-435a-97c9-79f872f24578",
+      "source_file": "rish_lipen_2026/Рішення від 09.07.2026 № 513-р.doc",
+      "updated_at": "2026-07-27T10:07:56.768Z"
     }
   },
   "last_run": {
-    "at": "2026-07-26T17:12:40.601Z",
-    "resources_considered": 0,
-    "additions": 0,
-    "raw_additions": 0,
+    "at": "2026-07-27T10:07:56.769Z",
+    "resources_considered": 1,
+    "additions": 6,
+    "raw_additions": 6,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 0,
-      "docsSeen": 0,
-      "docsRelevant": 0,
-      "docsSkipped": 0,
+      "resourcesChecked": 1,
+      "docsSeen": 32,
+      "docsRelevant": 6,
+      "docsSkipped": 26,
       "errors": 0
     },
-    "gemini_calls": 0,
+    "gemini_calls": 6,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
