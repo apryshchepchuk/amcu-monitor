@@ -35,6 +35,12 @@
       "relevant_count": 0,
       "timeline_items": 5,
       "pharma_candidates": 0
+    },
+    "weekly:2026-07-27:2026-08-02": {
+      "sent_at": "2026-08-03T10:10:12.153Z",
+      "relevant_count": 0,
+      "timeline_items": 4,
+      "pharma_candidates": 0
     }
   },
   "seen_urls": {
@@ -229,18 +235,42 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-126-2613150-26-prat-filip-morris-ukraina-i-tov-imperial-brends-prodakshn-ukraina",
       "first_seen_at": "2026-07-27T10:13:09.588Z",
       "last_seen_at": "2026-07-27T10:13:09.588Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613156-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/156-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-145-2613156-26",
+      "first_seen_at": "2026-08-03T10:10:08.063Z",
+      "last_seen_at": "2026-08-03T10:10:08.063Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613153-26-126-2613154-26": {
+      "title": "Розпочато розгляд справ № 126-26.13/153-26, № 126-26.13/154-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613153-26-126-2613154-26",
+      "first_seen_at": "2026-08-03T10:10:09.124Z",
+      "last_seen_at": "2026-08-03T10:10:09.124Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-126-2613155-26": {
+      "title": "Розпочато розгляд справи № 126-26.13/155-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-spravy-126-2613155-26",
+      "first_seen_at": "2026-08-03T10:10:09.848Z",
+      "last_seen_at": "2026-08-03T10:10:09.848Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613147-26-126-2613148-26-126-2613149-26": {
+      "title": "Розпочато розгляд справ № 126-26.13/147-26, № 126-26.13/148-26, № 126-26.13/149-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lypen-2026/rozpochato-rozghliad-sprav-126-2613147-26-126-2613148-26-126-2613149-26",
+      "first_seen_at": "2026-08-03T10:10:10.587Z",
+      "last_seen_at": "2026-08-03T10:10:10.587Z"
     }
   },
   "last_run": {
-    "at": "2026-07-27T10:13:16.585Z",
+    "at": "2026-08-03T10:10:12.153Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-07-20",
-      "to": "2026-07-26",
-      "label": "2026-07-20 — 2026-07-26"
+      "from": "2026-07-27",
+      "to": "2026-08-02",
+      "label": "2026-07-27 — 2026-08-02"
     },
-    "digest_key": "weekly:2026-07-20:2026-07-26",
-    "timeline_items": 5,
+    "digest_key": "weekly:2026-07-27:2026-08-02",
+    "timeline_items": 4,
     "pharma_candidates": 0,
     "relevant_rows": 0,
     "gemini_calls": 0,
