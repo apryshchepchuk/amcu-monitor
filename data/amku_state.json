@@ -55473,19 +55473,19 @@
     }
   },
   "last_run": {
-    "at": "2026-08-03T18:02:06.676Z",
-    "resources_considered": 1,
-    "additions": 2,
-    "raw_additions": 2,
+    "at": "2026-08-04T08:52:02.519Z",
+    "resources_considered": 0,
+    "additions": 0,
+    "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 1,
-      "docsSeen": 75,
-      "docsRelevant": 2,
-      "docsSkipped": 73,
+      "resourcesChecked": 0,
+      "docsSeen": 0,
+      "docsRelevant": 0,
+      "docsSkipped": 0,
       "errors": 0
     },
-    "gemini_calls": 2,
+    "gemini_calls": 0,
     "settings": {
       "force_resources": false,
       "force_reanalyze_decisions": false,
