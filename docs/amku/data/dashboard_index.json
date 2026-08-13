@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-08-13T07:49:04.453Z",
+  "updated_at": "2026-08-13T11:58:20.309Z",
   "source_file": "data/practice/amku_practice.json",
-  "total_decisions": 767,
-  "total_sanction_uah": 24189528110.57,
+  "total_decisions": 775,
+  "total_sanction_uah": 24239965649.57,
   "years": [
     2026,
     2025,
@@ -14,8 +14,8 @@
     2019
   ],
   "by_law_family": {
-    "economic_competition": 648,
-    "unfair_competition": 119,
+    "economic_competition": 655,
+    "unfair_competition": 120,
     "other": 0
   },
   "categories": [
@@ -24,14 +24,14 @@
       "label": "п. 1 ст. 50 — антиконкурентні узгоджені дії",
       "law_family": "economic_competition",
       "short_label": "антиконкурентні узгоджені дії",
-      "count": 156
+      "count": 157
     },
     {
       "code": "zek:50:2",
       "label": "п. 2 ст. 50 — зловживання монопольним (домінуючим) становищем",
       "law_family": "economic_competition",
       "short_label": "зловживання монопольним (домінуючим) становищем",
-      "count": 57
+      "count": 58
     },
     {
       "code": "zek:50:3",
@@ -66,14 +66,14 @@
       "label": "п. 12 ст. 50 — концентрація без отримання відповідного дозволу органів АМКУ",
       "law_family": "economic_competition",
       "short_label": "концентрація без отримання відповідного дозволу органів АМКУ",
-      "count": 280
+      "count": 282
     },
     {
       "code": "zek:50:13",
       "label": "п. 13 ст. 50 — неподання інформації у встановлені строки",
       "law_family": "economic_competition",
       "short_label": "неподання інформації у встановлені строки",
-      "count": 83
+      "count": 86
     },
     {
       "code": "zek:50:14",
@@ -129,7 +129,7 @@
       "label": "ст. 15-1 — поширення інформації, що вводить в оману",
       "law_family": "unfair_competition",
       "short_label": "поширення інформації, що вводить в оману",
-      "count": 76
+      "count": 77
     },
     {
       "code": "unfair:16",
@@ -139,6 +139,6 @@
       "count": 1
     }
   ],
-  "newest_decision_date": "2026-07-23",
+  "newest_decision_date": "2026-07-30",
   "oldest_decision_date": "2019-03-21"
 }
