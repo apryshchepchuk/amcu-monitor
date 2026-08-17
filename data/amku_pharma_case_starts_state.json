@@ -47,6 +47,12 @@
       "relevant_count": 1,
       "timeline_items": 3,
       "pharma_candidates": 1
+    },
+    "weekly:2026-08-10:2026-08-16": {
+      "sent_at": "2026-08-17T07:28:32.437Z",
+      "relevant_count": 1,
+      "timeline_items": 2,
+      "pharma_candidates": 1
     }
   },
   "seen_urls": {
@@ -283,18 +289,30 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-145-2613126-26",
       "first_seen_at": "2026-08-10T08:10:33.324Z",
       "last_seen_at": "2026-08-10T08:10:33.324Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-spravu-128-2511-26-ek": {
+      "title": "Розпочато справу № 128-25/11-26-ЕК",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-spravu-128-2511-26-ek",
+      "first_seen_at": "2026-08-17T07:28:28.284Z",
+      "last_seen_at": "2026-08-17T07:28:28.284Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-145-2613159-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/159-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-145-2613159-26",
+      "first_seen_at": "2026-08-17T07:28:29.341Z",
+      "last_seen_at": "2026-08-17T07:28:29.341Z"
     }
   },
   "last_run": {
-    "at": "2026-08-10T08:10:35.240Z",
+    "at": "2026-08-17T07:28:32.437Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-08-03",
-      "to": "2026-08-09",
-      "label": "2026-08-03 — 2026-08-09"
+      "from": "2026-08-10",
+      "to": "2026-08-16",
+      "label": "2026-08-10 — 2026-08-16"
     },
-    "digest_key": "weekly:2026-08-03:2026-08-09",
-    "timeline_items": 3,
+    "digest_key": "weekly:2026-08-10:2026-08-16",
+    "timeline_items": 2,
     "pharma_candidates": 1,
     "relevant_rows": 1,
     "gemini_calls": 1,

@@ -1,5 +1,54 @@
 [
   {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-145-2613159-26",
+    "period_mode": "weekly",
+    "period_from": "2026-08-10",
+    "period_to": "2026-08-16",
+    "publication_date": "2026-08-13",
+    "publication_datetime": "2026-08-13 21:19:54",
+    "timeline_day": "13.08.2026",
+    "title": "Розпочато розгляд справи № 145-26.13/159-26",
+    "timeline_title": "Розпочато розгляд справи № 145-26.13/159-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-145-2613159-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "medical_devices",
+    "case_numbers": [
+      "145-26.13/159-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «АЛЬЯНС-2013»",
+      "ТОВ «ГЛОБАЛМЕДГРУП»",
+      "ТОВ «СУЧАСНА ЛІКАРНЯ»",
+      "ТОВ «ФІОРЕ-М»",
+      "ТОВ «ТЕХМЕД КАРДІО»",
+      "ТОВ «ТОПСЕРВІС-МЕДТЕХНІКА»",
+      "ТОВ «СВІТМЕД»",
+      "ТОВ «АРТЕК МЕДІКАЛ ГРУП»",
+      "ТОВ «ІМД+»",
+      "ТОВ «ОРТОІМПЕКС»",
+      "ТОВ «МЕДИЧНА КОМПАНІЯ «АЙНА»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "стаття 50, стаття 6",
+      "point": "пункт 1 статті 50, пункт 4 частини другої статті 6",
+      "text": "вчинення антиконкурентних узгоджених дій, які стосуються спотворення результатів торгів"
+    },
+    "short_description": "АМКУ розпочав розгляд справи щодо можливої змови (антиконкурентних узгоджених дій) між низкою компаній під час участі у публічних закупівлях, проведених ДНП «Національний інститут раку».",
+    "confidence": "high",
+    "page_text_sha256": "d23feedb9d40f3ff17738f793eedc86ed86526e4722cacf9f6395429440f13e9",
+    "analyzed_at": "2026-08-17T07:28:31.010Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-08-17T07:28:31.010Z"
+    }
+  },
+  {
     "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/obiednano-spravy-145-2613133-25-i-145-2613127-26-v-odnu-spravu-ta-prysvoieno-spravi-145-2613157-26",
     "period_mode": "weekly",
     "period_from": "2026-08-03",
