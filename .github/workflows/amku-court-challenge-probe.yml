@@ -1,0 +1,68 @@
+name: AMCU Court Challenge Probe
+
+"on":
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "EDRSR year to scan"
+        required: true
+        default: "2026"
+        type: choice
+        options:
+          - "2026"
+          - "2025"
+
+      max_cases:
+        description: "Max prefiltered court cases to inspect (0 = all)"
+        required: false
+        default: "500"
+
+      focus_decision:
+        description: "Optional AMCU decision number to emphasize in report (e.g. 393-р)"
+        required: false
+        default: "393-р"
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run diagnostic probe
+        shell: bash
+        run: |
+          python scripts/amku_court_challenge_probe.py \
+            --year "${{ inputs.year }}" \
+            --practice "data/practice/amku_practice.json" \
+            --out-dir "data/tmp/amku_court_challenge_probe" \
+            --cache-dir "data/tmp/amku_court_challenge_cache" \
+            --max-cases "${{ inputs.max_cases }}" \
+            --focus-decision "${{ inputs.focus_decision }}" \
+            --request-delay-ms 150 \
+            --request-timeout 45 \
+            --retries 4
+
+      - name: Print report
+        if: always()
+        shell: bash
+        run: |
+          if [ -f data/tmp/amku_court_challenge_probe/report.md ]; then
+            cat data/tmp/amku_court_challenge_probe/report.md
+          fi
+
+      - name: Upload diagnostic artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amku-court-challenge-probe-${{ inputs.year }}
+          path: data/tmp/amku_court_challenge_probe/
+          if-no-files-found: warn
+          retention-days: 14
