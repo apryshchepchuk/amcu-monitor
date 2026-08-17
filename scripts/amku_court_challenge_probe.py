@@ -20,7 +20,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "amku-court-challenge-probe/0.1"
+USER_AGENT = "amku-court-challenge-probe/0.2"
 PASSPORT_URL_TEMPLATE = "https://dsa.court.gov.ua/open_data_json.php?json={dataset_id}"
 DATASET_IDS = {
     2025: 879,
@@ -28,10 +28,20 @@ DATASET_IDS = {
 }
 PUBLIC_EDRSR_URL = "https://reyestr.court.gov.ua/Review/{doc_id}"
 
-CATEGORY_RE = re.compile(
-    r"антимонопол|антиконкурент|економічн\w*\s+конкуренц|"
-    r"недобросовісн\w*\s+конкуренц|монопол\w*\s+становищ",
-    re.IGNORECASE,
+# Select only categories whose *own name* is relevant.
+# IMPORTANT: do not expand numeric-code prefixes as descendants. The EDRSR
+# classifier is not safe to traverse with simple startswith() logic.
+CATEGORY_PATTERNS = [
+    re.compile(r"оскаржен\w*\s+рішен\w*\s+антимонопольн", re.I),
+    re.compile(r"застосуван\w*\s+антимонопольн\w*\s+(?:та\s+конкурентн\w*\s+)?законодавств", re.I),
+    re.compile(r"захист\w*\s+економічн\w*\s+конкуренц", re.I),
+    re.compile(r"антиконкурентн\w*\s+узгоджен\w*\s+ді", re.I),
+    re.compile(r"антиконкурентн\w*\s+ді\w*\s+орган", re.I),
+    re.compile(r"недобросовісн\w*\s+конкуренц", re.I),
+    re.compile(r"зловживан\w*\s+монопольн\w*\s+становищ", re.I),
+]
+PRIMARY_CHALLENGE_CATEGORY_RE = re.compile(
+    r"оскаржен\w*\s+рішен\w*\s+антимонопольн", re.I
 )
 COMMERCIAL_JUSTICE_RE = re.compile(r"господар", re.IGNORECASE)
 
@@ -55,6 +65,7 @@ class PracticeRow:
     decision_date: str
     liable_parties: list[str]
     decision_number_norm: str
+    decision_number_pattern: re.Pattern[str]
     party_norms: list[str]
 
 
@@ -93,7 +104,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--focus-decision",
         default="",
-        help="Optional decision number only for report emphasis; scan still covers all selected cases.",
+        help="Optional AMCU decision number. When set, max-cases is ignored so the full prefilter is scanned.",
     )
     p.add_argument(
         "--keep-zip",
@@ -220,14 +231,52 @@ def normalize_text(v: Any) -> str:
     s = s.replace("ґ", "г")
     s = re.sub(r"[’'`ʼ«»“”„]", " ", s)
     s = re.sub(r"[‐‑‒–—−]", "-", s)
-    s = re.sub(r"[^0-9a-zа-яіїєг\-]+", " ", s, flags=re.I)
+    s = re.sub(r"[^0-9a-zа-яіїєг/\-]+", " ", s, flags=re.I)
     return re.sub(r"\s+", " ", s).strip()
 
 
 def normalized_number(v: Any) -> str:
-    # Keep alphanumeric chunks; punctuation differences like /, -, № become irrelevant.
-    s = normalize_text(v)
-    return " ".join(re.findall(r"[0-9a-zа-яіїєг]+", s, flags=re.I))
+    # Canonical form for equality/reporting only. Keep slash structure so
+    # 30-р is NOT treated as equivalent to 72/30-р/к.
+    s = unicodedata.normalize("NFKC", clean(v)).lower().replace("№", "")
+    s = s.replace("ґ", "г")
+    s = re.sub(r"[‐‑‒–—−]", "-", s)
+    s = re.sub(r"\s+", "", s)
+    s = re.sub(r"[^0-9a-zа-яіїєг/\-]", "", s, flags=re.I)
+    return s
+
+
+def decision_number_regex(v: Any) -> re.Pattern[str]:
+    """Compile a structure-preserving AMCU decision-number matcher.
+
+    Examples:
+      393-р     matches №393-р / 393 р
+      30-р      does NOT match 72/30-р/к
+      72/30-р/к matches the full compound number
+    """
+    canonical = normalized_number(v)
+    if not canonical:
+        return re.compile(r"(?!)")
+
+    parts = re.split(r"([/\-])", canonical)
+    body: list[str] = []
+    for part in parts:
+        if not part:
+            continue
+        if part == "/":
+            body.append(r"\s*/\s*")
+        elif part == "-":
+            # Court texts sometimes omit the dash before a letter suffix.
+            body.append(r"\s*[-‐‑‒–—−]?\s*")
+        else:
+            body.append(re.escape(part))
+
+    # Slash is explicitly forbidden next to the match. This is what prevents
+    # a short number (30-р) from matching inside 72/30-р/к.
+    return re.compile(
+        r"(?<![0-9a-zа-яіїєг/])" + "".join(body) + r"(?![0-9a-zа-яіїєг/])",
+        re.I,
+    )
 
 
 def date_variants(iso_date: str) -> list[str]:
@@ -235,7 +284,18 @@ def date_variants(iso_date: str) -> list[str]:
     if not m:
         return []
     y, mo, d = m.groups()
-    return [f"{d} {mo} {y}", f"{int(d)} {int(mo)} {y}"]
+    month_names = {
+        "01": "січня", "02": "лютого", "03": "березня", "04": "квітня",
+        "05": "травня", "06": "червня", "07": "липня", "08": "серпня",
+        "09": "вересня", "10": "жовтня", "11": "листопада", "12": "грудня",
+    }
+    raw = [
+        f"{d}.{mo}.{y}",
+        f"{int(d)}.{int(mo)}.{y}",
+        f"{y}-{mo}-{d}",
+        f"{int(d)} {month_names.get(mo, mo)} {y}",
+    ]
+    return sorted({normalize_text(x) for x in raw if x})
 
 
 def load_practice(path: Path) -> list[PracticeRow]:
@@ -271,30 +331,30 @@ def load_practice(path: Path) -> list[PracticeRow]:
                 decision_date=date,
                 liable_parties=parties,
                 decision_number_norm=normalized_number(num),
+                decision_number_pattern=decision_number_regex(num),
                 party_norms=[normalize_text(x) for x in parties if normalize_text(x)],
             )
         )
     return out
 
 
-def category_prefix(code: str) -> str:
-    s = re.sub(r"\D+", "", code)
-    return s.rstrip("0")
+def category_name_is_relevant(name: str) -> bool:
+    return any(pattern.search(name or "") for pattern in CATEGORY_PATTERNS)
 
 
 def relevant_category_codes(categories: dict[str, str]) -> set[str]:
-    direct = {code for code, name in categories.items() if CATEGORY_RE.search(name or "")}
-    prefixes = [category_prefix(code) for code in direct]
-    prefixes = [p for p in prefixes if len(p) >= 3]
+    # Exact category-name selection only. No numeric-prefix descendant expansion.
+    return {
+        code for code, name in categories.items()
+        if category_name_is_relevant(name)
+    }
 
-    # Cause-category codes are hierarchical numeric codes; when a parent category matches,
-    # include its descendants as well (e.g. 255000000 -> all 255****** descendants).
-    expanded = set(direct)
-    for code in categories:
-        numeric = re.sub(r"\D+", "", code)
-        if any(numeric.startswith(p) for p in prefixes):
-            expanded.add(code)
-    return expanded
+
+def primary_challenge_category_codes(categories: dict[str, str]) -> set[str]:
+    return {
+        code for code, name in categories.items()
+        if PRIMARY_CHALLENGE_CATEGORY_RE.search(name or "")
+    }
 
 
 def commercial_justice_codes(justice: dict[str, str]) -> set[str]:
@@ -339,7 +399,7 @@ def scan_prefilter(
     zf: zipfile.ZipFile,
     relevant_categories: set[str],
     commercial_codes: set[str],
-) -> tuple[dict[str, list[DocRow]], dict[str, int]]:
+) -> tuple[dict[str, list[DocRow]], dict[str, int], dict[str, dict[str, Any]]]:
     member = find_zip_member(zf, "documents.csv")
     cases: dict[str, list[DocRow]] = defaultdict(list)
     stats = {
@@ -348,6 +408,15 @@ def scan_prefilter(
         "category_match": 0,
         "commercial_and_category": 0,
         "cases": 0,
+    }
+    category_stats: dict[str, dict[str, Any]] = {
+        code: {
+            "category_code": code,
+            "active_documents": 0,
+            "commercial_documents": 0,
+            "commercial_cases": set(),
+        }
+        for code in relevant_categories
     }
 
     with open_tsv_member(zf, member) as f:
@@ -363,18 +432,21 @@ def scan_prefilter(
             if cat not in relevant_categories:
                 continue
             stats["category_match"] += 1
+            category_stats[cat]["active_documents"] += 1
 
             justice = clean(row.get("justice_kind"))
             if justice not in commercial_codes:
                 continue
             stats["commercial_and_category"] += 1
+            category_stats[cat]["commercial_documents"] += 1
 
             doc = doc_from_row(row)
             if doc.cause_num:
                 cases[doc.cause_num].append(doc)
+                category_stats[cat]["commercial_cases"].add(doc.cause_num)
 
     stats["cases"] = len(cases)
-    return cases, stats
+    return cases, stats, category_stats
 
 
 def html_to_text(raw: bytes) -> str:
@@ -470,20 +542,23 @@ def match_practice(text: str, practice: list[PracticeRow]) -> list[dict[str, Any
 
     matches: list[dict[str, Any]] = []
     padded = f" {text_norm} "
-    number_padded = f" {normalized_number(text)} "
 
     for row in practice:
-        num = row.decision_number_norm
-        if not num:
+        if not row.decision_number_norm:
             continue
-        num_hit = f" {num} " in number_padded
+
+        # Structure-preserving exact number match. This prevents e.g. 30-р from
+        # matching inside a different compound number such as 72/30-р/к.
+        num_hit = bool(row.decision_number_pattern.search(text_norm))
         party_hit, party_needle = party_match_score(text_norm, row.party_norms)
         date_hit = any(f" {v} " in padded for v in date_variants(row.decision_date))
 
-        # High confidence: exact normalized decision number + AMCU + explicit challenge language.
-        # Date/party are corroboration, not mandatory, because some court texts omit one of them.
-        if num_hit and has_challenge:
+        # High confidence now requires corroboration beyond the number itself:
+        # AMCU + explicit challenge language + exact full decision number + (date OR liable party).
+        if num_hit and has_challenge and (party_hit or date_hit):
             confidence = "high"
+        elif num_hit and has_challenge:
+            confidence = "review"
         elif has_challenge and party_hit and date_hit:
             confidence = "medium"
         elif num_hit and (party_hit or date_hit):
@@ -559,6 +634,7 @@ def main() -> int:
         courts = read_dict_tsv(zf, "courts.csv", "court_code")
 
         cat_codes = relevant_category_codes(categories)
+        primary_cat_codes = primary_challenge_category_codes(categories)
         comm_codes = commercial_justice_codes(justice)
 
         if not cat_codes:
@@ -569,13 +645,13 @@ def main() -> int:
         log("Matched justice kinds:")
         for code in sorted(comm_codes):
             log(f"  {code}: {justice.get(code, '')}")
-        log(f"Relevant category codes (incl. descendants): {len(cat_codes)}")
+        log(f"Relevant category codes (exact name matches only): {len(cat_codes)}")
         for code in sorted(cat_codes)[:40]:
             log(f"  {code}: {categories.get(code, '')}")
         if len(cat_codes) > 40:
             log(f"  ... +{len(cat_codes) - 40} more")
 
-        cases, stats = scan_prefilter(zf, cat_codes, comm_codes)
+        cases, stats, category_stats = scan_prefilter(zf, cat_codes, comm_codes)
         log(
             "Prefilter: "
             f"rows={stats['rows_total']:,}; active={stats['active']:,}; "
@@ -584,12 +660,21 @@ def main() -> int:
             f"cases={stats['cases']:,}"
         )
 
-        ordered_cases = sorted(
-            cases.items(),
-            key=lambda kv: max((doc_sort_key(d) for d in kv[1]), default=((0, ""), (0, ""), 0)),
-            reverse=True,
-        )
-        if args.max_cases > 0:
+        def case_priority(item: tuple[str, list[DocRow]]) -> tuple[Any, ...]:
+            _cause_num, docs = item
+            primary = any(d.category_code in primary_cat_codes for d in docs)
+            latest = max((doc_sort_key(d) for d in docs), default=((0, ""), (0, ""), 0))
+            return (1 if primary else 0, latest)
+
+        ordered_cases = sorted(cases.items(), key=case_priority, reverse=True)
+
+        if args.focus_decision:
+            if args.max_cases > 0 and len(ordered_cases) > args.max_cases:
+                log(
+                    f"Focus mode `{args.focus_decision}`: ignoring --max-cases={args.max_cases}; "
+                    f"scanning all {len(ordered_cases):,} prefiltered cases."
+                )
+        elif args.max_cases > 0:
             ordered_cases = ordered_cases[: args.max_cases]
 
         prefilter_rows: list[dict[str, Any]] = []
@@ -665,13 +750,27 @@ def main() -> int:
         match_rows.sort(key=lambda x: (x["decision_date"], x["decision_number"], x["cause_num"]), reverse=True)
         review_rows.sort(key=lambda x: (x["decision_date"], x["decision_number"], x["cause_num"]), reverse=True)
 
-        matched_category_rows = [
-            {"category_code": code, "name": categories.get(code, "")}
-            for code in sorted(cat_codes)
-        ]
+        matched_category_rows = []
+        category_stat_rows = []
+        for code in sorted(cat_codes):
+            stat = category_stats.get(code, {})
+            row = {
+                "category_code": code,
+                "name": categories.get(code, ""),
+                "primary_challenge_category": code in primary_cat_codes,
+                "active_documents": int(stat.get("active_documents", 0)),
+                "commercial_documents": int(stat.get("commercial_documents", 0)),
+                "commercial_cases": len(stat.get("commercial_cases", set())),
+            }
+            matched_category_rows.append(row)
+            category_stat_rows.append(row)
+        category_stat_rows.sort(
+            key=lambda r: (r["commercial_cases"], r["commercial_documents"], r["category_code"]),
+            reverse=True,
+        )
 
         summary = {
-            "schema": "amku_court_challenge_probe_v1",
+            "schema": "amku_court_challenge_probe_v2",
             "generated_at": datetime.utcnow().isoformat(timespec="seconds") + "Z",
             "year": year,
             "dataset_id": dataset_id,
@@ -686,6 +785,10 @@ def main() -> int:
                 {"code": code, "name": justice.get(code, "")} for code in sorted(comm_codes)
             ],
             "relevant_category_codes_count": len(cat_codes),
+            "primary_challenge_category_codes": [
+                {"code": code, "name": categories.get(code, "")}
+                for code in sorted(primary_cat_codes)
+            ],
             "focus_decision": args.focus_decision,
             "focus_hits": [
                 row for row in match_rows + review_rows
@@ -735,7 +838,18 @@ def main() -> int:
         write_csv(
             out_dir / "matched_categories.csv",
             matched_category_rows,
-            ["category_code", "name"],
+            [
+                "category_code", "name", "primary_challenge_category",
+                "active_documents", "commercial_documents", "commercial_cases",
+            ],
+        )
+        write_csv(
+            out_dir / "category_stats.csv",
+            category_stat_rows,
+            [
+                "category_code", "name", "primary_challenge_category",
+                "active_documents", "commercial_documents", "commercial_cases",
+            ],
         )
         write_csv(
             out_dir / "fetch_errors.csv",
@@ -776,7 +890,9 @@ Generated: {summary['generated_at']}
 - Manual-review matches: {len(review_rows):,}
 - Text fetch errors: {len(fetch_errors):,}
 
-High confidence means the inspected court text contains the AMCU name, an explicit challenge/cancellation signal, and the normalized AMCU decision number. Party/date matches are corroborating signals.
+High confidence means the inspected court text contains the AMCU name, an explicit challenge/cancellation signal, the exact full AMCU decision number, and at least one corroborating signal: the AMCU decision date or a liable party.
+
+Decision-number matching preserves slash structure, so a short number such as `30-р` is not accepted inside a different compound number such as `72/30-р/к`.
 
 `pending_no_merits` means the challenge is found but the case has no active `Рішення`/`Постанова` in this yearly EDRSR archive yet.
 {focus_md}
