@@ -13,19 +13,19 @@ name: AMCU Court Challenge Probe
           - "2025"
 
       max_cases:
-        description: "Max prefiltered court cases to inspect (0 = all)"
+        description: "Max prefiltered cases to inspect (0 = all; ignored when focus_decision is set)"
         required: false
         default: "500"
 
       focus_decision:
-        description: "Optional AMCU decision number to emphasize in report (e.g. 393-р)"
+        description: "Optional AMCU decision number for full-prefilter control scan (e.g. 393-р)"
         required: false
         default: "393-р"
 
 jobs:
   probe:
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 120
 
     steps:
       - name: Checkout
