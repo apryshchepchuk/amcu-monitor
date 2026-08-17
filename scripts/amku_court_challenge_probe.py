@@ -20,7 +20,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "amku-court-challenge-probe/0.2"
+USER_AGENT = "amku-court-challenge-probe/0.3"
 PASSPORT_URL_TEMPLATE = "https://dsa.court.gov.ua/open_data_json.php?json={dataset_id}"
 DATASET_IDS = {
     2025: 879,
@@ -84,6 +84,12 @@ class DocRow:
     date_publ: str
 
 
+class DocumentFetchError(RuntimeError):
+    def __init__(self, message: str, attempts: list[dict[str, Any]]):
+        super().__init__(message)
+        self.attempts = attempts
+
+
 def log(msg: str) -> None:
     print(msg, flush=True)
 
@@ -125,6 +131,31 @@ def http_bytes(url: str, timeout: int, retries: int) -> bytes:
             req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
             with urllib.request.urlopen(req, timeout=timeout) as res:
                 return res.read()
+        except Exception as exc:  # noqa: BLE001
+            last = exc
+            if attempt >= retries:
+                break
+            wait = min(20, 2 ** (attempt - 1))
+            log(f"HTTP retry {attempt}/{retries} after error: {exc}; sleep {wait}s")
+            time.sleep(wait)
+    raise RuntimeError(f"Failed to fetch {url}: {last}")
+
+
+def http_bytes_meta(url: str, timeout: int, retries: int) -> tuple[bytes, dict[str, Any]]:
+    last: Exception | None = None
+    for attempt in range(1, retries + 1):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            with urllib.request.urlopen(req, timeout=timeout) as res:
+                body = res.read()
+                meta = {
+                    "requested_url": url,
+                    "final_url": clean(getattr(res, "geturl", lambda: url)()),
+                    "status": int(getattr(res, "status", 0) or 0),
+                    "content_type": clean(res.headers.get("Content-Type")),
+                    "body_bytes": len(body),
+                }
+                return body, meta
         except Exception as exc:  # noqa: BLE001
             last = exc
             if attempt >= retries:
@@ -449,40 +480,188 @@ def scan_prefilter(
     return cases, stats, category_stats
 
 
-def html_to_text(raw: bytes) -> str:
-    text = raw.decode("utf-8", errors="replace")
+def decode_response_text(raw: bytes, content_type: str = "") -> str:
+    encodings: list[str] = []
+    m = re.search(r"charset\s*=\s*['\"]?([^;\s'\"]+)", content_type or "", re.I)
+    if m:
+        encodings.append(m.group(1).strip())
+    if raw.startswith(b"\xef\xbb\xbf"):
+        encodings.append("utf-8-sig")
+    elif raw.startswith((b"\xff\xfe", b"\xfe\xff")):
+        encodings.append("utf-16")
+    encodings.extend(["utf-8", "cp1251"])
+
+    seen: set[str] = set()
+    for encoding in encodings:
+        key = encoding.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        try:
+            return raw.decode(encoding)
+        except (LookupError, UnicodeDecodeError):
+            continue
+    return raw.decode("utf-8", errors="replace")
+
+
+def html_to_text(raw: bytes, content_type: str = "") -> str:
+    text = decode_response_text(raw, content_type)
     text = re.sub(r"(?is)<script\b.*?</script>", " ", text)
     text = re.sub(r"(?is)<style\b.*?</style>", " ", text)
+    text = re.sub(r"(?is)<noscript\b.*?</noscript>", " ", text)
     text = re.sub(r"(?is)<br\s*/?>", "\n", text)
-    text = re.sub(r"(?is)</p\s*>", "\n", text)
+    text = re.sub(r"(?is)</(?:p|div|tr|li|h[1-6])\s*>", "\n", text)
     text = re.sub(r"(?is)<[^>]+>", " ", text)
     return html.unescape(text)
 
 
-def fetch_doc_text(doc: DocRow, cache_dir: Path, timeout: int, retries: int) -> str:
+def structured_identifier_regex(v: Any) -> re.Pattern[str]:
+    canonical = normalized_number(v)
+    if not canonical:
+        return re.compile(r"(?!)")
+
+    parts = re.split(r"([/\-])", canonical)
+    body: list[str] = []
+    for part in parts:
+        if not part:
+            continue
+        if part == "/":
+            body.append(r"\s*/\s*")
+        elif part == "-":
+            body.append(r"\s*[-‐‑‒–—−]?\s*")
+        else:
+            body.append(re.escape(part))
+
+    return re.compile(
+        r"(?<![0-9a-zа-яіїєг/])" + "".join(body) + r"(?![0-9a-zа-яіїєг/])",
+        re.I,
+    )
+
+
+def court_document_validation(text: str, doc: DocRow) -> dict[str, Any]:
+    norm = normalize_text(text)
+    text_length = len(norm)
+    case_hit = bool(doc.cause_num and structured_identifier_regex(doc.cause_num).search(norm))
+
+    judgment_markers = ["ухвала", "рішення", "постанова", "судовий наказ"]
+    has_judgment_marker = any(re.search(rf"(?:^|\s){re.escape(x)}(?:\s|$)", norm) for x in judgment_markers)
+    has_court_marker = any(x in norm for x in ["господарський суд", "апеляційний господарський суд", "верховний суд", "суддя"])
+    has_case_word = bool(re.search(r"(?:^|\s)справ[аиіою](?:\s|$)", norm))
+
+    # The case number is the strongest cheap proof that we received the actual
+    # judicial text rather than a service/anti-bot/navigation page. A marker-only
+    # fallback is retained for unusual layouts where the number is omitted.
+    valid_by_case = text_length >= 500 and case_hit
+    valid_by_markers = text_length >= 1200 and has_case_word and has_judgment_marker and has_court_marker
+    valid = valid_by_case or valid_by_markers
+
+    reason = "ok"
+    if not valid:
+        if text_length < 500:
+            reason = "too_short"
+        elif not case_hit and not valid_by_markers:
+            reason = "case_number_or_court_markers_missing"
+        else:
+            reason = "not_recognized_as_court_document"
+
+    return {
+        "valid": valid,
+        "reason": reason,
+        "text_length": text_length,
+        "contains_case_number": case_hit,
+        "contains_case_word": has_case_word,
+        "contains_judgment_marker": has_judgment_marker,
+        "contains_court_marker": has_court_marker,
+    }
+
+
+def fetch_doc_text(
+    doc: DocRow,
+    cache_dir: Path,
+    timeout: int,
+    retries: int,
+) -> tuple[str, dict[str, Any]]:
     ensure_dir(cache_dir)
     cache = cache_dir / f"{doc.doc_id}.txt"
-    if cache.exists() and cache.stat().st_size > 50:
-        return cache.read_text(encoding="utf-8", errors="replace")
+    attempts: list[dict[str, Any]] = []
 
-    urls = [doc.doc_url]
+    # Never trust an old cache solely by size. Validate it against the case
+    # metadata; stale service pages from an earlier run are deleted and retried.
+    if cache.exists() and cache.stat().st_size > 50:
+        cached_text = cache.read_text(encoding="utf-8", errors="replace")
+        validation = court_document_validation(cached_text, doc)
+        attempts.append({
+            "source": "cache",
+            "requested_url": "",
+            "final_url": "",
+            "status": 0,
+            "content_type": "text/plain; cache",
+            "body_bytes": cache.stat().st_size,
+            **validation,
+            "accepted": bool(validation["valid"]),
+        })
+        if validation["valid"]:
+            return cached_text, {
+                "cache_hit": True,
+                "source_url": "cache",
+                "attempts": attempts,
+                "validation": validation,
+            }
+        cache.unlink(missing_ok=True)
+
+    urls: list[tuple[str, str]] = []
+    if doc.doc_url:
+        urls.append(("doc_url", doc.doc_url))
     public_url = PUBLIC_EDRSR_URL.format(doc_id=doc.doc_id)
-    if public_url not in urls:
-        urls.append(public_url)
+    if all(url != public_url for _kind, url in urls):
+        urls.append(("public_review", public_url))
 
     last: Exception | None = None
-    for url in [u for u in urls if u]:
+    for source_kind, url in urls:
         try:
-            body = http_bytes(url, timeout, retries)
-            text = html_to_text(body)
-            if len(text.strip()) < 100:
-                raise RuntimeError(f"Very short document body from {url}")
+            body, http_meta = http_bytes_meta(url, timeout, retries)
+            text = html_to_text(body, http_meta.get("content_type", ""))
+            validation = court_document_validation(text, doc)
+            attempt = {
+                "source": source_kind,
+                **http_meta,
+                **validation,
+                "accepted": bool(validation["valid"]),
+            }
+            if not validation["valid"]:
+                attempt["text_preview"] = normalize_text(text)[:500]
+            attempts.append(attempt)
+
+            if not validation["valid"]:
+                last = RuntimeError(
+                    f"Response from {url} is not a validated court document: {validation['reason']}"
+                )
+                continue
+
             cache.write_text(text, encoding="utf-8")
-            return text
+            return text, {
+                "cache_hit": False,
+                "source_url": url,
+                "final_url": http_meta.get("final_url", url),
+                "content_type": http_meta.get("content_type", ""),
+                "body_bytes": http_meta.get("body_bytes", len(body)),
+                "attempts": attempts,
+                "validation": validation,
+            }
         except Exception as exc:  # noqa: BLE001
             last = exc
+            attempts.append({
+                "source": source_kind,
+                "requested_url": url,
+                "accepted": False,
+                "error": str(exc),
+            })
             continue
-    raise RuntimeError(f"Could not fetch doc {doc.doc_id}: {last}")
+
+    raise DocumentFetchError(
+        f"Could not fetch validated court text for doc {doc.doc_id}: {last}",
+        attempts,
+    )
 
 
 def is_merits_doc(doc: DocRow, judgment_forms: dict[str, str]) -> bool:
@@ -532,29 +711,44 @@ def party_match_score(text_norm: str, party_norms: Iterable[str]) -> tuple[bool,
     return False, ""
 
 
-def match_practice(text: str, practice: list[PracticeRow]) -> list[dict[str, Any]]:
+def practice_signals(text: str, row: PracticeRow) -> dict[str, Any]:
     text_norm = normalize_text(text)
+    padded = f" {text_norm} "
     has_amcu = bool(AMCU_RE.search(text_norm))
     has_challenge = contains_challenge_signal(text_norm)
+    num_hit = bool(row.decision_number_pattern.search(text_norm)) if row.decision_number_norm else False
+    party_hit, party_needle = party_match_score(text_norm, row.party_norms)
+    date_hit = any(f" {v} " in padded for v in date_variants(row.decision_date))
+    return {
+        "amcu": has_amcu,
+        "challenge": has_challenge,
+        "decision_number": num_hit,
+        "decision_date": date_hit,
+        "liable_party": party_hit,
+        "party_needle": party_needle,
+    }
 
-    if not has_amcu:
-        return []
 
+def match_practice(text: str, practice: list[PracticeRow]) -> list[dict[str, Any]]:
     matches: list[dict[str, Any]] = []
-    padded = f" {text_norm} "
+
+    # Fast global AMCU gate before evaluating every practice row.
+    text_norm = normalize_text(text)
+    if not AMCU_RE.search(text_norm):
+        return []
 
     for row in practice:
         if not row.decision_number_norm:
             continue
 
-        # Structure-preserving exact number match. This prevents e.g. 30-р from
-        # matching inside a different compound number such as 72/30-р/к.
-        num_hit = bool(row.decision_number_pattern.search(text_norm))
-        party_hit, party_needle = party_match_score(text_norm, row.party_norms)
-        date_hit = any(f" {v} " in padded for v in date_variants(row.decision_date))
+        signals = practice_signals(text, row)
+        has_challenge = bool(signals["challenge"])
+        num_hit = bool(signals["decision_number"])
+        party_hit = bool(signals["liable_party"])
+        date_hit = bool(signals["decision_date"])
 
-        # High confidence now requires corroboration beyond the number itself:
-        # AMCU + explicit challenge language + exact full decision number + (date OR liable party).
+        # High confidence requires AMCU + explicit challenge language + exact
+        # full decision number + one corroborating signal (date or liable party).
         if num_hit and has_challenge and (party_hit or date_hit):
             confidence = "high"
         elif num_hit and has_challenge:
@@ -571,14 +765,7 @@ def match_practice(text: str, practice: list[PracticeRow]) -> list[dict[str, Any
             "decision_date": row.decision_date,
             "liable_parties": row.liable_parties,
             "confidence": confidence,
-            "signals": {
-                "amcu": has_amcu,
-                "challenge": has_challenge,
-                "decision_number": num_hit,
-                "decision_date": date_hit,
-                "liable_party": party_hit,
-                "party_needle": party_needle,
-            },
+            "signals": signals,
         })
 
     return matches
@@ -621,6 +808,24 @@ def main() -> int:
 
     practice = load_practice(practice_path)
     log(f"Practice rows loaded: {len(practice):,}")
+
+    focus_norm = normalized_number(args.focus_decision)
+    focus_rows = [row for row in practice if focus_norm and row.decision_number_norm == focus_norm]
+    focus_debug: dict[str, Any] = {
+        "focus_decision": args.focus_decision,
+        "practice_rows": [
+            {
+                "decision_number": row.decision_number,
+                "decision_date": row.decision_date,
+                "liable_parties": row.liable_parties,
+            }
+            for row in focus_rows
+        ],
+        "signal_candidates": [],
+        "fetch_failures": [],
+    }
+    if args.focus_decision and not focus_rows:
+        log(f"WARNING: focus decision `{args.focus_decision}` not found in practice DB")
 
     zip_url = fetch_passport_zip_url(year, dataset_id, args.request_timeout, args.retries)
     log(f"EDRSR ZIP URL resolved from passport: {zip_url}")
@@ -681,6 +886,13 @@ def main() -> int:
         match_rows: list[dict[str, Any]] = []
         review_rows: list[dict[str, Any]] = []
         fetch_errors: list[dict[str, Any]] = []
+        fetch_stats = {
+            "documents_requested": 0,
+            "validated_documents": 0,
+            "cache_hits": 0,
+            "url_attempts": 0,
+            "invalid_responses": 0,
+        }
 
         for idx, (cause_num, docs) in enumerate(ordered_cases, start=1):
             reps = representative_docs(docs, judgment_forms)
@@ -704,17 +916,71 @@ def main() -> int:
             inspected_doc_ids: list[str] = []
 
             for rep in reps:
+                fetch_stats["documents_requested"] += 1
                 try:
-                    text = fetch_doc_text(rep, cache_dir / "texts", args.request_timeout, args.retries)
+                    text, fetch_meta = fetch_doc_text(
+                        rep, cache_dir / "texts", args.request_timeout, args.retries
+                    )
                     inspected_doc_ids.append(rep.doc_id)
-                except Exception as exc:  # noqa: BLE001
-                    fetch_errors.append({
+                    fetch_stats["validated_documents"] += 1
+                    fetch_stats["cache_hits"] += int(bool(fetch_meta.get("cache_hit")))
+                    attempts = fetch_meta.get("attempts") or []
+                    fetch_stats["url_attempts"] += sum(1 for a in attempts if a.get("source") != "cache")
+                    fetch_stats["invalid_responses"] += sum(
+                        1 for a in attempts
+                        if a.get("source") != "cache" and not a.get("accepted") and not a.get("error")
+                    )
+                except DocumentFetchError as exc:
+                    attempts = exc.attempts
+                    fetch_stats["url_attempts"] += sum(1 for a in attempts if a.get("source") != "cache")
+                    fetch_stats["invalid_responses"] += sum(
+                        1 for a in attempts
+                        if a.get("source") != "cache" and not a.get("accepted") and not a.get("error")
+                    )
+                    error_row = {
                         "cause_num": cause_num,
                         "doc_id": rep.doc_id,
                         "doc_url": rep.doc_url,
                         "error": str(exc),
-                    })
+                        "attempts": attempts,
+                    }
+                    fetch_errors.append(error_row)
+                    if args.focus_decision:
+                        focus_debug["fetch_failures"].append(error_row)
                     continue
+                except Exception as exc:  # noqa: BLE001
+                    error_row = {
+                        "cause_num": cause_num,
+                        "doc_id": rep.doc_id,
+                        "doc_url": rep.doc_url,
+                        "error": str(exc),
+                        "attempts": [],
+                    }
+                    fetch_errors.append(error_row)
+                    if args.focus_decision:
+                        focus_debug["fetch_failures"].append(error_row)
+                    continue
+
+                if focus_rows:
+                    for focus_row in focus_rows:
+                        signals = practice_signals(text, focus_row)
+                        if (
+                            signals["decision_number"]
+                            or signals["decision_date"]
+                            or signals["liable_party"]
+                            or (signals["amcu"] and signals["challenge"])
+                        ):
+                            focus_debug["signal_candidates"].append({
+                                "cause_num": cause_num,
+                                "doc_id": rep.doc_id,
+                                "source_url": fetch_meta.get("source_url", ""),
+                                "final_url": fetch_meta.get("final_url", ""),
+                                "content_type": fetch_meta.get("content_type", ""),
+                                "body_bytes": fetch_meta.get("body_bytes", 0),
+                                "validation": fetch_meta.get("validation", {}),
+                                "signals": signals,
+                                "text_preview": normalize_text(text)[:1000],
+                            })
 
                 for m in match_practice(text, practice):
                     key = (m["decision_date"], m["decision_number"])
@@ -770,7 +1036,7 @@ def main() -> int:
         )
 
         summary = {
-            "schema": "amku_court_challenge_probe_v2",
+            "schema": "amku_court_challenge_probe_v3",
             "generated_at": datetime.utcnow().isoformat(timespec="seconds") + "Z",
             "year": year,
             "dataset_id": dataset_id,
@@ -781,6 +1047,7 @@ def main() -> int:
             "high_confidence_matches": len(match_rows),
             "manual_review_matches": len(review_rows),
             "fetch_errors": len(fetch_errors),
+            "text_fetch": fetch_stats,
             "commercial_justice_codes": [
                 {"code": code, "name": justice.get(code, "")} for code in sorted(comm_codes)
             ],
@@ -807,6 +1074,11 @@ def main() -> int:
         )
         (out_dir / "fetch_errors.json").write_text(
             json.dumps(fetch_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        focus_debug["fetch_stats"] = fetch_stats
+        focus_debug["focus_hits"] = summary["focus_hits"]
+        (out_dir / "focus_debug.json").write_text(
+            json.dumps(focus_debug, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
 
         write_csv(
@@ -854,7 +1126,7 @@ def main() -> int:
         write_csv(
             out_dir / "fetch_errors.csv",
             fetch_errors,
-            ["cause_num", "doc_id", "doc_url", "error"],
+            ["cause_num", "doc_id", "doc_url", "error", "attempts"],
         )
 
         focus_md = ""
@@ -889,6 +1161,12 @@ Generated: {summary['generated_at']}
 - High-confidence AMCU challenge matches: {len(match_rows):,}
 - Manual-review matches: {len(review_rows):,}
 - Text fetch errors: {len(fetch_errors):,}
+- Validated court texts: {fetch_stats['validated_documents']:,}/{fetch_stats['documents_requested']:,}
+- HTTP URL attempts: {fetch_stats['url_attempts']:,}
+- Rejected non-court/service responses: {fetch_stats['invalid_responses']:,}
+- Validated cache hits: {fetch_stats['cache_hits']:,}
+
+`fetch_errors=0` now means every inspected representative document passed content validation; a merely long HTTP response is no longer accepted as a court decision.
 
 High confidence means the inspected court text contains the AMCU name, an explicit challenge/cancellation signal, the exact full AMCU decision number, and at least one corroborating signal: the AMCU decision date or a liable party.
 
@@ -905,6 +1183,11 @@ Decision-number matching preserves slash structure, so a short number such as `3
     log(f"High-confidence matches: {len(match_rows)}")
     log(f"Manual review: {len(review_rows)}")
     log(f"Fetch errors: {len(fetch_errors)}")
+    log(
+        "Validated court texts: "
+        f"{fetch_stats['validated_documents']}/{fetch_stats['documents_requested']}; "
+        f"invalid responses={fetch_stats['invalid_responses']}"
+    )
     log(f"Artifacts: {out_dir}")
     return 0
 
