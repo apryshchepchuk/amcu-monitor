@@ -6,7 +6,7 @@ name: AMCU Court Challenges
       year:
         description: "EDRSR year to scan"
         required: true
-        default: "2026"
+        default: "2025"
         type: choice
         options:
           - "2026"
@@ -51,6 +51,12 @@ name: AMCU Court Challenges
         description: "Maximum Gemini calls to check newer post-merits court acts for active appeal/cassation review"
         required: false
         default: "20"
+
+      skip_gemini:
+        description: "Scout mode: do not call Gemini; diagnostics only (recommended for first 2025 run)"
+        required: false
+        default: false
+        type: boolean
 
       replace_year:
         description: "Replace this year's observations in persistent court registry"
@@ -97,8 +103,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: data/tmp/amku_court_challenge_cache/v4/texts
-          key: amku-court-texts-v8-${{ inputs.year }}-${{ github.run_id }}
+          key: amku-court-texts-v9-${{ inputs.year }}-${{ github.run_id }}
           restore-keys: |
+            amku-court-texts-v9-${{ inputs.year }}-
             amku-court-texts-v8-${{ inputs.year }}-
             amku-court-texts-v7-${{ inputs.year }}-
             amku-court-texts-v6-${{ inputs.year }}-
@@ -110,8 +117,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: data/tmp/amku_court_ai_cache
-          key: amku-court-ai-v2-${{ inputs.year }}-${{ github.run_id }}
+          key: amku-court-ai-v3-${{ inputs.year }}-${{ github.run_id }}
           restore-keys: |
+            amku-court-ai-v3-${{ inputs.year }}-
             amku-court-ai-v2-${{ inputs.year }}-
 
       - name: Check scripts syntax
@@ -135,6 +143,10 @@ jobs:
 
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             EXTRA_ARGS+=(--dry-run)
+          fi
+
+          if [ "${{ inputs.skip_gemini }}" = "true" ]; then
+            EXTRA_ARGS+=(--skip-gemini)
           fi
 
           python scripts/amku_court_challenges.py \
@@ -176,14 +188,14 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: data/tmp/amku_court_challenge_cache/v4/texts
-          key: amku-court-texts-v8-${{ inputs.year }}-${{ github.run_id }}
+          key: amku-court-texts-v9-${{ inputs.year }}-${{ github.run_id }}
 
       - name: Save Gemini checkpoint cache
         if: always()
         uses: actions/cache/save@v4
         with:
           path: data/tmp/amku_court_ai_cache
-          key: amku-court-ai-v2-${{ inputs.year }}-${{ github.run_id }}
+          key: amku-court-ai-v3-${{ inputs.year }}-${{ github.run_id }}
 
       - name: Upload diagnostic artifacts and AI checkpoint
         if: always()
