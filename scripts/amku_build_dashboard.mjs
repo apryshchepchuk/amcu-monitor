@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 const PRACTICE_PATH = path.join(ROOT, 'data', 'practice', 'amku_practice.json');
+const COURT_CHALLENGES_PATH = path.join(ROOT, 'data', 'practice', 'amku_court_challenges.json');
 const FALLBACK_RESULTS_PATH = path.join(ROOT, 'data', 'amku_results.json');
 const OUT_DIR = path.join(ROOT, 'docs', 'amku', 'data');
 const PRACTICE_OUT = path.join(OUT_DIR, 'practice.json');
@@ -77,7 +78,26 @@ function listToSearch(list) {
   return Array.isArray(list) ? list.join(' | ') : '';
 }
 
-function buildSearchBlob(row) {
+function courtSearchParts(courtChallenge) {
+  if (!courtChallenge?.has_challenge) return [];
+  const cases = Array.isArray(courtChallenge.cases) ? courtChallenge.cases : [];
+  return [
+    courtChallenge.display_status_label,
+    courtChallenge.primary_case_number,
+    ...cases.flatMap((item) => [
+      item?.case_number,
+      item?.challenger,
+      item?.status_label,
+      item?.status_detail,
+      item?.latest_merits?.court,
+      item?.latest_merits?.type,
+      item?.latest_relevant?.court,
+      item?.latest_relevant?.type,
+    ]),
+  ].filter(Boolean);
+}
+
+function buildSearchBlob(row, courtChallenge = null) {
   return lower([
     row.decision_number,
     row.decision_date,
@@ -97,15 +117,55 @@ function buildSearchBlob(row) {
     row.market_or_sector,
     listToSearch(row.search_keywords),
     row.source_resource,
-    row.source_file
+    row.source_file,
+    ...courtSearchParts(courtChallenge)
   ].filter(Boolean).join(' || '));
+}
+
+function normalizeCourtDoc(doc) {
+  if (!doc || typeof doc !== 'object' || !doc.doc_id) return null;
+  return {
+    doc_id: String(doc.doc_id),
+    type: compactText(doc.type) || 'Судовий акт',
+    date: compactText(doc.date) || null,
+    court: compactText(doc.court),
+    url: compactText(doc.url),
+  };
+}
+
+function normalizeCourtChallenge(value) {
+  if (!value || typeof value !== 'object' || value.has_challenge !== true) return null;
+  const cases = (Array.isArray(value.cases) ? value.cases : [])
+    .filter((item) => item && item.case_number)
+    .map((item) => ({
+      case_number: compactText(item.case_number),
+      challenger: compactText(item.challenger),
+      status: compactText(item.status) || 'ongoing',
+      status_label: compactText(item.status_label),
+      status_detail: compactText(item.status_detail),
+      result_summary: compactText(item.result_summary),
+      latest_merits: normalizeCourtDoc(item.latest_merits),
+      latest_relevant: normalizeCourtDoc(item.latest_relevant),
+    }));
+
+  return {
+    has_challenge: true,
+    display_status: compactText(value.display_status) || 'ongoing',
+    display_status_label: compactText(value.display_status_label) || 'Оскарження триває',
+    primary_case_number: compactText(value.primary_case_number) || cases[0]?.case_number || '',
+    cases_count: Number(value.cases_count) || cases.length,
+    display_url: compactText(value.display_url),
+    latest_merits: normalizeCourtDoc(value.latest_merits),
+    latest_relevant: normalizeCourtDoc(value.latest_relevant),
+    cases,
+  };
 }
 
 function sumSanctions(row) {
   return (row.sanction_amounts || []).reduce((acc, item) => acc + (Number(item?.amount_uah) || 0), 0);
 }
 
-function normalizeRow(row) {
+function normalizeRow(row, courtChallengeRaw = null) {
   const lawFamily = row.classification?.law_family || row.law_area || 'other';
   const primaryCode = row.primary_code || row.classification?.primary_code || 'other';
   const primaryLabel = row.primary_label || row.classification?.primary_label || 'Без класифікації';
@@ -116,6 +176,7 @@ function normalizeRow(row) {
   const unfairArticles = Array.isArray(row.classification?.unfair_competition_articles)
     ? row.classification.unfair_competition_articles
     : [];
+  const courtChallenge = normalizeCourtChallenge(courtChallengeRaw);
 
   const out = {
     decision_key: row.decision_key || `${row.decision_date || ''}|${row.decision_number || ''}`,
@@ -157,7 +218,8 @@ function normalizeRow(row) {
       resource_id: row.source_resource_id || null
     },
     analyzed_at: row.analyzed_at || row.analysis?.analyzed_at || null,
-    search_blob: buildSearchBlob(row),
+    court_challenge: courtChallenge,
+    search_blob: buildSearchBlob(row, courtChallenge),
   };
 
   out.sort_key = `${out.decision_date || '9999-99-99'}|${out.decision_number || ''}`;
@@ -186,7 +248,14 @@ function compareCodes(a, b) {
 async function main() {
   const sourcePath = (await fileExists(PRACTICE_PATH)) ? PRACTICE_PATH : FALLBACK_RESULTS_PATH;
   const raw = await readJson(sourcePath, []);
-  const practice = (raw || []).map(normalizeRow).sort((a, b) => String(a.sort_key).localeCompare(String(b.sort_key), 'uk'));
+  const courtRegistry = await readJson(COURT_CHALLENGES_PATH, { decisions: {} });
+  const courtByDecision = (courtRegistry && typeof courtRegistry.decisions === 'object' && courtRegistry.decisions)
+    ? courtRegistry.decisions
+    : {};
+  const practice = (raw || []).map((row) => {
+    const decisionKey = row.decision_key || `${row.decision_date || ''}|${row.decision_number || ''}`;
+    return normalizeRow(row, courtByDecision[decisionKey] || null);
+  }).sort((a, b) => String(a.sort_key).localeCompare(String(b.sort_key), 'uk'));
 
   const years = [...new Set(practice.map((r) => r.year).filter(Boolean))].sort((a, b) => b - a);
   const byCode = new Map();
@@ -206,6 +275,11 @@ async function main() {
   }
 
   const categories = [...byCode.values()].sort(compareCodes);
+  const courtChallengedDecisions = practice.filter((row) => row.court_challenge?.has_challenge);
+  const courtChallengeCases = courtChallengedDecisions.reduce(
+    (acc, row) => acc + (Number(row.court_challenge?.cases_count) || row.court_challenge?.cases?.length || 0),
+    0
+  );
 
   const index = {
     updated_at: new Date().toISOString(),
@@ -219,6 +293,12 @@ async function main() {
       other: byFamily.get('other') || 0
     },
     categories,
+    court_challenges: {
+      updated_at: courtRegistry?.updated_at || null,
+      challenged_decisions: courtChallengedDecisions.length,
+      cases: courtChallengeCases,
+      source_years: Array.isArray(courtRegistry?.source_years) ? courtRegistry.source_years : [],
+    },
     newest_decision_date: practice.at(-1)?.decision_date || null,
     oldest_decision_date: practice[0]?.decision_date || null,
   };
@@ -231,6 +311,8 @@ async function main() {
   console.log(`- ${INDEX_OUT}`);
   console.log(`Rows: ${practice.length}`);
   console.log(`Categories: ${categories.length}`);
+  console.log(`Court-challenged decisions: ${courtChallengedDecisions.length}`);
+  console.log(`Court challenge cases: ${courtChallengeCases}`);
 }
 
 main().catch((err) => {
