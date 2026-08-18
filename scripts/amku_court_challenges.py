@@ -3264,10 +3264,10 @@ def main() -> int:
             latest_merits_payload = row.get("latest_merits") or None
             if not latest_merits_payload:
                 continue
-            latest_active: DocRow | None = entry.get("latest_active")
-            if not latest_active or not latest_active.doc_id:
+            latest_active_doc: DocRow | None = entry.get("latest_active_doc")
+            if not latest_active_doc or not latest_active_doc.doc_id:
                 continue
-            if latest_active.doc_id == clean(latest_merits_payload.get("doc_id")):
+            if latest_active_doc.doc_id == clean(latest_merits_payload.get("doc_id")):
                 continue
 
             docs: list[DocRow] = entry["docs"]
@@ -3275,12 +3275,12 @@ def main() -> int:
                 (d for d in docs if d.doc_id == clean(latest_merits_payload.get("doc_id"))),
                 None,
             )
-            if not merits_doc or doc_sort_key(latest_active) <= doc_sort_key(merits_doc):
+            if not merits_doc or doc_sort_key(latest_active_doc) <= doc_sort_key(merits_doc):
                 continue
 
             try:
                 status_text, status_meta = fetch_doc_text(
-                    latest_active,
+                    latest_active_doc,
                     cache_dir / "texts",
                     args.request_timeout,
                     args.retries,
@@ -3298,8 +3298,8 @@ def main() -> int:
                 fetch_errors.append({
                     "cause_num": row["cause_num"],
                     "role": "current_status_verification",
-                    "doc_id": latest_active.doc_id,
-                    "doc_url": latest_active.doc_url,
+                    "doc_id": latest_active_doc.doc_id,
+                    "doc_url": latest_active_doc.doc_url,
                     "error": str(exc),
                     "attempts": exc.attempts if isinstance(exc, DocumentFetchError) else [],
                 })
@@ -3311,9 +3311,9 @@ def main() -> int:
                     "decision_date": row["decision_date"],
                     "liable_parties": row["liable_parties"],
                     "cause_num": row["cause_num"],
-                    "court": courts.get(latest_active.court_code, row["court"]),
-                    "matched_on_doc_id": latest_active.doc_id,
-                    "not_processed_reason": f"Could not fetch newer court act {latest_active.doc_id} for current-status verification.",
+                    "court": courts.get(latest_active_doc.court_code, row["court"]),
+                    "matched_on_doc_id": latest_active_doc.doc_id,
+                    "not_processed_reason": f"Could not fetch newer court act {latest_active_doc.doc_id} for current-status verification.",
                 })
                 continue
 
@@ -3331,7 +3331,7 @@ def main() -> int:
                 stage="current_status",
                 year=year,
                 cause_num=row["cause_num"],
-                doc_id=latest_active.doc_id,
+                doc_id=latest_active_doc.doc_id,
                 decision_key=row["decision_key"],
                 model=gemini_model,
                 version=CURRENT_STATUS_CACHE_VERSION,
@@ -3350,8 +3350,8 @@ def main() -> int:
                         "decision_date": row["decision_date"],
                         "liable_parties": row["liable_parties"],
                         "cause_num": row["cause_num"],
-                        "court": courts.get(latest_active.court_code, row["court"]),
-                        "matched_on_doc_id": latest_active.doc_id,
+                        "court": courts.get(latest_active_doc.court_code, row["court"]),
+                        "matched_on_doc_id": latest_active_doc.doc_id,
                         "not_processed_reason": "Current-status verification skipped by --skip-gemini and no checkpoint exists.",
                     })
                     continue
@@ -3364,8 +3364,8 @@ def main() -> int:
                         "decision_date": row["decision_date"],
                         "liable_parties": row["liable_parties"],
                         "cause_num": row["cause_num"],
-                        "court": courts.get(latest_active.court_code, row["court"]),
-                        "matched_on_doc_id": latest_active.doc_id,
+                        "court": courts.get(latest_active_doc.court_code, row["court"]),
+                        "matched_on_doc_id": latest_active_doc.doc_id,
                         "not_processed_reason": "GEMINI_API_KEY is unavailable for uncached current-status verification.",
                     })
                     continue
@@ -3378,8 +3378,8 @@ def main() -> int:
                         "decision_date": row["decision_date"],
                         "liable_parties": row["liable_parties"],
                         "cause_num": row["cause_num"],
-                        "court": courts.get(latest_active.court_code, row["court"]),
-                        "matched_on_doc_id": latest_active.doc_id,
+                        "court": courts.get(latest_active_doc.court_code, row["court"]),
+                        "matched_on_doc_id": latest_active_doc.doc_id,
                         "not_processed_reason": f"Gemini current-status call budget exceeded ({args.max_current_status_gemini_calls}).",
                     })
                     continue
@@ -3388,14 +3388,14 @@ def main() -> int:
                 current_status_gemini_calls += 1
                 log(
                     f"Gemini current status {current_status_gemini_calls}/{args.max_current_status_gemini_calls}: "
-                    f"case {row['cause_num']}; decision {row['decision_number']}; doc {latest_active.doc_id}"
+                    f"case {row['cause_num']}; decision {row['decision_number']}; doc {latest_active_doc.doc_id}"
                 )
                 try:
                     verification = verify_current_status_with_gemini(
                         row["cause_num"],
-                        courts.get(latest_active.court_code, row["court"]),
-                        latest_active,
-                        judgment_forms.get(latest_active.judgment_code, ""),
+                        courts.get(latest_active_doc.court_code, row["court"]),
+                        latest_active_doc,
+                        judgment_forms.get(latest_active_doc.judgment_code, ""),
                         latest_merits_payload,
                         candidate_for_status,
                         status_text,
@@ -3411,7 +3411,7 @@ def main() -> int:
                         stage="current_status",
                         year=year,
                         cause_num=row["cause_num"],
-                        doc_id=latest_active.doc_id,
+                        doc_id=latest_active_doc.doc_id,
                         decision_key=row["decision_key"],
                         model=gemini_model,
                         version=CURRENT_STATUS_CACHE_VERSION,
@@ -3425,7 +3425,7 @@ def main() -> int:
                     gemini_errors.append({
                         "stage": "current_status_verification",
                         "cause_num": row["cause_num"],
-                        "doc_id": latest_active.doc_id,
+                        "doc_id": latest_active_doc.doc_id,
                         "decision_number": row["decision_number"],
                         "error": str(exc),
                     })
@@ -3437,8 +3437,8 @@ def main() -> int:
                         "decision_date": row["decision_date"],
                         "liable_parties": row["liable_parties"],
                         "cause_num": row["cause_num"],
-                        "court": courts.get(latest_active.court_code, row["court"]),
-                        "matched_on_doc_id": latest_active.doc_id,
+                        "court": courts.get(latest_active_doc.court_code, row["court"]),
+                        "matched_on_doc_id": latest_active_doc.doc_id,
                         "not_processed_reason": f"Gemini current-status verification error: {str(exc)[:300]}",
                     })
                     continue
@@ -3451,10 +3451,10 @@ def main() -> int:
                 "cause_num": row["cause_num"],
                 "prior_merits_doc_id": clean(latest_merits_payload.get("doc_id")),
                 "prior_merits_date": clean(latest_merits_payload.get("date")),
-                "newer_doc_id": latest_active.doc_id,
-                "newer_doc_date": date_only(latest_active.adjudication_date),
-                "newer_doc_form": judgment_forms.get(latest_active.judgment_code, ""),
-                "newer_doc_court": courts.get(latest_active.court_code, ""),
+                "newer_doc_id": latest_active_doc.doc_id,
+                "newer_doc_date": date_only(latest_active_doc.adjudication_date),
+                "newer_doc_form": judgment_forms.get(latest_active_doc.judgment_code, ""),
+                "newer_doc_court": courts.get(latest_active_doc.court_code, ""),
                 "source": f"current_status_{verification_source}",
                 "status": status_code,
                 "confidence": verification.get("gemini_confidence", ""),
@@ -3468,7 +3468,7 @@ def main() -> int:
                 "status": status_code,
                 "confidence": verification.get("gemini_confidence", ""),
                 "reason": verification.get("reason", ""),
-                "doc_id": latest_active.doc_id,
+                "doc_id": latest_active_doc.doc_id,
             }
 
             if status_code == "INVALIDATES_PRIOR":
