@@ -899,3 +899,172 @@ body.reading-mode .detail-card {
     line-height: 1.35;
   }
 }
+
+/* Court challenge enrichment */
+.result-title-tools {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.court-gavel {
+  width: 31px;
+  height: 31px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.court-gavel svg,
+.court-challenge-head-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.court-gavel:hover {
+  transform: translateY(-1px);
+}
+
+.court-gavel.ongoing,
+.court-challenge-card.ongoing {
+  --court-color: #a86700;
+  --court-soft: rgba(245, 158, 11, 0.12);
+  --court-border: rgba(217, 119, 6, 0.24);
+}
+
+.court-gavel.upheld,
+.court-challenge-card.upheld {
+  --court-color: #087a55;
+  --court-soft: rgba(16, 185, 129, 0.11);
+  --court-border: rgba(5, 150, 105, 0.23);
+}
+
+.court-gavel.overturned,
+.court-challenge-card.overturned {
+  --court-color: #c0392b;
+  --court-soft: rgba(220, 38, 38, 0.09);
+  --court-border: rgba(220, 38, 38, 0.22);
+}
+
+.court-gavel {
+  color: var(--court-color);
+  background: var(--court-soft);
+  border-color: var(--court-border);
+}
+
+.court-gavel:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--court-color) 20%, transparent);
+  outline-offset: 2px;
+}
+
+.decision-side {
+  width: min(390px, 40vw);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.decision-side .decision-actions {
+  max-width: none;
+}
+
+.court-challenge-card {
+  padding: 12px 13px;
+  border: 1px solid var(--court-border);
+  border-radius: 15px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), var(--court-soft));
+  box-shadow: 0 6px 16px rgba(16, 24, 40, 0.045);
+  color: var(--text-soft);
+  font-size: 12.5px;
+  line-height: 1.42;
+}
+
+.court-challenge-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  color: var(--court-color);
+}
+
+.court-challenge-head strong {
+  color: var(--court-color);
+  font-size: 13px;
+  letter-spacing: .01em;
+}
+
+.court-challenge-head-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.court-challenge-line + .court-challenge-line {
+  margin-top: 5px;
+}
+
+.court-challenge-line > span:first-child {
+  color: var(--muted);
+}
+
+.court-challenge-line strong {
+  color: var(--text);
+  font-weight: 750;
+}
+
+.court-challenge-act a {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.court-challenge-act a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1180px) {
+  .decision-side {
+    width: 100%;
+    max-width: none;
+  }
+
+  .court-challenge-card {
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 780px) {
+  .result-title-row {
+    gap: 8px;
+  }
+
+  .result-title-tools {
+    gap: 6px;
+  }
+
+  .court-gavel {
+    width: 29px;
+    height: 29px;
+  }
+
+  .court-challenge-card {
+    max-width: none;
+    padding: 12px;
+  }
+}
