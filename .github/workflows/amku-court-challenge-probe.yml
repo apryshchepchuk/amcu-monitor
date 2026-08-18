@@ -30,7 +30,7 @@ name: AMCU Court Challenge Probe
       max_gemini_calls:
         description: "Maximum Gemini classification calls"
         required: false
-        default: "30"
+        default: "50"
 
       skip_gemini:
         description: "Diagnostic only: find candidates without Gemini classification"
