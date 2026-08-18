@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "amku-court-challenge-probe/0.5"
+USER_AGENT = "amku-court-challenge-probe/0.6"
 PASSPORT_URL_TEMPLATE = "https://dsa.court.gov.ua/open_data_json.php?json={dataset_id}"
 DATASET_IDS = {2025: 879, 2026: 7636}
 PUBLIC_EDRSR_URL = "https://reyestr.court.gov.ua/Review/{doc_id}"
@@ -155,7 +155,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--request-delay-ms", type=int, default=0)
     p.add_argument("--request-timeout", type=int, default=45)
     p.add_argument("--retries", type=int, default=4)
-    p.add_argument("--max-gemini-calls", type=int, default=50)
+    p.add_argument("--max-gemini-calls", type=int, default=180, help="Maximum Gemini calls for challenge classification.")
+    p.add_argument("--max-merits-gemini-calls", type=int, default=100, help="Maximum Gemini calls for merits verification after a challenge is confirmed.")
     p.add_argument("--gemini-rpm-limit", type=int, default=5)
     p.add_argument("--gemini-max-text-chars", type=int, default=30000)
     p.add_argument("--skip-gemini", action="store_true")
@@ -814,6 +815,16 @@ def latest_merits(docs: list[DocRow], judgment_forms: dict[str, str]) -> DocRow 
     return max(merits, key=doc_sort_key) if merits else None
 
 
+def merits_docs_desc(docs: list[DocRow], judgment_forms: dict[str, str]) -> list[DocRow]:
+    """Return all active Рішення/Постанови newest first.
+
+    This is only a form-based candidate list. Whether a particular act actually resolves the
+    AMCU challenge on the merits is verified separately by Gemini.
+    """
+    merits = [d for d in docs if d.status == "1" and is_merits_doc(d, judgment_forms)]
+    return sorted(merits, key=doc_sort_key, reverse=True)
+
+
 def latest_active(docs: list[DocRow]) -> DocRow | None:
     active = [d for d in docs if d.status == "1"]
     return max(active, key=doc_sort_key) if active else None
@@ -977,6 +988,7 @@ def build_gemini_prompt(
     cause_num: str,
     court_name: str,
     doc: DocRow,
+    current_doc_form: str,
     candidates: list[dict[str, Any]],
     text_excerpt: str,
 ) -> str:
@@ -993,16 +1005,23 @@ def build_gemini_prompt(
     ]
     return f"""Ти аналізуєш текст судового документа з ЄДРСР для бази практики АМКУ.
 
-ЗАВДАННЯ:
-Для КОЖНОГО candidate визнач лише YES або NO: чи є саме зазначене рішення АМКУ ПРЕДМЕТОМ СУДОВОГО ОСКАРЖЕННЯ У ПОТОЧНІЙ СУДОВІЙ СПРАВІ {cause_num}.
+ЗАВДАННЯ 1 — ОСКАРЖЕННЯ:
+Для КОЖНОГО candidate визнач лише YES або NO: чи є САМЕ зазначене рішення АМКУ БЕЗПОСЕРЕДНІМ ПРЕДМЕТОМ СУДОВОГО ОСКАРЖЕННЯ У ПОТОЧНІЙ СУДОВІЙ СПРАВІ {cause_num}.
 
-Важливо:
+Критерії:
 - Формулювання позовної вимоги може бути будь-яким: визнання незаконним, протиправним, неправомірним, недійсним, скасування, оскарження, повністю або в частині тощо. НЕ вимагай конкретної сталої фрази.
-- YES: поточна справа спрямована на судову перевірку/оспорювання саме цього рішення АМКУ, повністю або в частині.
-- NO: рішення лише згадується як передумова, доказ, історія іншої справи; або поточна справа стосується стягнення штрафу/пені, виконання рішення чи іншої вимоги, а саме рішення тут не оскаржується.
-- Якщо оскаржується інше рішення АМКУ, а candidate лише згадується або був ним підтверджений/залишений без змін, поверни NO.
+- YES: у поточній справі суд безпосередньо перевіряє законність/дійсність саме candidate decision, повністю або в частині.
+- NO: candidate decision лише згадується як передумова, доказ, історія іншої справи, підстава для штрафу/пені/виконання або інший контекст, але саме воно не є предметом вимоги про судовий перегляд у цій справі.
+- ОСОБЛИВО ВАЖЛИВО: якщо позивач у цій справі оскаржує ІНШЕ рішення АМКУ (наприклад, рішення за скаргою/переглядом), яким candidate decision було залишено без змін, підтверджено, змінено, переглянуто або щодо нього відмовлено в перегляді, для candidate decision поверни NO. Навіть якщо результат справи може фактично вплинути на candidate decision.
 - Збіг повного номера рішення вже перевірений кодом. Назва порушника і дата — лише допоміжні ознаки.
 - Обов'язково дай YES або NO для кожного candidate. Не використовуй UNCERTAIN/RELATED або інші статуси.
+
+ЗАВДАННЯ 2 — ЧИ ВИРІШУЄ ЦЕЙ АКТ СПІР ПО СУТІ:
+Для кожного candidate з classification=YES також визнач current_document_resolves_merits=true/false.
+- true ТІЛЬКИ якщо САМЕ ЦЕЙ судовий акт вирішує по суті вимогу щодо законності/дійсності candidate decision (наприклад, позов задоволено/відмовлено у позові щодо цього рішення; апеляція/касація по суті залишила, змінила або скасувала таке рішення суду).
+- false для актів про відкриття/повернення позову, залишення без розгляду, строки, забезпечення позову, зупинення/поновлення, підсудність/юрисдикцію, виправлення описки, судові витрати, виконання, процесуальну апеляцію на ухвалу тощо.
+- Якщо classification=NO, current_document_resolves_merits має бути false.
+- Не роби true лише через те, що форма документа називається «Рішення» або «Постанова»: оцінюй зміст.
 
 Поверни ТІЛЬКИ валідний JSON без markdown:
 {{
@@ -1012,7 +1031,9 @@ def build_gemini_prompt(
       "classification": "YES|NO",
       "confidence": "high|medium|low",
       "challenger": "коротка назва позивача/скаржника або порожньо",
-      "reason": "дуже коротко, чому"
+      "current_document_resolves_merits": true,
+      "reason": "дуже коротко, чому YES/NO щодо оскарження",
+      "merits_reason": "дуже коротко, чому цей акт вирішує або не вирішує спір по суті"
     }}
   ]
 }}
@@ -1020,6 +1041,7 @@ def build_gemini_prompt(
 Суд: {court_name}
 Номер поточної справи: {cause_num}
 Дата документа: {doc.adjudication_date}
+Форма документа за metadata: {current_doc_form}
 Doc ID: {doc.doc_id}
 
 CANDIDATES:
@@ -1028,6 +1050,49 @@ CANDIDATES:
 ТЕКСТ СУДОВОГО ДОКУМЕНТА:
 {text_excerpt}
 """
+
+
+def build_merits_verification_prompt(
+    cause_num: str,
+    court_name: str,
+    doc: DocRow,
+    doc_form: str,
+    candidate: dict[str, Any],
+    text_excerpt: str,
+) -> str:
+    compact_candidate = {
+        "candidate_id": candidate["candidate_id"],
+        "decision_number": candidate["decision_number"],
+        "decision_date": candidate["decision_date"],
+        "liable_parties": candidate["liable_parties"],
+    }
+    return f"""Ти перевіряєш, чи конкретний судовий акт є рішенням ПО СУТІ щодо оскарження конкретного рішення АМКУ.
+
+Поточна судова справа: {cause_num}
+Суд: {court_name}
+Дата акта: {doc.adjudication_date}
+Форма за metadata: {doc_form}
+Doc ID: {doc.doc_id}
+
+Рішення АМКУ:
+{json.dumps(compact_candidate, ensure_ascii=False, indent=2)}
+
+Поверни resolves_merits=YES ТІЛЬКИ якщо саме цей судовий акт вирішує по суті вимогу про законність/дійсність зазначеного рішення АМКУ, повністю або в частині.
+Поверни NO, якщо акт є процесуальним: відкриття/повернення позову, залишення без розгляду, строки, забезпечення, зупинення/поновлення, підсудність/юрисдикція, виправлення, судові витрати, виконання, апеляція/касація лише щодо процесуальної ухвали тощо.
+Якщо акт вирішує по суті апеляцію або касацію щодо попереднього рішення суду, яким по суті розглядалось оскарження цього рішення АМКУ, це YES.
+Якщо акт стосується іншого рішення АМКУ, а candidate лише згадується/був залишений без змін іншим рішенням, це NO.
+
+Поверни ТІЛЬКИ валідний JSON без markdown:
+{{
+  "resolves_merits": "YES|NO",
+  "confidence": "high|medium|low",
+  "reason": "дуже коротко, чому"
+}}
+
+ТЕКСТ СУДОВОГО АКТА:
+{text_excerpt}
+"""
+
 
 def parse_json_loose(text: str) -> Any:
     s = clean(text)
@@ -1107,6 +1172,7 @@ def classify_candidates_with_gemini(
     cause_num: str,
     court_name: str,
     doc: DocRow,
+    current_doc_form: str,
     candidates: list[dict[str, Any]],
     text: str,
     api_key: str,
@@ -1116,7 +1182,14 @@ def classify_candidates_with_gemini(
     max_text_chars: int,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], str]:
     excerpt = text_excerpt_for_gemini(text, candidates, max_text_chars)
-    prompt = build_gemini_prompt(cause_num, court_name, doc, candidates, excerpt)
+    prompt = build_gemini_prompt(
+        cause_num,
+        court_name,
+        doc,
+        current_doc_form,
+        candidates,
+        excerpt,
+    )
     response = gemini_generate_json(prompt, api_key, model, timeout, retries)
     results = response.get("results")
     if not isinstance(results, list):
@@ -1144,11 +1217,17 @@ def classify_candidates_with_gemini(
         conf = clean(item.get("confidence")).lower()
         if conf not in {"high", "medium", "low"}:
             conf = "low"
+        resolves_raw = item.get("current_document_resolves_merits", False)
+        resolves_merits = resolves_raw is True or clean(resolves_raw).lower() in {"true", "yes", "1"}
+        if cls == "NO":
+            resolves_merits = False
         classified.append({
             **by_id[cid],
             "classification": cls,
             "gemini_confidence": conf,
             "challenger": clean(item.get("challenger")),
+            "current_document_resolves_merits": resolves_merits,
+            "current_document_merits_reason": clean(item.get("merits_reason"))[:600],
             "reason": clean(item.get("reason"))[:600],
         })
 
@@ -1160,6 +1239,46 @@ def classify_candidates_with_gemini(
             })
 
     return classified, not_processed, excerpt
+
+
+def verify_merits_doc_with_gemini(
+    cause_num: str,
+    court_name: str,
+    doc: DocRow,
+    doc_form: str,
+    candidate: dict[str, Any],
+    text: str,
+    api_key: str,
+    model: str,
+    timeout: int,
+    retries: int,
+    max_text_chars: int,
+) -> dict[str, Any]:
+    excerpt = text_excerpt_for_gemini(text, [candidate], max_text_chars)
+    prompt = build_merits_verification_prompt(
+        cause_num,
+        court_name,
+        doc,
+        doc_form,
+        candidate,
+        excerpt,
+    )
+    response = gemini_generate_json(prompt, api_key, model, timeout, retries)
+    value = clean(response.get("resolves_merits")).upper()
+    if value not in {"YES", "NO"}:
+        raise RuntimeError(
+            f"Gemini merits JSON has invalid resolves_merits: {json.dumps(response, ensure_ascii=False)[:1000]}"
+        )
+    conf = clean(response.get("confidence")).lower()
+    if conf not in {"high", "medium", "low"}:
+        conf = "low"
+    return {
+        "resolves_merits": value == "YES",
+        "gemini_confidence": conf,
+        "reason": clean(response.get("reason"))[:600],
+        "excerpt": excerpt,
+    }
+
 
 def csv_cell(v: Any) -> str:
     if v is None:
@@ -1207,6 +1326,7 @@ def main() -> int:
         "negative_prefilter_hits": [],
         "negative_prefilter_bypassed_fallback": [],
         "gemini_results": [],
+        "merits_verification": [],
         "not_processed": [],
         "fetch_failures": [],
     }
@@ -1227,6 +1347,7 @@ def main() -> int:
         "fetch_errors": 0,
         "primary_documents": 0,
         "fallback_documents": 0,
+        "merits_documents": 0,
         "fallback_candidate_cases": 0,
         "candidate_documents_before_negative_filter": 0,
         "candidate_pairs_before_negative_filter": 0,
@@ -1556,6 +1677,7 @@ def main() -> int:
                             "primary_kind": result["primary_kind"],
                             "negative_prefilter": negative,
                             "latest_merits": merits,
+                            "docs": docs,
                         }
                         candidate_docs.append(entry)
                         text_cache_for_gemini[doc.doc_id] = result["candidate_text"]
@@ -1628,15 +1750,28 @@ def main() -> int:
         no_rows: list[dict[str, Any]] = []
         not_processed_rows: list[dict[str, Any]] = []
         gemini_errors: list[dict[str, Any]] = []
+        merits_verification_rows: list[dict[str, Any]] = []
+        yes_work_items: list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]] = []
+
         gemini_calls = 0
+        merits_gemini_calls = 0
         min_call_interval = 60.0 / max(1, args.gemini_rpm_limit) if args.gemini_rpm_limit > 0 else 0.0
         last_call_started = 0.0
 
+        def wait_for_gemini_slot() -> None:
+            nonlocal last_call_started
+            elapsed = time.monotonic() - last_call_started
+            if last_call_started and min_call_interval > 0 and elapsed < min_call_interval:
+                time.sleep(min_call_interval - elapsed)
+            last_call_started = time.monotonic()
+
+        # Stage 1: determine whether each candidate AMCU decision is directly challenged in the case.
         for entry in candidate_docs:
             doc: DocRow = entry["doc"]
-            merits: DocRow | None = entry["latest_merits"]
+            raw_latest_form: DocRow | None = entry["latest_merits"]
             text = text_cache_for_gemini.get(doc.doc_id, "")
             candidates = entry["candidates"]
+            current_doc_form = judgment_forms.get(doc.judgment_code, "")
 
             classified: list[dict[str, Any]] = []
             technical_not_processed: list[dict[str, Any]] = []
@@ -1648,24 +1783,22 @@ def main() -> int:
                 ]
             elif gemini_calls >= args.max_gemini_calls:
                 technical_not_processed = [
-                    {**c, "not_processed_reason": f"Gemini call budget exceeded ({args.max_gemini_calls})."}
+                    {**c, "not_processed_reason": f"Gemini challenge-classification call budget exceeded ({args.max_gemini_calls})."}
                     for c in candidates
                 ]
             else:
-                elapsed = time.monotonic() - last_call_started
-                if last_call_started and min_call_interval > 0 and elapsed < min_call_interval:
-                    time.sleep(min_call_interval - elapsed)
-                last_call_started = time.monotonic()
+                wait_for_gemini_slot()
                 gemini_calls += 1
                 log(
-                    f"Gemini {gemini_calls}/{args.max_gemini_calls}: case {entry['cause_num']}; "
-                    f"candidate(s)={len(candidates)}"
+                    f"Gemini challenge {gemini_calls}/{args.max_gemini_calls}: "
+                    f"case {entry['cause_num']}; candidate(s)={len(candidates)}"
                 )
                 try:
                     classified, technical_not_processed, _excerpt = classify_candidates_with_gemini(
                         entry["cause_num"],
                         entry["court"],
                         doc,
+                        current_doc_form,
                         candidates,
                         text,
                         api_key,
@@ -1676,13 +1809,14 @@ def main() -> int:
                     )
                 except Exception as exc:  # noqa: BLE001
                     gemini_errors.append({
+                        "stage": "challenge_classification",
                         "cause_num": entry["cause_num"],
                         "doc_id": doc.doc_id,
                         "error": str(exc),
                         "candidates": candidates,
                     })
                     technical_not_processed = [
-                        {**c, "not_processed_reason": f"Gemini error: {str(exc)[:300]}"}
+                        {**c, "not_processed_reason": f"Gemini challenge-classification error: {str(exc)[:300]}"}
                         for c in candidates
                     ]
 
@@ -1697,6 +1831,8 @@ def main() -> int:
                     "gemini_confidence": result["gemini_confidence"],
                     "challenger": result["challenger"],
                     "reason": result["reason"],
+                    "current_document_resolves_merits": result.get("current_document_resolves_merits", False),
+                    "current_document_merits_reason": result.get("current_document_merits_reason", ""),
                     "cause_num": entry["cause_num"],
                     "matched_on_doc_id": doc.doc_id,
                     "matched_on_source": entry["candidate_source"],
@@ -1705,21 +1841,30 @@ def main() -> int:
                     "court": entry["court"],
                     "category_code": entry["category_code"],
                     "category_name": entry["category_name"],
-                    "latest_merits_doc_id": merits.doc_id if merits else "",
-                    "latest_merits_type": judgment_forms.get(merits.judgment_code, "") if merits else "",
-                    "latest_merits_date": merits.adjudication_date if merits else "",
-                    "latest_merits_url": PUBLIC_EDRSR_URL.format(doc_id=merits.doc_id) if merits else "",
-                    "challenge_status": "merits_found" if merits else "pending_no_merits",
+                    # Form-based latest Рішення/Постанова from metadata. This is NOT yet treated as merits.
+                    "latest_form_doc_id": raw_latest_form.doc_id if raw_latest_form else "",
+                    "latest_form_type": judgment_forms.get(raw_latest_form.judgment_code, "") if raw_latest_form else "",
+                    "latest_form_date": raw_latest_form.adjudication_date if raw_latest_form else "",
+                    # These fields are populated only after substantive-merits verification.
+                    "latest_merits_doc_id": "",
+                    "latest_merits_type": "",
+                    "latest_merits_date": "",
+                    "latest_merits_url": "",
+                    "merits_gemini_confidence": "",
+                    "merits_reason": "",
+                    "challenge_status": "",
                 }
                 if row["classification"] == "YES":
                     yes_rows.append(row)
+                    yes_work_items.append((row, result, entry))
                 else:
                     no_rows.append(row)
                 if focus_norm and normalized_number(row["decision_number"]) == focus_norm:
-                    focus_debug["gemini_results"].append(row)
+                    focus_debug["gemini_results"].append(dict(row))
 
             for result in technical_not_processed:
                 row = {
+                    "stage": "challenge_classification",
                     "decision_number": result["decision_number"],
                     "decision_date": result["decision_date"],
                     "liable_parties": result["liable_parties"],
@@ -1736,6 +1881,200 @@ def main() -> int:
                 not_processed_rows.append(row)
                 if focus_norm and normalized_number(row["decision_number"]) == focus_norm:
                     focus_debug["not_processed"].append(row)
+
+        # Stage 2: for each confirmed challenge, find the newest Рішення/Постанова that actually
+        # resolves the challenge on the merits. A form label alone is not enough.
+        for row, result, entry in yes_work_items:
+            docs: list[DocRow] = entry["docs"]
+            form_docs = merits_docs_desc(docs, judgment_forms)
+            current_doc: DocRow = entry["doc"]
+            current_is_latest_form = bool(form_docs and form_docs[0].doc_id == current_doc.doc_id)
+
+            if not form_docs:
+                row["challenge_status"] = "pending_no_merits"
+                row["merits_reason"] = "No active Рішення/Постанова exists in EDRSR metadata for this case."
+                continue
+
+            # The challenge-classification call already assessed the current document. If that
+            # document is the newest Рішення/Постанова, reuse that answer and avoid another call.
+            start_index = 0
+            if current_is_latest_form:
+                merits_verification_rows.append({
+                    "decision_number": row["decision_number"],
+                    "decision_date": row["decision_date"],
+                    "cause_num": row["cause_num"],
+                    "doc_id": current_doc.doc_id,
+                    "doc_date": current_doc.adjudication_date,
+                    "doc_form": judgment_forms.get(current_doc.judgment_code, ""),
+                    "source": "reused_challenge_classification",
+                    "resolves_merits": bool(result.get("current_document_resolves_merits", False)),
+                    "confidence": result.get("gemini_confidence", ""),
+                    "reason": result.get("current_document_merits_reason", "") or result.get("reason", ""),
+                })
+                if result.get("current_document_resolves_merits", False):
+                    row["latest_merits_doc_id"] = current_doc.doc_id
+                    row["latest_merits_type"] = judgment_forms.get(current_doc.judgment_code, "")
+                    row["latest_merits_date"] = current_doc.adjudication_date
+                    row["latest_merits_url"] = PUBLIC_EDRSR_URL.format(doc_id=current_doc.doc_id)
+                    row["merits_gemini_confidence"] = result.get("gemini_confidence", "")
+                    row["merits_reason"] = result.get("current_document_merits_reason", "") or result.get("reason", "")
+                    row["challenge_status"] = "merits_found"
+                    if focus_norm and normalized_number(row["decision_number"]) == focus_norm:
+                        focus_debug["merits_verification"].append(merits_verification_rows[-1])
+                    continue
+                start_index = 1
+
+            merits_resolved = False
+            merits_check_interrupted = False
+
+            for merit_doc in form_docs[start_index:]:
+                if args.skip_gemini:
+                    row["challenge_status"] = "merits_not_verified"
+                    row["merits_reason"] = "Merits verification skipped by --skip-gemini."
+                    not_processed_rows.append({
+                        "stage": "merits_verification",
+                        "decision_number": row["decision_number"],
+                        "decision_date": row["decision_date"],
+                        "liable_parties": row["liable_parties"],
+                        "cause_num": row["cause_num"],
+                        "court": row["court"],
+                        "matched_on_doc_id": merit_doc.doc_id,
+                        "not_processed_reason": row["merits_reason"],
+                    })
+                    merits_check_interrupted = True
+                    break
+
+                if merits_gemini_calls >= args.max_merits_gemini_calls:
+                    row["challenge_status"] = "merits_not_verified"
+                    row["merits_reason"] = (
+                        f"Gemini merits-verification call budget exceeded ({args.max_merits_gemini_calls})."
+                    )
+                    not_processed_rows.append({
+                        "stage": "merits_verification",
+                        "decision_number": row["decision_number"],
+                        "decision_date": row["decision_date"],
+                        "liable_parties": row["liable_parties"],
+                        "cause_num": row["cause_num"],
+                        "court": row["court"],
+                        "matched_on_doc_id": merit_doc.doc_id,
+                        "not_processed_reason": row["merits_reason"],
+                    })
+                    merits_check_interrupted = True
+                    break
+
+                try:
+                    merit_text, merit_meta = fetch_doc_text(
+                        merit_doc,
+                        cache_dir / "texts",
+                        args.request_timeout,
+                        args.retries,
+                        args.request_delay_ms,
+                    )
+                    fetch_stats["documents_requested"] += 1
+                    fetch_stats["merits_documents"] += 1
+                    fetch_stats["validated_documents"] += 1
+                    if merit_meta.get("cache_hit"):
+                        fetch_stats["cache_hits"] += 1
+                except Exception as exc:  # noqa: BLE001
+                    fetch_stats["documents_requested"] += 1
+                    fetch_stats["merits_documents"] += 1
+                    fetch_stats["fetch_errors"] += 1
+                    fetch_errors.append({
+                        "cause_num": row["cause_num"],
+                        "role": "merits_verification",
+                        "doc_id": merit_doc.doc_id,
+                        "doc_url": merit_doc.doc_url,
+                        "error": str(exc),
+                        "attempts": exc.attempts if isinstance(exc, DocumentFetchError) else [],
+                    })
+                    row["challenge_status"] = "merits_not_verified"
+                    row["merits_reason"] = f"Could not fetch candidate merits document {merit_doc.doc_id}."
+                    merits_check_interrupted = True
+                    break
+
+                wait_for_gemini_slot()
+                merits_gemini_calls += 1
+                log(
+                    f"Gemini merits {merits_gemini_calls}/{args.max_merits_gemini_calls}: "
+                    f"case {row['cause_num']}; decision {row['decision_number']}; doc {merit_doc.doc_id}"
+                )
+                candidate_for_merits = {
+                    "candidate_id": result["candidate_id"],
+                    "decision_number": row["decision_number"],
+                    "decision_date": row["decision_date"],
+                    "liable_parties": row["liable_parties"],
+                    "strength": row["prefilter_strength"],
+                    "signals": row["signals"],
+                }
+                try:
+                    verification = verify_merits_doc_with_gemini(
+                        row["cause_num"],
+                        row["court"],
+                        merit_doc,
+                        judgment_forms.get(merit_doc.judgment_code, ""),
+                        candidate_for_merits,
+                        merit_text,
+                        api_key,
+                        gemini_model,
+                        args.request_timeout,
+                        args.retries,
+                        args.gemini_max_text_chars,
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    gemini_errors.append({
+                        "stage": "merits_verification",
+                        "cause_num": row["cause_num"],
+                        "doc_id": merit_doc.doc_id,
+                        "decision_number": row["decision_number"],
+                        "error": str(exc),
+                    })
+                    row["challenge_status"] = "merits_not_verified"
+                    row["merits_reason"] = f"Gemini merits-verification error: {str(exc)[:300]}"
+                    not_processed_rows.append({
+                        "stage": "merits_verification",
+                        "decision_number": row["decision_number"],
+                        "decision_date": row["decision_date"],
+                        "liable_parties": row["liable_parties"],
+                        "cause_num": row["cause_num"],
+                        "court": row["court"],
+                        "matched_on_doc_id": merit_doc.doc_id,
+                        "not_processed_reason": row["merits_reason"],
+                    })
+                    merits_check_interrupted = True
+                    break
+
+                verification_row = {
+                    "decision_number": row["decision_number"],
+                    "decision_date": row["decision_date"],
+                    "cause_num": row["cause_num"],
+                    "doc_id": merit_doc.doc_id,
+                    "doc_date": merit_doc.adjudication_date,
+                    "doc_form": judgment_forms.get(merit_doc.judgment_code, ""),
+                    "source": "merits_verification_call",
+                    "resolves_merits": verification["resolves_merits"],
+                    "confidence": verification["gemini_confidence"],
+                    "reason": verification["reason"],
+                }
+                merits_verification_rows.append(verification_row)
+                if focus_norm and normalized_number(row["decision_number"]) == focus_norm:
+                    focus_debug["merits_verification"].append(verification_row)
+
+                if verification["resolves_merits"]:
+                    row["latest_merits_doc_id"] = merit_doc.doc_id
+                    row["latest_merits_type"] = judgment_forms.get(merit_doc.judgment_code, "")
+                    row["latest_merits_date"] = merit_doc.adjudication_date
+                    row["latest_merits_url"] = PUBLIC_EDRSR_URL.format(doc_id=merit_doc.doc_id)
+                    row["merits_gemini_confidence"] = verification["gemini_confidence"]
+                    row["merits_reason"] = verification["reason"]
+                    row["challenge_status"] = "merits_found"
+                    merits_resolved = True
+                    break
+
+            if not merits_resolved and not merits_check_interrupted:
+                row["challenge_status"] = "pending_no_merits"
+                row["merits_reason"] = (
+                    "Active Рішення/Постанови exist, but none of the checked acts resolves the AMCU challenge on the merits."
+                )
 
         sort_key = lambda x: (
             clean(x.get("decision_date")),
@@ -1765,8 +2104,12 @@ def main() -> int:
             for code, count in sorted(justice_stats.items(), key=lambda kv: kv[1], reverse=True)
         ]
 
+        merits_found_count = sum(1 for row in yes_rows if row.get("challenge_status") == "merits_found")
+        pending_no_merits_count = sum(1 for row in yes_rows if row.get("challenge_status") == "pending_no_merits")
+        merits_not_verified_count = sum(1 for row in yes_rows if row.get("challenge_status") == "merits_not_verified")
+
         summary = {
-            "schema": "amku_court_challenge_probe_v5_1",
+            "schema": "amku_court_challenge_probe_v6",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "year": year,
             "dataset_id": dataset_id,
@@ -1786,10 +2129,15 @@ def main() -> int:
             "candidate_documents_sent_to_gemini_queue": len(candidate_docs),
             "candidate_pairs_sent_to_gemini_queue": len(candidate_rows),
             "gemini_model": gemini_model,
-            "gemini_calls": gemini_calls,
-            "gemini_call_limit": args.max_gemini_calls,
+            "challenge_gemini_calls": gemini_calls,
+            "challenge_gemini_call_limit": args.max_gemini_calls,
+            "merits_gemini_calls": merits_gemini_calls,
+            "merits_gemini_call_limit": args.max_merits_gemini_calls,
             "confirmed_challenges": len(yes_rows),
             "rejected_mentions": len(no_rows),
+            "merits_found": merits_found_count,
+            "pending_no_merits": pending_no_merits_count,
+            "merits_not_verified": merits_not_verified_count,
             "not_processed": len(not_processed_rows),
             "gemini_errors": len(gemini_errors),
             "focus_decision": args.focus_decision,
@@ -1803,6 +2151,7 @@ def main() -> int:
         (out_dir / "matches.json").write_text(json.dumps(yes_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "rejected.json").write_text(json.dumps(no_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "not_processed.json").write_text(json.dumps(not_processed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "merits_verification.json").write_text(json.dumps(merits_verification_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "negative_prefilter.json").write_text(json.dumps(negative_prefilter_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "negative_prefilter_bypassed_fallback.json").write_text(json.dumps(negative_prefilter_bypassed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "fetch_errors.json").write_text(json.dumps(fetch_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -1812,9 +2161,11 @@ def main() -> int:
         common_result_columns = [
             "decision_date", "decision_number", "liable_parties", "cause_num", "classification",
             "gemini_confidence", "challenger", "prefilter_strength", "signals", "reason",
-            "court", "category_code", "category_name", "matched_on_doc_id", "matched_on_source",
-            "primary_doc_id", "primary_kind", "challenge_status", "latest_merits_doc_id",
-            "latest_merits_type", "latest_merits_date", "latest_merits_url",
+            "current_document_resolves_merits", "current_document_merits_reason", "court", "category_code", "category_name",
+            "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
+            "latest_form_doc_id", "latest_form_type", "latest_form_date", "challenge_status",
+            "latest_merits_doc_id", "latest_merits_type", "latest_merits_date", "latest_merits_url",
+            "merits_gemini_confidence", "merits_reason",
         ]
         write_csv(out_dir / "matches.csv", yes_rows, common_result_columns)
         write_csv(out_dir / "rejected.csv", no_rows, common_result_columns)
@@ -1822,9 +2173,17 @@ def main() -> int:
             out_dir / "not_processed.csv",
             not_processed_rows,
             [
-                "decision_date", "decision_number", "liable_parties", "cause_num", "prefilter_strength",
+                "stage", "decision_date", "decision_number", "liable_parties", "cause_num", "prefilter_strength",
                 "signals", "court", "matched_on_doc_id", "matched_on_source", "primary_doc_id",
                 "primary_kind", "not_processed_reason",
+            ],
+        )
+        write_csv(
+            out_dir / "merits_verification.csv",
+            merits_verification_rows,
+            [
+                "decision_date", "decision_number", "cause_num", "doc_id", "doc_date", "doc_form",
+                "source", "resolves_merits", "confidence", "reason",
             ],
         )
         write_csv(
@@ -1884,7 +2243,7 @@ def main() -> int:
         write_csv(
             out_dir / "gemini_errors.csv",
             gemini_errors,
-            ["cause_num", "doc_id", "error", "candidates"],
+            ["stage", "cause_num", "doc_id", "decision_number", "error", "candidates"],
         )
 
         focus_md = ""
@@ -1896,23 +2255,28 @@ def main() -> int:
                 f"- Dropped by AMCU-plaintiff negative prefilter: {len(focus_debug['negative_prefilter_hits'])}\n"
                 f"- Negative filter bypassed because match came from earliest fallback: {len(focus_debug['negative_prefilter_bypassed_fallback'])}\n"
                 f"- Gemini-confirmed challenge(s): {len(focus_confirmed)}\n"
+                f"- Merits-verification records: {len(focus_debug['merits_verification'])}\n"
                 f"- Not processed technically/budget: {len(focus_debug['not_processed'])}\n"
             )
             for h in focus_confirmed:
                 focus_md += (
                     f"- case `{h['cause_num']}`, status `{h['challenge_status']}`, "
-                    f"latest merits `{h['latest_merits_doc_id'] or 'none'}`\n"
+                    f"verified merits `{h['latest_merits_doc_id'] or 'none'}`\n"
                 )
 
-        report = f"""# AMCU court challenge probe v5.1 — {year}
+        report = f"""# AMCU court challenge probe v6 — {year}
 
 Generated: {summary['generated_at']}
 
 ## Pipeline
 
-`EDRSR metadata -> active + exact competition category + commercial jurisdiction -> latest merits (else latest active) -> exact AMCU decision number -> cautious same-document AMCU-plaintiff negative prefilter -> Gemini YES/NO`
+`EDRSR metadata -> active + exact competition category + commercial jurisdiction -> latest Рішення/Постанова (else latest active) -> exact AMCU decision number -> cautious same-document AMCU-plaintiff negative prefilter -> Gemini direct-challenge YES/NO -> substantive-merits verification`
 
 If the primary latest document contains no exact AMCU practice decision number, the earliest active document is fetched once as a fallback. A candidate found only in that earliest fallback is never hard-dropped solely because a different later primary document shows AMCU as plaintiff. Party/date matches remain corroborating signals only.
+
+Gemini must classify a candidate as `NO` when the current case directly challenges another AMCU decision and the candidate decision is merely mentioned, including cases where that other decision left the candidate unchanged/confirmed/reviewed it.
+
+A metadata form `Рішення` or `Постанова` is only a candidate merits act. The dashboard-link fields are populated only after Gemini confirms that the particular act actually resolves the legality/validity of the candidate AMCU decision on the merits.
 
 ## Metadata prefilter
 
@@ -1928,9 +2292,10 @@ If the primary latest document contains no exact AMCU practice decision number, 
 
 ## Candidate discovery
 
-- Court texts requested: {fetch_stats['documents_requested']:,}
+- Court texts requested (all stages): {fetch_stats['documents_requested']:,}
 - Primary latest texts: {fetch_stats['primary_documents']:,}
 - Earliest fallback texts: {fetch_stats['fallback_documents']:,}
+- Additional merits-verification texts: {fetch_stats['merits_documents']:,}
 - Cases where fallback found the exact number: {fetch_stats['fallback_candidate_cases']:,}
 - Validated court texts: {fetch_stats['validated_documents']:,}
 - Persistent/cache hits: {fetch_stats['cache_hits']:,}
@@ -1944,16 +2309,27 @@ If the primary latest document contains no exact AMCU practice decision number, 
 - Candidate cases remaining for Gemini queue: {len(candidate_docs):,}
 - Candidate pairs remaining for Gemini queue: {len(candidate_rows):,}
 
-## Gemini classification
+## Gemini challenge classification
 
 - Model: `{gemini_model}`
 - Calls used: {gemini_calls:,}/{args.max_gemini_calls:,}
-- Confirmed challenge pairs (`YES`): {len(yes_rows):,}
-- Rejected mentions (`NO`): {len(no_rows):,}
+- Confirmed direct challenge pairs (`YES`): {len(yes_rows):,}
+- Rejected mentions/indirect cases (`NO`): {len(no_rows):,}
+
+## Substantive merits verification
+
+- Additional Gemini calls: {merits_gemini_calls:,}/{args.max_merits_gemini_calls:,}
+- Confirmed challenges with a verified latest merits act: {merits_found_count:,}
+- Confirmed challenges with no substantive merits act found yet: {pending_no_merits_count:,}
+- Confirmed challenges whose merits check was not completed technically/budget: {merits_not_verified_count:,}
+- Merits-verification audit rows: {len(merits_verification_rows):,}
+
+## Technical completeness
+
 - Not processed because of budget/technical response: {len(not_processed_rows):,}
 - Gemini request errors: {len(gemini_errors):,}
 
-Gemini is required to return only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid classifications are recorded separately in `not_processed.csv`; they are not treated as a legal classification.
+Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid responses are recorded separately in `not_processed.csv`; they are never treated as a legal result.
 {focus_md}
 """
         (out_dir / "report.md").write_text(report, encoding="utf-8")
@@ -1964,9 +2340,11 @@ Gemini is required to return only `YES` or `NO`. Budget exhaustion, API errors, 
     log(
         f"Done: candidates_before_negative={fetch_stats['candidate_pairs_before_negative_filter']}; "
         f"negative_dropped={fetch_stats['negative_prefilter_pairs']}; "
-        f"Gemini_queue={fetch_stats['candidate_pairs']}; Gemini={gemini_calls}; "
-        f"YES={len(yes_rows)}; NO={len(no_rows)}; not_processed={len(not_processed_rows)}; "
-        f"fetch_errors={len(fetch_errors)}"
+        f"Gemini_queue={fetch_stats['candidate_pairs']}; "
+        f"challenge_Gemini={gemini_calls}; merits_Gemini={merits_gemini_calls}; "
+        f"YES={len(yes_rows)}; NO={len(no_rows)}; merits_found={merits_found_count}; "
+        f"pending_no_merits={pending_no_merits_count}; merits_not_verified={merits_not_verified_count}; "
+        f"not_processed={len(not_processed_rows)}; fetch_errors={len(fetch_errors)}"
     )
     log(f"Artifacts: {out_dir}")
     return 0
