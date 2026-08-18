@@ -1,0 +1,248 @@
+name: AMCU Court Challenges
+
+"on":
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "EDRSR year to scan"
+        required: true
+        default: "2026"
+        type: choice
+        options:
+          - "2026"
+          - "2025"
+
+      max_cases:
+        description: "Max prefiltered cases to inspect (0 = all)"
+        required: false
+        default: "0"
+
+      focus_decision:
+        description: "Optional AMCU decision number for diagnostic emphasis"
+        required: false
+        default: "393-р"
+
+      workers:
+        description: "Concurrent EDRSR text fetch workers"
+        required: false
+        default: "4"
+
+      max_gemini_calls:
+        description: "Maximum Gemini calls for direct challenge classification"
+        required: false
+        default: "180"
+
+      max_safeguard_gemini_calls:
+        description: "Maximum second-check calls for weak YES results"
+        required: false
+        default: "20"
+
+      max_merits_gemini_calls:
+        description: "Maximum additional Gemini calls for current substantive-result verification"
+        required: false
+        default: "120"
+
+      replace_year:
+        description: "Replace this year's observations in persistent court registry"
+        required: false
+        default: true
+        type: boolean
+
+      dry_run:
+        description: "Run analysis and upload diagnostics without writing registry/dashboard"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: amku-repo-writes
+  cancel-in-progress: false
+
+jobs:
+  court-challenges:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Restore EDRSR court-text cache
+        uses: actions/cache@v4
+        with:
+          path: data/tmp/amku_court_challenge_cache/v4/texts
+          key: amku-court-texts-v7-${{ inputs.year }}-${{ github.run_id }}
+          restore-keys: |
+            amku-court-texts-v7-${{ inputs.year }}-
+            amku-court-texts-v6-${{ inputs.year }}-
+            amku-court-texts-v5-${{ inputs.year }}-
+            amku-court-texts-v4-${{ inputs.year }}-
+
+      - name: Check scripts syntax
+        run: |
+          python -m py_compile scripts/amku_court_challenges.py
+          node --check scripts/amku_build_dashboard.mjs
+
+      - name: Run court challenge enrichment
+        shell: bash
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+        run: |
+          EXTRA_ARGS=()
+
+          if [ "${{ inputs.replace_year }}" = "true" ]; then
+            EXTRA_ARGS+=(--replace-year)
+          fi
+
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            EXTRA_ARGS+=(--dry-run)
+          fi
+
+          python scripts/amku_court_challenges.py \
+            --year "${{ inputs.year }}" \
+            --practice "data/practice/amku_practice.json" \
+            --registry "data/practice/amku_court_challenges.json" \
+            --out-dir "data/tmp/amku_court_challenges" \
+            --cache-dir "data/tmp/amku_court_challenge_cache/v4" \
+            --max-cases "${{ inputs.max_cases }}" \
+            --focus-decision "${{ inputs.focus_decision }}" \
+            --workers "${{ inputs.workers }}" \
+            --request-delay-ms 0 \
+            --request-timeout 45 \
+            --retries 4 \
+            --max-gemini-calls "${{ inputs.max_gemini_calls }}" \
+            --max-safeguard-gemini-calls "${{ inputs.max_safeguard_gemini_calls }}" \
+            --max-merits-gemini-calls "${{ inputs.max_merits_gemini_calls }}" \
+            --gemini-rpm-limit 5 \
+            --gemini-max-text-chars 30000 \
+            "${EXTRA_ARGS[@]}"
+
+      - name: Print enrichment report
+        if: always()
+        shell: bash
+        run: |
+          if [ -f data/tmp/amku_court_challenges/report.md ]; then
+            cat data/tmp/amku_court_challenges/report.md
+          fi
+
+      - name: Build dashboard with court challenge data
+        if: ${{ inputs.dry_run != true }}
+        run: node scripts/amku_build_dashboard.mjs
+
+      - name: Validate court challenge dashboard data
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const registry = JSON.parse(
+            fs.readFileSync('data/practice/amku_court_challenges.json', 'utf8')
+          );
+          const dashboard = JSON.parse(
+            fs.readFileSync('docs/amku/data/practice.json', 'utf8')
+          );
+
+          const allowed = new Set([
+            'ongoing',
+            'upheld',
+            'overturned',
+            'partially_overturned'
+          ]);
+
+          const decisions = registry.decisions || {};
+          for (const [key, item] of Object.entries(decisions)) {
+            if (!item?.has_challenge) throw new Error(`Missing has_challenge for ${key}`);
+            if (!allowed.has(item.display_status)) {
+              throw new Error(`Invalid display_status for ${key}: ${item.display_status}`);
+            }
+            const cases = Array.isArray(item.cases) ? item.cases : [];
+            if (!cases.length) throw new Error(`No cases for ${key}`);
+            if (Number(item.cases_count) !== cases.length) {
+              throw new Error(`cases_count mismatch for ${key}`);
+            }
+            for (const c of cases) {
+              if (!c.case_number) throw new Error(`Missing case_number for ${key}`);
+              if (!allowed.has(c.status)) throw new Error(`Invalid case status for ${key}`);
+              if (c.status !== 'ongoing' && !c.latest_merits) {
+                throw new Error(`Final court status without latest_merits for ${key}, case ${c.case_number}`);
+              }
+              if (!c.latest_relevant) {
+                throw new Error(`Missing latest_relevant for ${key}, case ${c.case_number}`);
+              }
+              for (const doc of [c.latest_merits, c.latest_relevant].filter(Boolean)) {
+                if (!/^https:\/\/reyestr\.court\.gov\.ua\/Review\//.test(doc.url || '')) {
+                  throw new Error(`Invalid EDRSR url for ${key}: ${doc.url}`);
+                }
+                if (!doc.court) throw new Error(`Missing court name for ${key}, doc ${doc.doc_id}`);
+              }
+            }
+          }
+
+          const enriched = dashboard.filter((row) => row.court_challenge?.has_challenge);
+          if (enriched.length !== Object.keys(decisions).length) {
+            throw new Error(
+              `Dashboard/registry mismatch: dashboard=${enriched.length}, registry=${Object.keys(decisions).length}`
+            );
+          }
+
+          console.log(
+            `Court challenge validation passed: ${enriched.length} challenged decisions in dashboard.`
+          );
+          NODE
+
+      - name: Upload diagnostic artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amku-court-challenges-${{ inputs.year }}
+          path: data/tmp/amku_court_challenges/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit court challenge registry and dashboard data
+        if: ${{ inputs.dry_run != true }}
+        shell: bash
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add data/practice/amku_court_challenges.json
+          git add docs/amku/data/practice.json
+          git add docs/amku/data/dashboard_index.json
+
+          if git diff --cached --quiet; then
+            echo "No court challenge/dashboard changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update AMCU court challenges"
+
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "Push succeeded."
+              exit 0
+            fi
+
+            echo "Push failed. Rebasing on latest origin/main. Attempt ${attempt}/3..."
+            git pull --rebase origin main
+            sleep $((attempt * 5))
+          done
+
+          echo "Push failed after 3 attempts."
+          exit 1
