@@ -6,6 +6,7 @@ import csv
 import html
 import io
 import json
+import hashlib
 import os
 import re
 import sys
@@ -22,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "amku-court-challenges/1.0"
+USER_AGENT = "amku-court-challenges/1.1-resume"
 PASSPORT_URL_TEMPLATE = "https://dsa.court.gov.ua/open_data_json.php?json={dataset_id}"
 DATASET_IDS = {2025: 879, 2026: 7636}
 PUBLIC_EDRSR_URL = "https://reyestr.court.gov.ua/Review/{doc_id}"
@@ -104,6 +105,12 @@ CASE_STATUS_LABELS = {
     "partially_overturned": "Рішення АМКУ скасовано частково",
 }
 
+AI_CACHE_SCHEMA = "amku_court_ai_cache_v2"
+CHALLENGE_CACHE_VERSION = "direct-challenge-v2"
+SAFEGUARD_CACHE_VERSION = "weak-yes-v1"
+MERITS_CACHE_VERSION = "merits-status-v2"
+
+
 
 
 @dataclass
@@ -166,8 +173,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--request-timeout", type=int, default=45)
     p.add_argument("--retries", type=int, default=4)
     p.add_argument("--max-gemini-calls", type=int, default=180, help="Maximum Gemini calls for challenge classification.")
+    p.add_argument("--max-targeted-retry-calls", type=int, default=20, help="Maximum extra single-candidate retries for malformed/partial Gemini challenge responses.")
+    p.add_argument("--targeted-retry-attempts", type=int, default=2, help="Maximum targeted retry attempts per unresolved candidate.")
     p.add_argument("--max-safeguard-gemini-calls", type=int, default=20, help="Maximum second-check calls for weak YES results.")
     p.add_argument("--max-merits-gemini-calls", type=int, default=120, help="Maximum Gemini calls for substantive/current-status verification.")
+    p.add_argument("--ai-cache", default="data/tmp/amku_court_ai_cache/cache.json", help="Checkpoint cache for normalized Gemini results; safe to restore between runs.")
+    p.add_argument("--seed-cache", default="", help="Optional approved historical probe seed used only when year/dataset/ZIP/model match.")
     p.add_argument("--gemini-rpm-limit", type=int, default=5)
     p.add_argument("--gemini-max-text-chars", type=int, default=30000)
     p.add_argument("--skip-gemini", action="store_true")
@@ -184,6 +195,244 @@ def parse_args() -> argparse.Namespace:
 
 def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
+
+
+def atomic_write_json(path: Path, value: Any) -> None:
+    """Durably checkpoint JSON without exposing a half-written file to the next run."""
+    ensure_dir(path.parent)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(path)
+
+
+def load_ai_cache(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {
+            "schema": AI_CACHE_SCHEMA,
+            "updated_at": None,
+            "entries": {},
+        }
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        # Corrupt/mid-write caches are never trusted. The atomic writer should make this rare.
+        return {
+            "schema": AI_CACHE_SCHEMA,
+            "updated_at": None,
+            "entries": {},
+        }
+    if not isinstance(raw, dict) or raw.get("schema") != AI_CACHE_SCHEMA:
+        return {
+            "schema": AI_CACHE_SCHEMA,
+            "updated_at": None,
+            "entries": {},
+        }
+    entries = raw.get("entries") if isinstance(raw.get("entries"), dict) else {}
+    return {
+        "schema": AI_CACHE_SCHEMA,
+        "updated_at": raw.get("updated_at"),
+        "entries": entries,
+    }
+
+
+def text_sha256(text: str) -> str:
+    return hashlib.sha256((text or "").encode("utf-8", errors="replace")).hexdigest()
+
+
+def ai_cache_key(
+    stage: str,
+    year: int,
+    cause_num: str,
+    doc_id: str,
+    decision_key: str,
+    model: str,
+    version: str,
+    text_hash: str,
+) -> str:
+    raw = "\x1f".join([
+        stage,
+        str(year),
+        clean(cause_num),
+        clean(doc_id),
+        clean(decision_key),
+        clean(model),
+        clean(version),
+        clean(text_hash),
+    ])
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def ai_cache_get(
+    cache: dict[str, Any],
+    *,
+    stage: str,
+    year: int,
+    cause_num: str,
+    doc_id: str,
+    decision_key: str,
+    model: str,
+    version: str,
+    text_hash: str,
+) -> dict[str, Any] | None:
+    key = ai_cache_key(stage, year, cause_num, doc_id, decision_key, model, version, text_hash)
+    entry = (cache.get("entries") or {}).get(key)
+    if not isinstance(entry, dict):
+        return None
+    result = entry.get("result")
+    return dict(result) if isinstance(result, dict) else None
+
+
+def ai_cache_put(
+    cache_path: Path,
+    cache: dict[str, Any],
+    *,
+    stage: str,
+    year: int,
+    cause_num: str,
+    doc_id: str,
+    decision_key: str,
+    model: str,
+    version: str,
+    text_hash: str,
+    result: dict[str, Any],
+    source: str,
+) -> None:
+    key = ai_cache_key(stage, year, cause_num, doc_id, decision_key, model, version, text_hash)
+    entries = cache.setdefault("entries", {})
+    entries[key] = {
+        "stage": stage,
+        "year": year,
+        "cause_num": clean(cause_num),
+        "doc_id": clean(doc_id),
+        "decision_key": clean(decision_key),
+        "model": clean(model),
+        "version": version,
+        "text_sha256": text_hash,
+        "source": source,
+        "saved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "result": result,
+    }
+    cache["schema"] = AI_CACHE_SCHEMA
+    cache["updated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    atomic_write_json(cache_path, cache)
+
+
+def load_approved_seed(
+    path: Path | None,
+    *,
+    year: int,
+    dataset_id: int,
+    zip_url: str,
+    model: str,
+) -> dict[tuple[str, str, str], dict[str, Any]]:
+    """Load an approved v6 direct-challenge seed for the same year/dataset/model.
+
+    The annual ZIP may be refreshed later. A seed row is still reusable only when current discovery
+    independently finds the exact same case + court doc_id + AMCU decision, so newly added documents
+    never inherit a historical classification by number alone.
+    """
+    if not path or not path.exists():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception as exc:  # noqa: BLE001
+        log(f"Seed cache ignored: could not parse {path}: {exc}")
+        return {}
+    if not isinstance(raw, dict) or raw.get("schema") != "amku_court_ai_seed_v1":
+        log(f"Seed cache ignored: unsupported schema in {path}")
+        return {}
+    if int(raw.get("year") or 0) != int(year):
+        return {}
+    if int(raw.get("dataset_id") or 0) != int(dataset_id):
+        return {}
+    if clean(raw.get("zip_url")) != clean(zip_url):
+        log(
+            "Seed ZIP URL differs from the historical probe ZIP; reusing only exact "
+            "case + court-doc-id + AMCU-decision identities. Current metadata discovery still "
+            "has to find those same active candidate documents before a seed entry can be used."
+        )
+    if clean(raw.get("gemini_model")) != clean(model):
+        log("Seed cache ignored: Gemini model differs from the successful probe model.")
+        return {}
+    out: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for item in raw.get("challenge_results") or []:
+        if not isinstance(item, dict):
+            continue
+        decision_key = clean(item.get("decision_key"))
+        cause_num = clean(item.get("cause_num"))
+        doc_id = clean(item.get("doc_id"))
+        cls = clean(item.get("classification")).upper()
+        if decision_key and cause_num and doc_id and cls in {"YES", "NO"}:
+            out[(cause_num, doc_id, decision_key)] = dict(item)
+    return out
+
+
+def result_from_seed(candidate: dict[str, Any], seed: dict[str, Any]) -> dict[str, Any]:
+    cls = clean(seed.get("classification")).upper()
+    # Seed v6 is trusted only for the direct YES/NO question. Current case status and merits are
+    # intentionally re-verified by the production merits stage because those rules changed later.
+    return {
+        **candidate,
+        "classification": cls,
+        "gemini_confidence": clean(seed.get("gemini_confidence")) or "high",
+        "challenger": clean(seed.get("challenger")),
+        "current_document_resolves_merits": False,
+        "current_document_invalidates_prior_merits": False,
+        "case_outcome": "not_applicable" if cls == "NO" else "ongoing",
+        "status_reason": "",
+        "reason": clean(seed.get("reason"))[:600],
+        "current_status_verified": False,
+        "cache_source": "approved_probe_v6_seed",
+    }
+
+
+def load_approved_merits_seed(
+    path: Path | None,
+    *,
+    year: int,
+    dataset_id: int,
+    model: str,
+) -> dict[tuple[str, str, str], dict[str, Any]]:
+    """Load conservative v6 merits/status recovery rows.
+
+    Only rows whose v6 audit text explicitly supported an outcome/process status were included in
+    the seed. Ambiguous outcome rows are intentionally absent and will still go to production Gemini.
+    Current discovery must independently encounter the exact same case + doc_id + AMCU decision.
+    """
+    if not path or not path.exists():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return {}
+    if not isinstance(raw, dict) or raw.get("schema") != "amku_court_ai_seed_v1":
+        return {}
+    if int(raw.get("year") or 0) != int(year):
+        return {}
+    if int(raw.get("dataset_id") or 0) != int(dataset_id):
+        return {}
+    if clean(raw.get("gemini_model")) != clean(model):
+        return {}
+    out: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for item in raw.get("merits_results") or []:
+        if not isinstance(item, dict):
+            continue
+        decision_key = clean(item.get("decision_key"))
+        cause_num = clean(item.get("cause_num"))
+        doc_id = clean(item.get("doc_id"))
+        outcome = clean(item.get("outcome")).lower()
+        if outcome not in CASE_OUTCOMES:
+            continue
+        if not (decision_key and cause_num and doc_id):
+            continue
+        out[(cause_num, doc_id, decision_key)] = {
+            "resolves_merits": bool(item.get("resolves_merits", False)),
+            "invalidates_prior_merits": bool(item.get("invalidates_prior_merits", False)),
+            "outcome": outcome,
+            "gemini_confidence": clean(item.get("gemini_confidence")) or "high",
+            "reason": clean(item.get("reason"))[:600],
+        }
+    return out
 
 
 def http_bytes(url: str, timeout: int, retries: int) -> bytes:
@@ -1306,6 +1555,8 @@ def classify_candidates_with_gemini(
             "case_outcome": outcome,
             "status_reason": clean(item.get("status_reason"))[:600],
             "reason": clean(item.get("reason"))[:600],
+            "current_status_verified": True,
+            "cache_source": "gemini",
         })
 
     for cid, candidate in by_id.items():
@@ -1667,8 +1918,14 @@ def main() -> int:
     registry_path = Path(args.registry)
     out_dir = Path(args.out_dir)
     cache_dir = Path(args.cache_dir)
+    ai_cache_path = Path(args.ai_cache)
+    seed_cache_path = Path(args.seed_cache) if clean(args.seed_cache) else None
     ensure_dir(out_dir)
     ensure_dir(cache_dir)
+    ensure_dir(ai_cache_path.parent)
+    ai_cache = load_ai_cache(ai_cache_path)
+    # Ensure the checkpoint path exists even if the run fails before the first Gemini call.
+    atomic_write_json(ai_cache_path, ai_cache)
 
     practice = load_practice(practice_path)
     number_index = build_number_index(practice)
@@ -1722,6 +1979,19 @@ def main() -> int:
         "candidate_pairs": 0,
         "weak_yes_safeguard_calls": 0,
         "weak_yes_rejected": 0,
+    }
+    registry_write_blocked_reason = ""
+    ai_stats = {
+        "challenge_cache_hits": 0,
+        "challenge_seed_hits": 0,
+        "challenge_cache_writes": 0,
+        "challenge_targeted_retry_calls": 0,
+        "challenge_targeted_retry_recovered": 0,
+        "safeguard_cache_hits": 0,
+        "safeguard_cache_writes": 0,
+        "merits_cache_hits": 0,
+        "merits_seed_hits": 0,
+        "merits_cache_writes": 0,
     }
 
     with zipfile.ZipFile(zip_path, "r") as zf:
@@ -2109,8 +2379,26 @@ def main() -> int:
 
         api_key = clean(os.environ.get("GEMINI_API_KEY"))
         gemini_model = clean(os.environ.get("GEMINI_MODEL")) or DEFAULT_GEMINI_MODEL
-        if candidate_docs and not args.skip_gemini and not api_key:
-            raise RuntimeError("GEMINI_API_KEY is required because exact-number candidates were found.")
+        approved_seed = load_approved_seed(
+            seed_cache_path,
+            year=year,
+            dataset_id=dataset_id,
+            zip_url=zip_url,
+            model=gemini_model,
+        )
+        approved_merits_seed = load_approved_merits_seed(
+            seed_cache_path,
+            year=year,
+            dataset_id=dataset_id,
+            model=gemini_model,
+        )
+        log(
+            f"AI checkpoint entries restored: {len(ai_cache.get('entries') or {}):,}; "
+            f"approved challenge seed entries: {len(approved_seed):,}; "
+            f"approved merits/status seed entries: {len(approved_merits_seed):,}"
+        )
+        if candidate_docs and not args.skip_gemini and not api_key and not approved_seed and not (ai_cache.get("entries") or {}):
+            raise RuntimeError("GEMINI_API_KEY is required because exact-number candidates were found and no reusable AI results are available.")
 
         yes_rows: list[dict[str, Any]] = []
         no_rows: list[dict[str, Any]] = []
@@ -2121,6 +2409,7 @@ def main() -> int:
         yes_work_items: list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]] = []
 
         gemini_calls = 0
+        targeted_retry_calls = 0
         safeguard_gemini_calls = 0
         merits_gemini_calls = 0
         min_call_interval = 60.0 / max(1, args.gemini_rpm_limit) if args.gemini_rpm_limit > 0 else 0.0
@@ -2134,93 +2423,95 @@ def main() -> int:
             last_call_started = time.monotonic()
 
         # Stage 1: determine whether each candidate AMCU decision is directly challenged in the case.
+        # Results are checkpointed per candidate. A failed/partial run therefore resumes from the
+        # missing candidate(s) instead of repeating every case-level Gemini call.
         for entry in candidate_docs:
             doc: DocRow = entry["doc"]
             raw_latest_form: DocRow | None = entry["latest_merits"]
             text = text_cache_for_gemini.get(doc.doc_id, "")
+            doc_text_hash = text_sha256(text)
             candidates = entry["candidates"]
             current_doc_form = judgment_forms.get(doc.judgment_code, "")
 
             classified: list[dict[str, Any]] = []
+            unresolved_candidates: list[dict[str, Any]] = []
             technical_not_processed: list[dict[str, Any]] = []
 
-            if args.skip_gemini:
-                technical_not_processed = [
-                    {**c, "not_processed_reason": "Gemini skipped by --skip-gemini."}
-                    for c in candidates
-                ]
-            elif gemini_calls >= args.max_gemini_calls:
-                technical_not_processed = [
-                    {**c, "not_processed_reason": f"Gemini challenge-classification call budget exceeded ({args.max_gemini_calls})."}
-                    for c in candidates
-                ]
-            else:
-                wait_for_gemini_slot()
-                gemini_calls += 1
-                log(
-                    f"Gemini challenge {gemini_calls}/{args.max_gemini_calls}: "
-                    f"case {entry['cause_num']}; candidate(s)={len(candidates)}"
+            # 1A. Reuse persistent checkpoints first; then the approved v6 recovery seed.
+            for candidate in candidates:
+                cid = clean(candidate.get("candidate_id"))
+                cached = ai_cache_get(
+                    ai_cache,
+                    stage="challenge",
+                    year=year,
+                    cause_num=entry["cause_num"],
+                    doc_id=doc.doc_id,
+                    decision_key=cid,
+                    model=gemini_model,
+                    version=CHALLENGE_CACHE_VERSION,
+                    text_hash=doc_text_hash,
                 )
-                try:
-                    classified, technical_not_processed, _excerpt = classify_candidates_with_gemini(
-                        entry["cause_num"],
-                        entry["court"],
-                        doc,
-                        current_doc_form,
-                        candidates,
-                        text,
-                        api_key,
-                        gemini_model,
-                        args.request_timeout,
-                        args.retries,
-                        args.gemini_max_text_chars,
-                    )
-                except Exception as exc:  # noqa: BLE001
-                    gemini_errors.append({
-                        "stage": "challenge_classification",
-                        "cause_num": entry["cause_num"],
-                        "doc_id": doc.doc_id,
-                        "error": str(exc),
-                        "candidates": candidates,
-                    })
-                    technical_not_processed = [
-                        {**c, "not_processed_reason": f"Gemini challenge-classification error: {str(exc)[:300]}"}
-                        for c in candidates
-                    ]
+                if cached:
+                    ai_stats["challenge_cache_hits"] += 1
+                    classified.append({**candidate, **cached, "cache_source": cached.get("cache_source", "checkpoint")})
+                    continue
 
-            for result in classified:
-                # Production safeguard for weak YES results: if neither party nor date corroborates
-                # the exact number, run one additional contradiction-focused check. Absence of those
-                # signals alone is not a reason to reject; the second check should reject only a clear
-                # different same-number decision.
-                safeguard_result: dict[str, Any] | None = None
-                weak_yes = bool(
-                    result["classification"] == "YES"
-                    and not result.get("signals", {}).get("decision_date")
-                    and not result.get("signals", {}).get("liable_party")
-                )
-                if weak_yes and not args.skip_gemini:
-                    if safeguard_gemini_calls >= args.max_safeguard_gemini_calls:
-                        technical_not_processed.append({
-                            **result,
-                            "not_processed_reason": (
-                                f"Weak-YES safeguard call budget exceeded ({args.max_safeguard_gemini_calls})."
-                            ),
-                        })
-                        continue
+                seed = approved_seed.get((entry["cause_num"], doc.doc_id, cid))
+                if seed:
+                    result = result_from_seed(candidate, seed)
+                    classified.append(result)
+                    ai_stats["challenge_seed_hits"] += 1
+                    ai_cache_put(
+                        ai_cache_path,
+                        ai_cache,
+                        stage="challenge",
+                        year=year,
+                        cause_num=entry["cause_num"],
+                        doc_id=doc.doc_id,
+                        decision_key=cid,
+                        model=gemini_model,
+                        version=CHALLENGE_CACHE_VERSION,
+                        text_hash=doc_text_hash,
+                        result=result,
+                        source="approved_probe_v6_seed",
+                    )
+                    ai_stats["challenge_cache_writes"] += 1
+                    continue
+
+                unresolved_candidates.append(candidate)
+
+            # 1B. Only genuinely missing candidates consume a normal challenge call.
+            partial_not_processed: list[dict[str, Any]] = []
+            if unresolved_candidates:
+                if args.skip_gemini:
+                    partial_not_processed = [
+                        {**c, "not_processed_reason": "Gemini skipped by --skip-gemini."}
+                        for c in unresolved_candidates
+                    ]
+                elif not api_key:
+                    partial_not_processed = [
+                        {**c, "not_processed_reason": "GEMINI_API_KEY is unavailable for uncached challenge candidates."}
+                        for c in unresolved_candidates
+                    ]
+                elif gemini_calls >= args.max_gemini_calls:
+                    partial_not_processed = [
+                        {**c, "not_processed_reason": f"Gemini challenge-classification call budget exceeded ({args.max_gemini_calls})."}
+                        for c in unresolved_candidates
+                    ]
+                else:
                     wait_for_gemini_slot()
-                    safeguard_gemini_calls += 1
-                    fetch_stats["weak_yes_safeguard_calls"] += 1
+                    gemini_calls += 1
                     log(
-                        f"Gemini weak-YES safeguard {safeguard_gemini_calls}/{args.max_safeguard_gemini_calls}: "
-                        f"case {entry['cause_num']}; decision {result['decision_number']}"
+                        f"Gemini challenge {gemini_calls}/{args.max_gemini_calls}: "
+                        f"case {entry['cause_num']}; uncached candidate(s)={len(unresolved_candidates)}"
                     )
                     try:
-                        safeguard_result = verify_weak_yes_with_gemini(
+                        fresh_classified, partial_not_processed, _excerpt = classify_candidates_with_gemini(
                             entry["cause_num"],
                             entry["court"],
                             doc,
-                            result,
+                            current_doc_form,
+                            unresolved_candidates,
                             text,
                             api_key,
                             gemini_model,
@@ -2228,19 +2519,213 @@ def main() -> int:
                             args.retries,
                             args.gemini_max_text_chars,
                         )
+                        for result in fresh_classified:
+                            result["current_status_verified"] = True
+                            result["cache_source"] = "gemini"
+                            classified.append(result)
+                            ai_cache_put(
+                                ai_cache_path,
+                                ai_cache,
+                                stage="challenge",
+                                year=year,
+                                cause_num=entry["cause_num"],
+                                doc_id=doc.doc_id,
+                                decision_key=result["candidate_id"],
+                                model=gemini_model,
+                                version=CHALLENGE_CACHE_VERSION,
+                                text_hash=doc_text_hash,
+                                result=result,
+                                source="gemini",
+                            )
+                            ai_stats["challenge_cache_writes"] += 1
                     except Exception as exc:  # noqa: BLE001
                         gemini_errors.append({
-                            "stage": "weak_yes_safeguard",
+                            "stage": "challenge_classification",
                             "cause_num": entry["cause_num"],
                             "doc_id": doc.doc_id,
-                            "decision_number": result["decision_number"],
                             "error": str(exc),
+                            "candidates": unresolved_candidates,
                         })
+                        partial_not_processed = [
+                            {**c, "not_processed_reason": f"Gemini challenge-classification error: {str(exc)[:300]}"}
+                            for c in unresolved_candidates
+                        ]
+
+            # 1C. Partial/malformed case-level responses get a small single-candidate retry.
+            # This is the failure mode that wasted the previous run: 2 missing results no longer
+            # invalidate the other 239 already successful candidate classifications.
+            for missing in partial_not_processed:
+                reason = clean(missing.get("not_processed_reason"))
+                retriable = any(token in reason for token in [
+                    "Gemini did not return this candidate_id",
+                    "Gemini returned invalid classification",
+                    "Gemini challenge-classification error",
+                ])
+                recovered: dict[str, Any] | None = None
+                last_retry_reason = reason
+
+                if retriable and not args.skip_gemini and api_key:
+                    for attempt in range(1, max(1, args.targeted_retry_attempts) + 1):
+                        if targeted_retry_calls >= args.max_targeted_retry_calls:
+                            last_retry_reason = (
+                                f"Targeted retry budget exceeded ({args.max_targeted_retry_calls}) after: {last_retry_reason}"
+                            )
+                            break
+                        wait_for_gemini_slot()
+                        targeted_retry_calls += 1
+                        ai_stats["challenge_targeted_retry_calls"] += 1
+                        log(
+                            f"Gemini targeted retry {targeted_retry_calls}/{args.max_targeted_retry_calls}: "
+                            f"case {entry['cause_num']}; decision {missing.get('decision_number')}; attempt {attempt}"
+                        )
+                        try:
+                            retry_classified, retry_missing, _excerpt = classify_candidates_with_gemini(
+                                entry["cause_num"],
+                                entry["court"],
+                                doc,
+                                current_doc_form,
+                                [missing],
+                                text,
+                                api_key,
+                                gemini_model,
+                                args.request_timeout,
+                                args.retries,
+                                args.gemini_max_text_chars,
+                            )
+                            if retry_classified and not retry_missing:
+                                recovered = retry_classified[0]
+                                recovered["current_status_verified"] = True
+                                recovered["cache_source"] = "gemini_targeted_retry"
+                                classified.append(recovered)
+                                ai_cache_put(
+                                    ai_cache_path,
+                                    ai_cache,
+                                    stage="challenge",
+                                    year=year,
+                                    cause_num=entry["cause_num"],
+                                    doc_id=doc.doc_id,
+                                    decision_key=recovered["candidate_id"],
+                                    model=gemini_model,
+                                    version=CHALLENGE_CACHE_VERSION,
+                                    text_hash=doc_text_hash,
+                                    result=recovered,
+                                    source="gemini_targeted_retry",
+                                )
+                                ai_stats["challenge_cache_writes"] += 1
+                                ai_stats["challenge_targeted_retry_recovered"] += 1
+                                break
+                            if retry_missing:
+                                last_retry_reason = clean(retry_missing[0].get("not_processed_reason")) or last_retry_reason
+                        except Exception as exc:  # noqa: BLE001
+                            last_retry_reason = f"Targeted retry error: {str(exc)[:300]}"
+                            gemini_errors.append({
+                                "stage": "challenge_targeted_retry",
+                                "cause_num": entry["cause_num"],
+                                "doc_id": doc.doc_id,
+                                "decision_number": missing.get("decision_number"),
+                                "attempt": attempt,
+                                "error": str(exc),
+                            })
+
+                if recovered is None:
+                    technical_not_processed.append({
+                        **missing,
+                        "not_processed_reason": last_retry_reason or "Technical classification failure",
+                    })
+
+            for result in classified:
+                # Production safeguard for weak YES results: if neither party nor date corroborates
+                # the exact number, run one additional contradiction-focused check. Safeguard results
+                # have their own checkpoint, so a later failure does not pay for them again.
+                safeguard_result: dict[str, Any] | None = None
+                weak_yes = bool(
+                    result["classification"] == "YES"
+                    and not result.get("signals", {}).get("decision_date")
+                    and not result.get("signals", {}).get("liable_party")
+                )
+                if weak_yes:
+                    safeguard_result = ai_cache_get(
+                        ai_cache,
+                        stage="safeguard",
+                        year=year,
+                        cause_num=entry["cause_num"],
+                        doc_id=doc.doc_id,
+                        decision_key=result["candidate_id"],
+                        model=gemini_model,
+                        version=SAFEGUARD_CACHE_VERSION,
+                        text_hash=doc_text_hash,
+                    )
+                    if safeguard_result:
+                        ai_stats["safeguard_cache_hits"] += 1
+                    elif args.skip_gemini:
                         technical_not_processed.append({
                             **result,
-                            "not_processed_reason": f"Weak-YES safeguard error: {str(exc)[:300]}",
+                            "not_processed_reason": "Weak-YES safeguard skipped by --skip-gemini.",
                         })
                         continue
+                    elif not api_key:
+                        technical_not_processed.append({
+                            **result,
+                            "not_processed_reason": "GEMINI_API_KEY is unavailable for weak-YES safeguard.",
+                        })
+                        continue
+                    elif safeguard_gemini_calls >= args.max_safeguard_gemini_calls:
+                        technical_not_processed.append({
+                            **result,
+                            "not_processed_reason": (
+                                f"Weak-YES safeguard call budget exceeded ({args.max_safeguard_gemini_calls})."
+                            ),
+                        })
+                        continue
+                    else:
+                        wait_for_gemini_slot()
+                        safeguard_gemini_calls += 1
+                        fetch_stats["weak_yes_safeguard_calls"] += 1
+                        log(
+                            f"Gemini weak-YES safeguard {safeguard_gemini_calls}/{args.max_safeguard_gemini_calls}: "
+                            f"case {entry['cause_num']}; decision {result['decision_number']}"
+                        )
+                        try:
+                            safeguard_result = verify_weak_yes_with_gemini(
+                                entry["cause_num"],
+                                entry["court"],
+                                doc,
+                                result,
+                                text,
+                                api_key,
+                                gemini_model,
+                                args.request_timeout,
+                                args.retries,
+                                args.gemini_max_text_chars,
+                            )
+                            ai_cache_put(
+                                ai_cache_path,
+                                ai_cache,
+                                stage="safeguard",
+                                year=year,
+                                cause_num=entry["cause_num"],
+                                doc_id=doc.doc_id,
+                                decision_key=result["candidate_id"],
+                                model=gemini_model,
+                                version=SAFEGUARD_CACHE_VERSION,
+                                text_hash=doc_text_hash,
+                                result=safeguard_result,
+                                source="gemini",
+                            )
+                            ai_stats["safeguard_cache_writes"] += 1
+                        except Exception as exc:  # noqa: BLE001
+                            gemini_errors.append({
+                                "stage": "weak_yes_safeguard",
+                                "cause_num": entry["cause_num"],
+                                "doc_id": doc.doc_id,
+                                "decision_number": result["decision_number"],
+                                "error": str(exc),
+                            })
+                            technical_not_processed.append({
+                                **result,
+                                "not_processed_reason": f"Weak-YES safeguard error: {str(exc)[:300]}",
+                            })
+                            continue
 
                     safeguard_row = {
                         "decision_key": result["candidate_id"],
@@ -2282,6 +2767,8 @@ def main() -> int:
                     "current_document_resolves_merits": result.get("current_document_resolves_merits", False),
                     "current_document_invalidates_prior_merits": result.get("current_document_invalidates_prior_merits", False),
                     "current_document_case_outcome": result.get("case_outcome", "ongoing"),
+                    "current_status_verified": bool(result.get("current_status_verified", False)),
+                    "classification_cache_source": result.get("cache_source", ""),
                     "status_detail": result.get("status_reason", ""),
                     "cause_num": entry["cause_num"],
                     "matched_on_doc_id": doc.doc_id,
@@ -2336,6 +2823,7 @@ def main() -> int:
                 if focus_norm and normalized_number(row["decision_number"]) == focus_norm:
                     focus_debug["not_processed"].append(row)
 
+
         # Stage 2: determine the current usable court result and the newest still-current
         # substantive act. A later act that cancels prior merits and remands the case makes the
         # display status ongoing; we deliberately do NOT fall back to the cancelled older merits.
@@ -2354,7 +2842,7 @@ def main() -> int:
                 continue
 
             start_index = 0
-            if current_is_latest_form:
+            if current_is_latest_form and result.get("current_status_verified", False):
                 reused = {
                     "decision_key": row["decision_key"],
                     "decision_number": row["decision_number"],
@@ -2407,42 +2895,6 @@ def main() -> int:
             invalidated_prior = False
 
             for merit_doc in form_docs[start_index:]:
-                if args.skip_gemini:
-                    row["challenge_status"] = "merits_not_verified"
-                    row["merits_reason"] = "Merits verification skipped by --skip-gemini."
-                    not_processed_rows.append({
-                        "stage": "merits_verification",
-                        "decision_key": row["decision_key"],
-                        "decision_number": row["decision_number"],
-                        "decision_date": row["decision_date"],
-                        "liable_parties": row["liable_parties"],
-                        "cause_num": row["cause_num"],
-                        "court": row["court"],
-                        "matched_on_doc_id": merit_doc.doc_id,
-                        "not_processed_reason": row["merits_reason"],
-                    })
-                    merits_check_interrupted = True
-                    break
-
-                if merits_gemini_calls >= args.max_merits_gemini_calls:
-                    row["challenge_status"] = "merits_not_verified"
-                    row["merits_reason"] = (
-                        f"Gemini merits-verification call budget exceeded ({args.max_merits_gemini_calls})."
-                    )
-                    not_processed_rows.append({
-                        "stage": "merits_verification",
-                        "decision_key": row["decision_key"],
-                        "decision_number": row["decision_number"],
-                        "decision_date": row["decision_date"],
-                        "liable_parties": row["liable_parties"],
-                        "cause_num": row["cause_num"],
-                        "court": row["court"],
-                        "matched_on_doc_id": merit_doc.doc_id,
-                        "not_processed_reason": row["merits_reason"],
-                    })
-                    merits_check_interrupted = True
-                    break
-
                 try:
                     merit_text, merit_meta = fetch_doc_text(
                         merit_doc,
@@ -2470,47 +2922,6 @@ def main() -> int:
                     })
                     row["challenge_status"] = "merits_not_verified"
                     row["merits_reason"] = f"Could not fetch candidate merits document {merit_doc.doc_id}."
-                    merits_check_interrupted = True
-                    break
-
-                wait_for_gemini_slot()
-                merits_gemini_calls += 1
-                log(
-                    f"Gemini merits {merits_gemini_calls}/{args.max_merits_gemini_calls}: "
-                    f"case {row['cause_num']}; decision {row['decision_number']}; doc {merit_doc.doc_id}"
-                )
-                candidate_for_merits = {
-                    "candidate_id": result["candidate_id"],
-                    "decision_number": row["decision_number"],
-                    "decision_date": row["decision_date"],
-                    "liable_parties": row["liable_parties"],
-                    "strength": row["prefilter_strength"],
-                    "signals": row["signals"],
-                }
-                try:
-                    verification = verify_merits_doc_with_gemini(
-                        row["cause_num"],
-                        courts.get(merit_doc.court_code, row["court"]),
-                        merit_doc,
-                        judgment_forms.get(merit_doc.judgment_code, ""),
-                        candidate_for_merits,
-                        merit_text,
-                        api_key,
-                        gemini_model,
-                        args.request_timeout,
-                        args.retries,
-                        args.gemini_max_text_chars,
-                    )
-                except Exception as exc:  # noqa: BLE001
-                    gemini_errors.append({
-                        "stage": "merits_verification",
-                        "cause_num": row["cause_num"],
-                        "doc_id": merit_doc.doc_id,
-                        "decision_number": row["decision_number"],
-                        "error": str(exc),
-                    })
-                    row["challenge_status"] = "merits_not_verified"
-                    row["merits_reason"] = f"Gemini merits-verification error: {str(exc)[:300]}"
                     not_processed_rows.append({
                         "stage": "merits_verification",
                         "decision_key": row["decision_key"],
@@ -2525,6 +2936,165 @@ def main() -> int:
                     merits_check_interrupted = True
                     break
 
+                candidate_for_merits = {
+                    "candidate_id": result["candidate_id"],
+                    "decision_number": row["decision_number"],
+                    "decision_date": row["decision_date"],
+                    "liable_parties": row["liable_parties"],
+                    "strength": row["prefilter_strength"],
+                    "signals": row["signals"],
+                }
+                merit_hash = text_sha256(merit_text)
+                verification = ai_cache_get(
+                    ai_cache,
+                    stage="merits",
+                    year=year,
+                    cause_num=row["cause_num"],
+                    doc_id=merit_doc.doc_id,
+                    decision_key=row["decision_key"],
+                    model=gemini_model,
+                    version=MERITS_CACHE_VERSION,
+                    text_hash=merit_hash,
+                )
+                verification_source = "checkpoint"
+                if verification:
+                    ai_stats["merits_cache_hits"] += 1
+                else:
+                    seeded_verification = approved_merits_seed.get((
+                        row["cause_num"], merit_doc.doc_id, row["decision_key"]
+                    ))
+                    if seeded_verification:
+                        verification = dict(seeded_verification)
+                        verification_source = "approved_probe_v6_seed"
+                        ai_stats["merits_seed_hits"] += 1
+                        ai_cache_put(
+                            ai_cache_path,
+                            ai_cache,
+                            stage="merits",
+                            year=year,
+                            cause_num=row["cause_num"],
+                            doc_id=merit_doc.doc_id,
+                            decision_key=row["decision_key"],
+                            model=gemini_model,
+                            version=MERITS_CACHE_VERSION,
+                            text_hash=merit_hash,
+                            result=verification,
+                            source="approved_probe_v6_seed",
+                        )
+                        ai_stats["merits_cache_writes"] += 1
+
+                if not verification:
+                    if args.skip_gemini:
+                        row["challenge_status"] = "merits_not_verified"
+                        row["merits_reason"] = "Merits verification skipped by --skip-gemini and no checkpoint exists."
+                        not_processed_rows.append({
+                            "stage": "merits_verification",
+                            "decision_key": row["decision_key"],
+                            "decision_number": row["decision_number"],
+                            "decision_date": row["decision_date"],
+                            "liable_parties": row["liable_parties"],
+                            "cause_num": row["cause_num"],
+                            "court": row["court"],
+                            "matched_on_doc_id": merit_doc.doc_id,
+                            "not_processed_reason": row["merits_reason"],
+                        })
+                        merits_check_interrupted = True
+                        break
+                    if not api_key:
+                        row["challenge_status"] = "merits_not_verified"
+                        row["merits_reason"] = "GEMINI_API_KEY is unavailable for uncached merits verification."
+                        not_processed_rows.append({
+                            "stage": "merits_verification",
+                            "decision_key": row["decision_key"],
+                            "decision_number": row["decision_number"],
+                            "decision_date": row["decision_date"],
+                            "liable_parties": row["liable_parties"],
+                            "cause_num": row["cause_num"],
+                            "court": row["court"],
+                            "matched_on_doc_id": merit_doc.doc_id,
+                            "not_processed_reason": row["merits_reason"],
+                        })
+                        merits_check_interrupted = True
+                        break
+                    if merits_gemini_calls >= args.max_merits_gemini_calls:
+                        row["challenge_status"] = "merits_not_verified"
+                        row["merits_reason"] = (
+                            f"Gemini merits-verification call budget exceeded ({args.max_merits_gemini_calls})."
+                        )
+                        not_processed_rows.append({
+                            "stage": "merits_verification",
+                            "decision_key": row["decision_key"],
+                            "decision_number": row["decision_number"],
+                            "decision_date": row["decision_date"],
+                            "liable_parties": row["liable_parties"],
+                            "cause_num": row["cause_num"],
+                            "court": row["court"],
+                            "matched_on_doc_id": merit_doc.doc_id,
+                            "not_processed_reason": row["merits_reason"],
+                        })
+                        merits_check_interrupted = True
+                        break
+
+                    wait_for_gemini_slot()
+                    merits_gemini_calls += 1
+                    log(
+                        f"Gemini merits {merits_gemini_calls}/{args.max_merits_gemini_calls}: "
+                        f"case {row['cause_num']}; decision {row['decision_number']}; doc {merit_doc.doc_id}"
+                    )
+                    try:
+                        verification = verify_merits_doc_with_gemini(
+                            row["cause_num"],
+                            courts.get(merit_doc.court_code, row["court"]),
+                            merit_doc,
+                            judgment_forms.get(merit_doc.judgment_code, ""),
+                            candidate_for_merits,
+                            merit_text,
+                            api_key,
+                            gemini_model,
+                            args.request_timeout,
+                            args.retries,
+                            args.gemini_max_text_chars,
+                        )
+                        ai_cache_put(
+                            ai_cache_path,
+                            ai_cache,
+                            stage="merits",
+                            year=year,
+                            cause_num=row["cause_num"],
+                            doc_id=merit_doc.doc_id,
+                            decision_key=row["decision_key"],
+                            model=gemini_model,
+                            version=MERITS_CACHE_VERSION,
+                            text_hash=merit_hash,
+                            result=verification,
+                            source="gemini",
+                        )
+                        ai_stats["merits_cache_writes"] += 1
+                        verification_source = "gemini"
+                    except Exception as exc:  # noqa: BLE001
+                        gemini_errors.append({
+                            "stage": "merits_verification",
+                            "cause_num": row["cause_num"],
+                            "doc_id": merit_doc.doc_id,
+                            "decision_number": row["decision_number"],
+                            "error": str(exc),
+                        })
+                        row["challenge_status"] = "merits_not_verified"
+                        row["merits_reason"] = f"Gemini merits-verification error: {str(exc)[:300]}"
+                        not_processed_rows.append({
+                            "stage": "merits_verification",
+                            "decision_key": row["decision_key"],
+                            "decision_number": row["decision_number"],
+                            "decision_date": row["decision_date"],
+                            "liable_parties": row["liable_parties"],
+                            "cause_num": row["cause_num"],
+                            "court": row["court"],
+                            "matched_on_doc_id": merit_doc.doc_id,
+                            "not_processed_reason": row["merits_reason"],
+                        })
+                        merits_check_interrupted = True
+                        break
+
                 verification_row = {
                     "decision_key": row["decision_key"],
                     "decision_number": row["decision_number"],
@@ -2533,7 +3103,7 @@ def main() -> int:
                     "doc_id": merit_doc.doc_id,
                     "doc_date": merit_doc.adjudication_date,
                     "doc_form": judgment_forms.get(merit_doc.judgment_code, ""),
-                    "source": "merits_verification_call",
+                    "source": f"merits_verification_{verification_source}",
                     "resolves_merits": verification["resolves_merits"],
                     "invalidates_prior_merits": verification["invalidates_prior_merits"],
                     "outcome": verification["outcome"],
@@ -2616,9 +3186,9 @@ def main() -> int:
 
         outcome_counts = {code: sum(1 for row in yes_rows if row.get("case_status") == code) for code in sorted(CASE_OUTCOMES)}
 
-        # replace-year is intentionally strict: a partial technical run must never overwrite
-        # a previously complete yearly observation. Challenge classification, weak-YES safeguard
-        # and substantive-result verification all have to finish cleanly before replacement.
+        # A partial technical run must never write a production registry. Unlike the previous
+        # version, diagnostics/checkpoints are still written first and the process fails only after
+        # those artifacts are safely available to the workflow.
         blocking_unprocessed = [
             row for row in not_processed_rows
             if row.get("stage") in {"challenge_classification", "weak_yes_safeguard", "merits_verification"}
@@ -2627,37 +3197,42 @@ def main() -> int:
             row for row in yes_rows
             if row.get("challenge_status") == "merits_not_verified"
         ]
-        if args.replace_year and not args.dry_run and (blocking_unprocessed or blocking_merits or fetch_errors):
-            raise RuntimeError(
-                "Refusing replace-year registry write because the yearly court scan was technically incomplete: "
+        technically_complete = not (blocking_unprocessed or blocking_merits or fetch_errors)
+        if not args.dry_run and not technically_complete:
+            registry_write_blocked_reason = (
+                "Refusing registry write because the yearly court scan was technically incomplete: "
                 f"not_processed={len(blocking_unprocessed)}, merits_not_verified={len(blocking_merits)}, "
                 f"fetch_errors={len(fetch_errors)}"
             )
+            log(f"REGISTRY WRITE BLOCKED: {registry_write_blocked_reason}")
+            registry_preview = read_registry(registry_path)
+        else:
+            registry_preview = merge_registry(
+                registry_path,
+                year,
+                yes_rows,
+                courts,
+                judgment_forms,
+                args.replace_year,
+            )
 
-        registry_preview = merge_registry(
-            registry_path,
-            year,
-            yes_rows,
-            courts,
-            judgment_forms,
-            args.replace_year,
-        )
-        if not args.dry_run:
+        if not args.dry_run and technically_complete:
             registry_path.parent.mkdir(parents=True, exist_ok=True)
             registry_path.write_text(
                 json.dumps(registry_preview, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
             log(f"Court-challenge registry written: {registry_path}")
-        else:
+        elif args.dry_run:
             log("DRY RUN: persistent court-challenge registry was not written.")
+
         (out_dir / "registry_preview.json").write_text(
             json.dumps(registry_preview, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
 
         summary = {
-            "schema": "amku_court_challenges_production_v1",
+            "schema": "amku_court_challenges_production_v1_1_resume",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "year": year,
             "dataset_id": dataset_id,
@@ -2677,8 +3252,20 @@ def main() -> int:
             "candidate_documents_sent_to_gemini_queue": len(candidate_docs),
             "candidate_pairs_sent_to_gemini_queue": len(candidate_rows),
             "gemini_model": gemini_model,
+            "technically_complete": technically_complete,
+            "registry_write_blocked": bool(registry_write_blocked_reason),
+            "registry_write_blocked_reason": registry_write_blocked_reason,
+            "ai_checkpoint": {
+                **ai_stats,
+                "persistent_entries": len(ai_cache.get("entries") or {}),
+                "path": str(ai_cache_path),
+                "seed_entries_available": len(approved_seed),
+                "merits_seed_entries_available": len(approved_merits_seed),
+            },
             "challenge_gemini_calls": gemini_calls,
             "challenge_gemini_call_limit": args.max_gemini_calls,
+            "targeted_retry_calls": targeted_retry_calls,
+            "targeted_retry_call_limit": args.max_targeted_retry_calls,
             "weak_yes_safeguard_calls": safeguard_gemini_calls,
             "weak_yes_safeguard_call_limit": args.max_safeguard_gemini_calls,
             "weak_yes_rejected": fetch_stats["weak_yes_rejected"],
@@ -2718,7 +3305,7 @@ def main() -> int:
             "decision_key", "decision_date", "decision_number", "liable_parties", "cause_num", "classification",
             "gemini_confidence", "challenger", "prefilter_strength", "signals", "reason",
             "current_document_resolves_merits", "current_document_invalidates_prior_merits",
-            "current_document_case_outcome", "case_status", "status_detail", "court", "category_code", "category_name",
+            "current_document_case_outcome", "current_status_verified", "classification_cache_source", "case_status", "status_detail", "court", "category_code", "category_name",
             "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
             "latest_form_doc_id", "latest_form_type", "latest_form_date", "challenge_status",
             "latest_relevant", "latest_merits", "latest_merits_doc_id", "latest_merits_type",
@@ -2872,10 +3459,15 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 - Candidate cases remaining for Gemini queue: {len(candidate_docs):,}
 - Candidate pairs remaining for Gemini queue: {len(candidate_rows):,}
 
-## Gemini challenge classification
+## Gemini challenge classification / resume
 
 - Model: `{gemini_model}`
-- Calls used: {gemini_calls:,}/{args.max_gemini_calls:,}
+- Normal challenge calls used this run: {gemini_calls:,}/{args.max_gemini_calls:,}
+- Targeted single-candidate retry calls: {targeted_retry_calls:,}/{args.max_targeted_retry_calls:,}
+- Challenge checkpoint hits: {ai_stats['challenge_cache_hits']:,}
+- Approved v6 seed hits: {ai_stats['challenge_seed_hits']:,}
+- Targeted retries recovered: {ai_stats['challenge_targeted_retry_recovered']:,}
+- Persistent AI checkpoint entries after run: {len(ai_cache.get('entries') or {}):,}
 - Confirmed direct challenge pairs (`YES`): {len(yes_rows):,}
 - Rejected mentions/indirect cases (`NO`): {len(no_rows):,}
 - Weak-YES safeguard calls: {safeguard_gemini_calls:,}/{args.max_safeguard_gemini_calls:,}
@@ -2883,7 +3475,10 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 
 ## Substantive merits verification
 
-- Additional Gemini calls: {merits_gemini_calls:,}/{args.max_merits_gemini_calls:,}
+- Additional Gemini calls this run: {merits_gemini_calls:,}/{args.max_merits_gemini_calls:,}
+- Merits checkpoint hits: {ai_stats['merits_cache_hits']:,}
+- Approved v6 merits/status seed hits: {ai_stats['merits_seed_hits']:,}
+- Safeguard checkpoint hits: {ai_stats['safeguard_cache_hits']:,}
 - Confirmed challenges with a verified latest merits act: {merits_found_count:,}
 - Confirmed challenges with no substantive merits act found yet: {pending_no_merits_count:,}
 - Confirmed challenges whose merits check was not completed technically/budget: {merits_not_verified_count:,}
@@ -2895,16 +3490,23 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 
 ## Technical completeness
 
+- Run technically complete: {'YES' if technically_complete else 'NO'}
+- Registry write blocked: {'YES' if registry_write_blocked_reason else 'NO'}
+- Block reason: {registry_write_blocked_reason or 'none'}
 - Not processed because of budget/technical response: {len(not_processed_rows):,}
 - Gemini request errors: {len(gemini_errors):,}
 
-Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid responses are recorded separately in `not_processed.csv`; they are never treated as a legal result. The persistent registry is written only when the run is not dry-run; with `--replace-year`, any incomplete challenge classification, weak-YES safeguard, merits verification or court-text fetch blocks the registry write.
+Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid responses are recorded separately in `not_processed.csv`; they are never treated as a legal result. The persistent registry is written only when the run is not dry-run and the full technical scan is complete. Any incomplete challenge classification, weak-YES safeguard, merits verification or court-text fetch blocks the registry write, but diagnostics and the AI checkpoint are still written before the workflow fails.
 {focus_md}
 """
         (out_dir / "report.md").write_text(report, encoding="utf-8")
 
     if not args.keep_zip:
         zip_path.unlink(missing_ok=True)
+
+    if registry_write_blocked_reason:
+        # Delayed failure: workflow can upload diagnostics and persist the checkpoint first.
+        raise RuntimeError(registry_write_blocked_reason)
 
     log(
         f"Done: candidates_before_negative={fetch_stats['candidate_pairs_before_negative_filter']}; "
