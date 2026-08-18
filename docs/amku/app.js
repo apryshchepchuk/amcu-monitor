@@ -17,6 +17,7 @@ const ICONS = {
   evidence: `<svg viewBox="0 0 24 24" fill="none"><path d="M9 11l2 2 4-5"/><path d="M5 4h14v16H5z"/></svg>`,
   lightbulb: `<svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M8 14a6 6 0 1 1 8 0c-.7.6-1 1.4-1 2H9c0-.6-.3-1.4-1-2z"/></svg>`,
   response: `<svg viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>`,
+  gavel: `<svg viewBox="0 0 24 24" fill="none"><path d="M14 4l6 6-3 3-6-6 3-3z"/><path d="M10 8l6 6-3 3-6-6 3-3z"/><path d="M10.5 13.5L4 20"/><path d="M2.5 21h8"/></svg>`,
 };
 
 const state = {
@@ -109,6 +110,18 @@ function exactSearchFields(row) {
     ...(Array.isArray(row.key_takeaways) ? row.key_takeaways : []),
     ...(Array.isArray(row.evidence_factors) ? row.evidence_factors : []),
     ...(Array.isArray(row.legal_basis) ? row.legal_basis : []),
+
+    row.court_challenge?.display_status_label,
+    row.court_challenge?.primary_case_number,
+    ...(Array.isArray(row.court_challenge?.cases)
+      ? row.court_challenge.cases.flatMap((item) => [
+          item?.case_number,
+          item?.challenger,
+          item?.status_label,
+          item?.latest_merits?.court,
+          item?.latest_relevant?.court,
+        ])
+      : []),
 
     row.market_or_sector,
   ]
@@ -258,6 +271,135 @@ function outcomeMeta(row) {
     summary: row?.outcome_summary || 'АМКУ встановив порушення / застосував наслідки.',
     className: 'violation'
   };
+}
+
+const COURT_STATUS_META = {
+  ongoing: {
+    className: 'ongoing',
+    label: 'Оскарження триває',
+    tooltip: 'Судове оскарження: оскарження триває',
+  },
+  upheld: {
+    className: 'upheld',
+    label: 'Рішення АМКУ залишено чинним',
+    tooltip: 'Судове оскарження: рішення АМКУ встояло',
+  },
+  overturned: {
+    className: 'overturned',
+    label: 'Рішення АМКУ скасовано',
+    tooltip: 'Судове оскарження: рішення АМКУ скасовано',
+  },
+  partially_overturned: {
+    className: 'overturned',
+    label: 'Рішення АМКУ скасовано частково',
+    tooltip: 'Судове оскарження: рішення АМКУ скасовано частково',
+  },
+};
+
+function courtChallengeMeta(row) {
+  const challenge = row?.court_challenge;
+  if (!challenge?.has_challenge) return null;
+  const status = COURT_STATUS_META[challenge.display_status] || COURT_STATUS_META.ongoing;
+  return { challenge, status };
+}
+
+function courtChallengeUrl(challenge) {
+  return challenge?.display_url
+    || challenge?.latest_merits?.url
+    || challenge?.latest_relevant?.url
+    || challenge?.cases?.find((item) => item?.latest_merits?.url)?.latest_merits?.url
+    || challenge?.cases?.find((item) => item?.latest_relevant?.url)?.latest_relevant?.url
+    || '';
+}
+
+function courtCaseNumbers(challenge) {
+  const values = (Array.isArray(challenge?.cases) ? challenge.cases : [])
+    .map((item) => item?.case_number)
+    .filter(Boolean);
+  return [...new Set(values)];
+}
+
+function formatCourtDocSentence(doc) {
+  if (!doc) return '';
+  const type = String(doc.type || 'Судовий акт').toLocaleLowerCase('uk-UA');
+  const court = doc.court ? ` ${doc.court}` : '';
+  const date = doc.date ? ` від ${formatDate(doc.date)}` : '';
+  return `${type}${court}${date}`;
+}
+
+function renderCourtChallengeGavel(row) {
+  const meta = courtChallengeMeta(row);
+  if (!meta) return '';
+  const { challenge, status } = meta;
+  const url = courtChallengeUrl(challenge);
+  if (!url) return '';
+  const caseNumber = challenge.primary_case_number ? ` у справі № ${challenge.primary_case_number}` : '';
+  const title = `${status.tooltip}${caseNumber}`;
+  return `
+    <a class="court-gavel ${status.className}"
+       href="${escapeHtml(url)}"
+       target="_blank"
+       rel="noopener"
+       title="${escapeHtml(title)}"
+       aria-label="${escapeHtml(title)}">
+      ${ICONS.gavel}
+    </a>
+  `;
+}
+
+function renderCourtChallengePanel(row) {
+  const meta = courtChallengeMeta(row);
+  if (!meta) return '';
+  const { challenge, status } = meta;
+  const caseNumbers = courtCaseNumbers(challenge);
+  const primaryCase = challenge.primary_case_number || caseNumbers[0] || '';
+  const casesCount = Number(challenge.cases_count) || caseNumbers.length;
+  const casesText = primaryCase
+    ? casesCount > 1
+      ? `Рішення оскаржувалось у <strong>${casesCount}</strong> справах, зокрема у справі <strong>№ ${escapeHtml(primaryCase)}</strong>.`
+      : `Рішення оскаржувалось у справі <strong>№ ${escapeHtml(primaryCase)}</strong>.`
+    : 'Рішення оскаржувалось у суді.';
+
+  const resultLabel = challenge.display_status_label || status.label;
+  const merits = challenge.latest_merits;
+  const relevant = challenge.latest_relevant;
+
+  const courtActHtml = merits
+    ? `
+      <div class="court-challenge-line court-challenge-act">
+        <span>Останнє судове рішення по суті спору в ЄДРСР:</span>
+        <strong>${escapeHtml(formatCourtDocSentence(merits))}</strong>
+        ${merits.url ? `<a href="${escapeHtml(merits.url)}" target="_blank" rel="noopener">Відкрити в ЄДРСР</a>` : ''}
+      </div>
+    `
+    : `
+      <div class="court-challenge-line court-challenge-act">
+        <span>Останнє судове рішення по суті спору в ЄДРСР:</span>
+        <strong>відсутнє</strong>
+      </div>
+      ${relevant ? `
+        <div class="court-challenge-line court-challenge-act">
+          <span>Останній судовий акт в ЄДРСР:</span>
+          <strong>${escapeHtml(formatCourtDocSentence(relevant))}</strong>
+          ${relevant.url ? `<a href="${escapeHtml(relevant.url)}" target="_blank" rel="noopener">Відкрити в ЄДРСР</a>` : ''}
+        </div>
+      ` : ''}
+    `;
+
+  return `
+    <section class="court-challenge-card ${status.className}" aria-label="Судове оскарження">
+      <div class="court-challenge-head">
+        <span class="court-challenge-head-icon">${ICONS.gavel}</span>
+        <strong>Судове оскарження</strong>
+      </div>
+      <div class="court-challenge-line">${casesText}</div>
+      <div class="court-challenge-line">
+        <span>Результат оскарження:</span>
+        <strong>${escapeHtml(resultLabel)}</strong>
+      </div>
+      ${courtActHtml}
+    </section>
+  `;
 }
 
 function sanctionDisplay(row) {
@@ -482,10 +624,13 @@ function renderResults() {
     const outcome = outcomeMeta(row);
 
     return `
-      <button class="result-item ${active}" data-key="${escapeHtml(row.decision_key)}">
+      <div class="result-item ${active}" data-key="${escapeHtml(row.decision_key)}" role="button" tabindex="0">
         <div class="result-title-row">
           <div class="result-title">${escapeHtml(`${formatDate(row.decision_date)} · № ${row.decision_number || '—'}`)}</div>
-          <span class="tag primary">${escapeHtml(shortCodeBadge(row.primary_code))}</span>
+          <div class="result-title-tools">
+            ${renderCourtChallengeGavel(row)}
+            <span class="tag primary">${escapeHtml(shortCodeBadge(row.primary_code))}</span>
+          </div>
         </div>
         <div class="result-party">${escapeHtml(party)}${escapeHtml(extra)}</div>
         <div class="result-meta-row">
@@ -496,20 +641,35 @@ function renderResults() {
           <span class="outcome-badge ${outcome.className}">${escapeHtml(outcome.label)}</span>
         </div>
         <div class="result-summary">${escapeHtml(row.violation_summary || '')}</div>
-      </button>
+      </div>
     `;
   }).join('');
 
-  document.querySelectorAll('.result-item').forEach((button) => {
-    button.addEventListener('click', () => {
-      state.selectedKey = button.dataset.key;
+  document.querySelectorAll('.result-item').forEach((item) => {
+    const selectItem = () => {
+      state.selectedKey = item.dataset.key;
       renderResults();
       renderDetail();
       syncStateToUrl();
       if (window.matchMedia('(max-width: 900px)').matches) {
         document.querySelector('.detail-pane')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    };
+
+    item.addEventListener('click', (event) => {
+      if (event.target.closest('.court-gavel')) return;
+      selectItem();
     });
+    item.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        selectItem();
+      }
+    });
+  });
+
+  document.querySelectorAll('.court-gavel').forEach((link) => {
+    link.addEventListener('click', (event) => event.stopPropagation());
   });
 }
 
@@ -620,10 +780,13 @@ function renderDetail() {
           ${row.sanction_total_uah ? `<span>${escapeHtml(formatMoney(row.sanction_total_uah))}</span>` : ''}
         </div>
       </div>
-      <div class="decision-actions">
-        <button class="ghost-btn small" id="readingModeBtn">${state.readingMode ? 'Звичайний режим' : 'Режим читання'}</button>
-        <button class="ghost-btn small" id="copyCitationBtn">Скопіювати цитату</button>
-        <button class="ghost-btn small" id="copyLinkBtn">Скопіювати посилання</button>
+      <div class="decision-side">
+        <div class="decision-actions">
+          <button class="ghost-btn small" id="readingModeBtn">${state.readingMode ? 'Звичайний режим' : 'Режим читання'}</button>
+          <button class="ghost-btn small" id="copyCitationBtn">Скопіювати цитату</button>
+          <button class="ghost-btn small" id="copyLinkBtn">Скопіювати посилання</button>
+        </div>
+        ${renderCourtChallengePanel(row)}
       </div>
     </header>
 
