@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "amku-court-challenges/1.1-resume"
+USER_AGENT = "amku-court-challenges/1.2-history"
 PASSPORT_URL_TEMPLATE = "https://dsa.court.gov.ua/open_data_json.php?json={dataset_id}"
 DATASET_IDS = {2025: 879, 2026: 7636}
 PUBLIC_EDRSR_URL = "https://reyestr.court.gov.ua/Review/{doc_id}"
@@ -713,10 +713,27 @@ def scan_prefilter(
     zf: zipfile.ZipFile,
     relevant_categories: set[str],
     commercial_justice_codes: set[str],
-) -> tuple[dict[str, list[DocRow]], dict[str, int], dict[str, dict[str, Any]], dict[str, int]]:
-    """Cheap metadata filter: active + exact relevant category + commercial jurisdiction + cause_num."""
+    known_case_numbers: set[str] | None = None,
+) -> tuple[
+    dict[str, list[DocRow]],
+    dict[str, int],
+    dict[str, dict[str, Any]],
+    dict[str, int],
+    dict[str, list[DocRow]],
+]:
+    """Single-pass EDRSR metadata scan.
+
+    Discovery remains conservative: active + exact competition category + commercial
+    jurisdiction + case number. In parallel, already-confirmed court case numbers are
+    collected across ALL active EDRSR categories so their appellate/cassation history
+    is not lost merely because a later document uses a different category code or no
+    longer repeats the AMCU decision number.
+    """
     member = find_zip_member(zf, "documents.csv")
     cases: dict[str, list[DocRow]] = defaultdict(list)
+    known_history_cases: dict[str, list[DocRow]] = defaultdict(list)
+    known_case_numbers = {clean(x) for x in (known_case_numbers or set()) if clean(x)}
+
     stats = {
         "rows_total": 0,
         "active": 0,
@@ -724,6 +741,9 @@ def scan_prefilter(
         "commercial_match": 0,
         "with_cause_num": 0,
         "cases": 0,
+        "known_history_case_numbers_requested": len(known_case_numbers),
+        "known_history_documents": 0,
+        "known_history_cases_found": 0,
     }
     category_stats: dict[str, dict[str, Any]] = {
         code: {
@@ -744,6 +764,15 @@ def scan_prefilter(
                 continue
             stats["active"] += 1
 
+            # Known-case history is intentionally independent of category matching.
+            # Exact cause_num is already a confirmed link from our persistent registry.
+            cause_num = clean(row.get("cause_num"))
+            doc_for_history: DocRow | None = None
+            if cause_num and cause_num in known_case_numbers:
+                doc_for_history = doc_from_row(row)
+                known_history_cases[cause_num].append(doc_for_history)
+                stats["known_history_documents"] += 1
+
             cat = clean(row.get("category_code"))
             if cat not in relevant_categories:
                 continue
@@ -757,7 +786,7 @@ def scan_prefilter(
             stats["commercial_match"] += 1
             category_stats[cat]["commercial_documents"] += 1
 
-            doc = doc_from_row(row)
+            doc = doc_for_history if doc_for_history is not None else doc_from_row(row)
             if not doc.cause_num:
                 continue
             stats["with_cause_num"] += 1
@@ -765,7 +794,8 @@ def scan_prefilter(
             category_stats[cat]["cases"].add(doc.cause_num)
 
     stats["cases"] = len(cases)
-    return cases, stats, category_stats, dict(justice_stats)
+    stats["known_history_cases_found"] = len(known_history_cases)
+    return cases, stats, category_stats, dict(justice_stats), dict(known_history_cases)
 
 def decode_response_text(raw: bytes, content_type: str = "") -> str:
     encodings: list[str] = []
@@ -2007,6 +2037,121 @@ def merge_registry(
         "decisions": decisions,
     }
 
+
+def is_discovery_eligible(row: PracticeRow) -> bool:
+    """Exclude only explicit closure/no-violation decisions from NEW-case discovery.
+
+    All other outcomes, including legacy rows without decision_outcome, remain eligible.
+    This filter never removes already-confirmed cases from history enrichment.
+    """
+    return clean(row.raw.get("decision_outcome")) != "proceeding_closed_no_violation"
+
+
+def known_case_links_from_registry(registry: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    """Map confirmed cause_num -> decision links already present in the registry."""
+    out: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for decision_key, record in (registry.get("decisions") or {}).items():
+        for case in record.get("cases") or []:
+            if not isinstance(case, dict):
+                continue
+            case_number = clean(case.get("case_number"))
+            if not case_number:
+                continue
+            out[case_number].append({
+                "decision_key": clean(decision_key),
+                "case": dict(case),
+            })
+    return dict(out)
+
+
+def history_row_from_known_case(
+    practice_row: PracticeRow,
+    case_number: str,
+    existing_case: dict[str, Any],
+    entry: dict[str, Any],
+    courts: dict[str, str],
+    judgment_forms: dict[str, str],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Create a confirmed-YES work item without re-running challenge discovery.
+
+    The decision<->case relation has already been confirmed in a prior run. Gemini is used
+    only later, if needed, to classify substantive/result documents for this yearly history.
+    """
+    raw_latest_form: DocRow | None = entry.get("latest_merits")
+    primary_doc: DocRow = entry["doc"]
+    latest_relevant_payload = court_doc_payload(entry.get("latest_active"), courts, judgment_forms)
+    prior_merits = existing_case.get("latest_merits") if isinstance(existing_case.get("latest_merits"), dict) else None
+    prior_status = clean(existing_case.get("status")).lower()
+    if prior_status not in CASE_OUTCOMES:
+        prior_status = "ongoing"
+
+    result = {
+        "candidate_id": practice_row.row_id,
+        "decision_number": practice_row.decision_number,
+        "decision_date": practice_row.decision_date,
+        "liable_parties": practice_row.liable_parties,
+        "strength": "known_case_history",
+        "signals": {
+            "decision_number": False,
+            "decision_date": False,
+            "liable_party": False,
+            "party_needle": "",
+        },
+        "classification": "YES",
+        "gemini_confidence": "registry_confirmed",
+        "challenger": clean(existing_case.get("challenger")),
+        "reason": "Known confirmed decision/case link from persistent registry; direct-challenge Gemini classification skipped for history enrichment.",
+        "current_document_resolves_merits": False,
+        "current_document_invalidates_prior_merits": False,
+        "case_outcome": prior_status,
+        "current_status_verified": False,
+        "cache_source": "known_case_registry",
+        "status_reason": clean(existing_case.get("status_detail")),
+    }
+
+    row = {
+        "decision_key": practice_row.row_id,
+        "decision_number": practice_row.decision_number,
+        "decision_date": practice_row.decision_date,
+        "liable_parties": practice_row.liable_parties,
+        "prefilter_strength": "known_case_history",
+        "signals": result["signals"],
+        "classification": "YES",
+        "gemini_confidence": "registry_confirmed",
+        "challenger": clean(existing_case.get("challenger")),
+        "reason": result["reason"],
+        "current_document_resolves_merits": False,
+        "current_document_invalidates_prior_merits": False,
+        "current_document_case_outcome": prior_status,
+        "current_status_verified": False,
+        "classification_cache_source": "known_case_registry",
+        "status_detail": clean(existing_case.get("status_detail")),
+        "cause_num": case_number,
+        "matched_on_doc_id": primary_doc.doc_id,
+        "matched_on_source": "known_case_history",
+        "primary_doc_id": primary_doc.doc_id,
+        "primary_kind": entry.get("primary_kind", "history"),
+        "court": entry.get("court", ""),
+        "category_code": primary_doc.category_code,
+        "category_name": entry.get("category_name", ""),
+        "latest_form_doc_id": raw_latest_form.doc_id if raw_latest_form else "",
+        "latest_form_type": judgment_forms.get(raw_latest_form.judgment_code, "") if raw_latest_form else "",
+        "latest_form_date": raw_latest_form.adjudication_date if raw_latest_form else "",
+        "latest_relevant": latest_relevant_payload,
+        "latest_merits": prior_merits,
+        "latest_merits_doc_id": clean((prior_merits or {}).get("doc_id")),
+        "latest_merits_type": clean((prior_merits or {}).get("type")),
+        "latest_merits_date": clean((prior_merits or {}).get("date")),
+        "latest_merits_court": clean((prior_merits or {}).get("court")),
+        "latest_merits_url": clean((prior_merits or {}).get("url")),
+        "merits_gemini_confidence": "",
+        "merits_reason": "",
+        "challenge_status": "history_prior_merits" if prior_merits else "",
+        "case_status": prior_status if prior_merits else "ongoing",
+        "invalidates_prior_merits": False,
+    }
+    return row, result
+
 def main() -> int:
     args = parse_args()
     year = args.year
@@ -2025,7 +2170,15 @@ def main() -> int:
     atomic_write_json(ai_cache_path, ai_cache)
 
     practice = load_practice(practice_path)
-    number_index = build_number_index(practice)
+    discovery_practice = [row for row in practice if is_discovery_eligible(row)]
+    excluded_closed_practice = [row for row in practice if not is_discovery_eligible(row)]
+    number_index = build_number_index(discovery_practice)
+    practice_by_key = {row.row_id: row for row in practice}
+
+    registry_snapshot = read_registry(registry_path)
+    known_case_links = known_case_links_from_registry(registry_snapshot)
+    known_case_numbers = set(known_case_links)
+
     focus_norm = normalized_number(args.focus_decision)
     focus_rows = [r for r in practice if focus_norm and r.decision_number_norm == focus_norm]
     focus_debug: dict[str, Any] = {
@@ -2049,7 +2202,12 @@ def main() -> int:
         "fetch_failures": [],
     }
 
-    log(f"Practice rows: {len(practice):,}; unique decision numbers: {len(number_index):,}")
+    log(
+        f"Practice rows: {len(practice):,}; discovery-eligible={len(discovery_practice):,}; "
+        f"excluded proceeding_closed_no_violation={len(excluded_closed_practice):,}; "
+        f"unique discovery decision numbers={len(number_index):,}; "
+        f"known confirmed court cases={len(known_case_numbers):,}"
+    )
     if args.focus_decision:
         log(f"Focus `{args.focus_decision}` corresponds to {len(focus_rows)} practice row(s).")
 
@@ -2078,6 +2236,11 @@ def main() -> int:
         "candidate_pairs": 0,
         "weak_yes_safeguard_calls": 0,
         "weak_yes_rejected": 0,
+        "known_history_work_items": 0,
+        "known_history_current_refresh": 0,
+        "known_history_backfill_merits": 0,
+        "known_history_skipped_existing_merits": 0,
+        "known_history_skipped_duplicate_discovery": 0,
     }
     registry_write_blocked_reason = ""
     ai_stats = {
@@ -2118,10 +2281,11 @@ def main() -> int:
             + ", ".join(f"{code}={justice.get(code, '')}" for code in sorted(commercial_codes))
         )
 
-        cases, stats, category_stats, justice_stats = scan_prefilter(
+        cases, stats, category_stats, justice_stats, known_history_docs = scan_prefilter(
             zf,
             cat_codes,
             commercial_codes,
+            known_case_numbers,
         )
 
         log(
@@ -2131,7 +2295,9 @@ def main() -> int:
             f"category={stats['category_match']:,}; "
             f"commercial={stats['commercial_match']:,}; "
             f"with_case={stats['with_cause_num']:,}; "
-            f"cases={stats['cases']:,}"
+            f"cases={stats['cases']:,}; "
+            f"known_history_cases_found={stats['known_history_cases_found']:,}; "
+            f"known_history_documents={stats['known_history_documents']:,}"
         )
 
         ordered_cases = sorted(
@@ -2927,6 +3093,151 @@ def main() -> int:
                     focus_debug["not_processed"].append(row)
 
 
+        new_discovery_yes_count = len(yes_rows)
+        new_discovery_no_count = len(no_rows)
+
+        # Stage 1H: history enrichment for already-confirmed decision<->case links.
+        #
+        # Two modes are intentionally different:
+        # - current/newer-year refresh: follow the known cause_num even when newer documents do
+        #   not repeat the AMCU decision number; preserve prior merits as a reference and let
+        #   Stage 2/3 determine whether the current yearly acts change the status.
+        # - older-year backfill: to save Gemini calls, inspect a known case only when the registry
+        #   still lacks a substantive merits act and this older package contains Рішення/Постанова.
+        known_history_rows: list[dict[str, Any]] = []
+        already_confirmed_pairs = {
+            (clean(row.get("decision_key")), clean(row.get("cause_num")))
+            for row in yes_rows
+        }
+
+        for case_number, docs in sorted(known_history_docs.items()):
+            links = known_case_links.get(case_number) or []
+            if not links or not docs:
+                continue
+
+            primary, primary_kind = primary_discovery_doc(docs, judgment_forms)
+            if not primary:
+                continue
+            raw_latest_form = latest_merits(docs, judgment_forms)
+            latest_doc = latest_active(docs)
+            form_docs = merits_docs_desc(docs, judgment_forms)
+
+            for link in links:
+                decision_key = clean(link.get("decision_key"))
+                pair = (decision_key, case_number)
+                if pair in already_confirmed_pairs:
+                    fetch_stats["known_history_skipped_duplicate_discovery"] += 1
+                    continue
+
+                practice_row = practice_by_key.get(decision_key)
+                if not practice_row:
+                    known_history_rows.append({
+                        "decision_key": decision_key,
+                        "cause_num": case_number,
+                        "mode": "skipped",
+                        "reason": "Decision key from registry is not present in current AMCU practice database.",
+                        "documents": len(docs),
+                    })
+                    continue
+
+                existing_case = link.get("case") if isinstance(link.get("case"), dict) else {}
+                source_years = sorted({
+                    int(y) for y in (existing_case.get("source_years") or [])
+                    if str(y).isdigit()
+                })
+                latest_source_year = max(source_years) if source_years else 0
+                current_or_newer_refresh = year >= latest_source_year
+                has_prior_merits = isinstance(existing_case.get("latest_merits"), dict) and clean(existing_case.get("latest_merits", {}).get("doc_id"))
+                prior_invalidated = bool(existing_case.get("invalidates_prior_merits"))
+                needs_older_merits_backfill = bool(
+                    year < latest_source_year
+                    and not has_prior_merits
+                    and not prior_invalidated
+                    and form_docs
+                )
+
+                if not current_or_newer_refresh and not needs_older_merits_backfill:
+                    fetch_stats["known_history_skipped_existing_merits"] += 1
+                    known_history_rows.append({
+                        "decision_key": decision_key,
+                        "decision_number": practice_row.decision_number,
+                        "decision_date": practice_row.decision_date,
+                        "cause_num": case_number,
+                        "mode": "skipped_older_history",
+                        "documents": len(docs),
+                        "form_documents": len(form_docs),
+                        "prior_merits_doc_id": clean((existing_case.get("latest_merits") or {}).get("doc_id")),
+                        "latest_source_year": latest_source_year,
+                        "reason": "Older package cannot improve the dashboard: a newer registry observation already has a merits act (or prior merits were invalidated).",
+                    })
+                    continue
+
+                mode = "current_refresh" if current_or_newer_refresh else "backfill_missing_merits"
+                entry = {
+                    "cause_num": case_number,
+                    "doc": primary,
+                    "text": "",
+                    "court": courts.get(primary.court_code, ""),
+                    "category_code": primary.category_code,
+                    "category_name": categories.get(primary.category_code, ""),
+                    "candidates": [],
+                    "fetch_meta": {},
+                    "candidate_source": "known_case_history",
+                    "primary_doc": primary,
+                    "primary_kind": f"known_case_{mode}",
+                    "negative_prefilter": {},
+                    "latest_merits": raw_latest_form,
+                    "latest_active": latest_doc,
+                    "docs": docs,
+                    "history_mode": mode,
+                    "history_prior_merits": existing_case.get("latest_merits") if current_or_newer_refresh else None,
+                    "history_existing_status": clean(existing_case.get("status")).lower() or "ongoing",
+                    "history_existing_status_detail": clean(existing_case.get("status_detail")),
+                }
+                row, result = history_row_from_known_case(
+                    practice_row,
+                    case_number,
+                    existing_case,
+                    entry,
+                    courts,
+                    judgment_forms,
+                )
+                yes_rows.append(row)
+                yes_work_items.append((row, result, entry))
+                already_confirmed_pairs.add(pair)
+                fetch_stats["known_history_work_items"] += 1
+                if mode == "current_refresh":
+                    fetch_stats["known_history_current_refresh"] += 1
+                else:
+                    fetch_stats["known_history_backfill_merits"] += 1
+
+                known_history_rows.append({
+                    "decision_key": decision_key,
+                    "decision_number": practice_row.decision_number,
+                    "decision_date": practice_row.decision_date,
+                    "cause_num": case_number,
+                    "mode": mode,
+                    "documents": len(docs),
+                    "form_documents": len(form_docs),
+                    "primary_doc_id": primary.doc_id,
+                    "latest_active_doc_id": latest_doc.doc_id if latest_doc else "",
+                    "latest_form_doc_id": raw_latest_form.doc_id if raw_latest_form else "",
+                    "prior_merits_doc_id": clean((existing_case.get("latest_merits") or {}).get("doc_id")),
+                    "latest_source_year": latest_source_year,
+                    "reason": "Known challenge link reused; direct-challenge Gemini classification skipped.",
+                })
+
+        if known_history_docs:
+            log(
+                f"Known-case history: metadata cases found={len(known_history_docs):,}; "
+                f"work_items={fetch_stats['known_history_work_items']:,}; "
+                f"current_refresh={fetch_stats['known_history_current_refresh']:,}; "
+                f"older_missing_merits={fetch_stats['known_history_backfill_merits']:,}; "
+                f"skipped_older={fetch_stats['known_history_skipped_existing_merits']:,}; "
+                f"duplicate_with_discovery={fetch_stats['known_history_skipped_duplicate_discovery']:,}"
+            )
+
+
         # Stage 2: determine the current usable court result and the newest still-current
         # substantive act. A later act that cancels prior merits and remands the case makes the
         # display status ongoing; we deliberately do NOT fall back to the cancelled older merits.
@@ -2937,11 +3248,29 @@ def main() -> int:
             current_is_latest_form = bool(form_docs and form_docs[0].doc_id == current_doc.doc_id)
 
             if not form_docs:
-                row["case_status"] = "ongoing"
-                row["challenge_status"] = "pending_no_merits"
-                row["merits_reason"] = "No active Рішення/Постанова exists in EDRSR metadata for this case."
-                if not row.get("status_detail"):
-                    row["status_detail"] = "Оскарження триває"
+                prior_merits = entry.get("history_prior_merits") if isinstance(entry.get("history_prior_merits"), dict) else None
+                if prior_merits and clean(prior_merits.get("doc_id")):
+                    # A known case can have only a newer procedural act in this yearly package.
+                    # Keep the previously verified merits act so Stage 3 can decide whether the
+                    # newer act makes appellate/cassation review ongoing.
+                    row["latest_merits"] = prior_merits
+                    row["latest_merits_doc_id"] = clean(prior_merits.get("doc_id"))
+                    row["latest_merits_type"] = clean(prior_merits.get("type"))
+                    row["latest_merits_date"] = clean(prior_merits.get("date"))
+                    row["latest_merits_court"] = clean(prior_merits.get("court"))
+                    row["latest_merits_url"] = clean(prior_merits.get("url"))
+                    prior_status = clean(entry.get("history_existing_status")).lower()
+                    row["case_status"] = prior_status if prior_status in CASE_OUTCOMES else "ongoing"
+                    row["challenge_status"] = "history_prior_merits"
+                    row["merits_reason"] = "No current-year Рішення/Постанова; retained previously verified merits act for cross-year current-status verification."
+                    if not row.get("status_detail"):
+                        row["status_detail"] = clean(entry.get("history_existing_status_detail"))
+                else:
+                    row["case_status"] = "ongoing"
+                    row["challenge_status"] = "pending_no_merits"
+                    row["merits_reason"] = "No active Рішення/Постанова exists in EDRSR metadata for this case."
+                    if not row.get("status_detail"):
+                        row["status_detail"] = "Оскарження триває"
                 continue
 
             start_index = 0
@@ -3247,13 +3576,30 @@ def main() -> int:
                         break
 
             if not merits_resolved and not merits_check_interrupted and not invalidated_prior:
-                row["case_status"] = "ongoing"
-                row["challenge_status"] = "pending_no_merits"
-                row["merits_reason"] = (
-                    "Active Рішення/Постанови exist, but none of the checked acts is a current substantive result of the AMCU challenge."
-                )
-                if not row.get("status_detail"):
-                    row["status_detail"] = "Оскарження триває"
+                prior_merits = entry.get("history_prior_merits") if isinstance(entry.get("history_prior_merits"), dict) else None
+                if prior_merits and clean(prior_merits.get("doc_id")):
+                    row["latest_merits"] = prior_merits
+                    row["latest_merits_doc_id"] = clean(prior_merits.get("doc_id"))
+                    row["latest_merits_type"] = clean(prior_merits.get("type"))
+                    row["latest_merits_date"] = clean(prior_merits.get("date"))
+                    row["latest_merits_court"] = clean(prior_merits.get("court"))
+                    row["latest_merits_url"] = clean(prior_merits.get("url"))
+                    prior_status = clean(entry.get("history_existing_status")).lower()
+                    row["case_status"] = prior_status if prior_status in CASE_OUTCOMES else "ongoing"
+                    row["challenge_status"] = "history_prior_merits"
+                    row["merits_reason"] = (
+                        "Current-year Рішення/Постанови did not replace the previously verified substantive result; prior merits retained pending later-act status verification."
+                    )
+                    if not row.get("status_detail"):
+                        row["status_detail"] = clean(entry.get("history_existing_status_detail"))
+                else:
+                    row["case_status"] = "ongoing"
+                    row["challenge_status"] = "pending_no_merits"
+                    row["merits_reason"] = (
+                        "Active Рішення/Постанови exist, but none of the checked acts is a current substantive result of the AMCU challenge."
+                    )
+                    if not row.get("status_detail"):
+                        row["status_detail"] = "Оскарження триває"
 
         # Stage 3: if a confirmed merits act exists but EDRSR has a newer active court act,
         # verify whether appellate/cassation review is still genuinely active. A newer procedural
@@ -3276,8 +3622,19 @@ def main() -> int:
                 (d for d in docs if d.doc_id == clean(latest_merits_payload.get("doc_id"))),
                 None,
             )
-            if not merits_doc or doc_sort_key(latest_active_doc) <= doc_sort_key(merits_doc):
-                continue
+            if merits_doc:
+                if doc_sort_key(latest_active_doc) <= doc_sort_key(merits_doc):
+                    continue
+            else:
+                # Cross-year history refresh: prior merits can come from an older EDRSR package
+                # and therefore be absent from the current year's docs list. Compare by date.
+                latest_dt = parse_date(latest_active_doc.adjudication_date)
+                merits_dt = parse_date(clean(latest_merits_payload.get("date")))
+                if latest_dt and merits_dt and latest_dt <= merits_dt:
+                    continue
+                if not latest_dt or not merits_dt:
+                    # Without a reliable ordering, do not spend Gemini on a speculative status check.
+                    continue
 
             current_status_eligible_pairs += 1
 
@@ -3522,7 +3879,7 @@ def main() -> int:
             for code, count in sorted(justice_stats.items(), key=lambda kv: kv[1], reverse=True)
         ]
 
-        merits_found_count = sum(1 for row in yes_rows if row.get("challenge_status") in {"merits_found", "merits_found_review_ongoing"})
+        merits_found_count = sum(1 for row in yes_rows if row.get("latest_merits"))
         pending_no_merits_count = sum(1 for row in yes_rows if row.get("challenge_status") == "pending_no_merits")
         review_ongoing_after_merits_count = sum(1 for row in yes_rows if row.get("challenge_status") == "merits_found_review_ongoing")
         merits_not_verified_count = sum(1 for row in yes_rows if row.get("challenge_status") == "merits_not_verified")
@@ -3590,13 +3947,18 @@ def main() -> int:
         )
 
         summary = {
-            "schema": "amku_court_challenges_production_v1_1_resume",
+            "schema": "amku_court_challenges_production_v1_2_history",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "year": year,
             "dataset_id": dataset_id,
             "zip_url": zip_url,
             "practice_rows": len(practice),
+            "discovery_eligible_practice_rows": len(discovery_practice),
+            "discovery_excluded_closed_no_violation": len(excluded_closed_practice),
             "unique_decision_numbers": len(number_index),
+            "known_registry_cases_before_run": len(known_case_numbers),
+            "known_history_cases_found_in_year": len(known_history_docs),
+            "known_history_work_items": fetch_stats["known_history_work_items"],
             "commercial_justice_codes": sorted(commercial_codes),
             "prefilter": stats,
             "cases_scanned": len(jobs),
@@ -3633,6 +3995,8 @@ def main() -> int:
             "current_status_gemini_call_limit": args.max_current_status_gemini_calls,
             "current_status_eligible_pairs": current_status_eligible_pairs,
             "current_status_coverage_gap": current_status_coverage_gap,
+            "new_discovery_confirmed_challenges": new_discovery_yes_count,
+            "new_discovery_rejected_mentions": new_discovery_no_count,
             "confirmed_challenges": len(yes_rows),
             "confirmed_challenge_cases": len({row.get("cause_num") for row in yes_rows if row.get("cause_num")}),
             "confirmed_challenge_decisions": len({row.get("decision_key") for row in yes_rows if row.get("decision_key")}),
@@ -3659,6 +4023,7 @@ def main() -> int:
         (out_dir / "merits_verification.json").write_text(json.dumps(merits_verification_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "current_status_verification.json").write_text(json.dumps(current_status_verification_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "weak_yes_safeguard.json").write_text(json.dumps(safeguard_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "known_case_history.json").write_text(json.dumps(known_history_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "negative_prefilter.json").write_text(json.dumps(negative_prefilter_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "negative_prefilter_bypassed_fallback.json").write_text(json.dumps(negative_prefilter_bypassed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "fetch_errors.json").write_text(json.dumps(fetch_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -3708,6 +4073,15 @@ def main() -> int:
             out_dir / "weak_yes_safeguard.csv",
             safeguard_rows,
             ["decision_key", "decision_date", "decision_number", "cause_num", "classification", "confidence", "reason"],
+        )
+        write_csv(
+            out_dir / "known_case_history.csv",
+            known_history_rows,
+            [
+                "decision_key", "decision_date", "decision_number", "cause_num", "mode", "documents",
+                "form_documents", "primary_doc_id", "latest_active_doc_id", "latest_form_doc_id",
+                "prior_merits_doc_id", "latest_source_year", "reason",
+            ],
         )
         write_csv(
             out_dir / "negative_prefilter.csv",
@@ -3794,7 +4168,7 @@ Generated: {summary['generated_at']}
 
 ## Pipeline
 
-`EDRSR metadata -> active + exact competition category + commercial jurisdiction -> latest Рішення/Постанова (else latest active) -> exact AMCU decision number -> cautious same-document AMCU-plaintiff negative prefilter -> Gemini YES/NO -> weak-YES safeguard when needed -> substantive merits verification -> later-act current-status verification -> persistent registry`
+`EDRSR metadata -> (A) new-case discovery: active + exact competition category + commercial jurisdiction -> exact AMCU decision number from discovery-eligible practice -> Gemini YES/NO; plus (B) known-case history: exact confirmed cause_num across all active categories -> substantive/history verification only when useful -> later-act current-status verification -> persistent registry`
 
 If the primary latest document contains no exact AMCU practice decision number, the earliest active document is fetched once as a fallback. A candidate found only in that earliest fallback is never hard-dropped solely because a different later primary document shows AMCU as plaintiff. Party/date matches remain corroborating signals only.
 
@@ -3804,8 +4178,13 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 
 ## Metadata prefilter
 
-- Practice rows: {len(practice):,}
-- Unique AMCU decision numbers: {len(number_index):,}
+- Practice rows total: {len(practice):,}
+- Discovery-eligible practice rows: {len(discovery_practice):,}
+- Excluded from NEW-case discovery because `decision_outcome=proceeding_closed_no_violation`: {len(excluded_closed_practice):,}
+- Unique AMCU decision numbers used for NEW-case discovery: {len(number_index):,}
+- Confirmed registry case numbers available for history lookup: {len(known_case_numbers):,}
+- Confirmed case numbers found in this EDRSR year (all active categories): {len(known_history_docs):,}
+- Active documents collected for known-case history: {stats['known_history_documents']:,}
 - EDRSR rows: {stats['rows_total']:,}
 - Active rows: {stats['active']:,}
 - Exact competition-category rows: {stats['category_match']:,}
@@ -3834,6 +4213,16 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 - Candidate cases remaining for Gemini queue: {len(candidate_docs):,}
 - Candidate pairs remaining for Gemini queue: {len(candidate_rows):,}
 
+## Known-case history enrichment
+
+- Known decision/case work items added without repeat challenge classification: {fetch_stats['known_history_work_items']:,}
+- Current/newer-year refresh work items: {fetch_stats['known_history_current_refresh']:,}
+- Older-year work items used only to fill missing merits: {fetch_stats['known_history_backfill_merits']:,}
+- Older known links skipped because a newer merits result already exists / was invalidated: {fetch_stats['known_history_skipped_existing_merits']:,}
+- Known links skipped because the same pair was already confirmed by this year's discovery: {fetch_stats['known_history_skipped_duplicate_discovery']:,}
+
+For older backfill years, known cases are intentionally cheap: if the registry already has a newer substantive merits act, the older package is not sent through Gemini merely to reconstruct redundant history. If the registry lacks merits, the newest historical `Рішення/Постанова` candidates are checked. For current/newer years, known `cause_num` documents can update status even when they no longer repeat the AMCU decision number.
+
 ## Gemini challenge classification / resume
 
 - Model: `{gemini_model}`
@@ -3843,8 +4232,9 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 - Approved v6 seed hits: {ai_stats['challenge_seed_hits']:,}
 - Targeted retries recovered: {ai_stats['challenge_targeted_retry_recovered']:,}
 - Persistent AI checkpoint entries after run: {len(ai_cache.get('entries') or {}):,}
-- Confirmed direct challenge pairs (`YES`): {len(yes_rows):,}
-- Rejected mentions/indirect cases (`NO`): {len(no_rows):,}
+- NEW-case discovery confirmed direct challenge pairs (`YES`): {new_discovery_yes_count:,}
+- NEW-case discovery rejected mentions/indirect cases (`NO`): {new_discovery_no_count:,}
+- Total yearly work rows entering registry merge after known-case history enrichment: {len(yes_rows):,}
 - Weak-YES safeguard calls: {safeguard_gemini_calls:,}/{args.max_safeguard_gemini_calls:,}
 - Weak YES rejected by safeguard: {fetch_stats['weak_yes_rejected']:,}
 
@@ -3900,6 +4290,7 @@ Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors
         f"Done: candidates_before_negative={fetch_stats['candidate_pairs_before_negative_filter']}; "
         f"negative_dropped={fetch_stats['negative_prefilter_pairs']}; "
         f"Gemini_queue={fetch_stats['candidate_pairs']}; "
+        f"history_work_items={fetch_stats['known_history_work_items']}; "
         f"challenge_Gemini={gemini_calls}; safeguard_Gemini={safeguard_gemini_calls}; merits_Gemini={merits_gemini_calls}; current_status_Gemini={current_status_gemini_calls}; "
         f"YES={len(yes_rows)}; NO={len(no_rows)}; merits_found={merits_found_count}; "
         f"pending_no_merits={pending_no_merits_count}; merits_not_verified={merits_not_verified_count}; "
