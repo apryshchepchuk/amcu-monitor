@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "amku-court-challenge-probe/0.4"
+USER_AGENT = "amku-court-challenge-probe/0.5"
 PASSPORT_URL_TEMPLATE = "https://dsa.court.gov.ua/open_data_json.php?json={dataset_id}"
 DATASET_IDS = {2025: 879, 2026: 7636}
 PUBLIC_EDRSR_URL = "https://reyestr.court.gov.ua/Review/{doc_id}"
@@ -42,6 +42,27 @@ PRIMARY_CHALLENGE_CATEGORY_RE = re.compile(
     r"оскаржен\w*\s+рішен\w*\s+антимонопольн", re.I
 )
 MERITS_FORM_RE = re.compile(r"(?:^|\s)(рішення|постанова)(?:\s|$)", re.I)
+COMMERCIAL_JUSTICE_RE = re.compile(r"господар", re.I)
+
+# Cautious negative prefilter. It is used only when the LATEST substantive/current
+# court document itself clearly identifies AMCU (or its territorial office) as plaintiff.
+# If a counterclaim against AMCU is visible in that same current document, the case is
+# NOT excluded and still goes to Gemini.
+AMCU_ENTITY_RE_FRAGMENT = (
+    r"(?:антимонопольн\w*\s+комітет\w*\s+україн\w*|"
+    r"(?:[а-яіїєг\-]+\s+){0,7}(?:міжобласн\w*\s+)?територіальн\w*\s+"
+    r"відділен\w*\s+антимонопольн\w*\s+комітет\w*\s+україн\w*)"
+)
+AMCU_PLAINTIFF_RE = re.compile(
+    rf"(?:за\s+(?:первісн\w*\s+)?позов\w*|за\s+позовн\w*\s+заяв\w*)"
+    rf".{{0,280}}?{AMCU_ENTITY_RE_FRAGMENT}.{{0,140}}?\sдо\s",
+    re.I | re.S,
+)
+COUNTERCLAIM_AGAINST_AMCU_RE = re.compile(
+    rf"(?:зустрічн\w*\s+позов\w*|зустрічн\w*\s+позовн\w*\s+заяв\w*)"
+    rf".{{0,650}}?\sдо\s.{{0,260}}?{AMCU_ENTITY_RE_FRAGMENT}",
+    re.I | re.S,
+)
 
 # Generic / anonymized values should never be treated as a party match.
 GENERIC_PARTY_PHRASES = {
@@ -265,14 +286,14 @@ def normalize_text(v: Any) -> str:
     raw = clean(v).replace("№", " ")
     s = unicodedata.normalize("NFKC", raw).lower().replace("ґ", "г")
     s = re.sub(r"[’'`ʼ«»“”„]", " ", s)
-    s = re.sub(r"[‐-‒–—−]", "-", s)
+    s = re.sub(r"[‐‑‒–—−]", "-", s)
     s = re.sub(r"[^0-9a-zа-яіїєг/\-]+", " ", s, flags=re.I)
     return re.sub(r"\s+", " ", s).strip()
 
 
 def normalized_number(v: Any) -> str:
     s = unicodedata.normalize("NFKC", clean(v)).lower().replace("№", "").replace("ґ", "г")
-    s = re.sub(r"[‐-‒–—−]", "-", s)
+    s = re.sub(r"[‐‑‒–—−]", "-", s)
     s = re.sub(r"\s+", "", s)
     s = re.sub(r"[^0-9a-zа-яіїєг/\-]", "", s, flags=re.I)
     return s
@@ -290,7 +311,7 @@ def structured_identifier_regex(v: Any) -> re.Pattern[str]:
         if part == "/":
             body.append(r"\s*/\s*")
         elif part == "-":
-            body.append(r"\s*[-‐-‒–—−]?\s*")
+            body.append(r"\s*[-‐‑‒–—−]?\s*")
         else:
             body.append(re.escape(part))
     return re.compile(
@@ -426,17 +447,26 @@ def doc_sort_key(d: DocRow) -> tuple[Any, ...]:
 def scan_prefilter(
     zf: zipfile.ZipFile,
     relevant_categories: set[str],
+    commercial_justice_codes: set[str],
 ) -> tuple[dict[str, list[DocRow]], dict[str, int], dict[str, dict[str, Any]], dict[str, int]]:
-    """Cheap metadata filter: active + exact relevant category + non-empty cause_num.
-
-    We intentionally do not require justice_kind here. In the previous POC the exact category
-    selection already made that check redundant, and keeping it out minimizes false negatives.
-    """
+    """Cheap metadata filter: active + exact relevant category + commercial jurisdiction + cause_num."""
     member = find_zip_member(zf, "documents.csv")
     cases: dict[str, list[DocRow]] = defaultdict(list)
-    stats = {"rows_total": 0, "active": 0, "category_match": 0, "with_cause_num": 0, "cases": 0}
+    stats = {
+        "rows_total": 0,
+        "active": 0,
+        "category_match": 0,
+        "commercial_match": 0,
+        "with_cause_num": 0,
+        "cases": 0,
+    }
     category_stats: dict[str, dict[str, Any]] = {
-        code: {"category_code": code, "active_documents": 0, "cases": set()}
+        code: {
+            "category_code": code,
+            "active_documents": 0,
+            "commercial_documents": 0,
+            "cases": set(),
+        }
         for code in relevant_categories
     }
     justice_stats: dict[str, int] = defaultdict(int)
@@ -448,12 +478,19 @@ def scan_prefilter(
             if clean(row.get("status")) != "1":
                 continue
             stats["active"] += 1
+
             cat = clean(row.get("category_code"))
             if cat not in relevant_categories:
                 continue
             stats["category_match"] += 1
             category_stats[cat]["active_documents"] += 1
-            justice_stats[clean(row.get("justice_kind"))] += 1
+
+            justice_code = clean(row.get("justice_kind"))
+            justice_stats[justice_code] += 1
+            if justice_code not in commercial_justice_codes:
+                continue
+            stats["commercial_match"] += 1
+            category_stats[cat]["commercial_documents"] += 1
 
             doc = doc_from_row(row)
             if not doc.cause_num:
@@ -464,7 +501,6 @@ def scan_prefilter(
 
     stats["cases"] = len(cases)
     return cases, stats, category_stats, dict(justice_stats)
-
 
 def decode_response_text(raw: bytes, content_type: str = "") -> str:
     encodings: list[str] = []
@@ -613,7 +649,7 @@ def rtf_to_text(raw: bytes) -> str:
                 try:
                     out.append(chr(value))
                 except ValueError:
-                    out.append("�")
+                    out.append(" ")
             skip_fallback = ucskip
             continue
         if word in RTF_SPECIAL_WORDS:
@@ -778,9 +814,45 @@ def latest_merits(docs: list[DocRow], judgment_forms: dict[str, str]) -> DocRow 
     return max(merits, key=doc_sort_key) if merits else None
 
 
-def discovery_doc(docs: list[DocRow]) -> DocRow | None:
+def latest_active(docs: list[DocRow]) -> DocRow | None:
+    active = [d for d in docs if d.status == "1"]
+    return max(active, key=doc_sort_key) if active else None
+
+
+def earliest_active(docs: list[DocRow]) -> DocRow | None:
     active = [d for d in docs if d.status == "1"]
     return min(active, key=doc_sort_key) if active else None
+
+
+def primary_discovery_doc(
+    docs: list[DocRow],
+    judgment_forms: dict[str, str],
+) -> tuple[DocRow | None, str]:
+    merits = latest_merits(docs, judgment_forms)
+    if merits:
+        return merits, "latest_merits"
+    latest = latest_active(docs)
+    if latest:
+        return latest, "latest_active"
+    return None, "none"
+
+def amcu_plaintiff_negative_prefilter(text: str, preamble_chars: int = 12000) -> dict[str, Any]:
+    """Return a cautious negative signal for obvious AMCU-as-plaintiff enforcement cases.
+
+    We inspect only the beginning of the latest substantive/current court text. A case is excluded
+    only when that current document explicitly identifies AMCU/its territorial office as plaintiff
+    AND does not show a counterclaim against AMCU. Ambiguous cases remain candidates for Gemini.
+    """
+    norm = normalize_text(text)
+    preamble = norm[:preamble_chars]
+    plaintiff = bool(AMCU_PLAINTIFF_RE.search(preamble))
+    counterclaim = bool(COUNTERCLAIM_AGAINST_AMCU_RE.search(norm[:30000]))
+    return {
+        "exclude": bool(plaintiff and not counterclaim),
+        "amcu_plaintiff": plaintiff,
+        "counterclaim_against_amcu": counterclaim,
+        "preamble_chars_checked": min(len(norm), preamble_chars),
+    }
 
 
 def party_match_score(text_norm: str, party_norms: Iterable[str]) -> tuple[bool, str]:
@@ -866,19 +938,19 @@ def find_candidate_rows(
 
 
 def text_excerpt_for_gemini(text: str, candidates: list[dict[str, Any]], max_chars: int) -> str:
+    """Build a bounded Gemini excerpt without batching or overlap-dedup optimization.
+
+    We keep the beginning of the court document and add context around candidate decision numbers.
+    Overlapping fragments are intentionally NOT merged in this version.
+    """
     if len(text) <= max_chars:
         return text
 
     chunks: list[tuple[int, int]] = [(0, min(len(text), 8000))]
+    lower = text.lower()
     for c in candidates:
         number = clean(c.get("decision_number"))
-        pattern = decision_number_regex(number)
-        for m in pattern.finditer(normalize_text(text)):
-            # Pattern positions are on normalized text, so they are not safe offsets into raw text.
-            # Fall back to string searches on common visible number variants below.
-            break
         visible_variants = [number, number.replace("-", " "), number.replace("№", "")]
-        lower = text.lower()
         for variant in visible_variants:
             pos = lower.find(variant.lower())
             if pos >= 0:
@@ -886,17 +958,10 @@ def text_excerpt_for_gemini(text: str, candidates: list[dict[str, Any]], max_cha
                 break
 
     chunks.append((max(0, len(text) - 4000), len(text)))
-    chunks.sort()
-    merged: list[tuple[int, int]] = []
-    for start, end in chunks:
-        if not merged or start > merged[-1][1] + 300:
-            merged.append((start, end))
-        else:
-            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
 
     out: list[str] = []
     used = 0
-    for start, end in merged:
+    for start, end in chunks:
         chunk = text[start:end]
         if used + len(chunk) > max_chars:
             chunk = chunk[: max(0, max_chars - used)]
@@ -929,25 +994,24 @@ def build_gemini_prompt(
     return f"""Ти аналізуєш текст судового документа з ЄДРСР для бази практики АМКУ.
 
 ЗАВДАННЯ:
-Для КОЖНОГО candidate визнач, чи є саме зазначене рішення АМКУ ПРЕДМЕТОМ СУДОВОГО ОСКАРЖЕННЯ У ПОТОЧНІЙ СУДОВІЙ СПРАВІ {cause_num}.
+Для КОЖНОГО candidate визнач лише YES або NO: чи є саме зазначене рішення АМКУ ПРЕДМЕТОМ СУДОВОГО ОСКАРЖЕННЯ У ПОТОЧНІЙ СУДОВІЙ СПРАВІ {cause_num}.
 
 Важливо:
 - Формулювання позовної вимоги може бути будь-яким: визнання незаконним, протиправним, неправомірним, недійсним, скасування, оскарження, повністю або в частині тощо. НЕ вимагай конкретної сталої фрази.
-- YES: поточна справа спрямована на судову перевірку/оспорювання саме цього рішення АМКУ (повністю або в частині).
-- NO: рішення лише згадується як передумова, доказ, історія іншої справи, або поточна справа стосується стягнення штрафу/пені, виконання рішення чи іншої вимоги, а саме рішення тут не оскаржується.
-- Якщо текст каже, що це рішення оскаржувалося В ІНШІЙ справі, для поточної справи поверни NO та, якщо можливо, вкажи номер тієї іншої справи у referenced_challenge_case.
-- UNCERTAIN: лише коли з наданого тексту неможливо надійно встановити предмет поточної справи.
-- Збіг номера рішення вже перевірений кодом. Назва порушника/дата — допоміжні ознаки, а не обов'язкові умови.
+- YES: поточна справа спрямована на судову перевірку/оспорювання саме цього рішення АМКУ, повністю або в частині.
+- NO: рішення лише згадується як передумова, доказ, історія іншої справи; або поточна справа стосується стягнення штрафу/пені, виконання рішення чи іншої вимоги, а саме рішення тут не оскаржується.
+- Якщо оскаржується інше рішення АМКУ, а candidate лише згадується або був ним підтверджений/залишений без змін, поверни NO.
+- Збіг повного номера рішення вже перевірений кодом. Назва порушника і дата — лише допоміжні ознаки.
+- Обов'язково дай YES або NO для кожного candidate. Не використовуй UNCERTAIN/RELATED або інші статуси.
 
-Поверни ТІЛЬКИ валідний JSON без markdown у форматі:
+Поверни ТІЛЬКИ валідний JSON без markdown:
 {{
   "results": [
     {{
       "candidate_id": "...",
-      "classification": "YES|NO|UNCERTAIN",
+      "classification": "YES|NO",
       "confidence": "high|medium|low",
       "challenger": "коротка назва позивача/скаржника або порожньо",
-      "referenced_challenge_case": "номер іншої справи або порожньо",
       "reason": "дуже коротко, чому"
     }}
   ]
@@ -964,7 +1028,6 @@ CANDIDATES:
 ТЕКСТ СУДОВОГО ДОКУМЕНТА:
 {text_excerpt}
 """
-
 
 def parse_json_loose(text: str) -> Any:
     s = clean(text)
@@ -1051,7 +1114,7 @@ def classify_candidates_with_gemini(
     timeout: int,
     retries: int,
     max_text_chars: int,
-) -> tuple[list[dict[str, Any]], str]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], str]:
     excerpt = text_excerpt_for_gemini(text, candidates, max_text_chars)
     prompt = build_gemini_prompt(cause_num, court_name, doc, candidates, excerpt)
     response = gemini_generate_json(prompt, api_key, model, timeout, retries)
@@ -1060,42 +1123,43 @@ def classify_candidates_with_gemini(
         raise RuntimeError(f"Gemini JSON has no results[]: {json.dumps(response, ensure_ascii=False)[:1000]}")
 
     by_id = {clean(c["candidate_id"]): c for c in candidates}
-    normalized: list[dict[str, Any]] = []
+    classified: list[dict[str, Any]] = []
+    not_processed: list[dict[str, Any]] = []
     seen: set[str] = set()
+
     for item in results:
         if not isinstance(item, dict):
             continue
         cid = clean(item.get("candidate_id"))
-        if cid not in by_id:
+        if cid not in by_id or cid in seen:
             continue
+        seen.add(cid)
         cls = clean(item.get("classification")).upper()
-        if cls not in {"YES", "NO", "UNCERTAIN"}:
-            cls = "UNCERTAIN"
+        if cls not in {"YES", "NO"}:
+            not_processed.append({
+                **by_id[cid],
+                "not_processed_reason": f"Gemini returned invalid classification: {cls or '<empty>'}",
+            })
+            continue
         conf = clean(item.get("confidence")).lower()
         if conf not in {"high", "medium", "low"}:
             conf = "low"
-        normalized.append({
+        classified.append({
             **by_id[cid],
             "classification": cls,
             "gemini_confidence": conf,
             "challenger": clean(item.get("challenger")),
-            "referenced_challenge_case": clean(item.get("referenced_challenge_case")),
             "reason": clean(item.get("reason"))[:600],
         })
-        seen.add(cid)
 
     for cid, candidate in by_id.items():
         if cid not in seen:
-            normalized.append({
+            not_processed.append({
                 **candidate,
-                "classification": "UNCERTAIN",
-                "gemini_confidence": "low",
-                "challenger": "",
-                "referenced_challenge_case": "",
-                "reason": "Gemini did not return this candidate_id.",
+                "not_processed_reason": "Gemini did not return this candidate_id.",
             })
-    return normalized, excerpt
 
+    return classified, not_processed, excerpt
 
 def csv_cell(v: Any) -> str:
     if v is None:
@@ -1140,7 +1204,9 @@ def main() -> int:
             for r in focus_rows
         ],
         "candidate_hits": [],
+        "negative_prefilter_hits": [],
         "gemini_results": [],
+        "not_processed": [],
         "fetch_failures": [],
     }
 
@@ -1148,63 +1214,54 @@ def main() -> int:
     if args.focus_decision:
         log(f"Focus `{args.focus_decision}` corresponds to {len(focus_rows)} practice row(s).")
 
-    zip_url = fetch_passport_zip_url(
-        year,
-        dataset_id,
-        args.request_timeout,
-        args.retries,
-    )
+    zip_url = fetch_passport_zip_url(year, dataset_id, args.request_timeout, args.retries)
     log(f"EDRSR ZIP: {zip_url}")
-
     zip_path = cache_dir / f"edrsr_data_{year}.zip"
-    download_file(
-        zip_url,
-        zip_path,
-        max(args.request_timeout, 120),
-        args.retries,
-    )
+    download_file(zip_url, zip_path, max(args.request_timeout, 120), args.retries)
 
     fetch_stats = {
         "documents_requested": 0,
         "validated_documents": 0,
         "cache_hits": 0,
         "fetch_errors": 0,
+        "primary_documents": 0,
+        "fallback_documents": 0,
+        "fallback_candidate_cases": 0,
+        "candidate_documents_before_negative_filter": 0,
+        "candidate_pairs_before_negative_filter": 0,
+        "negative_prefilter_cases": 0,
+        "negative_prefilter_pairs": 0,
         "candidate_documents": 0,
         "candidate_pairs": 0,
     }
 
     with zipfile.ZipFile(zip_path, "r") as zf:
-        categories = read_dict_tsv(
-            zf,
-            "cause_categories.csv",
-            "category_code",
-        )
-        judgment_forms = read_dict_tsv(
-            zf,
-            "judgment_forms.csv",
-            "judgment_code",
-        )
-        courts = read_dict_tsv(
-            zf,
-            "courts.csv",
-            "court_code",
-        )
-        justice = read_dict_tsv(
-            zf,
-            "justice_kinds.csv",
-            "justice_kind",
-        )
+        categories = read_dict_tsv(zf, "cause_categories.csv", "category_code")
+        judgment_forms = read_dict_tsv(zf, "judgment_forms.csv", "judgment_code")
+        courts = read_dict_tsv(zf, "courts.csv", "court_code")
+        justice = read_dict_tsv(zf, "justice_kinds.csv", "justice_kind")
 
         cat_codes = relevant_category_codes(categories)
         primary_cat_codes = primary_challenge_category_codes(categories)
+        commercial_codes = {
+            code for code, name in justice.items()
+            if COMMERCIAL_JUSTICE_RE.search(name or "")
+        }
+        if not commercial_codes:
+            raise RuntimeError("Commercial justice_kind code was not found in justice_kinds.csv")
 
         log(f"Relevant exact category codes: {len(cat_codes)}")
         for code in sorted(cat_codes):
             log(f"  {code}: {categories.get(code, '')}")
+        log(
+            "Commercial justice codes: "
+            + ", ".join(f"{code}={justice.get(code, '')}" for code in sorted(commercial_codes))
+        )
 
         cases, stats, category_stats, justice_stats = scan_prefilter(
             zf,
             cat_codes,
+            commercial_codes,
         )
 
         log(
@@ -1212,6 +1269,7 @@ def main() -> int:
             f"rows={stats['rows_total']:,}; "
             f"active={stats['active']:,}; "
             f"category={stats['category_match']:,}; "
+            f"commercial={stats['commercial_match']:,}; "
             f"with_case={stats['with_cause_num']:,}; "
             f"cases={stats['cases']:,}"
         )
@@ -1219,1019 +1277,588 @@ def main() -> int:
         ordered_cases = sorted(
             cases.items(),
             key=lambda kv: (
-                1
-                if any(
-                    d.category_code in primary_cat_codes
-                    for d in kv[1]
-                )
-                else 0,
-                max(
-                    (doc_sort_key(d) for d in kv[1]),
-                    default=((0, ""), (0, ""), 0),
-                ),
+                1 if any(d.category_code in primary_cat_codes for d in kv[1]) else 0,
+                max((doc_sort_key(d) for d in kv[1]), default=((0, ""), (0, ""), 0)),
             ),
             reverse=True,
         )
-
         if args.max_cases > 0:
             ordered_cases = ordered_cases[:args.max_cases]
 
         prefilter_rows: list[dict[str, Any]] = []
-        jobs: list[tuple[str, DocRow, list[DocRow]]] = []
+        jobs: list[tuple[str, DocRow, str, DocRow | None, list[DocRow]]] = []
 
         for cause_num, docs in ordered_cases:
-            first = discovery_doc(docs)
+            primary, primary_kind = primary_discovery_doc(docs, judgment_forms)
+            earliest = earliest_active(docs)
             merits = latest_merits(docs, judgment_forms)
-
-            if not first:
+            latest = latest_active(docs)
+            if not primary:
                 continue
 
             prefilter_rows.append({
                 "cause_num": cause_num,
                 "documents": len(docs),
-                "category_code": first.category_code,
-                "category_name": categories.get(
-                    first.category_code,
-                    "",
-                ),
-                "justice_kind": justice.get(
-                    first.justice_kind,
-                    first.justice_kind,
-                ),
-                "discovery_doc_id": first.doc_id,
-                "discovery_date": first.adjudication_date,
-                "latest_merits_doc_id": (
-                    merits.doc_id
-                    if merits
-                    else ""
-                ),
-                "latest_merits_date": (
-                    merits.adjudication_date
-                    if merits
-                    else ""
-                ),
-                "latest_merits_form": (
-                    judgment_forms.get(
-                        merits.judgment_code,
-                        "",
-                    )
-                    if merits
-                    else ""
-                ),
+                "category_code": primary.category_code,
+                "category_name": categories.get(primary.category_code, ""),
+                "justice_kind": justice.get(primary.justice_kind, primary.justice_kind),
+                "primary_kind": primary_kind,
+                "primary_doc_id": primary.doc_id,
+                "primary_date": primary.adjudication_date,
+                "earliest_doc_id": earliest.doc_id if earliest else "",
+                "earliest_date": earliest.adjudication_date if earliest else "",
+                "latest_active_doc_id": latest.doc_id if latest else "",
+                "latest_active_date": latest.adjudication_date if latest else "",
+                "latest_merits_doc_id": merits.doc_id if merits else "",
+                "latest_merits_date": merits.adjudication_date if merits else "",
+                "latest_merits_form": judgment_forms.get(merits.judgment_code, "") if merits else "",
             })
-
-            jobs.append(
-                (
-                    cause_num,
-                    first,
-                    docs,
-                )
-            )
+            jobs.append((cause_num, primary, primary_kind, earliest, docs))
 
         candidate_docs: list[dict[str, Any]] = []
+        negative_prefilter_rows: list[dict[str, Any]] = []
         fetch_errors: list[dict[str, Any]] = []
         text_cache_for_gemini: dict[str, str] = {}
 
-        def worker(
-            job: tuple[str, DocRow, list[DocRow]],
-        ) -> dict[str, Any]:
-            cause_num, doc, docs = job
+        def fetch_one(doc: DocRow) -> tuple[str, dict[str, Any]]:
+            return fetch_doc_text(
+                doc,
+                cache_dir / "texts",
+                args.request_timeout,
+                args.retries,
+                args.request_delay_ms,
+            )
+
+        def worker(job: tuple[str, DocRow, str, DocRow | None, list[DocRow]]) -> dict[str, Any]:
+            cause_num, primary, primary_kind, earliest, docs = job
+            fetch_records: list[dict[str, Any]] = []
+            primary_text = ""
+            primary_meta: dict[str, Any] = {}
+            primary_error: dict[str, Any] | None = None
 
             try:
-                text, meta = fetch_doc_text(
-                    doc,
-                    cache_dir / "texts",
-                    args.request_timeout,
-                    args.retries,
-                    args.request_delay_ms,
-                )
-
-                candidates = find_candidate_rows(
-                    text,
-                    doc,
-                    number_index,
-                )
-
-                return {
-                    "ok": True,
-                    "cause_num": cause_num,
-                    "doc": doc,
-                    "docs": docs,
-                    "text": text,
-                    "meta": meta,
-                    "candidates": candidates,
-                }
-
+                primary_text, primary_meta = fetch_one(primary)
+                fetch_records.append({"role": "primary", "doc": primary, "meta": primary_meta, "ok": True})
             except Exception as exc:  # noqa: BLE001
-                attempts = (
-                    exc.attempts
-                    if isinstance(
-                        exc,
-                        DocumentFetchError,
-                    )
-                    else []
-                )
+                primary_error = {
+                    "role": "primary",
+                    "doc_id": primary.doc_id,
+                    "doc_url": primary.doc_url,
+                    "error": str(exc),
+                    "attempts": exc.attempts if isinstance(exc, DocumentFetchError) else [],
+                }
+                fetch_records.append({"role": "primary", "doc": primary, "ok": False, **primary_error})
 
+            candidates: list[dict[str, Any]] = []
+            candidate_doc = primary
+            candidate_text = primary_text
+            candidate_meta = primary_meta
+            candidate_source = primary_kind
+
+            if primary_text:
+                candidates = find_candidate_rows(primary_text, primary, number_index)
+
+            fallback_used = False
+            fallback_error: dict[str, Any] | None = None
+            if not candidates and earliest and earliest.doc_id != primary.doc_id:
+                fallback_used = True
+                try:
+                    fallback_text, fallback_meta = fetch_one(earliest)
+                    fetch_records.append({"role": "earliest_fallback", "doc": earliest, "meta": fallback_meta, "ok": True})
+                    fallback_candidates = find_candidate_rows(fallback_text, earliest, number_index)
+                    if fallback_candidates:
+                        candidates = fallback_candidates
+                        candidate_doc = earliest
+                        candidate_text = fallback_text
+                        candidate_meta = fallback_meta
+                        candidate_source = "earliest_fallback"
+                except Exception as exc:  # noqa: BLE001
+                    fallback_error = {
+                        "role": "earliest_fallback",
+                        "doc_id": earliest.doc_id,
+                        "doc_url": earliest.doc_url,
+                        "error": str(exc),
+                        "attempts": exc.attempts if isinstance(exc, DocumentFetchError) else [],
+                    }
+                    fetch_records.append({"role": "earliest_fallback", "doc": earliest, "ok": False, **fallback_error})
+
+            negative = amcu_plaintiff_negative_prefilter(primary_text) if primary_text else {
+                "exclude": False,
+                "amcu_plaintiff": False,
+                "counterclaim_against_amcu": False,
+                "preamble_chars_checked": 0,
+            }
+
+            if not primary_text and not candidate_text:
                 return {
                     "ok": False,
                     "cause_num": cause_num,
-                    "doc": doc,
-                    "error": str(exc),
-                    "attempts": attempts,
+                    "doc": primary,
+                    "error": primary_error or fallback_error or {"error": "No validated court text"},
+                    "fetch_records": fetch_records,
                 }
 
-        workers = max(
-            1,
-            min(
-                8,
-                args.workers,
-            ),
-        )
-
-        log(
-            f"Discovery scan: {len(jobs):,} cases; "
-            f"one court text per case; workers={workers}"
-        )
-
-        with ThreadPoolExecutor(
-            max_workers=workers,
-        ) as executor:
-
-            futures = {
-                executor.submit(
-                    worker,
-                    job,
-                ): job[0]
-                for job in jobs
+            return {
+                "ok": True,
+                "cause_num": cause_num,
+                "primary_doc": primary,
+                "primary_kind": primary_kind,
+                "primary_text": primary_text,
+                "primary_meta": primary_meta,
+                "candidate_doc": candidate_doc,
+                "candidate_text": candidate_text,
+                "candidate_meta": candidate_meta,
+                "candidate_source": candidate_source,
+                "docs": docs,
+                "candidates": candidates,
+                "negative": negative,
+                "fallback_used": fallback_used,
+                "fetch_records": fetch_records,
             }
 
-            done_count = 0
+        workers = max(1, min(8, args.workers))
+        log(
+            f"Discovery scan: {len(jobs):,} cases; primary=latest merits else latest active; "
+            f"earliest fallback only when primary has no exact AMCU number; workers={workers}"
+        )
 
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = {executor.submit(worker, job): job[0] for job in jobs}
+            done_count = 0
             for future in as_completed(futures):
                 done_count += 1
                 result = future.result()
 
-                fetch_stats["documents_requested"] += 1
+                for fr in result.get("fetch_records", []):
+                    fetch_stats["documents_requested"] += 1
+                    if fr.get("role") == "primary":
+                        fetch_stats["primary_documents"] += 1
+                    elif fr.get("role") == "earliest_fallback":
+                        fetch_stats["fallback_documents"] += 1
+                    if fr.get("ok"):
+                        fetch_stats["validated_documents"] += 1
+                        if fr.get("meta", {}).get("cache_hit"):
+                            fetch_stats["cache_hits"] += 1
+                    else:
+                        fetch_stats["fetch_errors"] += 1
+                        fetch_errors.append({
+                            "cause_num": result.get("cause_num", ""),
+                            "role": fr.get("role", ""),
+                            "doc_id": fr.get("doc_id", ""),
+                            "doc_url": fr.get("doc_url", ""),
+                            "error": fr.get("error", ""),
+                            "attempts": fr.get("attempts", []),
+                        })
 
-                if result["ok"]:
-                    fetch_stats["validated_documents"] += 1
+                if not result.get("ok"):
+                    if focus_norm:
+                        focus_debug["fetch_failures"].append({
+                            "cause_num": result.get("cause_num", ""),
+                            "error": result.get("error", {}),
+                        })
+                    continue
 
-                    if result["meta"].get("cache_hit"):
-                        fetch_stats["cache_hits"] += 1
+                candidates = result["candidates"]
+                if result.get("fallback_used") and candidates and result.get("candidate_source") == "earliest_fallback":
+                    fetch_stats["fallback_candidate_cases"] += 1
 
-                    candidates = result["candidates"]
+                if candidates:
+                    fetch_stats["candidate_documents_before_negative_filter"] += 1
+                    fetch_stats["candidate_pairs_before_negative_filter"] += len(candidates)
 
-                    if candidates:
+                    doc: DocRow = result["candidate_doc"]
+                    primary_doc: DocRow = result["primary_doc"]
+                    docs: list[DocRow] = result["docs"]
+                    merits = latest_merits(docs, judgment_forms)
+                    negative = result["negative"]
+
+                    if negative.get("exclude"):
+                        fetch_stats["negative_prefilter_cases"] += 1
+                        fetch_stats["negative_prefilter_pairs"] += len(candidates)
+                        for c in candidates:
+                            negative_prefilter_rows.append({
+                                "decision_number": c["decision_number"],
+                                "decision_date": c["decision_date"],
+                                "liable_parties": c["liable_parties"],
+                                "strength": c["strength"],
+                                "signals": c["signals"],
+                                "cause_num": result["cause_num"],
+                                "matched_on_doc_id": doc.doc_id,
+                                "matched_on_source": result["candidate_source"],
+                                "primary_doc_id": primary_doc.doc_id,
+                                "primary_kind": result["primary_kind"],
+                                "negative_prefilter": negative,
+                                "reason": "Latest substantive/current document explicitly identifies AMCU as plaintiff and shows no counterclaim against AMCU.",
+                            })
+                        if focus_norm and any(normalized_number(c["decision_number"]) == focus_norm for c in candidates):
+                            focus_debug["negative_prefilter_hits"].append({
+                                "cause_num": result["cause_num"],
+                                "primary_doc_id": primary_doc.doc_id,
+                                "candidate_doc_id": doc.doc_id,
+                                "negative_prefilter": negative,
+                                "candidates": [c for c in candidates if normalized_number(c["decision_number"]) == focus_norm],
+                            })
+                    else:
                         fetch_stats["candidate_documents"] += 1
                         fetch_stats["candidate_pairs"] += len(candidates)
-
-                        doc: DocRow = result["doc"]
-                        docs: list[DocRow] = result["docs"]
-
-                        merits = latest_merits(
-                            docs,
-                            judgment_forms,
-                        )
-
                         entry = {
                             "cause_num": result["cause_num"],
                             "doc": doc,
-                            "court": courts.get(
-                                doc.court_code,
-                                "",
-                            ),
+                            "text": result["candidate_text"],
+                            "court": courts.get(doc.court_code, ""),
                             "category_code": doc.category_code,
-                            "category_name": categories.get(
-                                doc.category_code,
-                                "",
-                            ),
+                            "category_name": categories.get(doc.category_code, ""),
                             "candidates": candidates,
-                            "fetch_meta": result["meta"],
+                            "fetch_meta": result["candidate_meta"],
+                            "candidate_source": result["candidate_source"],
+                            "primary_doc": primary_doc,
+                            "primary_kind": result["primary_kind"],
+                            "negative_prefilter": negative,
                             "latest_merits": merits,
                         }
-
                         candidate_docs.append(entry)
+                        text_cache_for_gemini[doc.doc_id] = result["candidate_text"]
 
-                        text_cache_for_gemini[
-                            doc.doc_id
-                        ] = result["text"]
-
-                        if (
-                            focus_norm
-                            and any(
-                                normalized_number(
-                                    c["decision_number"]
-                                ) == focus_norm
-                                for c in candidates
-                            )
-                        ):
-                            focus_debug[
-                                "candidate_hits"
-                            ].append({
+                        if focus_norm and any(normalized_number(c["decision_number"]) == focus_norm for c in candidates):
+                            focus_debug["candidate_hits"].append({
                                 "cause_num": result["cause_num"],
                                 "doc_id": doc.doc_id,
                                 "doc_date": doc.adjudication_date,
-                                "content_type": result[
-                                    "meta"
-                                ].get(
-                                    "content_type",
-                                    "",
-                                ),
-                                "decoder": result[
-                                    "meta"
-                                ].get(
-                                    "decoder",
-                                    "",
-                                ),
-                                "validation": result[
-                                    "meta"
-                                ].get(
-                                    "validation",
-                                    {},
-                                ),
-                                "candidates": [
-                                    c
-                                    for c in candidates
-                                    if normalized_number(
-                                        c["decision_number"]
-                                    ) == focus_norm
-                                ],
-                                "text_preview": normalize_text(
-                                    result["text"]
-                                )[:1400],
+                                "candidate_source": result["candidate_source"],
+                                "primary_doc_id": primary_doc.doc_id,
+                                "primary_kind": result["primary_kind"],
+                                "negative_prefilter": negative,
+                                "content_type": result["candidate_meta"].get("content_type", ""),
+                                "decoder": result["candidate_meta"].get("decoder", ""),
+                                "validation": result["candidate_meta"].get("validation", {}),
+                                "candidates": [c for c in candidates if normalized_number(c["decision_number"]) == focus_norm],
+                                "text_preview": normalize_text(result["candidate_text"])[:1400],
                             })
 
-                else:
-                    fetch_stats["fetch_errors"] += 1
-
-                    doc = result["doc"]
-
-                    error_row = {
-                        "cause_num": result["cause_num"],
-                        "doc_id": doc.doc_id,
-                        "doc_url": doc.doc_url,
-                        "error": result["error"],
-                        "attempts": result.get(
-                            "attempts",
-                            [],
-                        ),
-                    }
-
-                    fetch_errors.append(error_row)
-
-                    if focus_norm:
-                        focus_debug[
-                            "fetch_failures"
-                        ].append(
-                            error_row
-                        )
-
-                if (
-                    done_count == 1
-                    or done_count % 100 == 0
-                    or done_count == len(jobs)
-                ):
+                if done_count == 1 or done_count % 100 == 0 or done_count == len(jobs):
                     log(
-                        f"Discovery progress "
-                        f"{done_count}/{len(jobs)}; "
-                        f"candidate_docs="
-                        f"{fetch_stats['candidate_documents']}; "
-                        f"candidate_pairs="
-                        f"{fetch_stats['candidate_pairs']}; "
-                        f"errors="
-                        f"{fetch_stats['fetch_errors']}"
+                        f"Discovery progress {done_count}/{len(jobs)}; "
+                        f"candidate_cases(before negative)={fetch_stats['candidate_documents_before_negative_filter']}; "
+                        f"negative_dropped={fetch_stats['negative_prefilter_cases']}; "
+                        f"to_gemini={fetch_stats['candidate_documents']}; "
+                        f"errors={fetch_stats['fetch_errors']}"
                     )
 
-        # Strong candidates first; then newest documents.
-        # This matters only if a Gemini call cap is reached.
+        # Stronger corroborating signals first if the Gemini budget is smaller than the candidate set.
         candidate_docs.sort(
             key=lambda e: (
-                1
-                if any(
-                    c["strength"] == "number+party"
-                    for c in e["candidates"]
-                )
-                else 0,
+                1 if any(c["signals"].get("liable_party") and c["signals"].get("decision_date") for c in e["candidates"]) else 0,
+                1 if any(c["strength"] == "number+party" for c in e["candidates"]) else 0,
                 doc_sort_key(e["doc"]),
             ),
             reverse=True,
         )
 
         candidate_rows: list[dict[str, Any]] = []
+        for entry in candidate_docs:
+            doc: DocRow = entry["doc"]
+            merits: DocRow | None = entry["latest_merits"]
+            for c in entry["candidates"]:
+                candidate_rows.append({
+                    "decision_number": c["decision_number"],
+                    "decision_date": c["decision_date"],
+                    "liable_parties": c["liable_parties"],
+                    "strength": c["strength"],
+                    "signals": c["signals"],
+                    "cause_num": entry["cause_num"],
+                    "doc_id": doc.doc_id,
+                    "doc_date": doc.adjudication_date,
+                    "candidate_source": entry["candidate_source"],
+                    "primary_doc_id": entry["primary_doc"].doc_id,
+                    "primary_kind": entry["primary_kind"],
+                    "court": entry["court"],
+                    "category_code": entry["category_code"],
+                    "category_name": entry["category_name"],
+                    "latest_merits_doc_id": merits.doc_id if merits else "",
+                    "latest_merits_date": merits.adjudication_date if merits else "",
+                })
+
+        api_key = clean(os.environ.get("GEMINI_API_KEY"))
+        gemini_model = clean(os.environ.get("GEMINI_MODEL")) or DEFAULT_GEMINI_MODEL
+        if candidate_docs and not args.skip_gemini and not api_key:
+            raise RuntimeError("GEMINI_API_KEY is required because exact-number candidates were found.")
+
+        yes_rows: list[dict[str, Any]] = []
+        no_rows: list[dict[str, Any]] = []
+        not_processed_rows: list[dict[str, Any]] = []
+        gemini_errors: list[dict[str, Any]] = []
+        gemini_calls = 0
+        min_call_interval = 60.0 / max(1, args.gemini_rpm_limit) if args.gemini_rpm_limit > 0 else 0.0
+        last_call_started = 0.0
 
         for entry in candidate_docs:
             doc: DocRow = entry["doc"]
             merits: DocRow | None = entry["latest_merits"]
-
-            for c in entry["candidates"]:
-                candidate_rows.append({
-                    "decision_number": c[
-                        "decision_number"
-                    ],
-                    "decision_date": c[
-                        "decision_date"
-                    ],
-                    "liable_parties": c[
-                        "liable_parties"
-                    ],
-                    "strength": c[
-                        "strength"
-                    ],
-                    "signals": c[
-                        "signals"
-                    ],
-                    "cause_num": entry[
-                        "cause_num"
-                    ],
-                    "doc_id": doc.doc_id,
-                    "doc_date": doc.adjudication_date,
-                    "court": entry["court"],
-                    "category_code": entry[
-                        "category_code"
-                    ],
-                    "category_name": entry[
-                        "category_name"
-                    ],
-                    "latest_merits_doc_id": (
-                        merits.doc_id
-                        if merits
-                        else ""
-                    ),
-                    "latest_merits_date": (
-                        merits.adjudication_date
-                        if merits
-                        else ""
-                    ),
-                })
-
-        api_key = clean(
-            os.environ.get(
-                "GEMINI_API_KEY"
-            )
-        )
-
-        gemini_model = (
-            clean(
-                os.environ.get(
-                    "GEMINI_MODEL"
-                )
-            )
-            or DEFAULT_GEMINI_MODEL
-        )
-
-        if (
-            candidate_docs
-            and not args.skip_gemini
-            and not api_key
-        ):
-            raise RuntimeError(
-                "GEMINI_API_KEY is required because "
-                "exact-number candidates were found."
-            )
-
-        yes_rows: list[dict[str, Any]] = []
-        no_rows: list[dict[str, Any]] = []
-        uncertain_rows: list[dict[str, Any]] = []
-        gemini_errors: list[dict[str, Any]] = []
-
-        gemini_calls = 0
-
-        min_call_interval = (
-            60.0
-            / max(
-                1,
-                args.gemini_rpm_limit,
-            )
-            if args.gemini_rpm_limit > 0
-            else 0.0
-        )
-
-        last_call_started = 0.0
-
-        for idx, entry in enumerate(
-            candidate_docs,
-            start=1,
-        ):
-            doc: DocRow = entry["doc"]
-            merits: DocRow | None = entry[
-                "latest_merits"
-            ]
-
-            text = text_cache_for_gemini.get(
-                doc.doc_id,
-                "",
-            )
-
+            text = text_cache_for_gemini.get(doc.doc_id, "")
             candidates = entry["candidates"]
 
+            classified: list[dict[str, Any]] = []
+            technical_not_processed: list[dict[str, Any]] = []
+
             if args.skip_gemini:
-                classified = [
-                    {
-                        **c,
-                        "classification": "UNCERTAIN",
-                        "gemini_confidence": "low",
-                        "challenger": "",
-                        "referenced_challenge_case": "",
-                        "reason": (
-                            "Gemini skipped by "
-                            "--skip-gemini."
-                        ),
-                    }
+                technical_not_processed = [
+                    {**c, "not_processed_reason": "Gemini skipped by --skip-gemini."}
                     for c in candidates
                 ]
-
             elif gemini_calls >= args.max_gemini_calls:
-                classified = [
-                    {
-                        **c,
-                        "classification": "UNCERTAIN",
-                        "gemini_confidence": "low",
-                        "challenger": "",
-                        "referenced_challenge_case": "",
-                        "reason": (
-                            "Gemini call budget exceeded "
-                            f"({args.max_gemini_calls})."
-                        ),
-                    }
+                technical_not_processed = [
+                    {**c, "not_processed_reason": f"Gemini call budget exceeded ({args.max_gemini_calls})."}
                     for c in candidates
                 ]
-
             else:
-                elapsed = (
-                    time.monotonic()
-                    - last_call_started
-                )
-
-                if (
-                    last_call_started
-                    and min_call_interval > 0
-                    and elapsed < min_call_interval
-                ):
-                    time.sleep(
-                        min_call_interval
-                        - elapsed
-                    )
-
-                last_call_started = (
-                    time.monotonic()
-                )
-
+                elapsed = time.monotonic() - last_call_started
+                if last_call_started and min_call_interval > 0 and elapsed < min_call_interval:
+                    time.sleep(min_call_interval - elapsed)
+                last_call_started = time.monotonic()
                 gemini_calls += 1
-
                 log(
-                    f"Gemini "
-                    f"{gemini_calls}/"
-                    f"{args.max_gemini_calls}: "
-                    f"case "
-                    f"{entry['cause_num']}; "
-                    f"candidate(s)="
-                    f"{len(candidates)}"
+                    f"Gemini {gemini_calls}/{args.max_gemini_calls}: case {entry['cause_num']}; "
+                    f"candidate(s)={len(candidates)}"
                 )
-
                 try:
-                    classified, _excerpt = (
-                        classify_candidates_with_gemini(
-                            entry["cause_num"],
-                            entry["court"],
-                            doc,
-                            candidates,
-                            text,
-                            api_key,
-                            gemini_model,
-                            args.request_timeout,
-                            args.retries,
-                            args.gemini_max_text_chars,
-                        )
+                    classified, technical_not_processed, _excerpt = classify_candidates_with_gemini(
+                        entry["cause_num"],
+                        entry["court"],
+                        doc,
+                        candidates,
+                        text,
+                        api_key,
+                        gemini_model,
+                        args.request_timeout,
+                        args.retries,
+                        args.gemini_max_text_chars,
                     )
-
                 except Exception as exc:  # noqa: BLE001
                     gemini_errors.append({
-                        "cause_num": entry[
-                            "cause_num"
-                        ],
+                        "cause_num": entry["cause_num"],
                         "doc_id": doc.doc_id,
                         "error": str(exc),
                         "candidates": candidates,
                     })
-
-                    classified = [
-                        {
-                            **c,
-                            "classification": "UNCERTAIN",
-                            "gemini_confidence": "low",
-                            "challenger": "",
-                            "referenced_challenge_case": "",
-                            "reason": (
-                                "Gemini error: "
-                                f"{str(exc)[:300]}"
-                            ),
-                        }
+                    technical_not_processed = [
+                        {**c, "not_processed_reason": f"Gemini error: {str(exc)[:300]}"}
                         for c in candidates
                     ]
 
             for result in classified:
                 row = {
-                    "decision_number": result[
-                        "decision_number"
-                    ],
-                    "decision_date": result[
-                        "decision_date"
-                    ],
-                    "liable_parties": result[
-                        "liable_parties"
-                    ],
-                    "prefilter_strength": result[
-                        "strength"
-                    ],
-                    "signals": result[
-                        "signals"
-                    ],
-                    "classification": result[
-                        "classification"
-                    ],
-                    "gemini_confidence": result[
-                        "gemini_confidence"
-                    ],
-                    "challenger": result[
-                        "challenger"
-                    ],
-                    "referenced_challenge_case": result[
-                        "referenced_challenge_case"
-                    ],
-                    "reason": result[
-                        "reason"
-                    ],
-                    "cause_num": entry[
-                        "cause_num"
-                    ],
+                    "decision_number": result["decision_number"],
+                    "decision_date": result["decision_date"],
+                    "liable_parties": result["liable_parties"],
+                    "prefilter_strength": result["strength"],
+                    "signals": result["signals"],
+                    "classification": result["classification"],
+                    "gemini_confidence": result["gemini_confidence"],
+                    "challenger": result["challenger"],
+                    "reason": result["reason"],
+                    "cause_num": entry["cause_num"],
                     "matched_on_doc_id": doc.doc_id,
-                    "court": entry[
-                        "court"
-                    ],
-                    "category_code": entry[
-                        "category_code"
-                    ],
-                    "category_name": entry[
-                        "category_name"
-                    ],
-                    "latest_merits_doc_id": (
-                        merits.doc_id
-                        if merits
-                        else ""
-                    ),
-                    "latest_merits_type": (
-                        judgment_forms.get(
-                            merits.judgment_code,
-                            "",
-                        )
-                        if merits
-                        else ""
-                    ),
-                    "latest_merits_date": (
-                        merits.adjudication_date
-                        if merits
-                        else ""
-                    ),
-                    "latest_merits_url": (
-                        PUBLIC_EDRSR_URL.format(
-                            doc_id=merits.doc_id
-                        )
-                        if merits
-                        else ""
-                    ),
-                    "challenge_status": (
-                        "merits_found"
-                        if merits
-                        else "pending_no_merits"
-                    ),
+                    "matched_on_source": entry["candidate_source"],
+                    "primary_doc_id": entry["primary_doc"].doc_id,
+                    "primary_kind": entry["primary_kind"],
+                    "court": entry["court"],
+                    "category_code": entry["category_code"],
+                    "category_name": entry["category_name"],
+                    "latest_merits_doc_id": merits.doc_id if merits else "",
+                    "latest_merits_type": judgment_forms.get(merits.judgment_code, "") if merits else "",
+                    "latest_merits_date": merits.adjudication_date if merits else "",
+                    "latest_merits_url": PUBLIC_EDRSR_URL.format(doc_id=merits.doc_id) if merits else "",
+                    "challenge_status": "merits_found" if merits else "pending_no_merits",
                 }
-
                 if row["classification"] == "YES":
                     yes_rows.append(row)
-
-                elif row["classification"] == "NO":
-                    no_rows.append(row)
-
                 else:
-                    uncertain_rows.append(row)
+                    no_rows.append(row)
+                if focus_norm and normalized_number(row["decision_number"]) == focus_norm:
+                    focus_debug["gemini_results"].append(row)
 
-                if (
-                    focus_norm
-                    and normalized_number(
-                        row["decision_number"]
-                    ) == focus_norm
-                ):
-                    focus_debug[
-                        "gemini_results"
-                    ].append(
-                        row
-                    )
+            for result in technical_not_processed:
+                row = {
+                    "decision_number": result["decision_number"],
+                    "decision_date": result["decision_date"],
+                    "liable_parties": result["liable_parties"],
+                    "prefilter_strength": result["strength"],
+                    "signals": result["signals"],
+                    "cause_num": entry["cause_num"],
+                    "matched_on_doc_id": doc.doc_id,
+                    "matched_on_source": entry["candidate_source"],
+                    "primary_doc_id": entry["primary_doc"].doc_id,
+                    "primary_kind": entry["primary_kind"],
+                    "court": entry["court"],
+                    "not_processed_reason": result.get("not_processed_reason", "Technical classification failure"),
+                }
+                not_processed_rows.append(row)
+                if focus_norm and normalized_number(row["decision_number"]) == focus_norm:
+                    focus_debug["not_processed"].append(row)
 
         sort_key = lambda x: (
-            clean(
-                x.get(
-                    "decision_date"
-                )
-            ),
-            clean(
-                x.get(
-                    "decision_number"
-                )
-            ),
-            clean(
-                x.get(
-                    "cause_num"
-                )
-            ),
+            clean(x.get("decision_date")),
+            clean(x.get("decision_number")),
+            clean(x.get("cause_num")),
         )
+        yes_rows.sort(key=sort_key, reverse=True)
+        no_rows.sort(key=sort_key, reverse=True)
+        not_processed_rows.sort(key=sort_key, reverse=True)
+        negative_prefilter_rows.sort(key=sort_key, reverse=True)
 
-        yes_rows.sort(
-            key=sort_key,
-            reverse=True,
-        )
-        no_rows.sort(
-            key=sort_key,
-            reverse=True,
-        )
-        uncertain_rows.sort(
-            key=sort_key,
-            reverse=True,
-        )
-
-        matched_category_rows: list[
-            dict[str, Any]
-        ] = []
-
+        matched_category_rows: list[dict[str, Any]] = []
         for code in sorted(cat_codes):
-            stat = category_stats.get(
-                code,
-                {},
-            )
-
+            stat = category_stats.get(code, {})
             matched_category_rows.append({
                 "category_code": code,
-                "name": categories.get(
-                    code,
-                    "",
-                ),
-                "primary_challenge_category": (
-                    code in primary_cat_codes
-                ),
-                "active_documents": int(
-                    stat.get(
-                        "active_documents",
-                        0,
-                    )
-                ),
-                "cases": len(
-                    stat.get(
-                        "cases",
-                        set(),
-                    )
-                ),
+                "name": categories.get(code, ""),
+                "primary_challenge_category": code in primary_cat_codes,
+                "active_documents": int(stat.get("active_documents", 0)),
+                "commercial_documents": int(stat.get("commercial_documents", 0)),
+                "cases": len(stat.get("cases", set())),
             })
-
-        matched_category_rows.sort(
-            key=lambda r: (
-                r["cases"],
-                r["active_documents"],
-            ),
-            reverse=True,
-        )
+        matched_category_rows.sort(key=lambda r: (r["cases"], r["commercial_documents"]), reverse=True)
 
         justice_rows = [
-            {
-                "justice_kind": code,
-                "name": justice.get(
-                    code,
-                    "",
-                ),
-                "documents": count,
-            }
-            for code, count in sorted(
-                justice_stats.items(),
-                key=lambda kv: kv[1],
-                reverse=True,
-            )
+            {"justice_kind": code, "name": justice.get(code, ""), "category_matched_documents": count}
+            for code, count in sorted(justice_stats.items(), key=lambda kv: kv[1], reverse=True)
         ]
 
         summary = {
-            "schema": (
-                "amku_court_challenge_probe_v4"
-            ),
-            "generated_at": (
-                datetime.now(
-                    timezone.utc
-                ).isoformat(
-                    timespec="seconds"
-                )
-            ),
+            "schema": "amku_court_challenge_probe_v5",
+            "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "year": year,
             "dataset_id": dataset_id,
             "zip_url": zip_url,
-            "practice_rows": len(
-                practice
-            ),
-            "unique_decision_numbers": len(
-                number_index
-            ),
+            "practice_rows": len(practice),
+            "unique_decision_numbers": len(number_index),
+            "commercial_justice_codes": sorted(commercial_codes),
             "prefilter": stats,
-            "cases_scanned": len(
-                jobs
-            ),
+            "cases_scanned": len(jobs),
             "text_fetch": fetch_stats,
-            "candidate_documents": len(
-                candidate_docs
-            ),
-            "candidate_pairs": len(
-                candidate_rows
-            ),
+            "candidate_documents_before_negative_filter": fetch_stats["candidate_documents_before_negative_filter"],
+            "candidate_pairs_before_negative_filter": fetch_stats["candidate_pairs_before_negative_filter"],
+            "negative_prefilter_cases": fetch_stats["negative_prefilter_cases"],
+            "negative_prefilter_pairs": fetch_stats["negative_prefilter_pairs"],
+            "candidate_documents_sent_to_gemini_queue": len(candidate_docs),
+            "candidate_pairs_sent_to_gemini_queue": len(candidate_rows),
             "gemini_model": gemini_model,
             "gemini_calls": gemini_calls,
-            "gemini_call_limit": (
-                args.max_gemini_calls
-            ),
-            "confirmed_challenges": len(
-                yes_rows
-            ),
-            "rejected_mentions": len(
-                no_rows
-            ),
-            "manual_review": len(
-                uncertain_rows
-            ),
-            "gemini_errors": len(
-                gemini_errors
-            ),
-            "focus_decision": (
-                args.focus_decision
-            ),
+            "gemini_call_limit": args.max_gemini_calls,
+            "confirmed_challenges": len(yes_rows),
+            "rejected_mentions": len(no_rows),
+            "not_processed": len(not_processed_rows),
+            "gemini_errors": len(gemini_errors),
+            "focus_decision": args.focus_decision,
             "focus_confirmed": [
-                row
-                for row in yes_rows
-                if (
-                    focus_norm
-                    and normalized_number(
-                        row[
-                            "decision_number"
-                        ]
-                    ) == focus_norm
-                )
+                row for row in yes_rows
+                if focus_norm and normalized_number(row["decision_number"]) == focus_norm
             ],
         }
 
-        (
-            out_dir
-            / "summary.json"
-        ).write_text(
-            json.dumps(
-                summary,
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-        (
-            out_dir
-            / "matches.json"
-        ).write_text(
-            json.dumps(
-                yes_rows,
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-        (
-            out_dir
-            / "rejected.json"
-        ).write_text(
-            json.dumps(
-                no_rows,
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-        (
-            out_dir
-            / "manual_review.json"
-        ).write_text(
-            json.dumps(
-                uncertain_rows,
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-        (
-            out_dir
-            / "fetch_errors.json"
-        ).write_text(
-            json.dumps(
-                fetch_errors,
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-        (
-            out_dir
-            / "gemini_errors.json"
-        ).write_text(
-            json.dumps(
-                gemini_errors,
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-        (
-            out_dir
-            / "focus_debug.json"
-        ).write_text(
-            json.dumps(
-                focus_debug,
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
+        (out_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "matches.json").write_text(json.dumps(yes_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "rejected.json").write_text(json.dumps(no_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "not_processed.json").write_text(json.dumps(not_processed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "negative_prefilter.json").write_text(json.dumps(negative_prefilter_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "fetch_errors.json").write_text(json.dumps(fetch_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "gemini_errors.json").write_text(json.dumps(gemini_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "focus_debug.json").write_text(json.dumps(focus_debug, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
         common_result_columns = [
-            "decision_date",
-            "decision_number",
-            "liable_parties",
-            "cause_num",
-            "classification",
-            "gemini_confidence",
-            "challenger",
-            "prefilter_strength",
-            "signals",
-            "reason",
-            "referenced_challenge_case",
-            "court",
-            "category_code",
-            "category_name",
-            "matched_on_doc_id",
-            "challenge_status",
-            "latest_merits_doc_id",
-            "latest_merits_type",
-            "latest_merits_date",
-            "latest_merits_url",
+            "decision_date", "decision_number", "liable_parties", "cause_num", "classification",
+            "gemini_confidence", "challenger", "prefilter_strength", "signals", "reason",
+            "court", "category_code", "category_name", "matched_on_doc_id", "matched_on_source",
+            "primary_doc_id", "primary_kind", "challenge_status", "latest_merits_doc_id",
+            "latest_merits_type", "latest_merits_date", "latest_merits_url",
         ]
-
+        write_csv(out_dir / "matches.csv", yes_rows, common_result_columns)
+        write_csv(out_dir / "rejected.csv", no_rows, common_result_columns)
         write_csv(
-            out_dir / "matches.csv",
-            yes_rows,
-            common_result_columns,
+            out_dir / "not_processed.csv",
+            not_processed_rows,
+            [
+                "decision_date", "decision_number", "liable_parties", "cause_num", "prefilter_strength",
+                "signals", "court", "matched_on_doc_id", "matched_on_source", "primary_doc_id",
+                "primary_kind", "not_processed_reason",
+            ],
         )
-
         write_csv(
-            out_dir / "rejected.csv",
-            no_rows,
-            common_result_columns,
+            out_dir / "negative_prefilter.csv",
+            negative_prefilter_rows,
+            [
+                "decision_date", "decision_number", "liable_parties", "cause_num", "strength", "signals",
+                "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
+                "negative_prefilter", "reason",
+            ],
         )
-
-        write_csv(
-            out_dir / "manual_review.csv",
-            uncertain_rows,
-            common_result_columns,
-        )
-
         write_csv(
             out_dir / "candidates.csv",
             candidate_rows,
             [
-                "decision_date",
-                "decision_number",
-                "liable_parties",
-                "cause_num",
-                "strength",
-                "signals",
-                "doc_id",
-                "doc_date",
-                "court",
-                "category_code",
-                "category_name",
-                "latest_merits_doc_id",
-                "latest_merits_date",
+                "decision_date", "decision_number", "liable_parties", "cause_num", "strength", "signals",
+                "doc_id", "doc_date", "candidate_source", "primary_doc_id", "primary_kind", "court",
+                "category_code", "category_name", "latest_merits_doc_id", "latest_merits_date",
             ],
         )
-
         write_csv(
             out_dir / "prefilter_cases.csv",
             prefilter_rows,
             [
-                "cause_num",
-                "documents",
-                "category_code",
-                "category_name",
-                "justice_kind",
-                "discovery_doc_id",
-                "discovery_date",
-                "latest_merits_doc_id",
-                "latest_merits_date",
-                "latest_merits_form",
+                "cause_num", "documents", "category_code", "category_name", "justice_kind", "primary_kind",
+                "primary_doc_id", "primary_date", "earliest_doc_id", "earliest_date", "latest_active_doc_id",
+                "latest_active_date", "latest_merits_doc_id", "latest_merits_date", "latest_merits_form",
             ],
         )
-
         write_csv(
             out_dir / "category_stats.csv",
             matched_category_rows,
             [
-                "category_code",
-                "name",
-                "primary_challenge_category",
-                "active_documents",
-                "cases",
+                "category_code", "name", "primary_challenge_category", "active_documents",
+                "commercial_documents", "cases",
             ],
         )
-
         write_csv(
             out_dir / "justice_stats.csv",
             justice_rows,
-            [
-                "justice_kind",
-                "name",
-                "documents",
-            ],
+            ["justice_kind", "name", "category_matched_documents"],
         )
-
         write_csv(
             out_dir / "fetch_errors.csv",
             fetch_errors,
-            [
-                "cause_num",
-                "doc_id",
-                "doc_url",
-                "error",
-                "attempts",
-            ],
+            ["cause_num", "role", "doc_id", "doc_url", "error", "attempts"],
         )
-
         write_csv(
             out_dir / "gemini_errors.csv",
             gemini_errors,
-            [
-                "cause_num",
-                "doc_id",
-                "error",
-                "candidates",
-            ],
+            ["cause_num", "doc_id", "error", "candidates"],
         )
 
         focus_md = ""
-
         if args.focus_decision:
-            focus_candidates_count = len(
-                focus_debug[
-                    "candidate_hits"
-                ]
-            )
-
-            focus_confirmed = summary[
-                "focus_confirmed"
-            ]
-
+            focus_confirmed = summary["focus_confirmed"]
             focus_md = (
                 f"\n## Focus `{args.focus_decision}`\n\n"
-                f"- Exact-number candidate document(s): "
-                f"{focus_candidates_count}\n"
-                f"- Gemini-confirmed challenge(s): "
-                f"{len(focus_confirmed)}\n"
+                f"- Candidate document(s) after exact-number search: {len(focus_debug['candidate_hits'])}\n"
+                f"- Dropped by AMCU-plaintiff negative prefilter: {len(focus_debug['negative_prefilter_hits'])}\n"
+                f"- Gemini-confirmed challenge(s): {len(focus_confirmed)}\n"
+                f"- Not processed technically/budget: {len(focus_debug['not_processed'])}\n"
             )
-
             for h in focus_confirmed:
                 focus_md += (
-                    f"- case `{h['cause_num']}`, "
-                    f"status `{h['challenge_status']}`, "
-                    f"latest merits "
-                    f"`{h['latest_merits_doc_id'] or 'none'}`\n"
+                    f"- case `{h['cause_num']}`, status `{h['challenge_status']}`, "
+                    f"latest merits `{h['latest_merits_doc_id'] or 'none'}`\n"
                 )
 
-        report = f"""# AMCU court challenge probe v4 — {year}
+        report = f"""# AMCU court challenge probe v5 — {year}
 
 Generated: {summary['generated_at']}
 
 ## Pipeline
 
-`EDRSR metadata -> exact relevant category -> one discovery text per case -> exact AMCU decision number -> Gemini YES/NO/UNCERTAIN`
+`EDRSR metadata -> active + exact competition category + commercial jurisdiction -> latest merits (else latest active) -> exact AMCU decision number -> cautious AMCU-plaintiff negative prefilter -> Gemini YES/NO`
 
-No deterministic wording of the claim is required. A full exact decision-number match alone is enough to send the candidate to Gemini; liable-party/date matches are only corroborating signals.
+If the primary latest document contains no exact AMCU practice decision number, the earliest active document is fetched once as a fallback. Party/date matches remain corroborating signals only.
 
 ## Metadata prefilter
 
@@ -2240,6 +1867,7 @@ No deterministic wording of the claim is required. A full exact decision-number 
 - EDRSR rows: {stats['rows_total']:,}
 - Active rows: {stats['active']:,}
 - Exact competition-category rows: {stats['category_match']:,}
+- Commercial-jurisdiction rows: {stats['commercial_match']:,}
 - Rows with case number: {stats['with_cause_num']:,}
 - Unique prefiltered cases: {stats['cases']:,}
 - Cases actually scanned: {len(jobs):,}
@@ -2247,13 +1875,18 @@ No deterministic wording of the claim is required. A full exact decision-number 
 ## Candidate discovery
 
 - Court texts requested: {fetch_stats['documents_requested']:,}
+- Primary latest texts: {fetch_stats['primary_documents']:,}
+- Earliest fallback texts: {fetch_stats['fallback_documents']:,}
+- Cases where fallback found the exact number: {fetch_stats['fallback_candidate_cases']:,}
 - Validated court texts: {fetch_stats['validated_documents']:,}
 - Persistent/cache hits: {fetch_stats['cache_hits']:,}
 - Fetch errors: {fetch_stats['fetch_errors']:,}
-- Documents containing an exact AMCU practice decision number: {len(candidate_docs):,}
-- Candidate decision/case pairs: {len(candidate_rows):,}
-
-Only the earliest active court document in each prefiltered case is fetched during discovery. The latest merits `Рішення`/`Постанова` is taken from metadata only and is not downloaded unless a future version needs its text.
+- Candidate cases before AMCU-plaintiff negative filter: {fetch_stats['candidate_documents_before_negative_filter']:,}
+- Candidate pairs before negative filter: {fetch_stats['candidate_pairs_before_negative_filter']:,}
+- Cases dropped because the latest document clearly shows AMCU as plaintiff and no counterclaim against AMCU: {fetch_stats['negative_prefilter_cases']:,}
+- Candidate pairs dropped by that negative filter: {fetch_stats['negative_prefilter_pairs']:,}
+- Candidate cases remaining for Gemini queue: {len(candidate_docs):,}
+- Candidate pairs remaining for Gemini queue: {len(candidate_rows):,}
 
 ## Gemini classification
 
@@ -2261,54 +1894,33 @@ Only the earliest active court document in each prefiltered case is fetched duri
 - Calls used: {gemini_calls:,}/{args.max_gemini_calls:,}
 - Confirmed challenge pairs (`YES`): {len(yes_rows):,}
 - Rejected mentions (`NO`): {len(no_rows):,}
-- Manual review (`UNCERTAIN`): {len(uncertain_rows):,}
-- Gemini errors: {len(gemini_errors):,}
+- Not processed because of budget/technical response: {len(not_processed_rows):,}
+- Gemini request errors: {len(gemini_errors):,}
 
-`YES` means Gemini determined that the AMCU decision itself is the subject of judicial challenge in the current case, regardless of the wording of the claim. Enforcement/penalty-collection cases and references to challenges in other proceedings should be `NO`.
+Gemini is required to return only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid classifications are recorded separately in `not_processed.csv`; they are not treated as a legal classification.
 {focus_md}
 """
-
-        (
-            out_dir
-            / "report.md"
-        ).write_text(
-            report,
-            encoding="utf-8",
-        )
+        (out_dir / "report.md").write_text(report, encoding="utf-8")
 
     if not args.keep_zip:
-        zip_path.unlink(
-            missing_ok=True
-        )
+        zip_path.unlink(missing_ok=True)
 
     log(
-        f"Done: "
-        f"candidates="
-        f"{fetch_stats['candidate_pairs']}; "
-        f"Gemini={gemini_calls}; "
-        f"YES={len(yes_rows)}; "
-        f"NO={len(no_rows)}; "
-        f"UNCERTAIN={len(uncertain_rows)}; "
+        f"Done: candidates_before_negative={fetch_stats['candidate_pairs_before_negative_filter']}; "
+        f"negative_dropped={fetch_stats['negative_prefilter_pairs']}; "
+        f"Gemini_queue={fetch_stats['candidate_pairs']}; Gemini={gemini_calls}; "
+        f"YES={len(yes_rows)}; NO={len(no_rows)}; not_processed={len(not_processed_rows)}; "
         f"fetch_errors={len(fetch_errors)}"
     )
-
-    log(
-        f"Artifacts: {out_dir}"
-    )
-
+    log(f"Artifacts: {out_dir}")
     return 0
 
 
 if __name__ == "__main__":
     try:
-        raise SystemExit(
-            main()
-        )
+        raise SystemExit(main())
     except KeyboardInterrupt:
         raise
     except Exception as exc:  # noqa: BLE001
-        print(
-            f"ERROR: {exc}",
-            file=sys.stderr,
-        )
+        print(f"ERROR: {exc}", file=sys.stderr)
         raise
