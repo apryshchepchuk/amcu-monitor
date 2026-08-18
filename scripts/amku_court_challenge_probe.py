@@ -155,7 +155,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--request-delay-ms", type=int, default=0)
     p.add_argument("--request-timeout", type=int, default=45)
     p.add_argument("--retries", type=int, default=4)
-    p.add_argument("--max-gemini-calls", type=int, default=30)
+    p.add_argument("--max-gemini-calls", type=int, default=50)
     p.add_argument("--gemini-rpm-limit", type=int, default=5)
     p.add_argument("--gemini-max-text-chars", type=int, default=30000)
     p.add_argument("--skip-gemini", action="store_true")
@@ -1205,6 +1205,7 @@ def main() -> int:
         ],
         "candidate_hits": [],
         "negative_prefilter_hits": [],
+        "negative_prefilter_bypassed_fallback": [],
         "gemini_results": [],
         "not_processed": [],
         "fetch_failures": [],
@@ -1231,6 +1232,8 @@ def main() -> int:
         "candidate_pairs_before_negative_filter": 0,
         "negative_prefilter_cases": 0,
         "negative_prefilter_pairs": 0,
+        "negative_prefilter_bypassed_fallback_cases": 0,
+        "negative_prefilter_bypassed_fallback_pairs": 0,
         "candidate_documents": 0,
         "candidate_pairs": 0,
     }
@@ -1317,6 +1320,7 @@ def main() -> int:
 
         candidate_docs: list[dict[str, Any]] = []
         negative_prefilter_rows: list[dict[str, Any]] = []
+        negative_prefilter_bypassed_rows: list[dict[str, Any]] = []
         fetch_errors: list[dict[str, Any]] = []
         text_cache_for_gemini: dict[str, str] = {}
 
@@ -1472,7 +1476,44 @@ def main() -> int:
                     merits = latest_merits(docs, judgment_forms)
                     negative = result["negative"]
 
-                    if negative.get("exclude"):
+                    # Safety rule: the AMCU-plaintiff negative filter may hard-drop a case only
+                    # when the exact AMCU decision number was found in the SAME primary/latest
+                    # document on which the plaintiff-role check was performed.
+                    #
+                    # If the exact number was found only in earliest_fallback, a later primary
+                    # document can describe a different procedural phase (including AMCU enforcement)
+                    # and cannot safely exclude a challenge that is visible in the earlier document.
+                    negative_filter_applicable = result["candidate_source"] != "earliest_fallback"
+                    negative_should_drop = bool(negative.get("exclude") and negative_filter_applicable)
+
+                    if negative.get("exclude") and not negative_filter_applicable:
+                        fetch_stats["negative_prefilter_bypassed_fallback_cases"] += 1
+                        fetch_stats["negative_prefilter_bypassed_fallback_pairs"] += len(candidates)
+                        for c in candidates:
+                            negative_prefilter_bypassed_rows.append({
+                                "decision_number": c["decision_number"],
+                                "decision_date": c["decision_date"],
+                                "liable_parties": c["liable_parties"],
+                                "strength": c["strength"],
+                                "signals": c["signals"],
+                                "cause_num": result["cause_num"],
+                                "matched_on_doc_id": doc.doc_id,
+                                "matched_on_source": result["candidate_source"],
+                                "primary_doc_id": primary_doc.doc_id,
+                                "primary_kind": result["primary_kind"],
+                                "negative_prefilter": negative,
+                                "reason": "Hard drop bypassed: exact AMCU decision number was found only in earliest fallback; the later primary document cannot safely exclude a challenge found in a different document.",
+                            })
+                        if focus_norm and any(normalized_number(c["decision_number"]) == focus_norm for c in candidates):
+                            focus_debug["negative_prefilter_bypassed_fallback"].append({
+                                "cause_num": result["cause_num"],
+                                "primary_doc_id": primary_doc.doc_id,
+                                "candidate_doc_id": doc.doc_id,
+                                "negative_prefilter": negative,
+                                "candidates": [c for c in candidates if normalized_number(c["decision_number"]) == focus_norm],
+                            })
+
+                    if negative_should_drop:
                         fetch_stats["negative_prefilter_cases"] += 1
                         fetch_stats["negative_prefilter_pairs"] += len(candidates)
                         for c in candidates:
@@ -1488,7 +1529,7 @@ def main() -> int:
                                 "primary_doc_id": primary_doc.doc_id,
                                 "primary_kind": result["primary_kind"],
                                 "negative_prefilter": negative,
-                                "reason": "Latest substantive/current document explicitly identifies AMCU as plaintiff and shows no counterclaim against AMCU.",
+                                "reason": "The same primary/latest document both contains the exact AMCU decision number and explicitly identifies AMCU as plaintiff, with no counterclaim against AMCU.",
                             })
                         if focus_norm and any(normalized_number(c["decision_number"]) == focus_norm for c in candidates):
                             focus_debug["negative_prefilter_hits"].append({
@@ -1725,7 +1766,7 @@ def main() -> int:
         ]
 
         summary = {
-            "schema": "amku_court_challenge_probe_v5",
+            "schema": "amku_court_challenge_probe_v5_1",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "year": year,
             "dataset_id": dataset_id,
@@ -1740,6 +1781,8 @@ def main() -> int:
             "candidate_pairs_before_negative_filter": fetch_stats["candidate_pairs_before_negative_filter"],
             "negative_prefilter_cases": fetch_stats["negative_prefilter_cases"],
             "negative_prefilter_pairs": fetch_stats["negative_prefilter_pairs"],
+            "negative_prefilter_bypassed_fallback_cases": fetch_stats["negative_prefilter_bypassed_fallback_cases"],
+            "negative_prefilter_bypassed_fallback_pairs": fetch_stats["negative_prefilter_bypassed_fallback_pairs"],
             "candidate_documents_sent_to_gemini_queue": len(candidate_docs),
             "candidate_pairs_sent_to_gemini_queue": len(candidate_rows),
             "gemini_model": gemini_model,
@@ -1761,6 +1804,7 @@ def main() -> int:
         (out_dir / "rejected.json").write_text(json.dumps(no_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "not_processed.json").write_text(json.dumps(not_processed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "negative_prefilter.json").write_text(json.dumps(negative_prefilter_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (out_dir / "negative_prefilter_bypassed_fallback.json").write_text(json.dumps(negative_prefilter_bypassed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "fetch_errors.json").write_text(json.dumps(fetch_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "gemini_errors.json").write_text(json.dumps(gemini_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (out_dir / "focus_debug.json").write_text(json.dumps(focus_debug, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -1786,6 +1830,15 @@ def main() -> int:
         write_csv(
             out_dir / "negative_prefilter.csv",
             negative_prefilter_rows,
+            [
+                "decision_date", "decision_number", "liable_parties", "cause_num", "strength", "signals",
+                "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
+                "negative_prefilter", "reason",
+            ],
+        )
+        write_csv(
+            out_dir / "negative_prefilter_bypassed_fallback.csv",
+            negative_prefilter_bypassed_rows,
             [
                 "decision_date", "decision_number", "liable_parties", "cause_num", "strength", "signals",
                 "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
@@ -1841,6 +1894,7 @@ def main() -> int:
                 f"\n## Focus `{args.focus_decision}`\n\n"
                 f"- Candidate document(s) after exact-number search: {len(focus_debug['candidate_hits'])}\n"
                 f"- Dropped by AMCU-plaintiff negative prefilter: {len(focus_debug['negative_prefilter_hits'])}\n"
+                f"- Negative filter bypassed because match came from earliest fallback: {len(focus_debug['negative_prefilter_bypassed_fallback'])}\n"
                 f"- Gemini-confirmed challenge(s): {len(focus_confirmed)}\n"
                 f"- Not processed technically/budget: {len(focus_debug['not_processed'])}\n"
             )
@@ -1850,15 +1904,15 @@ def main() -> int:
                     f"latest merits `{h['latest_merits_doc_id'] or 'none'}`\n"
                 )
 
-        report = f"""# AMCU court challenge probe v5 — {year}
+        report = f"""# AMCU court challenge probe v5.1 — {year}
 
 Generated: {summary['generated_at']}
 
 ## Pipeline
 
-`EDRSR metadata -> active + exact competition category + commercial jurisdiction -> latest merits (else latest active) -> exact AMCU decision number -> cautious AMCU-plaintiff negative prefilter -> Gemini YES/NO`
+`EDRSR metadata -> active + exact competition category + commercial jurisdiction -> latest merits (else latest active) -> exact AMCU decision number -> cautious same-document AMCU-plaintiff negative prefilter -> Gemini YES/NO`
 
-If the primary latest document contains no exact AMCU practice decision number, the earliest active document is fetched once as a fallback. Party/date matches remain corroborating signals only.
+If the primary latest document contains no exact AMCU practice decision number, the earliest active document is fetched once as a fallback. A candidate found only in that earliest fallback is never hard-dropped solely because a different later primary document shows AMCU as plaintiff. Party/date matches remain corroborating signals only.
 
 ## Metadata prefilter
 
@@ -1883,8 +1937,10 @@ If the primary latest document contains no exact AMCU practice decision number, 
 - Fetch errors: {fetch_stats['fetch_errors']:,}
 - Candidate cases before AMCU-plaintiff negative filter: {fetch_stats['candidate_documents_before_negative_filter']:,}
 - Candidate pairs before negative filter: {fetch_stats['candidate_pairs_before_negative_filter']:,}
-- Cases dropped because the latest document clearly shows AMCU as plaintiff and no counterclaim against AMCU: {fetch_stats['negative_prefilter_cases']:,}
+- Cases dropped because the SAME primary/latest document both contains the exact AMCU decision number and clearly shows AMCU as plaintiff with no counterclaim: {fetch_stats['negative_prefilter_cases']:,}
 - Candidate pairs dropped by that negative filter: {fetch_stats['negative_prefilter_pairs']:,}
+- Fallback candidate cases protected from that hard drop: {fetch_stats['negative_prefilter_bypassed_fallback_cases']:,}
+- Fallback candidate pairs protected from that hard drop: {fetch_stats['negative_prefilter_bypassed_fallback_pairs']:,}
 - Candidate cases remaining for Gemini queue: {len(candidate_docs):,}
 - Candidate pairs remaining for Gemini queue: {len(candidate_rows):,}
 
