@@ -3258,13 +3258,14 @@ def main() -> int:
         # Stage 3: if a confirmed merits act exists but EDRSR has a newer active court act,
         # verify whether appellate/cassation review is still genuinely active. A newer procedural
         # document is NOT automatically ongoing; Gemini reads that one later act and classifies it.
+        current_status_eligible_pairs = 0
         for row, result, entry in yes_work_items:
             if row.get("case_status") not in {"upheld", "overturned", "partially_overturned"}:
                 continue
             latest_merits_payload = row.get("latest_merits") or None
             if not latest_merits_payload:
                 continue
-            latest_active_doc: DocRow | None = entry.get("latest_active_doc")
+            latest_active_doc: DocRow | None = entry.get("latest_active")
             if not latest_active_doc or not latest_active_doc.doc_id:
                 continue
             if latest_active_doc.doc_id == clean(latest_merits_payload.get("doc_id")):
@@ -3277,6 +3278,8 @@ def main() -> int:
             )
             if not merits_doc or doc_sort_key(latest_active_doc) <= doc_sort_key(merits_doc):
                 continue
+
+            current_status_eligible_pairs += 1
 
             try:
                 status_text, status_meta = fetch_doc_text(
@@ -3537,12 +3540,27 @@ def main() -> int:
             row for row in yes_rows
             if row.get("challenge_status") == "merits_not_verified"
         ]
-        technically_complete = not (blocking_unprocessed or blocking_merits or fetch_errors)
+        current_status_not_processed_count = sum(
+            1 for row in blocking_unprocessed
+            if row.get("stage") == "current_status_verification"
+        )
+        current_status_coverage_gap = max(
+            0,
+            current_status_eligible_pairs
+            - len(current_status_verification_rows)
+            - current_status_not_processed_count,
+        )
+        technically_complete = not (
+            blocking_unprocessed
+            or blocking_merits
+            or fetch_errors
+            or current_status_coverage_gap
+        )
         if not args.dry_run and not technically_complete:
             registry_write_blocked_reason = (
                 "Refusing registry write because the yearly court scan was technically incomplete: "
                 f"not_processed={len(blocking_unprocessed)}, merits_not_verified={len(blocking_merits)}, "
-                f"fetch_errors={len(fetch_errors)}"
+                f"fetch_errors={len(fetch_errors)}, current_status_coverage_gap={current_status_coverage_gap}"
             )
             log(f"REGISTRY WRITE BLOCKED: {registry_write_blocked_reason}")
             registry_preview = read_registry(registry_path)
@@ -3613,6 +3631,8 @@ def main() -> int:
             "current_status_gemini_calls": current_status_gemini_calls,
             "merits_gemini_call_limit": args.max_merits_gemini_calls,
             "current_status_gemini_call_limit": args.max_current_status_gemini_calls,
+            "current_status_eligible_pairs": current_status_eligible_pairs,
+            "current_status_coverage_gap": current_status_coverage_gap,
             "confirmed_challenges": len(yes_rows),
             "confirmed_challenge_cases": len({row.get("cause_num") for row in yes_rows if row.get("cause_num")}),
             "confirmed_challenge_decisions": len({row.get("decision_key") for row in yes_rows if row.get("decision_key")}),
@@ -3842,9 +3862,11 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 
 ## Later-act current-status verification
 
+- Eligible pairs with a newer active act after verified merits: {current_status_eligible_pairs:,}
 - Gemini calls this run: {current_status_gemini_calls:,}/{args.max_current_status_gemini_calls:,}
 - Checkpoint hits: {ai_stats['current_status_cache_hits']:,}
 - Audit rows: {len(current_status_verification_rows):,}
+- Coverage gap: {current_status_coverage_gap:,}
 - Later acts classified as active review: {sum(1 for r in current_status_verification_rows if r.get('status') == 'ONGOING'):,}
 - Later acts leaving prior merits final: {sum(1 for r in current_status_verification_rows if r.get('status') == 'FINAL_UNCHANGED'):,}
 - Later acts invalidating prior merits: {sum(1 for r in current_status_verification_rows if r.get('status') == 'INVALIDATES_PRIOR'):,}
@@ -3860,6 +3882,7 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 - Block reason: {registry_write_blocked_reason or 'none'}
 - Not processed because of budget/technical response: {len(not_processed_rows):,}
 - Gemini request errors: {len(gemini_errors):,}
+- Current-status coverage gap: {current_status_coverage_gap:,}
 
 Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid responses are recorded separately in `not_processed.csv`; they are never treated as a legal result. The persistent registry is written only when the run is not dry-run and the full technical scan is complete. Any incomplete challenge classification, weak-YES safeguard, merits verification or court-text fetch blocks the registry write, but diagnostics and the AI checkpoint are still written before the workflow fails.
 {focus_md}
