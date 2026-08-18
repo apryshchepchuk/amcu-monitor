@@ -13,14 +13,30 @@ name: AMCU Court Challenge Probe
           - "2025"
 
       max_cases:
-        description: "Max prefiltered cases to inspect (0 = all; ignored when focus_decision is set)"
+        description: "Max prefiltered cases to inspect (0 = all)"
         required: false
-        default: "500"
+        default: "0"
 
       focus_decision:
-        description: "Optional AMCU decision number for full-prefilter control scan (e.g. 393-р)"
+        description: "Optional AMCU decision number for report/debug emphasis (e.g. 393-р)"
         required: false
         default: "393-р"
+
+      workers:
+        description: "Concurrent EDRSR text fetch workers"
+        required: false
+        default: "4"
+
+      max_gemini_calls:
+        description: "Maximum Gemini classification calls"
+        required: false
+        default: "30"
+
+      skip_gemini:
+        description: "Diagnostic only: find exact-number candidates without Gemini classification"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   probe:
@@ -36,19 +52,40 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Restore EDRSR court-text cache
+        uses: actions/cache@v4
+        with:
+          path: data/tmp/amku_court_challenge_cache/v4/texts
+          key: amku-court-texts-v4-${{ inputs.year }}-${{ github.run_id }}
+          restore-keys: |
+            amku-court-texts-v4-${{ inputs.year }}-
+
       - name: Run diagnostic probe
         shell: bash
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
         run: |
+          EXTRA_ARGS=()
+          if [ "${{ inputs.skip_gemini }}" = "true" ]; then
+            EXTRA_ARGS+=(--skip-gemini)
+          fi
+
           python scripts/amku_court_challenge_probe.py \
             --year "${{ inputs.year }}" \
             --practice "data/practice/amku_practice.json" \
             --out-dir "data/tmp/amku_court_challenge_probe" \
-            --cache-dir "data/tmp/amku_court_challenge_cache" \
+            --cache-dir "data/tmp/amku_court_challenge_cache/v4" \
             --max-cases "${{ inputs.max_cases }}" \
             --focus-decision "${{ inputs.focus_decision }}" \
-            --request-delay-ms 150 \
+            --workers "${{ inputs.workers }}" \
+            --request-delay-ms 0 \
             --request-timeout 45 \
-            --retries 4
+            --retries 4 \
+            --max-gemini-calls "${{ inputs.max_gemini_calls }}" \
+            --gemini-rpm-limit 5 \
+            --gemini-max-text-chars 30000 \
+            "${EXTRA_ARGS[@]}"
 
       - name: Print report
         if: always()
