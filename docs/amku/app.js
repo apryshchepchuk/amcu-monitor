@@ -364,6 +364,15 @@ function renderCourtChallengePanel(row) {
   const merits = challenge.latest_merits;
   const relevant = challenge.latest_relevant;
 
+  const hasNewerRelevant = Boolean(
+    merits
+    && relevant
+    && relevant.doc_id
+    && merits.doc_id
+    && String(relevant.doc_id) !== String(merits.doc_id)
+    && challenge.display_status === 'ongoing'
+  );
+
   const courtActHtml = merits
     ? `
       <div class="court-challenge-line court-challenge-act">
@@ -371,6 +380,13 @@ function renderCourtChallengePanel(row) {
         <strong>${escapeHtml(formatCourtDocSentence(merits))}</strong>
         ${merits.url ? `<a href="${escapeHtml(merits.url)}" target="_blank" rel="noopener">Відкрити в ЄДРСР</a>` : ''}
       </div>
+      ${hasNewerRelevant ? `
+        <div class="court-challenge-line court-challenge-act">
+          <span>Останній судовий акт в ЄДРСР:</span>
+          <strong>${escapeHtml(formatCourtDocSentence(relevant))}</strong>
+          ${relevant.url ? `<a href="${escapeHtml(relevant.url)}" target="_blank" rel="noopener">Відкрити в ЄДРСР</a>` : ''}
+        </div>
+      ` : ''}
     `
     : `
       <div class="court-challenge-line court-challenge-act">
