@@ -47,6 +47,11 @@ name: AMCU Court Challenges
         required: false
         default: "80"
 
+      max_current_status_gemini_calls:
+        description: "Maximum Gemini calls to check newer post-merits court acts for active appeal/cassation review"
+        required: false
+        default: "20"
+
       replace_year:
         description: "Replace this year's observations in persistent court registry"
         required: false
@@ -151,6 +156,7 @@ jobs:
             --targeted-retry-attempts 2 \
             --max-safeguard-gemini-calls "${{ inputs.max_safeguard_gemini_calls }}" \
             --max-merits-gemini-calls "${{ inputs.max_merits_gemini_calls }}" \
+            --max-current-status-gemini-calls "${{ inputs.max_current_status_gemini_calls }}" \
             --gemini-rpm-limit 5 \
             --gemini-max-text-chars 30000 \
             "${EXTRA_ARGS[@]}"
