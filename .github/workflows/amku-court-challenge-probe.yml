@@ -28,9 +28,14 @@ name: AMCU Court Challenge Probe
         default: "4"
 
       max_gemini_calls:
-        description: "Maximum Gemini classification calls"
+        description: "Maximum Gemini calls for direct challenge classification"
         required: false
-        default: "50"
+        default: "180"
+
+      max_merits_gemini_calls:
+        description: "Maximum additional Gemini calls for substantive-merits verification"
+        required: false
+        default: "120"
 
       skip_gemini:
         description: "Diagnostic only: find candidates without Gemini classification"
@@ -41,7 +46,7 @@ name: AMCU Court Challenge Probe
 jobs:
   probe:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 180
 
     steps:
       - name: Checkout
@@ -56,8 +61,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/tmp/amku_court_challenge_cache/v4/texts
-          key: amku-court-texts-v5-${{ inputs.year }}-${{ github.run_id }}
+          key: amku-court-texts-v6-${{ inputs.year }}-${{ github.run_id }}
           restore-keys: |
+            amku-court-texts-v6-${{ inputs.year }}-
             amku-court-texts-v5-${{ inputs.year }}-
             amku-court-texts-v4-${{ inputs.year }}-
 
@@ -84,6 +90,7 @@ jobs:
             --request-timeout 45 \
             --retries 4 \
             --max-gemini-calls "${{ inputs.max_gemini_calls }}" \
+            --max-merits-gemini-calls "${{ inputs.max_merits_gemini_calls }}" \
             --gemini-rpm-limit 5 \
             --gemini-max-text-chars 30000 \
             "${EXTRA_ARGS[@]}"
