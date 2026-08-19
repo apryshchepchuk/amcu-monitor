@@ -197,16 +197,17 @@ jobs:
           path: data/tmp/amku_court_ai_cache
           key: amku-court-ai-v3-${{ inputs.year }}-${{ github.run_id }}
 
-      - name: Upload diagnostic artifacts and AI checkpoint
+      - name: Upload compact diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: amku-court-challenges-${{ inputs.year }}
           path: |
-            data/tmp/amku_court_challenges/
-            data/tmp/amku_court_ai_cache/cache.json
+            data/tmp/amku_court_challenges/report.md
+            data/tmp/amku_court_challenges/summary.json
+            data/tmp/amku_court_challenges/diagnostics.json
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 7
 
       - name: Build dashboard with court challenge data
         if: ${{ steps.enrichment.outcome == 'success' && inputs.dry_run != true }}
