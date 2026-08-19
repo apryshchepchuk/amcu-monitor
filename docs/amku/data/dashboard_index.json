@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-18T17:08:03.368Z",
+  "updated_at": "2026-08-19T08:14:25.876Z",
   "source_file": "data/practice/amku_practice.json",
   "total_decisions": 775,
   "total_sanction_uah": 24239965649.57,
@@ -140,10 +140,11 @@
     }
   ],
   "court_challenges": {
-    "updated_at": "2026-08-18T11:28:03+00:00",
-    "challenged_decisions": 68,
-    "cases": 79,
+    "updated_at": "2026-08-19T08:14:23+00:00",
+    "challenged_decisions": 95,
+    "cases": 138,
     "source_years": [
+      2025,
       2026
     ]
   },

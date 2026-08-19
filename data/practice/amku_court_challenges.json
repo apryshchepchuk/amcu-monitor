@@ -1,7 +1,8 @@
 {
   "schema": "amku_court_challenges_v1",
-  "updated_at": "2026-08-18T11:28:03+00:00",
+  "updated_at": "2026-08-19T08:14:23+00:00",
   "source_years": [
+    2025,
     2026
   ],
   "decisions": {
@@ -1771,7 +1772,7 @@
       "display_status": "ongoing",
       "display_status_label": "Оскарження триває",
       "primary_case_number": "910/11264/25",
-      "cases_count": 2,
+      "cases_count": 3,
       "display_url": "https://reyestr.court.gov.ua/Review/138360769",
       "latest_merits": {
         "doc_id": "134577544",
@@ -1843,6 +1844,28 @@
           ],
           "matched_on_doc_id": "134577544",
           "updated_at": "2026-08-18T11:28:03+00:00"
+        },
+        {
+          "case_number": "910/9892/25",
+          "challenger": "МПП «Гермес С»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Позовну заяву повернуто позивачу через неусунення недоліків (несплата судового збору), спір по суті не вирішено.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "130095047",
+            "type": "Ухвала",
+            "date": "2025-09-10",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/130095047"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "130095047",
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -1996,24 +2019,18 @@
     "2025-06-19|252-р": {
       "has_challenge": true,
       "decision_key": "2025-06-19|252-р",
-      "display_status": "partially_overturned",
-      "display_status_label": "Рішення АМКУ скасовано частково",
-      "primary_case_number": "910/10516/25",
-      "cases_count": 1,
-      "display_url": "https://reyestr.court.gov.ua/Review/138259582",
-      "latest_merits": {
-        "doc_id": "138259582",
-        "type": "Рішення",
-        "date": "2026-07-13",
-        "court": "Господарський суд міста Києва",
-        "url": "https://reyestr.court.gov.ua/Review/138259582"
-      },
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/10724/25",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/131065562",
+      "latest_merits": null,
       "latest_relevant": {
-        "doc_id": "138259582",
-        "type": "Рішення",
-        "date": "2026-07-13",
-        "court": "Господарський суд міста Києва",
-        "url": "https://reyestr.court.gov.ua/Review/138259582"
+        "doc_id": "131065562",
+        "type": "Ухвала",
+        "date": "2025-10-17",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/131065562"
       },
       "cases": [
         {
@@ -2043,6 +2060,28 @@
           ],
           "matched_on_doc_id": "138259582",
           "updated_at": "2026-08-18T11:28:03+00:00"
+        },
+        {
+          "case_number": "910/10724/25",
+          "challenger": "ТОВ «Фінансова компанія «Інвестохіллс Веста»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Поточний документ є ухвалою про самовідвід колегії суддів, спір по суті не вирішено.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "131065562",
+            "type": "Ухвала",
+            "date": "2025-10-17",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131065562"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131065562",
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -2052,7 +2091,7 @@
       "display_status": "ongoing",
       "display_status_label": "Оскарження триває",
       "primary_case_number": "910/11057/25",
-      "cases_count": 1,
+      "cases_count": 2,
       "display_url": "https://reyestr.court.gov.ua/Review/138033668",
       "latest_merits": null,
       "latest_relevant": {
@@ -2084,6 +2123,28 @@
           ],
           "matched_on_doc_id": "138033668",
           "updated_at": "2026-08-18T11:28:03+00:00"
+        },
+        {
+          "case_number": "910/10149/25",
+          "challenger": "ТОВ «ТРІНІТІ-ГРУП», ТОВ «АБЗ1»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Позовну заяву повернуто без розгляду через неусунення недоліків, спір по суті не вирішено.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "129926153",
+            "type": "Ухвала",
+            "date": "2025-09-02",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/129926153"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "129926153",
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -2913,10 +2974,11 @@
           },
           "invalidates_prior_merits": false,
           "source_years": [
+            2025,
             2026
           ],
           "matched_on_doc_id": "137846164",
-          "updated_at": "2026-08-18T11:28:03+00:00"
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -2926,7 +2988,7 @@
       "display_status": "ongoing",
       "display_status_label": "Справу направлено на новий розгляд",
       "primary_case_number": "910/1920/25",
-      "cases_count": 1,
+      "cases_count": 2,
       "display_url": "https://reyestr.court.gov.ua/Review/138397403",
       "latest_merits": null,
       "latest_relevant": {
@@ -2958,6 +3020,28 @@
           ],
           "matched_on_doc_id": "133588677",
           "updated_at": "2026-08-18T11:28:03+00:00"
+        },
+        {
+          "case_number": "910/2157/25",
+          "challenger": "ТОВ «Рожнятів Торф»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Позовну заяву повернуто на підставі п. 5 ч. 5 ст. 174 ГПК України (наявність іншого позову з тим самим предметом).",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "125495050",
+            "type": "Ухвала",
+            "date": "2025-02-27",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/125495050"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "125495050",
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -3036,10 +3120,11 @@
           },
           "invalidates_prior_merits": false,
           "source_years": [
+            2025,
             2026
           ],
           "matched_on_doc_id": "133486399",
-          "updated_at": "2026-08-18T11:28:03+00:00"
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -3077,10 +3162,11 @@
           },
           "invalidates_prior_merits": false,
           "source_years": [
+            2025,
             2026
           ],
           "matched_on_doc_id": "135551684",
-          "updated_at": "2026-08-18T11:28:03+00:00"
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -3090,7 +3176,7 @@
       "display_status": "upheld",
       "display_status_label": "Рішення АМКУ залишено чинним",
       "primary_case_number": "910/17874/23",
-      "cases_count": 1,
+      "cases_count": 2,
       "display_url": "https://reyestr.court.gov.ua/Review/135553355",
       "latest_merits": {
         "doc_id": "135553355",
@@ -3134,6 +3220,34 @@
           ],
           "matched_on_doc_id": "135553355",
           "updated_at": "2026-08-18T11:28:03+00:00"
+        },
+        {
+          "case_number": "910/18964/23",
+          "challenger": "ТОВ «УКРСПЕЦПОСТАВКА»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "суд відмовив у задоволенні позовних вимог, залишивши рішення АМКУ чинним",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128781432",
+            "type": "Рішення",
+            "date": "2025-07-02",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/128781432"
+          },
+          "latest_relevant": {
+            "doc_id": "128781432",
+            "type": "Рішення",
+            "date": "2025-07-02",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/128781432"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128781432",
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     },
@@ -3428,6 +3542,1995 @@
           ],
           "matched_on_doc_id": "134579634",
           "updated_at": "2026-08-18T11:28:03+00:00"
+        }
+      ]
+    },
+    "2025-10-23|697-р": {
+      "has_challenge": true,
+      "decision_key": "2025-10-23|697-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/14711/25",
+      "cases_count": 9,
+      "display_url": "https://reyestr.court.gov.ua/Review/132827333",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "132827333",
+        "type": "Ухвала",
+        "date": "2025-12-23",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/132827333"
+      },
+      "cases": [
+        {
+          "case_number": "910/14711/25",
+          "challenger": "ТОВ «БаДМ»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Провадження у справі відкрито, розгляд по суті триває.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "132827333",
+            "type": "Ухвала",
+            "date": "2025-12-23",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/132827333"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132827333",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/14446/25",
+          "challenger": "ТОВ «Оптіма-Фарм, ЛТД»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Поточний документ є процесуальним (ухвала про самовідвід колегії суддів), спір по суті триває.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "132826427",
+            "type": "Ухвала",
+            "date": "2025-12-23",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/132826427"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132826427",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/13736/25",
+          "challenger": "ТОВ «БаДМ»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "суд відмовив у відкритті провадження, позов повернуто",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "132607272",
+            "type": "Ухвала",
+            "date": "2025-12-15",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/132607272"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131645855",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/14665/25",
+          "challenger": "ТОВ «БаДМ»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Заяву про забезпечення позову повернуто через зловживання процесуальними правами.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "132470483",
+            "type": "Ухвала",
+            "date": "2025-12-10",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/132470483"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132082378",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/14453/25",
+          "challenger": "ТОВ «ОПТІМА-ФАРМ, ЛТД»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Позовну заяву повернуто позивачу до відкриття провадження, спір по суті не вирішено.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "132235753",
+            "type": "Ухвала",
+            "date": "2025-12-01",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/132235753"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132235753",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/14454/25",
+          "challenger": "Оптіма-Фарм, ЛТД",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Позовну заяву повернуто судом без розгляду по суті через зловживання процесуальними правами.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "132115275",
+            "type": "Ухвала",
+            "date": "2025-11-27",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/132115275"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132115275",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/14467/25",
+          "challenger": "Оптіма-Фарм, ЛТД",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "позовну заяву повернуто через зловживання процесуальними правами",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "132115271",
+            "type": "Ухвала",
+            "date": "2025-11-27",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/132115271"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132115271",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/13732/25",
+          "challenger": "Оптіма-Фарм, ЛТД",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Суд відмовив у відкритті провадження, оскільки спір не підлягає розгляду в порядку господарського судочинства (обрано неналежний спосіб захисту).",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "131806029",
+            "type": "Ухвала",
+            "date": "2025-11-13",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/131806029"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131806029",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/13254/25",
+          "challenger": "ТОВ «ОПТІМА-ФАРМ, ЛТД»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Справа на стадії забезпечення позову, спір по суті не вирішено.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "131355462",
+            "type": "Ухвала",
+            "date": "2025-10-28",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/131355462"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131355462",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-12-26|544-р": {
+      "has_challenge": true,
+      "decision_key": "2024-12-26|544-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/4595/25",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/130789190",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "130789190",
+        "type": "Ухвала",
+        "date": "2025-10-01",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/130789190"
+      },
+      "cases": [
+        {
+          "case_number": "910/4595/25",
+          "challenger": "ОСОБА_1",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Ухвала про відкриття провадження у справі, розгляд по суті ще не відбувся.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "130789190",
+            "type": "Ухвала",
+            "date": "2025-10-01",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/130789190"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "126763944",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-12-19|519-р": {
+      "has_challenge": true,
+      "decision_key": "2024-12-19|519-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/2127/25",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/128130458",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "128130458",
+        "type": "Ухвала",
+        "date": "2025-06-16",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/128130458"
+      },
+      "cases": [
+        {
+          "case_number": "910/2127/25",
+          "challenger": "ТОВ «СТЕЛЛАР ЛІМ 2024»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Справа перебуває на стадії підготовчого провадження, суд ухвалив рішення про розгляд справи у закритому засіданні.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "128130458",
+            "type": "Ухвала",
+            "date": "2025-06-16",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/128130458"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128130458",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/1982/25",
+          "challenger": "ТОВ «СТЕЙЛЕД»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Справа перебуває на стадії підготовчого провадження, суд вирішує процесуальні питання.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "127824284",
+            "type": "Ухвала",
+            "date": "2025-05-29",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/127824284"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "127824284",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-11-21|463-р": {
+      "has_challenge": true,
+      "decision_key": "2024-11-21|463-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/1978/25",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/130858367",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "130858367",
+        "type": "Рішення",
+        "date": "2025-09-23",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/130858367"
+      },
+      "cases": [
+        {
+          "case_number": "910/1978/25",
+          "challenger": "ТОВ «Альфа СБ»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "справа розглядається по суті, остаточне рішення ще не винесено",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "130858367",
+            "type": "Рішення",
+            "date": "2025-09-23",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/130858367"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "130858367",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/1991/25",
+          "challenger": "ПП «АЛМАЗ-2005»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "позов залишено без розгляду через неявку позивача, спір по суті не вирішено",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "127049590",
+            "type": "Ухвала",
+            "date": "2025-05-02",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/127049590"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "127049590",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-11-21|462-р": {
+      "has_challenge": true,
+      "decision_key": "2024-11-21|462-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/889/25",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/131574947",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "131574947",
+        "type": "Ухвала",
+        "date": "2025-10-30",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/131574947"
+      },
+      "cases": [
+        {
+          "case_number": "910/889/25",
+          "challenger": "ТОВ «Євро Смарт Пауер»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Справа на стадії відкриття провадження, розгляд по суті ще не відбувся.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "131574947",
+            "type": "Ухвала",
+            "date": "2025-10-30",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131574947"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124896243",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-10-31|408-р": {
+      "has_challenge": true,
+      "decision_key": "2024-10-31|408-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/501/25",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/127321805",
+      "latest_merits": {
+        "doc_id": "127321805",
+        "type": "Рішення",
+        "date": "2025-05-12",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/127321805"
+      },
+      "latest_relevant": {
+        "doc_id": "127321805",
+        "type": "Рішення",
+        "date": "2025-05-12",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/127321805"
+      },
+      "cases": [
+        {
+          "case_number": "910/501/25",
+          "challenger": "ТОВ «ЕЙЧ ЕН ГРУПП»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Суд відмовив у задоволенні позовних вимог, залишивши рішення АМКУ чинним.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "127321805",
+            "type": "Рішення",
+            "date": "2025-05-12",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/127321805"
+          },
+          "latest_relevant": {
+            "doc_id": "127321805",
+            "type": "Рішення",
+            "date": "2025-05-12",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/127321805"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "127321805",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-10-31|407-р": {
+      "has_challenge": true,
+      "decision_key": "2024-10-31|407-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "911/3393/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/127603016",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "127603016",
+        "type": "Ухвала",
+        "date": "2025-05-26",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/127603016"
+      },
+      "cases": [
+        {
+          "case_number": "911/3393/24",
+          "challenger": "ТДВ «Компані «Бест»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Процесуальна ухвала про залишення позовної заяви без руху для усунення недоліків.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "127603016",
+            "type": "Ухвала",
+            "date": "2025-05-26",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/127603016"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "125354774",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-10-17|388-р": {
+      "has_challenge": true,
+      "decision_key": "2024-10-17|388-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/16035/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/129713696",
+      "latest_merits": {
+        "doc_id": "129713696",
+        "type": "Рішення",
+        "date": "2025-07-28",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/129713696"
+      },
+      "latest_relevant": {
+        "doc_id": "131156351",
+        "type": "Ухвала",
+        "date": "2025-10-21",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/131156351"
+      },
+      "cases": [
+        {
+          "case_number": "910/16035/24",
+          "challenger": "ТОВ «СІВЕР ОІЛ»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Суд розглянув позов по суті та відмовив у задоволенні вимог про скасування рішення АМКУ, що означає залишення рішення АМКУ в силі.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "129713696",
+            "type": "Рішення",
+            "date": "2025-07-28",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/129713696"
+          },
+          "latest_relevant": {
+            "doc_id": "131156351",
+            "type": "Ухвала",
+            "date": "2025-10-21",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131156351"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124516216",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-10-17|386-р": {
+      "has_challenge": true,
+      "decision_key": "2024-10-17|386-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/185/25",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/124686050",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "124686050",
+        "type": "Ухвала",
+        "date": "2025-01-27",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/124686050"
+      },
+      "cases": [
+        {
+          "case_number": "910/185/25",
+          "challenger": "ДП «Укрспирт»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Позовну заяву повернуто заявнику через неусунення недоліків, спір по суті не вирішувався.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "124686050",
+            "type": "Ухвала",
+            "date": "2025-01-27",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/124686050"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124686050",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-10-10|373-р": {
+      "has_challenge": true,
+      "decision_key": "2024-10-10|373-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/128/25",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/128167563",
+      "latest_merits": {
+        "doc_id": "128167563",
+        "type": "Рішення",
+        "date": "2025-05-27",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/128167563"
+      },
+      "latest_relevant": {
+        "doc_id": "128167563",
+        "type": "Рішення",
+        "date": "2025-05-27",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/128167563"
+      },
+      "cases": [
+        {
+          "case_number": "910/128/25",
+          "challenger": "ТОВ «СКМ-1»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Суд розглянув справу по суті та відмовив у задоволенні позову, залишивши рішення АМКУ чинним.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128167563",
+            "type": "Рішення",
+            "date": "2025-05-27",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/128167563"
+          },
+          "latest_relevant": {
+            "doc_id": "128167563",
+            "type": "Рішення",
+            "date": "2025-05-27",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/128167563"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128167563",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-10-10|370-р": {
+      "has_challenge": true,
+      "decision_key": "2024-10-10|370-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/14404/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/125713373",
+      "latest_merits": {
+        "doc_id": "125713373",
+        "type": "Рішення",
+        "date": "2025-03-10",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/125713373"
+      },
+      "latest_relevant": {
+        "doc_id": "125713373",
+        "type": "Рішення",
+        "date": "2025-03-10",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/125713373"
+      },
+      "cases": [
+        {
+          "case_number": "910/14404/24",
+          "challenger": "ПрАТ «Вінницька кондитерська фабрика»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Суд відмовив у задоволенні позовних вимог, залишивши рішення АМКУ чинним.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "125713373",
+            "type": "Рішення",
+            "date": "2025-03-10",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/125713373"
+          },
+          "latest_relevant": {
+            "doc_id": "125713373",
+            "type": "Рішення",
+            "date": "2025-03-10",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/125713373"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "125713373",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-10-03|363-р": {
+      "has_challenge": true,
+      "decision_key": "2024-10-03|363-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/15090/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/128204543",
+      "latest_merits": {
+        "doc_id": "128204543",
+        "type": "Рішення",
+        "date": "2025-06-18",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/128204543"
+      },
+      "latest_relevant": {
+        "doc_id": "128452936",
+        "type": "Рішення",
+        "date": "2025-06-18",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/128452936"
+      },
+      "cases": [
+        {
+          "case_number": "910/15090/24",
+          "challenger": "ТОВ «Торговий дім Латчбахер Україна»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Суд розглянув позов по суті та відмовив у задоволенні вимог про скасування рішення АМКУ №363-р, що означає залишення рішення АМКУ в силі.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128204543",
+            "type": "Рішення",
+            "date": "2025-06-18",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/128204543"
+          },
+          "latest_relevant": {
+            "doc_id": "128452936",
+            "type": "Рішення",
+            "date": "2025-06-18",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/128452936"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128452936",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-09-19|332-р": {
+      "has_challenge": true,
+      "decision_key": "2024-09-19|332-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/15919/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/128592925",
+      "latest_merits": {
+        "doc_id": "128592925",
+        "type": "Постанова",
+        "date": "2025-07-01",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/128592925"
+      },
+      "latest_relevant": {
+        "doc_id": "128592925",
+        "type": "Постанова",
+        "date": "2025-07-01",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/128592925"
+      },
+      "cases": [
+        {
+          "case_number": "910/15919/24",
+          "challenger": "ТОВ «КОНВЕРС ЛІНКС»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Апеляційний суд залишив рішення суду першої інстанції без змін, а апеляційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128592925",
+            "type": "Постанова",
+            "date": "2025-07-01",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/128592925"
+          },
+          "latest_relevant": {
+            "doc_id": "128592925",
+            "type": "Постанова",
+            "date": "2025-07-01",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/128592925"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128592925",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-09-19|331-р": {
+      "has_challenge": true,
+      "decision_key": "2024-09-19|331-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/15114/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/131065546",
+      "latest_merits": {
+        "doc_id": "131065546",
+        "type": "Постанова",
+        "date": "2025-09-23",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/131065546"
+      },
+      "latest_relevant": {
+        "doc_id": "131065546",
+        "type": "Постанова",
+        "date": "2025-09-23",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/131065546"
+      },
+      "cases": [
+        {
+          "case_number": "910/15114/24",
+          "challenger": "ТОВ «КОНВЕРС ЛІНКС»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Апеляційний суд залишив рішення суду першої інстанції без змін, а апеляційну скаргу без задоволення, підтвердивши законність рішення АМКУ.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "131065546",
+            "type": "Постанова",
+            "date": "2025-09-23",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131065546"
+          },
+          "latest_relevant": {
+            "doc_id": "131065546",
+            "type": "Постанова",
+            "date": "2025-09-23",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131065546"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131065546",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-09-19|330-р": {
+      "has_challenge": true,
+      "decision_key": "2024-09-19|330-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/15111/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/129771608",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "129771608",
+        "type": "Ухвала",
+        "date": "2025-08-25",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/129771608"
+      },
+      "cases": [
+        {
+          "case_number": "910/15111/24",
+          "challenger": "ТОВ «Конверс Лінкс»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "справа на стадії підготовчого провадження",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "129771608",
+            "type": "Ухвала",
+            "date": "2025-08-25",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/129771608"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124302361",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-08-22|289-р": {
+      "has_challenge": true,
+      "decision_key": "2024-08-22|289-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/13020/24",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/127860744",
+      "latest_merits": {
+        "doc_id": "126120611",
+        "type": "Рішення",
+        "date": "2025-03-05",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/126120611"
+      },
+      "latest_relevant": {
+        "doc_id": "127860744",
+        "type": "Ухвала",
+        "date": "2025-06-03",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/127860744"
+      },
+      "cases": [
+        {
+          "case_number": "910/13020/24",
+          "challenger": "ТОВ «Авест буд»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Ухвала підтверджує, що апеляційне провадження триває, справу призначено до розгляду на нову дату (24.06.2025) після задоволення клопотання про закритий розгляд.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": {
+            "doc_id": "126120611",
+            "type": "Рішення",
+            "date": "2025-03-05",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/126120611"
+          },
+          "latest_relevant": {
+            "doc_id": "127860744",
+            "type": "Ухвала",
+            "date": "2025-06-03",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/127860744"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "126120611",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/13016/24",
+          "challenger": "ТОВ «Автодорбудпостач»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "справа перебуває на стадії підготовчого провадження, суд ухвалив проводити засідання у закритому режимі",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "124590385",
+            "type": "Ухвала",
+            "date": "2025-01-16",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/124590385"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124590385",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-07-25|242-р": {
+      "has_challenge": true,
+      "decision_key": "2024-07-25|242-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/16017/24",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/131390831",
+      "latest_merits": {
+        "doc_id": "131390831",
+        "type": "Постанова",
+        "date": "2025-10-28",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/131390831"
+      },
+      "latest_relevant": {
+        "doc_id": "131390831",
+        "type": "Постанова",
+        "date": "2025-10-28",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/131390831"
+      },
+      "cases": [
+        {
+          "case_number": "910/16017/24",
+          "challenger": "ТОВ «Рутен Інжиніринг»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив рішення судів попередніх інстанцій без змін, а касаційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "131390831",
+            "type": "Постанова",
+            "date": "2025-10-28",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/131390831"
+          },
+          "latest_relevant": {
+            "doc_id": "131390831",
+            "type": "Постанова",
+            "date": "2025-10-28",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/131390831"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131390831",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/12838/24",
+          "challenger": "ТОВ «ЮНІБУД ЕНЕРГОСЕРВІС»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив рішення судів попередніх інстанцій про відмову в позові без змін, рішення АМКУ залишено чинним.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "130681386",
+            "type": "Постанова",
+            "date": "2025-09-30",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/130681386"
+          },
+          "latest_relevant": {
+            "doc_id": "130681386",
+            "type": "Постанова",
+            "date": "2025-09-30",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/130681386"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "130681386",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-06-27|209-р": {
+      "has_challenge": true,
+      "decision_key": "2024-06-27|209-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/12573/24",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/131388971",
+      "latest_merits": {
+        "doc_id": "131388971",
+        "type": "Постанова",
+        "date": "2025-09-23",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/131388971"
+      },
+      "latest_relevant": {
+        "doc_id": "131388971",
+        "type": "Постанова",
+        "date": "2025-09-23",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/131388971"
+      },
+      "cases": [
+        {
+          "case_number": "910/12573/24",
+          "challenger": "ДП «Агентство професійної безпеки «Атлант»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Апеляційний суд залишив рішення суду першої інстанції без змін, а апеляційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "131388971",
+            "type": "Постанова",
+            "date": "2025-09-23",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131388971"
+          },
+          "latest_relevant": {
+            "doc_id": "131388971",
+            "type": "Постанова",
+            "date": "2025-09-23",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131388971"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131388971",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/11110/24",
+          "challenger": "Дочірнє підприємство «Дельта Сервіс»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Апеляційний суд залишив рішення суду першої інстанції про відмову в позові без змін, а апеляційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "132867544",
+            "type": "Постанова",
+            "date": "2025-05-26",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/132867544"
+          },
+          "latest_relevant": {
+            "doc_id": "132867544",
+            "type": "Постанова",
+            "date": "2025-05-26",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/132867544"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132867544",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-06-27|208-р": {
+      "has_challenge": true,
+      "decision_key": "2024-06-27|208-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/11971/24",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/132431189",
+      "latest_merits": {
+        "doc_id": "132431189",
+        "type": "Постанова",
+        "date": "2025-12-04",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/132431189"
+      },
+      "latest_relevant": {
+        "doc_id": "132431189",
+        "type": "Постанова",
+        "date": "2025-12-04",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/132431189"
+      },
+      "cases": [
+        {
+          "case_number": "910/11971/24",
+          "challenger": "Приватне підприємство \"ІНФОРМАЦІЯ_1\"",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив рішення судів попередніх інстанцій без змін, а касаційну скаргу без задоволення, підтвердивши законність рішення АМКУ.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "132431189",
+            "type": "Постанова",
+            "date": "2025-12-04",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/132431189"
+          },
+          "latest_relevant": {
+            "doc_id": "132431189",
+            "type": "Постанова",
+            "date": "2025-12-04",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/132431189"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "132431189",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/11961/24",
+          "challenger": "ТОВ «ІК «Візеріон»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційна скарга залишена без задоволення, рішення АМКУ залишено в силі.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128907697",
+            "type": "Постанова",
+            "date": "2025-07-15",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128907697"
+          },
+          "latest_relevant": {
+            "doc_id": "128907697",
+            "type": "Постанова",
+            "date": "2025-07-15",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128907697"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128907697",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-05-23|168-р": {
+      "has_challenge": true,
+      "decision_key": "2024-05-23|168-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/10120/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/124807676",
+      "latest_merits": {
+        "doc_id": "124807676",
+        "type": "Рішення",
+        "date": "2025-01-16",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/124807676"
+      },
+      "latest_relevant": {
+        "doc_id": "124807676",
+        "type": "Рішення",
+        "date": "2025-01-16",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/124807676"
+      },
+      "cases": [
+        {
+          "case_number": "910/10120/24",
+          "challenger": "ТОВ «ТОРГОВИЙ ДІМ КАРПАТИНАФТОТРЕЙД»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Суд відмовив у задоволенні позову, залишивши рішення АМКУ в силі.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "124807676",
+            "type": "Рішення",
+            "date": "2025-01-16",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/124807676"
+          },
+          "latest_relevant": {
+            "doc_id": "124807676",
+            "type": "Рішення",
+            "date": "2025-01-16",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/124807676"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124807676",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2024-04-25|150-р": {
+      "has_challenge": true,
+      "decision_key": "2024-04-25|150-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "902/770/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/125460492",
+      "latest_merits": {
+        "doc_id": "125460492",
+        "type": "Рішення",
+        "date": "2025-02-24",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/125460492"
+      },
+      "latest_relevant": {
+        "doc_id": "125460492",
+        "type": "Рішення",
+        "date": "2025-02-24",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/125460492"
+      },
+      "cases": [
+        {
+          "case_number": "902/770/24",
+          "challenger": "ТОВ «Брацлав-3М»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "суд відмовив у задоволенні позовних вимог, залишивши рішення АМКУ чинним",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "125460492",
+            "type": "Рішення",
+            "date": "2025-02-24",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/125460492"
+          },
+          "latest_relevant": {
+            "doc_id": "125460492",
+            "type": "Рішення",
+            "date": "2025-02-24",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/125460492"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "125460492",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2023-12-21|363-р": {
+      "has_challenge": true,
+      "decision_key": "2023-12-21|363-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/3661/24",
+      "cases_count": 2,
+      "display_url": "https://reyestr.court.gov.ua/Review/126532512",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "126532512",
+        "type": "Ухвала",
+        "date": "2025-04-11",
+        "court": "Північний апеляційний господарський суд",
+        "url": "https://reyestr.court.gov.ua/Review/126532512"
+      },
+      "cases": [
+        {
+          "case_number": "910/3374/24",
+          "challenger": "ТОВ «УТБ-Інжиніринг»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив без змін рішення судів попередніх інстанцій, якими у задоволенні позову відмовлено.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "129576847",
+            "type": "Постанова",
+            "date": "2025-08-14",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129576847"
+          },
+          "latest_relevant": {
+            "doc_id": "129576847",
+            "type": "Постанова",
+            "date": "2025-08-14",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129576847"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "129576847",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3661/24",
+          "challenger": "ТОВ «Еко Комфорт Групп»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Ухвала про відкладення розгляду справи, спір по суті триває.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "126532512",
+            "type": "Ухвала",
+            "date": "2025-04-11",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/126532512"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "126532512",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2023-12-21|362-р": {
+      "has_challenge": true,
+      "decision_key": "2023-12-21|362-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/3360/24",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/129214228",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "129214228",
+        "type": "Ухвала",
+        "date": "2025-07-30",
+        "court": "Господарський суд міста Києва",
+        "url": "https://reyestr.court.gov.ua/Review/129214228"
+      },
+      "cases": [
+        {
+          "case_number": "910/3360/24",
+          "challenger": "ТОВ «Сучасна лікарня»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Справа перебуває на стадії розгляду по суті, остаточного рішення по суті спору ще не прийнято.",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "129214228",
+            "type": "Ухвала",
+            "date": "2025-07-30",
+            "court": "Господарський суд міста Києва",
+            "url": "https://reyestr.court.gov.ua/Review/129214228"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "127960865",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2023-07-06|189-р": {
+      "has_challenge": true,
+      "decision_key": "2023-07-06|189-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/13407/23",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/129633132",
+      "latest_merits": {
+        "doc_id": "129633132",
+        "type": "Постанова",
+        "date": "2025-08-19",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/129633132"
+      },
+      "latest_relevant": {
+        "doc_id": "129687942",
+        "type": "Постанова",
+        "date": "2025-08-19",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/129687942"
+      },
+      "cases": [
+        {
+          "case_number": "910/13407/23",
+          "challenger": "ПП «Євро ІФ»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив без змін рішення судів попередніх інстанцій, якими було вирішено спір по суті щодо оскарження рішення АМКУ.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "129633132",
+            "type": "Постанова",
+            "date": "2025-08-19",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129633132"
+          },
+          "latest_relevant": {
+            "doc_id": "129687942",
+            "type": "Постанова",
+            "date": "2025-08-19",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129687942"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "129687942",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2022-12-22|305-р": {
+      "has_challenge": true,
+      "decision_key": "2022-12-22|305-р",
+      "display_status": "ongoing",
+      "display_status_label": "Оскарження триває",
+      "primary_case_number": "910/3475/23",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/131243146",
+      "latest_merits": null,
+      "latest_relevant": {
+        "doc_id": "131243146",
+        "type": "Ухвала",
+        "date": "2025-10-21",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/131243146"
+      },
+      "cases": [
+        {
+          "case_number": "910/3475/23",
+          "challenger": "ТОВ «ТС ТРЕЙД»",
+          "status": "ongoing",
+          "status_label": "Оскарження триває",
+          "status_detail": "Касаційне провадження закрито, рішення судів попередніх інстанцій, якими рішення АМКУ було скасовано, залишено в силі (фактично підтверджено результат на користь позивача).",
+          "result_summary": "Оскарження триває",
+          "latest_merits": null,
+          "latest_relevant": {
+            "doc_id": "131243146",
+            "type": "Ухвала",
+            "date": "2025-10-21",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/131243146"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131243146",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2020-12-24|810-р": {
+      "has_challenge": true,
+      "decision_key": "2020-12-24|810-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/3435/21",
+      "cases_count": 13,
+      "display_url": "https://reyestr.court.gov.ua/Review/131390851",
+      "latest_merits": {
+        "doc_id": "131390851",
+        "type": "Постанова",
+        "date": "2025-10-28",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/131390851"
+      },
+      "latest_relevant": {
+        "doc_id": "131390851",
+        "type": "Постанова",
+        "date": "2025-10-28",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/131390851"
+      },
+      "cases": [
+        {
+          "case_number": "910/3435/21",
+          "challenger": "АТ «Миколаївгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив рішення судів попередніх інстанцій без змін, відмовивши у задоволенні касаційної скарги.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "131390851",
+            "type": "Постанова",
+            "date": "2025-10-28",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/131390851"
+          },
+          "latest_relevant": {
+            "doc_id": "131390851",
+            "type": "Постанова",
+            "date": "2025-10-28",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/131390851"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131390851",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/8032/21",
+          "challenger": "АТ «ОГС «Львівгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Апеляційний суд залишив рішення суду першої інстанції про відмову в позові без змін.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128520738",
+            "type": "Постанова",
+            "date": "2025-06-19",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/128520738"
+          },
+          "latest_relevant": {
+            "doc_id": "131390849",
+            "type": "Ухвала",
+            "date": "2025-10-28",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/131390849"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128520738",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3367/21",
+          "challenger": "АТ «Чернівцігаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Апеляційний суд залишив рішення суду першої інстанції без змін, а апеляційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "131277939",
+            "type": "Постанова",
+            "date": "2025-10-06",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131277939"
+          },
+          "latest_relevant": {
+            "doc_id": "131277939",
+            "type": "Постанова",
+            "date": "2025-10-06",
+            "court": "Північний апеляційний господарський суд",
+            "url": "https://reyestr.court.gov.ua/Review/131277939"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "131277939",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3350/21",
+          "challenger": "АТ «Київоблгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив без змін рішення судів попередніх інстанцій, якими у задоволенні позову про скасування рішення АМКУ було відмовлено.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "130193655",
+            "type": "Постанова",
+            "date": "2025-09-11",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/130193655"
+          },
+          "latest_relevant": {
+            "doc_id": "130193655",
+            "type": "Постанова",
+            "date": "2025-09-11",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/130193655"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "130193655",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3497/21",
+          "challenger": "АТ «Запоріжгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив без змін рішення судів попередніх інстанцій, якими було вирішено спір по суті щодо оскарження рішення АМКУ.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "129375691",
+            "type": "Постанова",
+            "date": "2025-08-07",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129375691"
+          },
+          "latest_relevant": {
+            "doc_id": "129492798",
+            "type": "Постанова",
+            "date": "2025-08-07",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129492798"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "129492798",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3449/21",
+          "challenger": "АТ «ОГС «Дніпрогаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив рішення судів попередніх інстанцій без змін, а касаційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "129215270",
+            "type": "Постанова",
+            "date": "2025-07-29",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129215270"
+          },
+          "latest_relevant": {
+            "doc_id": "129215270",
+            "type": "Постанова",
+            "date": "2025-07-29",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/129215270"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "129215270",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3320/21",
+          "challenger": "АТ «Оператор газорозподільної системи «Житомиргаз», АТ «Оператор газорозподільної системи «Закарпатгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив рішення судів попередніх інстанцій без змін, а касаційні скарги без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128485110",
+            "type": "Постанова",
+            "date": "2025-06-26",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128485110"
+          },
+          "latest_relevant": {
+            "doc_id": "128485110",
+            "type": "Постанова",
+            "date": "2025-06-26",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128485110"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128485110",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3480/21",
+          "challenger": "АТ «Оператор газорозподільної системи «Рівнегаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив касаційну скаргу без задоволення, а рішення судів попередніх інстанцій — без змін.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128485107",
+            "type": "Постанова",
+            "date": "2025-06-26",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128485107"
+          },
+          "latest_relevant": {
+            "doc_id": "128485107",
+            "type": "Постанова",
+            "date": "2025-06-26",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128485107"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128485107",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3485/21",
+          "challenger": "АТ «Харківгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив рішення судів попередніх інстанцій без змін, а касаційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128067160",
+            "type": "Постанова",
+            "date": "2025-06-05",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128067160"
+          },
+          "latest_relevant": {
+            "doc_id": "128067160",
+            "type": "Постанова",
+            "date": "2025-06-05",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128067160"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128067160",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3370/21",
+          "challenger": "АТ «Оператор газорозподільної системи «Криворіжгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив рішення судів попередніх інстанцій без змін, а касаційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "128054341",
+            "type": "Постанова",
+            "date": "2025-06-05",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128054341"
+          },
+          "latest_relevant": {
+            "doc_id": "128054341",
+            "type": "Постанова",
+            "date": "2025-06-05",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/128054341"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "128054341",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3422/21",
+          "challenger": "АТ «Оператор газорозподільної системи «Дніпропетровськгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив без змін рішення судів попередніх інстанцій, якими у задоволенні позову про скасування рішення АМК було відмовлено.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "127249551",
+            "type": "Постанова",
+            "date": "2025-05-06",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/127249551"
+          },
+          "latest_relevant": {
+            "doc_id": "127249551",
+            "type": "Постанова",
+            "date": "2025-05-06",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/127249551"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "127249551",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3408/21",
+          "challenger": "АТ «Сумигаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив рішення судів попередніх інстанцій без змін, а касаційну скаргу без задоволення.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "126800036",
+            "type": "Постанова",
+            "date": "2025-04-22",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/126800036"
+          },
+          "latest_relevant": {
+            "doc_id": "126800036",
+            "type": "Постанова",
+            "date": "2025-04-22",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/126800036"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "126800036",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        },
+        {
+          "case_number": "910/3433/21",
+          "challenger": "АТ «Харківміськгаз»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Касаційний суд залишив рішення судів попередніх інстанцій без змін, відмовивши у задоволенні касаційної скарги.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "124897603",
+            "type": "Постанова",
+            "date": "2025-01-30",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/124897603"
+          },
+          "latest_relevant": {
+            "doc_id": "124897603",
+            "type": "Постанова",
+            "date": "2025-01-30",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/124897603"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124897603",
+          "updated_at": "2026-08-19T08:14:23+00:00"
+        }
+      ]
+    },
+    "2019-09-12|625-р": {
+      "has_challenge": true,
+      "decision_key": "2019-09-12|625-р",
+      "display_status": "upheld",
+      "display_status_label": "Рішення АМКУ залишено чинним",
+      "primary_case_number": "910/16728/19",
+      "cases_count": 1,
+      "display_url": "https://reyestr.court.gov.ua/Review/124484788",
+      "latest_merits": {
+        "doc_id": "124484788",
+        "type": "Постанова",
+        "date": "2025-01-16",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/124484788"
+      },
+      "latest_relevant": {
+        "doc_id": "124484788",
+        "type": "Постанова",
+        "date": "2025-01-16",
+        "court": "Касаційний господарський суд Верховного Суду",
+        "url": "https://reyestr.court.gov.ua/Review/124484788"
+      },
+      "cases": [
+        {
+          "case_number": "910/16728/19",
+          "challenger": "ТОВ «ППЛ 33-35»",
+          "status": "upheld",
+          "status_label": "Рішення АМКУ залишено чинним",
+          "status_detail": "Верховний Суд залишив без змін рішення судів попередніх інстанцій, якими у задоволенні позову про визнання рішення АМКУ недійсним було відмовлено.",
+          "result_summary": "Рішення АМКУ залишено чинним",
+          "latest_merits": {
+            "doc_id": "124484788",
+            "type": "Постанова",
+            "date": "2025-01-16",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/124484788"
+          },
+          "latest_relevant": {
+            "doc_id": "124484788",
+            "type": "Постанова",
+            "date": "2025-01-16",
+            "court": "Касаційний господарський суд Верховного Суду",
+            "url": "https://reyestr.court.gov.ua/Review/124484788"
+          },
+          "invalidates_prior_merits": false,
+          "source_years": [
+            2025
+          ],
+          "matched_on_doc_id": "124484788",
+          "updated_at": "2026-08-19T08:14:23+00:00"
         }
       ]
     }
