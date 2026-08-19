@@ -2241,6 +2241,9 @@ def main() -> int:
         "known_history_backfill_merits": 0,
         "known_history_skipped_existing_merits": 0,
         "known_history_skipped_duplicate_discovery": 0,
+        "known_confirmed_pairs_reused": 0,
+        "known_confirmed_cases_fully_skipped": 0,
+        "known_confirmed_cases_partially_deduped": 0,
     }
     registry_write_blocked_reason = ""
     ai_stats = {
@@ -2609,6 +2612,46 @@ def main() -> int:
                         f"to_gemini={fetch_stats['candidate_documents']}; "
                         f"errors={fetch_stats['fetch_errors']}"
                     )
+
+        # Known-pair dedup: if decision<->case is already confirmed in the persistent registry,
+        # do not spend Gemini again on the direct-challenge question. The known-case history
+        # stage below will still inspect that cause_num when historical enrichment is useful.
+        known_confirmed_pairs = {
+            (clean(link.get("decision_key")), clean(case_number))
+            for case_number, links in known_case_links.items()
+            for link in (links or [])
+            if clean(link.get("decision_key")) and clean(case_number)
+        }
+
+        deduped_candidate_docs: list[dict[str, Any]] = []
+        for entry in candidate_docs:
+            original_candidates = list(entry.get("candidates") or [])
+            new_candidates = [
+                candidate
+                for candidate in original_candidates
+                if (clean(candidate.get("candidate_id")), clean(entry.get("cause_num")))
+                not in known_confirmed_pairs
+            ]
+            reused_count = len(original_candidates) - len(new_candidates)
+            if reused_count:
+                fetch_stats["known_confirmed_pairs_reused"] += reused_count
+                if not new_candidates:
+                    fetch_stats["known_confirmed_cases_fully_skipped"] += 1
+                else:
+                    fetch_stats["known_confirmed_cases_partially_deduped"] += 1
+            if new_candidates:
+                entry = dict(entry)
+                entry["candidates"] = new_candidates
+                deduped_candidate_docs.append(entry)
+
+        candidate_docs = deduped_candidate_docs
+        log(
+            "Known-pair dedup: "
+            f"reused_pairs={fetch_stats['known_confirmed_pairs_reused']:,}; "
+            f"fully_skipped_cases={fetch_stats['known_confirmed_cases_fully_skipped']:,}; "
+            f"partially_deduped_cases={fetch_stats['known_confirmed_cases_partially_deduped']:,}; "
+            f"new_candidate_cases={len(candidate_docs):,}"
+        )
 
         # Stronger corroborating signals first if the Gemini budget is smaller than the candidate set.
         candidate_docs.sort(
@@ -3941,13 +3984,12 @@ def main() -> int:
         elif args.dry_run:
             log("DRY RUN: persistent court-challenge registry was not written.")
 
-        (out_dir / "registry_preview.json").write_text(
-            json.dumps(registry_preview, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
+        # Keep diagnostics deliberately compact. data/tmp is uploaded as a workflow artifact,
+        # not committed to the repository. We retain only a human report, a machine summary,
+        # and one combined diagnostics JSON for errors / targeted verification details.
 
         summary = {
-            "schema": "amku_court_challenges_production_v1_2_history",
+            "schema": "amku_court_challenges_production_v1_3_known_pair_dedup",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "year": year,
             "dataset_id": dataset_id,
@@ -3959,193 +4001,77 @@ def main() -> int:
             "known_registry_cases_before_run": len(known_case_numbers),
             "known_history_cases_found_in_year": len(known_history_docs),
             "known_history_work_items": fetch_stats["known_history_work_items"],
-            "commercial_justice_codes": sorted(commercial_codes),
             "prefilter": stats,
             "cases_scanned": len(jobs),
-            "text_fetch": fetch_stats,
-            "candidate_documents_before_negative_filter": fetch_stats["candidate_documents_before_negative_filter"],
+            "text_fetch": {
+                "documents_requested": fetch_stats["documents_requested"],
+                "validated_documents": fetch_stats["validated_documents"],
+                "cache_hits": fetch_stats["cache_hits"],
+                "fetch_errors": fetch_stats["fetch_errors"],
+            },
+            "candidate_cases_before_negative_filter": fetch_stats["candidate_documents_before_negative_filter"],
             "candidate_pairs_before_negative_filter": fetch_stats["candidate_pairs_before_negative_filter"],
             "negative_prefilter_cases": fetch_stats["negative_prefilter_cases"],
             "negative_prefilter_pairs": fetch_stats["negative_prefilter_pairs"],
-            "negative_prefilter_bypassed_fallback_cases": fetch_stats["negative_prefilter_bypassed_fallback_cases"],
-            "negative_prefilter_bypassed_fallback_pairs": fetch_stats["negative_prefilter_bypassed_fallback_pairs"],
-            "candidate_documents_sent_to_gemini_queue": len(candidate_docs),
-            "candidate_pairs_sent_to_gemini_queue": len(candidate_rows),
-            "gemini_model": gemini_model,
+            "candidate_cases_after_negative_filter": fetch_stats["candidate_documents"],
+            "candidate_pairs_after_negative_filter": fetch_stats["candidate_pairs"],
+            "known_confirmed_pairs_reused": fetch_stats["known_confirmed_pairs_reused"],
+            "known_confirmed_cases_fully_skipped": fetch_stats["known_confirmed_cases_fully_skipped"],
+            "known_confirmed_cases_partially_deduped": fetch_stats["known_confirmed_cases_partially_deduped"],
+            "new_candidate_cases_for_gemini": len(candidate_docs),
+            "new_candidate_pairs_for_gemini": len(candidate_rows),
+            "known_history_current_refresh": fetch_stats["known_history_current_refresh"],
+            "known_history_backfill_merits": fetch_stats["known_history_backfill_merits"],
+            "known_history_skipped_existing_merits": fetch_stats["known_history_skipped_existing_merits"],
             "technically_complete": technically_complete,
             "registry_write_blocked": bool(registry_write_blocked_reason),
             "registry_write_blocked_reason": registry_write_blocked_reason,
-            "ai_checkpoint": {
-                **ai_stats,
-                "persistent_entries": len(ai_cache.get("entries") or {}),
-                "path": str(ai_cache_path),
-                "seed_entries_available": len(approved_seed),
-                "merits_seed_entries_available": len(approved_merits_seed),
-            },
             "challenge_gemini_calls": gemini_calls,
-            "challenge_gemini_call_limit": args.max_gemini_calls,
             "targeted_retry_calls": targeted_retry_calls,
-            "targeted_retry_call_limit": args.max_targeted_retry_calls,
             "weak_yes_safeguard_calls": safeguard_gemini_calls,
-            "weak_yes_safeguard_call_limit": args.max_safeguard_gemini_calls,
             "weak_yes_rejected": fetch_stats["weak_yes_rejected"],
             "merits_gemini_calls": merits_gemini_calls,
             "current_status_gemini_calls": current_status_gemini_calls,
-            "merits_gemini_call_limit": args.max_merits_gemini_calls,
-            "current_status_gemini_call_limit": args.max_current_status_gemini_calls,
             "current_status_eligible_pairs": current_status_eligible_pairs,
             "current_status_coverage_gap": current_status_coverage_gap,
             "new_discovery_confirmed_challenges": new_discovery_yes_count,
             "new_discovery_rejected_mentions": new_discovery_no_count,
-            "confirmed_challenges": len(yes_rows),
-            "confirmed_challenge_cases": len({row.get("cause_num") for row in yes_rows if row.get("cause_num")}),
-            "confirmed_challenge_decisions": len({row.get("decision_key") for row in yes_rows if row.get("decision_key")}),
+            "confirmed_challenges_this_year_workset": len(yes_rows),
             "outcome_counts": outcome_counts,
-            "registry_decisions": len(registry_preview.get("decisions") or {}),
-            "rejected_mentions": len(no_rows),
+            "registry_decisions_after_merge": len(registry_preview.get("decisions") or {}),
             "merits_found": merits_found_count,
             "pending_no_merits": pending_no_merits_count,
             "review_ongoing_after_merits": review_ongoing_after_merits_count,
             "merits_not_verified": merits_not_verified_count,
             "not_processed": len(not_processed_rows),
             "gemini_errors": len(gemini_errors),
+            "ai_checkpoint_entries": len(ai_cache.get("entries") or {}),
             "focus_decision": args.focus_decision,
-            "focus_confirmed": [
-                row for row in yes_rows
-                if focus_norm and normalized_number(row["decision_number"]) == focus_norm
-            ],
         }
 
-        (out_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "matches.json").write_text(json.dumps(yes_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "rejected.json").write_text(json.dumps(no_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "not_processed.json").write_text(json.dumps(not_processed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "merits_verification.json").write_text(json.dumps(merits_verification_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "current_status_verification.json").write_text(json.dumps(current_status_verification_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "weak_yes_safeguard.json").write_text(json.dumps(safeguard_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "known_case_history.json").write_text(json.dumps(known_history_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "negative_prefilter.json").write_text(json.dumps(negative_prefilter_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "negative_prefilter_bypassed_fallback.json").write_text(json.dumps(negative_prefilter_bypassed_rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "fetch_errors.json").write_text(json.dumps(fetch_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "gemini_errors.json").write_text(json.dumps(gemini_errors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        (out_dir / "focus_debug.json").write_text(json.dumps(focus_debug, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        diagnostics = {
+            "not_processed": not_processed_rows,
+            "fetch_errors": fetch_errors,
+            "gemini_errors": gemini_errors,
+            "weak_yes_safeguard": safeguard_rows,
+            "merits_verification": merits_verification_rows,
+            "current_status_verification": current_status_verification_rows,
+            "focus": focus_debug if args.focus_decision else {},
+        }
 
-        common_result_columns = [
-            "decision_key", "decision_date", "decision_number", "liable_parties", "cause_num", "classification",
-            "gemini_confidence", "challenger", "prefilter_strength", "signals", "reason",
-            "current_document_resolves_merits", "current_document_invalidates_prior_merits",
-            "current_document_case_outcome", "current_status_verified", "classification_cache_source", "case_status", "status_detail", "court", "category_code", "category_name",
-            "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
-            "latest_form_doc_id", "latest_form_type", "latest_form_date", "challenge_status",
-            "latest_relevant", "latest_merits", "latest_merits_doc_id", "latest_merits_type",
-            "latest_merits_date", "latest_merits_court", "latest_merits_url",
-            "merits_gemini_confidence", "merits_reason",
-        ]
-        write_csv(out_dir / "matches.csv", yes_rows, common_result_columns)
-        write_csv(out_dir / "rejected.csv", no_rows, common_result_columns)
-        write_csv(
-            out_dir / "not_processed.csv",
-            not_processed_rows,
-            [
-                "stage", "decision_date", "decision_number", "liable_parties", "cause_num", "prefilter_strength",
-                "signals", "court", "matched_on_doc_id", "matched_on_source", "primary_doc_id",
-                "primary_kind", "not_processed_reason",
-            ],
+        (out_dir / "summary.json").write_text(
+            json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
-        write_csv(
-            out_dir / "merits_verification.csv",
-            merits_verification_rows,
-            [
-                "decision_key", "decision_date", "decision_number", "cause_num", "doc_id", "doc_date", "doc_form",
-                "source", "resolves_merits", "invalidates_prior_merits", "outcome", "confidence", "reason",
-            ],
-        )
-        write_csv(
-            out_dir / "current_status_verification.csv",
-            current_status_verification_rows,
-            [
-                "decision_key", "decision_date", "decision_number", "cause_num", "prior_merits_doc_id",
-                "prior_merits_date", "newer_doc_id", "newer_doc_date", "newer_doc_form", "newer_doc_court",
-                "source", "status", "confidence", "reason",
-            ],
-        )
-        write_csv(
-            out_dir / "weak_yes_safeguard.csv",
-            safeguard_rows,
-            ["decision_key", "decision_date", "decision_number", "cause_num", "classification", "confidence", "reason"],
-        )
-        write_csv(
-            out_dir / "known_case_history.csv",
-            known_history_rows,
-            [
-                "decision_key", "decision_date", "decision_number", "cause_num", "mode", "documents",
-                "form_documents", "primary_doc_id", "latest_active_doc_id", "latest_form_doc_id",
-                "prior_merits_doc_id", "latest_source_year", "reason",
-            ],
-        )
-        write_csv(
-            out_dir / "negative_prefilter.csv",
-            negative_prefilter_rows,
-            [
-                "decision_date", "decision_number", "liable_parties", "cause_num", "strength", "signals",
-                "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
-                "negative_prefilter", "reason",
-            ],
-        )
-        write_csv(
-            out_dir / "negative_prefilter_bypassed_fallback.csv",
-            negative_prefilter_bypassed_rows,
-            [
-                "decision_date", "decision_number", "liable_parties", "cause_num", "strength", "signals",
-                "matched_on_doc_id", "matched_on_source", "primary_doc_id", "primary_kind",
-                "negative_prefilter", "reason",
-            ],
-        )
-        write_csv(
-            out_dir / "candidates.csv",
-            candidate_rows,
-            [
-                "decision_date", "decision_number", "liable_parties", "cause_num", "strength", "signals",
-                "doc_id", "doc_date", "candidate_source", "primary_doc_id", "primary_kind", "court",
-                "category_code", "category_name", "latest_merits_doc_id", "latest_merits_date",
-            ],
-        )
-        write_csv(
-            out_dir / "prefilter_cases.csv",
-            prefilter_rows,
-            [
-                "cause_num", "documents", "category_code", "category_name", "justice_kind", "primary_kind",
-                "primary_doc_id", "primary_date", "earliest_doc_id", "earliest_date", "latest_active_doc_id",
-                "latest_active_date", "latest_merits_doc_id", "latest_merits_date", "latest_merits_form",
-            ],
-        )
-        write_csv(
-            out_dir / "category_stats.csv",
-            matched_category_rows,
-            [
-                "category_code", "name", "primary_challenge_category", "active_documents",
-                "commercial_documents", "cases",
-            ],
-        )
-        write_csv(
-            out_dir / "justice_stats.csv",
-            justice_rows,
-            ["justice_kind", "name", "category_matched_documents"],
-        )
-        write_csv(
-            out_dir / "fetch_errors.csv",
-            fetch_errors,
-            ["cause_num", "role", "doc_id", "doc_url", "error", "attempts"],
-        )
-        write_csv(
-            out_dir / "gemini_errors.csv",
-            gemini_errors,
-            ["stage", "cause_num", "doc_id", "decision_number", "error", "candidates"],
+        (out_dir / "diagnostics.json").write_text(
+            json.dumps(diagnostics, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
 
         focus_md = ""
         if args.focus_decision:
-            focus_confirmed = summary["focus_confirmed"]
+            focus_confirmed = [
+                row for row in yes_rows
+                if focus_norm and normalized_number(row.get("decision_number")) == focus_norm
+            ]
             focus_md = (
                 f"\n## Focus `{args.focus_decision}`\n\n"
                 f"- Candidate document(s) after exact-number search: {len(focus_debug['candidate_hits'])}\n"
@@ -4210,8 +4136,13 @@ A metadata form `Рішення` or `Постанова` is only a candidate mer
 - Candidate pairs dropped by that negative filter: {fetch_stats['negative_prefilter_pairs']:,}
 - Fallback candidate cases protected from that hard drop: {fetch_stats['negative_prefilter_bypassed_fallback_cases']:,}
 - Fallback candidate pairs protected from that hard drop: {fetch_stats['negative_prefilter_bypassed_fallback_pairs']:,}
-- Candidate cases remaining for Gemini queue: {len(candidate_docs):,}
-- Candidate pairs remaining for Gemini queue: {len(candidate_rows):,}
+- Candidate cases after negative filter, before known-pair dedup: {fetch_stats['candidate_documents']:,}
+- Candidate pairs after negative filter, before known-pair dedup: {fetch_stats['candidate_pairs']:,}
+- Already-confirmed decision/case pairs reused from registry (no repeat challenge Gemini): {fetch_stats['known_confirmed_pairs_reused']:,}
+- Candidate cases fully removed from challenge Gemini because every pair was already confirmed: {fetch_stats['known_confirmed_cases_fully_skipped']:,}
+- Candidate cases partially deduplicated (known + new pairs mixed): {fetch_stats['known_confirmed_cases_partially_deduped']:,}
+- NEW candidate cases remaining for Gemini queue: {len(candidate_docs):,}
+- NEW candidate pairs remaining for Gemini queue: {len(candidate_rows):,}
 
 ## Known-case history enrichment
 
@@ -4274,7 +4205,7 @@ For older backfill years, known cases are intentionally cheap: if the registry a
 - Gemini request errors: {len(gemini_errors):,}
 - Current-status coverage gap: {current_status_coverage_gap:,}
 
-Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid responses are recorded separately in `not_processed.csv`; they are never treated as a legal result. The persistent registry is written only when the run is not dry-run and the full technical scan is complete. Any incomplete challenge classification, weak-YES safeguard, merits verification or court-text fetch blocks the registry write, but diagnostics and the AI checkpoint are still written before the workflow fails.
+Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors, missing candidate IDs or invalid responses are recorded separately in `diagnostics.json`; they are never treated as a legal result. The persistent registry is written only when the run is not dry-run and the full technical scan is complete. Any incomplete challenge classification, weak-YES safeguard, merits verification or court-text fetch blocks the registry write, but diagnostics and the AI checkpoint are still written before the workflow fails.
 {focus_md}
 """
         (out_dir / "report.md").write_text(report, encoding="utf-8")
@@ -4289,7 +4220,7 @@ Gemini legal classification is only `YES` or `NO`. Budget exhaustion, API errors
     log(
         f"Done: candidates_before_negative={fetch_stats['candidate_pairs_before_negative_filter']}; "
         f"negative_dropped={fetch_stats['negative_prefilter_pairs']}; "
-        f"Gemini_queue={fetch_stats['candidate_pairs']}; "
+        f"Gemini_queue={len(candidate_rows)}; known_pairs_reused={fetch_stats['known_confirmed_pairs_reused']}; "
         f"history_work_items={fetch_stats['known_history_work_items']}; "
         f"challenge_Gemini={gemini_calls}; safeguard_Gemini={safeguard_gemini_calls}; merits_Gemini={merits_gemini_calls}; current_status_Gemini={current_status_gemini_calls}; "
         f"YES={len(yes_rows)}; NO={len(no_rows)}; merits_found={merits_found_count}; "
