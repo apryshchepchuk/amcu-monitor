@@ -23,9 +23,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-USER_AGENT = "amku-court-challenges/1.2-history"
+USER_AGENT = "amku-court-challenges/1.3-history"
 PASSPORT_URL_TEMPLATE = "https://dsa.court.gov.ua/open_data_json.php?json={dataset_id}"
-DATASET_IDS = {2025: 879, 2026: 7636}
+DATASET_IDS = {2024: 829, 2025: 879, 2026: 7636}
 PUBLIC_EDRSR_URL = "https://reyestr.court.gov.ua/Review/{doc_id}"
 
 # Exact category-name selection only. We deliberately do NOT infer descendants
