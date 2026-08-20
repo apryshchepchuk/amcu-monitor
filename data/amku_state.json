@@ -952,11 +952,11 @@
       "state_version": 4,
       "title": "Рішення АМКУ за липень 2026 (№ 480-р - № 596-р)",
       "url": "https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/54e5f9a1-7d1e-435a-97c9-79f872f24578/download/rish_lipen_2026.zip",
-      "signature": "2026-08-13T08:36:00.221055|2026-07-13T14:08:57.901296|5048850|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/54e5f9a1-7d1e-435a-97c9-79f872f24578/download/rish_lipen_2026.zip",
-      "zip_sha256": "c6c2b48c3fdb686325c483f3f952188f95cd39fd6335d5d455daee8775b18d82",
-      "processed_at": "2026-08-13T11:58:20.066Z",
+      "signature": "2026-08-20T14:09:26.977041|2026-07-13T14:08:57.901296|5049417|https://data.gov.ua/dataset/2d9f2b5a-9c06-4e53-994d-1bc75706b906/resource/54e5f9a1-7d1e-435a-97c9-79f872f24578/download/rish_lipen_2026.zip",
+      "zip_sha256": "0d1fc05a31121a9aacc512c4b01b7887c1a787a878a94c1e18fc56c9c57f7b75",
+      "processed_at": "2026-08-20T16:47:54.885Z",
       "docs_seen": 117,
-      "docs_relevant": 8,
+      "docs_relevant": 0,
       "errors": 0,
       "incomplete": false
     },
@@ -55885,16 +55885,16 @@
     }
   },
   "last_run": {
-    "at": "2026-08-20T11:37:44.295Z",
-    "resources_considered": 0,
+    "at": "2026-08-20T16:47:54.886Z",
+    "resources_considered": 1,
     "additions": 0,
     "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 0,
-      "docsSeen": 0,
+      "resourcesChecked": 1,
+      "docsSeen": 117,
       "docsRelevant": 0,
-      "docsSkipped": 0,
+      "docsSkipped": 117,
       "errors": 0
     },
     "gemini_calls": 0,
