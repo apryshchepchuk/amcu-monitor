@@ -6,11 +6,12 @@ name: AMCU Court Challenges
       year:
         description: "EDRSR year to scan"
         required: true
-        default: "2025"
+        default: "2024"
         type: choice
         options:
           - "2026"
           - "2025"
+          - "2024"
 
       max_cases:
         description: "Max prefiltered cases to inspect (0 = all)"
@@ -20,7 +21,7 @@ name: AMCU Court Challenges
       focus_decision:
         description: "Optional AMCU decision number for diagnostic emphasis"
         required: false
-        default: "393-р"
+        default: ""
 
       workers:
         description: "Concurrent EDRSR text fetch workers"
@@ -53,7 +54,7 @@ name: AMCU Court Challenges
         default: "20"
 
       skip_gemini:
-        description: "Scout mode: do not call Gemini; diagnostics only (recommended for first 2025 run)"
+        description: "Scout mode: do not call Gemini; diagnostics only (recommended for first run of a historical year)"
         required: false
         default: false
         type: boolean
