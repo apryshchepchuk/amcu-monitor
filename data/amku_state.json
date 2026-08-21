@@ -55885,16 +55885,16 @@
     }
   },
   "last_run": {
-    "at": "2026-08-20T16:47:54.886Z",
-    "resources_considered": 1,
+    "at": "2026-08-21T07:03:35.044Z",
+    "resources_considered": 0,
     "additions": 0,
     "raw_additions": 0,
     "duplicates_in_run": 0,
     "stats": {
-      "resourcesChecked": 1,
-      "docsSeen": 117,
+      "resourcesChecked": 0,
+      "docsSeen": 0,
       "docsRelevant": 0,
-      "docsSkipped": 117,
+      "docsSkipped": 0,
       "errors": 0
     },
     "gemini_calls": 0,
