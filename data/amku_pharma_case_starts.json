@@ -1,5 +1,83 @@
 [
   {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264161-26",
+    "period_mode": "weekly",
+    "period_from": "2026-08-17",
+    "period_to": "2026-08-23",
+    "publication_date": "2026-08-19",
+    "publication_datetime": "2026-08-19 11:10:25",
+    "timeline_day": "19.08.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/161-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/161-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264161-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/161-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «УНІВЕРСАЛЬНЕ АГЕНТСТВО «ПРО-ФАРМА»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «УНІВЕРСАЛЬНЕ АГЕНТСТВО «ПРО-ФАРМА» неповних та/або неточних відомостей про лікарський засіб «ТАМІПУЛ ®», що може вводити споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "f92f031a27e94d89826d06a95371583c0d20f38507ff82ab54be564202860cd4",
+    "analyzed_at": "2026-08-24T07:33:24.803Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-08-24T07:33:24.803Z"
+    }
+  },
+  {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264160-26",
+    "period_mode": "weekly",
+    "period_from": "2026-08-17",
+    "period_to": "2026-08-23",
+    "publication_date": "2026-08-19",
+    "publication_datetime": "2026-08-19 11:07:50",
+    "timeline_day": "19.08.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/160-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/160-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264160-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/160-26"
+    ],
+    "potential_violation_subjects": [
+      "ТОВ «РЕККІТТ БЕНКІЗЕР ХАУСХОЛД ЕНД ХЕЛС КЕР УКРАЇНА»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Поширення ТОВ «РЕККІТТ БЕНКІЗЕР ХАУСХОЛД ЕНД ХЕЛС КЕР УКРАЇНА» неповних, неточних або неправдивих відомостей про лікарський засіб «Гавіскон ® Подвійної Дії», що може вводити споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "a33e696be06e0c88a0a455dc871f4fb2c80f2dfc723b241eca0e318f685b4f0b",
+    "analyzed_at": "2026-08-24T07:33:26.976Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-08-24T07:33:26.976Z"
+    }
+  },
+  {
     "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-145-2613159-26",
     "period_mode": "weekly",
     "period_from": "2026-08-10",
