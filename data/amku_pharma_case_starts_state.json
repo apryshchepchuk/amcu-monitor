@@ -59,6 +59,12 @@
       "relevant_count": 2,
       "timeline_items": 2,
       "pharma_candidates": 2
+    },
+    "weekly:2026-08-24:2026-08-30": {
+      "sent_at": "2026-08-31T14:10:05.106Z",
+      "relevant_count": 0,
+      "timeline_items": 0,
+      "pharma_candidates": 0
     }
   },
   "seen_urls": {
@@ -322,18 +328,18 @@
     }
   },
   "last_run": {
-    "at": "2026-08-24T07:33:28.335Z",
+    "at": "2026-08-31T14:10:05.106Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-08-17",
-      "to": "2026-08-23",
-      "label": "2026-08-17 — 2026-08-23"
+      "from": "2026-08-24",
+      "to": "2026-08-30",
+      "label": "2026-08-24 — 2026-08-30"
     },
-    "digest_key": "weekly:2026-08-17:2026-08-23",
-    "timeline_items": 2,
-    "pharma_candidates": 2,
-    "relevant_rows": 2,
-    "gemini_calls": 2,
+    "digest_key": "weekly:2026-08-24:2026-08-30",
+    "timeline_items": 0,
+    "pharma_candidates": 0,
+    "relevant_rows": 0,
+    "gemini_calls": 0,
     "email_sent": true,
     "settings": {
       "period_mode": "weekly",
