@@ -65,6 +65,12 @@
       "relevant_count": 0,
       "timeline_items": 0,
       "pharma_candidates": 0
+    },
+    "weekly:2026-08-31:2026-09-06": {
+      "sent_at": "2026-09-07T12:47:47.810Z",
+      "relevant_count": 0,
+      "timeline_items": 1,
+      "pharma_candidates": 0
     }
   },
   "seen_urls": {
@@ -325,18 +331,24 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264160-26",
       "first_seen_at": "2026-08-24T07:33:25.893Z",
       "last_seen_at": "2026-08-24T07:33:25.893Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264162-26": {
+      "title": "Розпочато розгляд справи № 127-26.4/162-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264162-26",
+      "first_seen_at": "2026-09-07T12:47:46.300Z",
+      "last_seen_at": "2026-09-07T12:47:46.300Z"
     }
   },
   "last_run": {
-    "at": "2026-08-31T14:10:05.106Z",
+    "at": "2026-09-07T12:47:47.810Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-08-24",
-      "to": "2026-08-30",
-      "label": "2026-08-24 — 2026-08-30"
+      "from": "2026-08-31",
+      "to": "2026-09-06",
+      "label": "2026-08-31 — 2026-09-06"
     },
-    "digest_key": "weekly:2026-08-24:2026-08-30",
-    "timeline_items": 0,
+    "digest_key": "weekly:2026-08-31:2026-09-06",
+    "timeline_items": 1,
     "pharma_candidates": 0,
     "relevant_rows": 0,
     "gemini_calls": 0,
