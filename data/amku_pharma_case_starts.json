@@ -1,5 +1,44 @@
 [
   {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264164-26",
+    "period_mode": "weekly",
+    "period_from": "2026-09-07",
+    "period_to": "2026-09-13",
+    "publication_date": "2026-09-09",
+    "publication_datetime": "2026-09-09 12:16:46",
+    "timeline_day": "09.09.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/164-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/164-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264164-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/164-26"
+    ],
+    "potential_violation_subjects": [
+      "АТ «ФАРМАК»"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "short_description": "Розгляд справи стосується поширення АТ «ФАРМАК» неповних та/або неточних відомостей про лікарський засіб ФАРМАДОЛ®, що може вводити споживачів в оману.",
+    "confidence": "high",
+    "page_text_sha256": "00648514f0374008a99df630b43ac6c43c34fae3c6056a84b0a948593c93dd01",
+    "analyzed_at": "2026-09-14T13:04:33.026Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-09-14T13:04:33.026Z"
+    }
+  },
+  {
     "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/serpen-2026/rozpochato-rozghliad-spravy-127-264161-26",
     "period_mode": "weekly",
     "period_from": "2026-08-17",
