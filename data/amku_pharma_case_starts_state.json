@@ -77,6 +77,12 @@
       "relevant_count": 1,
       "timeline_items": 2,
       "pharma_candidates": 1
+    },
+    "weekly:2026-09-14:2026-09-20": {
+      "sent_at": "2026-09-21T13:02:57.825Z",
+      "relevant_count": 0,
+      "timeline_items": 2,
+      "pharma_candidates": 0
     }
   },
   "seen_urls": {
@@ -355,21 +361,33 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264164-26",
       "first_seen_at": "2026-09-14T13:04:31.858Z",
       "last_seen_at": "2026-09-14T13:04:31.858Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-130-2613165-26-za-oznakamy-vchynennia-fizychnoiu-osoboiu-hromadianynom-ukrainy-porushennia": {
+      "title": "Розпочато розгляд справи № 130-26.13/165-26 за ознаками вчинення фізичною особою – громадянином України порушення",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-130-2613165-26-za-oznakamy-vchynennia-fizychnoiu-osoboiu-hromadianynom-ukrainy-porushennia",
+      "first_seen_at": "2026-09-21T13:02:53.801Z",
+      "last_seen_at": "2026-09-21T13:02:53.801Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-130-2613166-26-za-oznakamy-vchynennia-fizychnoiu-osoboiu-hromadianynom-ukrainy": {
+      "title": "Розпочато розгляд справи № 130-26.13/166-26 за ознаками вчинення фізичною особою – громадянином України порушення",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-130-2613166-26-za-oznakamy-vchynennia-fizychnoiu-osoboiu-hromadianynom-ukrainy",
+      "first_seen_at": "2026-09-21T13:02:54.842Z",
+      "last_seen_at": "2026-09-21T13:02:54.842Z"
     }
   },
   "last_run": {
-    "at": "2026-09-14T13:04:34.653Z",
+    "at": "2026-09-21T13:02:57.825Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-09-07",
-      "to": "2026-09-13",
-      "label": "2026-09-07 — 2026-09-13"
+      "from": "2026-09-14",
+      "to": "2026-09-20",
+      "label": "2026-09-14 — 2026-09-20"
     },
-    "digest_key": "weekly:2026-09-07:2026-09-13",
+    "digest_key": "weekly:2026-09-14:2026-09-20",
     "timeline_items": 2,
-    "pharma_candidates": 1,
-    "relevant_rows": 1,
-    "gemini_calls": 1,
+    "pharma_candidates": 0,
+    "relevant_rows": 0,
+    "gemini_calls": 0,
     "email_sent": true,
     "settings": {
       "period_mode": "weekly",
