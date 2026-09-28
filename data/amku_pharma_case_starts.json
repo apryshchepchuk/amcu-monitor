@@ -1,5 +1,45 @@
 [
   {
+    "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-sprav-126-2613171-26-ta-126-2613172-26",
+    "period_mode": "weekly",
+    "period_from": "2026-09-21",
+    "period_to": "2026-09-27",
+    "publication_date": "2026-09-24",
+    "publication_datetime": "2026-09-24 16:31:40",
+    "timeline_day": "24.09.2026",
+    "title": "Розпочато розгляд справ № 126-26.13/171-26 та № 126-26.13/172-26",
+    "timeline_title": "Розпочато розгляд справ № 126-26.13/171-26 та № 126-26.13/172-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-sprav-126-2613171-26-ta-126-2613172-26",
+    "source": "pages",
+    "tags": [
+      "про початок розгляду справи"
+    ],
+    "is_pharma_market": true,
+    "sector": "manufacturing",
+    "case_numbers": [
+      "126-26.13/171-26",
+      "126-26.13/172-26"
+    ],
+    "potential_violation_subjects": [
+      "фізична особа – громадянин України"
+    ],
+    "preliminary_qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу органів Антимонопольного комітету України, наявність якого необхідна"
+    },
+    "short_description": "Здійснення концентрації шляхом набуття часток у статутних капіталах ТОВ «Кременчуцька фармацевтична компанія», ТОВ «Бердянська фармацевтична компанія», ТОВ «Олександрівська фармацевтична компанія» та ТОВ «Слобожанська фармацевтична компанія», що забезпечило перевищення 25 відсотків голосів у вищих органах управління без отримання дозволу АМКУ.",
+    "confidence": "high",
+    "page_text_sha256": "3e594d215e5a5f972d4b46b246a780f0082a74f64d455c3b542275eff407a7ed",
+    "analyzed_at": "2026-09-28T14:14:17.335Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-09-28T14:14:17.335Z"
+    }
+  },
+  {
     "case_start_key": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264164-26",
     "period_mode": "weekly",
     "period_from": "2026-09-07",
