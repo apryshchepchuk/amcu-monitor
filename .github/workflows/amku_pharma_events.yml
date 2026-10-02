@@ -29,6 +29,13 @@ on:
         default: false
         type: boolean
 
+
+      test_email_send:
+        description: "Send a TEST email even in dry-run (does not mark period as sent)"
+        required: false
+        default: false
+        type: boolean
+
       send_empty_email:
         description: "Send email even if no pharma events found"
         required: false
@@ -98,6 +105,7 @@ jobs:
           DATE_TO: ${{ github.event.inputs.date_to || '' }}
 
           SEND_EMAIL: ${{ github.event.inputs.send_email || 'false' }}
+          TEST_EMAIL_SEND: ${{ github.event.inputs.test_email_send || 'false' }}
           SEND_EMPTY_EMAIL: ${{ github.event.inputs.send_empty_email || 'false' }}
           FORCE_SEND: ${{ github.event.inputs.force_send || 'false' }}
           SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
@@ -121,6 +129,7 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          TEST_EMAIL_TO: ${{ secrets.TEST_EMAIL_TO }}
 
         run: node scripts/amku_pharma_events.mjs
 
