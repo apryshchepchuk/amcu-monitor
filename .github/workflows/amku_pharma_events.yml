@@ -78,6 +78,13 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Ensure PDF text extractor
+        run: |
+          if ! command -v pdftotext >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y poppler-utils
+          fi
+
       - name: Install Node dependencies
         run: npm install
 
@@ -96,6 +103,11 @@ jobs:
           SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
           MAX_GEMINI_CALLS: ${{ github.event.inputs.max_gemini_calls || '40' }}
+
+          PDF_FALLBACK_ENABLED: "true"
+          PDF_PREFILTER_PAGES: "3"
+          MAX_PDFS_PER_PAGE: "3"
+          MAX_PDF_BYTES: "25000000"
 
           TIMELINE_LANG: "uk"
 
