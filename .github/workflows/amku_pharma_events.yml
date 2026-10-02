@@ -1,0 +1,129 @@
+name: AMCU Pharma Events Digest (Pilot)
+
+on:
+  workflow_dispatch:
+    inputs:
+      period_mode:
+        description: "Digest period: weekly, monthly, or custom"
+        required: false
+        default: "weekly"
+        type: choice
+        options:
+          - weekly
+          - monthly
+          - custom
+
+      date_from:
+        description: "Only for custom mode: YYYY-MM-DD"
+        required: false
+        default: ""
+
+      date_to:
+        description: "Only for custom mode: YYYY-MM-DD"
+        required: false
+        default: ""
+
+      send_email:
+        description: "Send email digest"
+        required: false
+        default: false
+        type: boolean
+
+      send_empty_email:
+        description: "Send email even if no pharma events found"
+        required: false
+        default: false
+        type: boolean
+
+      force_send:
+        description: "Resend digest even if this period was already sent"
+        required: false
+        default: false
+        type: boolean
+
+      skip_gemini:
+        description: "Scout mode: skip Gemini and use only pharma keyword prefilter"
+        required: false
+        default: false
+        type: boolean
+
+      dry_run:
+        description: "Do not write data/state and do not send email"
+        required: false
+        default: true
+        type: boolean
+
+      max_gemini_calls:
+        description: "Max Gemini calls per run"
+        required: false
+        default: "40"
+
+concurrency:
+  group: amku-pharma-events
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Check script syntax
+        run: node --check scripts/amku_pharma_events.mjs
+
+      - name: Run AMCU pharma events digest
+        env:
+          PERIOD_MODE: ${{ github.event.inputs.period_mode || 'weekly' }}
+          DATE_FROM: ${{ github.event.inputs.date_from || '' }}
+          DATE_TO: ${{ github.event.inputs.date_to || '' }}
+
+          SEND_EMAIL: ${{ github.event.inputs.send_email || 'false' }}
+          SEND_EMPTY_EMAIL: ${{ github.event.inputs.send_empty_email || 'false' }}
+          FORCE_SEND: ${{ github.event.inputs.force_send || 'false' }}
+          SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+          MAX_GEMINI_CALLS: ${{ github.event.inputs.max_gemini_calls || '40' }}
+
+          TIMELINE_LANG: "uk"
+
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+        run: node scripts/amku_pharma_events.mjs
+
+      - name: Commit AMCU pharma events data
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add data/amku_pharma_events.json
+          git add data/amku_pharma_events_state.json
+
+          if git diff --cached --quiet; then
+            echo "No AMCU pharma events data changes to commit."
+          else
+            git commit -m "Update AMCU pharma events digest data"
+            git push
+          fi
