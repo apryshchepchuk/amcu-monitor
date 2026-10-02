@@ -880,8 +880,8 @@ function extractCaseNumbers(text) {
   const found = [];
 
   const patterns = [
-    /справ[аи]\s*№\s*([0-9]{2,4}[-–—][0-9]{1,3}(?:\.[0-9]{1,3})?\/[0-9]{1,4}[-–—][0-9]{2})/gi,
-    /№\s*([0-9]{2,4}[-–—][0-9]{1,3}(?:\.[0-9]{1,3})?\/[0-9]{1,4}[-–—][0-9]{2})/gi
+    /справ[аи]\s*№\s*([0-9]{2,4}[-–—][0-9]{1,3}(?:\.[0-9]{1,3})?\/[0-9]{1,4}[-–—][0-9]{2})(?![0-9A-Za-zА-Яа-яІіЇїЄєҐґ])/giu,
+    /№\s*([0-9]{2,4}[-–—][0-9]{1,3}(?:\.[0-9]{1,3})?\/[0-9]{1,4}[-–—][0-9]{2})(?![0-9A-Za-zА-Яа-яІіЇїЄєҐґ])/giu
   ];
 
   for (const re of patterns) {
@@ -1025,10 +1025,10 @@ async function fetchAndPreparePage(item) {
     pdfText ? `PDF (перші ${PDF_PREFILTER_PAGES} сторінки):\n${pdfText}` : ''
   ].filter(Boolean).join('\n\n'));
 
-  // PDF extraction failures do not make the whole digest incomplete.
-  // If HTML has no pharma signal and the PDF cannot be read, we simply have
-  // no confirmed pharma relevance from the AMCU material and skip the item.
-  const pdfFallbackCriticalError = false;
+  // If HTML was negative and at least one PDF existed, any PDF extraction
+  // failure leaves a real possibility of a false negative. Mark it so the
+  // run will not silently send an incomplete digest.
+  const pdfFallbackCriticalError = !htmlCandidate && pdfUrls.length > 0 && pdfErrors.length > 0;
 
   return {
     ...item,
@@ -1079,6 +1079,9 @@ function buildGeminiPrompt(page) {
    - procedural_update: інша проміжна процесуальна подія у вже існуючій справі (попередні висновки, засідання, слухання тощо).
 5. Якщо новина повідомляє про штраф як наслідок рішення, decision_adopted=true, fine_imposed=true.
 6. Якщо матеріал є лише аналітикою/адвокатуванням, але прямо релевантний фармринку, усі four facts можуть бути false — такий матеріал піде в other_relevant.
+7. Для КОЖНОЇ події поле source_excerpt є обов'язковим. Скопіюй дослівно фрагмент саме того пункту/абзацу наданого матеріалу АМКУ, який прямо показує фарм-релевантність цієї конкретної події (лікарські засоби, дієтичні добавки, медичні вироби, аптеки, фармацевтика тощо).
+8. Не використовуй власні знання про компанії, бренди або ринки. Якщо в тексті конкретного пункту немає прямого фарм-сигналу, НЕ повертай цей пункт як фарм-релевантну подію, навіть якщо тобі відомо, що компанія працює у фармі.
+9. Фарм-релевантність одного пункту багатопунктової сторінки не поширюється на інші пункти.
 
 Поверни виключно валідний JSON без Markdown.
 
@@ -1109,6 +1112,7 @@ function buildGeminiPrompt(page) {
       "fine_imposed": false,
       "fine_amount_uah": null,
       "short_description": "",
+      "source_excerpt": "Дослівний фрагмент саме цього пункту/абзацу матеріалу АМКУ, який прямо підтверджує фарм-релевантність події",
       "confidence": "high | medium | low"
     }
   ]
@@ -1124,7 +1128,6 @@ function buildGeminiPrompt(page) {
 - Source tags: ${(page.tags || []).join(', ') || 'none'}
 - Discovery source: ${page.discovery_source || 'unknown'}
 - Supporting PDF: ${page.pdf_source_url || 'none'}
-- Basic detected case numbers: ${(page.case_numbers_basic || []).join(', ') || 'none'}
 - Basic detected qualification: ${page.qualification_basic?.text || 'none'}
 
 Текст матеріалу (для NPA може включати текст перших ${PDF_PREFILTER_PAGES} сторінок PDF):
@@ -1153,6 +1156,7 @@ async function analyzeWithGemini(page) {
         fine_imposed: false,
         fine_amount_uah: null,
         short_description: page.summary_basic || page.page_title || page.title || '',
+        source_excerpt: page.summary_basic || page.page_title || page.title || '',
         confidence: 'low'
       }] : []
     };
@@ -1308,6 +1312,32 @@ function normalizeDecisionNumber(value) {
   return normalizeSpaces(value).replace(/^№\s*/u, '') || null;
 }
 
+function normalizeCaseNumber(value) {
+  const s = normalizeSpaces(value).replace(/^№\s*/u, '').replace(/[–—]/g, '-');
+  const m = s.match(/^([0-9]{2,4}-[0-9]{1,3}(?:\.[0-9]{1,3})?\/[0-9]{1,4}-[0-9]{2})$/u);
+  return m ? m[1] : null;
+}
+
+function validatedCaseNumbers(values) {
+  if (!Array.isArray(values)) return [];
+  return [...new Set(values.map(normalizeCaseNumber).filter(Boolean))];
+}
+
+function validateSourceExcerpt(rawEvent, page) {
+  const excerpt = normalizeSpaces(rawEvent?.source_excerpt || '');
+  if (!excerpt || excerpt.length < 12) return false;
+
+  const haystack = normalizeSpaces(page?.combined_text || '');
+  if (!haystack.includes(excerpt)) return false;
+
+  return hasPharmaSignals(excerpt);
+}
+
+function isAgendaPage(page) {
+  const text = normalizeSpaces([page?.title, page?.page_title].filter(Boolean).join(' '));
+  return /про(?:є|е)кт\s+порядку\s+денного/iu.test(text);
+}
+
 function inferEventFacts(rawEvent, page) {
   const facts = rawEvent?.facts && typeof rawEvent.facts === 'object' ? rawEvent.facts : {};
   const text = normalizeSpaces([
@@ -1316,18 +1346,38 @@ function inferEventFacts(rawEvent, page) {
     rawEvent?.short_description
   ].filter(Boolean).join(' '));
 
+  if (isAgendaPage(page)) {
+    return {
+      case_started: false,
+      decision_adopted: false,
+      recommendation_issued: false,
+      procedural_update: true
+    };
+  }
+
   return {
-    case_started: Boolean(facts.case_started) || /розпочато\s+(?:розгляд\s+)?справ[иу]?/iu.test(text),
+    case_started: Boolean(facts.case_started)
+      || /розпочато\s+(?:розгляд\s+)?справ[иу]?/iu.test(text),
     decision_adopted: Boolean(facts.decision_adopted)
-      || /оштраф|накладен\w*\s+штраф|визнан\w*\s+порушенням|надано\s+дозвіл\s+на\s+концентрац|відмовлен\w*\s+у\s+наданн\w*\s+дозвол/i.test(text),
+      || /оштраф/iu.test(text)
+      || /накладен(?:о|ий|а|і)?\s+штраф/iu.test(text)
+      || /визнан(?:о|ий|а|і)?\s+порушенням/iu.test(text)
+      || /надано\s+дозвіл\s+на\s+концентрац/iu.test(text)
+      || /відмовлен(?:о|ий|а|і)?\s+у\s+наданн(?:і|я)\s+дозвол/iu.test(text),
     recommendation_issued: Boolean(facts.recommendation_issued)
-      || /надав\w*\s+рекомендац|про\s+надання\s+рекомендац/i.test(text),
+      || /надав(?:ав|ала|али|ано)?\s+рекомендац/iu.test(text)
+      || /про\s+надання\s+рекомендац/iu.test(text),
     procedural_update: Boolean(facts.procedural_update)
-      || /попередн\w*\s+висновк|засіданн|слуханн|розгляд\s+справи/i.test(text)
+      || /попередн(?:і|іх|ими)?\s+висновк/iu.test(text)
+      || /засіданн/iu.test(text)
+      || /слуханн/iu.test(text)
+      || /розгляд\s+справи/iu.test(text)
   };
 }
 
 function deriveEventType(rawEvent, page) {
+  if (isAgendaPage(page)) return 'case_procedural_update';
+
   const facts = inferEventFacts(rawEvent, page);
   if (facts.decision_adopted) return 'case_decided';
   if (facts.recommendation_issued) return 'recommendation_issued';
@@ -1368,7 +1418,7 @@ function buildEventKey(event, page) {
   const eventType = deriveEventType(event, page);
   const decisionNumber = normalizeDecisionNumber(event.decision_number);
   const decisionDate = String(event.decision_date || '').slice(0, 10);
-  const cases = normalizedStringArray(event.case_numbers).sort();
+  const cases = validatedCaseNumbers(event.case_numbers).sort();
 
   if (decisionNumber && decisionDate) {
     return `decision|${decisionDate}|${decisionNumber.toLowerCase()}`;
@@ -1391,10 +1441,15 @@ function normalizeEvents(analysis, page, period) {
   rawEvents.forEach((rawEvent, index) => {
     if (!rawEvent || typeof rawEvent !== 'object') return;
 
+    if (!validateSourceExcerpt(rawEvent, page)) {
+      console.warn(`Dropped event without direct pharma evidence: ${page.title || page.url} | ${normalizeSpaces(rawEvent?.short_description || '').slice(0, 180)}`);
+      return;
+    }
+
     const eventType = deriveEventType(rawEvent, page);
     const qualification = rawEvent.qualification && typeof rawEvent.qualification === 'object'
       ? rawEvent.qualification
-      : page.qualification_basic;
+      : null;
 
     const eventWithOrdinal = { ...rawEvent, __ordinal: index };
     const row = {
@@ -1418,7 +1473,7 @@ function normalizeEvents(analysis, page, period) {
 
       facts: inferEventFacts(rawEvent, page),
       sector: rawEvent.sector || 'other',
-      case_numbers: normalizedStringArray(rawEvent.case_numbers?.length ? rawEvent.case_numbers : page.case_numbers_basic),
+      case_numbers: validatedCaseNumbers(rawEvent.case_numbers),
       decision_number: normalizeDecisionNumber(rawEvent.decision_number),
       decision_date: rawEvent.decision_date ? String(rawEvent.decision_date).slice(0, 10) : null,
       subjects: normalizedStringArray(rawEvent.subjects),
@@ -1433,6 +1488,7 @@ function normalizeEvents(analysis, page, period) {
       fine_imposed: Boolean(rawEvent.fine_imposed),
       fine_amount_uah: normalizeMoney(rawEvent.fine_amount_uah),
       short_description: normalizeSpaces(rawEvent.short_description || page.summary_basic || ''),
+      source_excerpt: normalizeSpaces(rawEvent.source_excerpt || ''),
       confidence: rawEvent.confidence || null,
 
       page_text_sha256: page.text_sha256,
@@ -1800,7 +1856,7 @@ async function main() {
     }
   }
 
-  const runComplete = !budgetExceeded && itemErrors.length === 0;
+  const runComplete = !budgetExceeded && itemErrors.length === 0 && pdfFallbackCriticalErrors === 0;
   const digestRows = mergeResults([], relevantRows);
   const merged = mergeResults(existingResults, digestRows);
   let emailSent = false;
