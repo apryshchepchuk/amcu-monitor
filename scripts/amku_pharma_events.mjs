@@ -246,18 +246,129 @@ function extractTitle(html) {
   return '';
 }
 
-function extractMainText(html) {
-  const main = extractBetween(html, 'main');
-  const article = extractBetween(html, 'article');
-  const body = extractBetween(html, 'body');
+function extractJsonLdArticleBody(html) {
+  const bodies = [];
+  const re = /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
 
-  const candidate = main || article || body || html;
-  return normalizeSpaces(stripTags(candidate));
+  function visit(value) {
+    if (!value) return;
+
+    if (Array.isArray(value)) {
+      for (const item of value) visit(item);
+      return;
+    }
+
+    if (typeof value !== 'object') return;
+
+    if (typeof value.articleBody === 'string') {
+      const text = normalizeSpaces(stripTags(value.articleBody));
+      if (text.length >= 60) bodies.push(text);
+    }
+
+    for (const nested of Object.values(value)) {
+      if (nested && (Array.isArray(nested) || typeof nested === 'object')) visit(nested);
+    }
+  }
+
+  for (const match of String(html || '').matchAll(re)) {
+    const raw = String(match[1] || '').trim();
+    if (!raw) continue;
+
+    try {
+      visit(JSON.parse(raw));
+      continue;
+    } catch {}
+
+    try {
+      visit(JSON.parse(decodeHtmlEntities(raw)));
+    } catch {}
+  }
+
+  if (!bodies.length) return '';
+  return bodies.sort((a, b) => b.length - a.length)[0];
+}
+
+function removeSemanticNoise(html) {
+  return String(html || '')
+    .replace(/<nav\b[\s\S]*?<\/nav>/gi, ' ')
+    .replace(/<aside\b[\s\S]*?<\/aside>/gi, ' ')
+    .replace(/<footer\b[\s\S]*?<\/footer>/gi, ' ')
+    .replace(/<header\b[\s\S]*?<\/header>/gi, ' ')
+    .replace(/<form\b[\s\S]*?<\/form>/gi, ' ');
+}
+
+function truncateKnownSiteTail(text) {
+  const s = normalizeSpaces(text);
+  if (s.length < 300) return s;
+
+  const tailMarkers = [
+    /(?:^|\n)\s*Останні новини\b/i,
+    /(?:^|\n)\s*Інші новини\b/i,
+    /(?:^|\n)\s*Схожі новини\b/i,
+    /(?:^|\n)\s*Схожі матеріали\b/i,
+    /(?:^|\n)\s*Читайте також\b/i,
+    /(?:^|\n)\s*Рекомендовані матеріали\b/i,
+    /(?:^|\n)\s*Усі новини\b/i,
+    /(?:^|\n)\s*Усі рішення\b/i,
+    /(?:^|\n)\s*Підписатися\b/i,
+    /(?:^|\n)\s*Поділитися\b/i
+  ];
+
+  let cutAt = s.length;
+
+  for (const re of tailMarkers) {
+    const m = re.exec(s);
+    if (m && m.index >= 250) cutAt = Math.min(cutAt, m.index);
+  }
+
+  return s.slice(0, cutAt).trim();
+}
+
+function extractContentText(html) {
+  const jsonLdBody = extractJsonLdArticleBody(html);
+  if (jsonLdBody) {
+    return {
+      text: truncateKnownSiteTail(jsonLdBody),
+      source: 'jsonld_article_body'
+    };
+  }
+
+  const article = extractBetween(html, 'article');
+  const articleText = truncateKnownSiteTail(normalizeSpaces(stripTags(removeSemanticNoise(article))));
+  if (articleText.length >= 60) {
+    return {
+      text: articleText,
+      source: 'article_tag'
+    };
+  }
+
+  const main = extractBetween(html, 'main');
+  const mainText = truncateKnownSiteTail(normalizeSpaces(stripTags(removeSemanticNoise(main))));
+  if (mainText.length >= 60) {
+    return {
+      text: mainText,
+      source: 'main_fallback'
+    };
+  }
+
+  const body = extractBetween(html, 'body');
+  const bodyText = truncateKnownSiteTail(normalizeSpaces(stripTags(removeSemanticNoise(body || html))));
+
+  return {
+    text: bodyText,
+    source: 'body_fallback'
+  };
+}
+
+function findPharmaSignals(text) {
+  const s = normalizeSpaces(text);
+  return PHARMA_PATTERNS
+    .filter((re) => re.test(s))
+    .map((re) => re.source);
 }
 
 function hasPharmaSignals(text) {
-  const s = normalizeSpaces(text);
-  return PHARMA_PATTERNS.some((re) => re.test(s));
+  return findPharmaSignals(text).length > 0;
 }
 
 function buildTimelineUrl(page, period) {
@@ -704,7 +815,8 @@ function normalizeUrlKey(url) {
 async function fetchAndPreparePage(item) {
   const html = await fetchText(item.url, `page ${item.url}`);
   const pageTitle = extractTitle(html) || item.title || '';
-  const bodyText = extractMainText(html);
+  const content = extractContentText(html);
+  const bodyText = content.text;
   const combinedText = normalizeSpaces([
     item.title,
     item.excerpt,
@@ -712,15 +824,19 @@ async function fetchAndPreparePage(item) {
     bodyText
   ].filter(Boolean).join('\n\n'));
 
-  const pharmaCandidate = hasPharmaSignals(combinedText);
+  const pharmaSignals = findPharmaSignals(combinedText);
+  const pharmaCandidate = pharmaSignals.length > 0;
 
   return {
     ...item,
     page_title: pageTitle,
     body_text: bodyText,
+    content_source: content.source,
+    body_text_chars: bodyText.length,
     combined_text: combinedText,
     text_sha256: sha256Text(combinedText),
     pharma_candidate: pharmaCandidate,
+    pharma_signals: pharmaSignals,
     case_numbers_basic: extractCaseNumbers(combinedText),
     qualification_basic: extractBasicQualification(combinedText),
     summary_basic: extractFallbackSummary(combinedText)
@@ -1370,6 +1486,10 @@ async function main() {
         console.log(`Skipped non-pharma candidate: ${item.title}`);
         continue;
       }
+
+      console.log(
+        `Pharma candidate [source=${page.content_source}, chars=${page.body_text_chars}, signals=${page.pharma_signals.join(', ')}]: ${item.title}`
+      );
 
       if (!SKIP_GEMINI && geminiCalls >= MAX_GEMINI_CALLS) {
         budgetExceeded = true;
