@@ -33,6 +33,7 @@ const DRY_RUN = boolEnv('DRY_RUN', false);
 const SKIP_GEMINI = boolEnv('SKIP_GEMINI', false);
 const FORCE_SEND = boolEnv('FORCE_SEND', false);
 const SEND_EMAIL = boolEnv('SEND_EMAIL', true);
+const TEST_EMAIL_SEND = boolEnv('TEST_EMAIL_SEND', false);
 const SEND_EMPTY_EMAIL = boolEnv('SEND_EMPTY_EMAIL', true);
 
 const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 20);
@@ -47,7 +48,7 @@ const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
 const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 3);
 const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
 
-const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'Щотижневий дайджест фарм-подій АМКУ');
+const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'Тижневий вісник АМКУ');
 const PRACTICE_DB_URL = env('PRACTICE_DB_URL', 'https://apryshchepchuk.github.io/amcu-monitor/amku/');
 
 const PHARMA_PATTERNS = [
@@ -1680,26 +1681,28 @@ function formatCaseNumbers(values) {
 }
 
 function sourceLinkLabel() {
-  return 'Відкрити матеріал АМКУ';
+  return 'Читати матеріал АМКУ';
 }
 
 function practiceDbFooterText() {
   return [
-    'Моніторинг охоплює публічні матеріали АМКУ, відібрані як релевантні фармацевтичному ринку.',
-    'Для аналізу вже сформованої практики доступна База практики АМКУ:',
+    'Тижневий вісник АМКУ — неофіційний автоматизований моніторинг публічних матеріалів Антимонопольного комітету України.',
+    'Відбір охоплює матеріали, у яких фармацевтична релевантність прямо випливає з публікації АМКУ або доданого до неї документа.',
+    'База практики АМКУ:',
     PRACTICE_DB_URL
   ].join('\n');
 }
 
 function practiceDbFooterHtml() {
   return `
-    <div style="margin:24px 0 0 0;padding:14px 0 0 0;border-top:1px solid #e5e7eb;">
-      <p style="margin:0;font-size:13px;line-height:1.5;color:#374151;">
-        Моніторинг охоплює публічні матеріали АМКУ, відібрані як релевантні фармацевтичному ринку.
+    <div style="margin:32px 0 0 0;padding:16px 0 0 0;border-top:3px double #1f2937;">
+      <p style="margin:0 0 6px 0;font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.5;color:#374151;">
+        <strong>Про видання.</strong> «Тижневий вісник АМКУ» — неофіційний автоматизований моніторинг публічних матеріалів Антимонопольного комітету України.
+      </p>
+      <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.5;color:#4b5563;">
+        Відбір охоплює матеріали, у яких фармацевтична релевантність прямо випливає з публікації АМКУ або доданого до неї документа.
         Для аналізу вже сформованої практики доступна
-        <a href="${htmlEscape(PRACTICE_DB_URL)}" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:none;">
-          База практики АМКУ
-        </a>.
+        <a href="${htmlEscape(PRACTICE_DB_URL)}" target="_blank" rel="noopener" style="color:#111827;text-decoration:underline;">База практики АМКУ</a>.
       </p>
     </div>
   `;
@@ -1712,10 +1715,19 @@ function groupEvents(rows) {
     .filter(([, items]) => items.length);
 }
 
+function periodLabelShort(period) {
+  return `${formatDateUk(period.from)} — ${formatDateUk(period.to)}`;
+}
+
+function buildEmailSubject(period) {
+  return `${EMAIL_SUBJECT_PREFIX} — ${periodLabelShort(period)}`;
+}
+
 function renderEventText(row, index) {
+  const actorValues = row.event_type === 'recommendation_issued' ? row.recommendation_addressees : row.subjects;
   const lines = [
-    `${index + 1}. ${formatDateUk(row.publication_date)} — ${eventTypeLabel(row.event_type)}`,
-    `Суб’єкт/адресат: ${plainList(row.event_type === 'recommendation_issued' ? row.recommendation_addressees : row.subjects)}`,
+    `${index + 1}. ${row.short_description || eventTypeLabel(row.event_type)}`,
+    `${formatDateUk(row.publication_date)} · ${plainList(actorValues)}`,
     `Сектор: ${sectorLabel(row.sector)}`
   ];
 
@@ -1724,77 +1736,125 @@ function renderEventText(row, index) {
   if (row.event_type === 'case_decided') lines.push(`Результат: ${outcomeLabel(row.outcome)}`);
   if (row.fine_imposed) lines.push(`Штраф: ${formatMoneyUah(row.fine_amount_uah) || 'накладено, сума не визначена'}`);
   if (qualificationText(row) !== 'Не зазначено в повідомленні') lines.push(`Кваліфікація: ${qualificationText(row)}`);
-  lines.push('', row.short_description || 'Без опису', '', `Джерело: ${row.url}`);
+  lines.push(`Джерело: ${row.url}`);
   return lines.join('\n');
 }
 
 function renderEmailText({ period, relevantRows }) {
-  const header = `${periodIntro(period)} виявлено ${relevantRows.length} фарм-релевантних подій АМКУ.`;
   const groups = groupEvents(relevantRows);
+  const masthead = [
+    EMAIL_SUBJECT_PREFIX.toUpperCase(),
+    `Фармацевтичний огляд практики АМКУ · ${periodLabelShort(period)}`,
+    `Неофіційний моніторинг · ${relevantRows.length} подій`
+  ].join('\n');
 
   if (!relevantRows.length) {
-    return [EMAIL_SUBJECT_PREFIX, '', header, '', 'Релевантних подій за цей період не виявлено.', '', practiceDbFooterText()].join('\n');
+    return [masthead, '', 'Релевантних подій за цей період не виявлено.', '', practiceDbFooterText()].join('\n');
   }
 
   const body = groups.map(([type, rows]) => {
-    const items = rows.map((row, index) => renderEventText(row, index)).join('\n\n---\n\n');
-    return `${eventTypeHeading(type)} — ${rows.length}\n\n${items}`;
-  }).join('\n\n====================\n\n');
+    const items = rows.map((row, index) => renderEventText(row, index)).join('\n\n');
+    return `${eventTypeHeading(type).toUpperCase()} · ${rows.length}\n${'-'.repeat(48)}\n${items}`;
+  }).join('\n\n' + '='.repeat(56) + '\n\n');
 
-  return [EMAIL_SUBJECT_PREFIX, '', header, '', body, '', practiceDbFooterText()].join('\n');
+  return [masthead, '', body, '', practiceDbFooterText()].join('\n');
 }
 
 function renderEventHtml(row, index) {
   const actorValues = row.event_type === 'recommendation_issued' ? row.recommendation_addressees : row.subjects;
-  const extra = [];
+  const meta = [];
 
-  if (row.case_numbers?.length) extra.push(`<p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;"><strong>Справа:</strong> ${htmlEscape(formatCaseNumbers(row.case_numbers))}</p>`);
-  if (row.decision_number) extra.push(`<p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;"><strong>Рішення:</strong> № ${htmlEscape(row.decision_number)}${row.decision_date ? ` від ${htmlEscape(formatDateUk(row.decision_date))}` : ''}</p>`);
-  if (row.event_type === 'case_decided') extra.push(`<p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;"><strong>Результат:</strong> ${htmlEscape(outcomeLabel(row.outcome))}</p>`);
-  if (row.fine_imposed) extra.push(`<p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;"><strong>Штраф:</strong> ${htmlEscape(formatMoneyUah(row.fine_amount_uah) || 'накладено, сума не визначена')}</p>`);
-  if (qualificationText(row) !== 'Не зазначено в повідомленні') extra.push(`<p style="margin:0 0 8px 0;font-size:14px;line-height:1.5;"><strong>Кваліфікація:</strong> ${htmlEscape(qualificationText(row))}</p>`);
+  if (row.case_numbers?.length) meta.push(`<strong>Справа:</strong> ${htmlEscape(formatCaseNumbers(row.case_numbers))}`);
+  if (row.decision_number) meta.push(`<strong>Рішення:</strong> № ${htmlEscape(row.decision_number)}${row.decision_date ? ` від ${htmlEscape(formatDateUk(row.decision_date))}` : ''}`);
+  if (row.event_type === 'case_decided') meta.push(`<strong>Результат:</strong> ${htmlEscape(outcomeLabel(row.outcome))}`);
+  if (row.fine_imposed) meta.push(`<strong>Штраф:</strong> ${htmlEscape(formatMoneyUah(row.fine_amount_uah) || 'накладено, сума не визначена')}`);
+  if (qualificationText(row) !== 'Не зазначено в повідомленні') meta.push(`<strong>Кваліфікація:</strong> ${htmlEscape(qualificationText(row))}`);
+
+  const headline = normalizeSpaces(row.short_description || row.title || eventTypeLabel(row.event_type));
+  const actor = plainList(actorValues);
 
   return `
-    <div style="margin:18px 0 0 0;padding:0 0 18px 0;border-bottom:1px solid #e5e7eb;">
-      <p style="margin:0 0 8px 0;font-size:15px;line-height:1.45;"><strong>${index + 1}. ${htmlEscape(formatDateUk(row.publication_date))} — ${htmlEscape(eventTypeLabel(row.event_type))}</strong></p>
-      <p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;"><strong>Суб’єкт/адресат:</strong> ${htmlEscape(plainList(actorValues))}</p>
-      <p style="margin:0 0 4px 0;font-size:14px;line-height:1.5;"><strong>Сектор:</strong> ${htmlEscape(sectorLabel(row.sector))}</p>
-      ${extra.join('\n')}
-      <p style="margin:8px 0 10px 0;font-size:14px;line-height:1.5;">${htmlEscape(row.short_description || 'Без опису')}</p>
-      <p style="margin:0;font-size:14px;line-height:1.5;"><strong>Джерело:</strong> <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener">${htmlEscape(sourceLinkLabel())}</a></p>
-    </div>
+    <article style="margin:0;padding:16px 0 17px 0;border-bottom:1px solid #9ca3af;">
+      <div style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:1.1px;text-transform:uppercase;color:#6b7280;margin:0 0 5px 0;">
+        ${htmlEscape(formatDateUk(row.publication_date))} &nbsp;·&nbsp; ${htmlEscape(sectorLabel(row.sector))}
+      </div>
+      <h3 style="margin:0 0 7px 0;font-family:Georgia,'Times New Roman',serif;font-size:19px;line-height:1.22;font-weight:700;color:#111827;">
+        ${htmlEscape(headline)}
+      </h3>
+      <p style="margin:0 0 8px 0;font-family:Georgia,'Times New Roman',serif;font-size:14px;line-height:1.48;color:#374151;">
+        <strong>${htmlEscape(actor)}</strong>
+      </p>
+      ${meta.length ? `<p style="margin:0 0 8px 0;font-family:Arial,sans-serif;font-size:12px;line-height:1.55;color:#374151;">${meta.join(' &nbsp;·&nbsp; ')}</p>` : ''}
+      <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.5;">
+        <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener" style="color:#111827;text-decoration:underline;">${htmlEscape(sourceLinkLabel())} →</a>
+      </p>
+    </article>
+  `;
+}
+
+function renderSectionHtml(type, rows) {
+  return `
+    <section style="margin:27px 0 0 0;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
+        <tr>
+          <td style="border-top:3px solid #111827;border-bottom:1px solid #111827;padding:7px 0 6px 0;">
+            <span style="font-family:Arial,sans-serif;font-size:11px;line-height:1.2;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:#111827;">${htmlEscape(eventTypeHeading(type))}</span>
+          </td>
+          <td align="right" style="border-top:3px solid #111827;border-bottom:1px solid #111827;padding:7px 0 6px 10px;font-family:Arial,sans-serif;font-size:11px;color:#6b7280;white-space:nowrap;">${rows.length}</td>
+        </tr>
+      </table>
+      ${rows.map((row, index) => renderEventHtml(row, index)).join('\n')}
+    </section>
   `;
 }
 
 function renderEmailHtml({ period, relevantRows }) {
-  const header = `${periodIntro(period)} виявлено ${relevantRows.length} фарм-релевантних подій АМКУ.`;
   const groups = groupEvents(relevantRows);
-
   const body = relevantRows.length
-    ? groups.map(([type, rows]) => `
-        <div style="margin:24px 0 0 0;">
-          <h3 style="margin:0 0 8px 0;font-size:16px;line-height:1.35;">${htmlEscape(eventTypeHeading(type))} — ${rows.length}</h3>
-          ${rows.map((row, index) => renderEventHtml(row, index)).join('\n')}
-        </div>
-      `).join('\n')
-    : `<p style="margin:18px 0 0 0;font-size:14px;line-height:1.5;">Релевантних подій за цей період не виявлено.</p>`;
+    ? groups.map(([type, rows]) => renderSectionHtml(type, rows)).join('\n')
+    : `<p style="margin:24px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.6;">Релевантних подій за цей період не виявлено.</p>`;
 
   return `<!doctype html>
-<html>
-<body style="font-family:Arial,sans-serif;color:#111827;line-height:1.5;background:#ffffff;padding:0;margin:0;">
-  <div style="max-width:860px;margin:0 auto;padding:22px 20px;">
-    <h2 style="margin:0 0 14px 0;font-size:18px;line-height:1.35;font-weight:700;">${htmlEscape(EMAIL_SUBJECT_PREFIX)}</h2>
-    <p style="margin:0 0 18px 0;font-size:14px;line-height:1.5;">${htmlEscape(header)}</p>
-    ${body}
-    ${practiceDbFooterHtml()}
-  </div>
+<html lang="uk">
+<body style="padding:0;margin:0;background:#f3f1eb;color:#111827;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;background:#f3f1eb;">
+    <tr>
+      <td align="center" style="padding:24px 10px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:760px;border-collapse:collapse;background:#fffdf7;border:1px solid #d1d5db;">
+          <tr>
+            <td style="padding:28px 28px 26px 28px;">
+              <div style="text-align:center;border-top:5px solid #111827;border-bottom:5px double #111827;padding:16px 0 14px 0;">
+                <div style="font-family:Arial,sans-serif;font-size:9px;line-height:1.3;letter-spacing:2px;text-transform:uppercase;color:#6b7280;margin-bottom:7px;">неофіційний моніторинг публічних матеріалів</div>
+                <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.05;font-weight:700;letter-spacing:-0.4px;color:#111827;">${htmlEscape(EMAIL_SUBJECT_PREFIX)}</h1>
+                <div style="margin-top:8px;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.35;font-style:italic;color:#374151;">Фармацевтичний огляд практики Антимонопольного комітету України</div>
+              </div>
+
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;margin-top:9px;">
+                <tr>
+                  <td style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 0;">Випуск за ${htmlEscape(periodLabelShort(period))}</td>
+                  <td align="right" style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 10px;">${relevantRows.length} ${relevantRows.length === 1 ? 'подія' : 'подій'}</td>
+                </tr>
+              </table>
+
+              <p style="margin:12px 0 0 0;padding:12px 0;border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.55;color:#374151;text-align:center;">
+                Короткий огляд оприлюднених АМКУ матеріалів, у яких прямо простежується зв’язок із фармацевтичним ринком.
+              </p>
+
+              ${body}
+              ${practiceDbFooterHtml()}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 }
 
 async function sendEmailDigest({ period, relevantRows }) {
-  if (!SEND_EMAIL) {
-    console.log('Email skipped: SEND_EMAIL=false.');
+  if (!SEND_EMAIL && !TEST_EMAIL_SEND) {
+    console.log('Email skipped: SEND_EMAIL=false and TEST_EMAIL_SEND=false.');
     return false;
   }
 
@@ -1803,14 +1863,16 @@ async function sendEmailDigest({ period, relevantRows }) {
     return false;
   }
 
-  if (DRY_RUN) {
+  if (DRY_RUN && !TEST_EMAIL_SEND) {
     console.log('Email skipped: DRY_RUN=true.');
     return false;
   }
 
-  const emailTo = process.env.EMAIL_TO;
+  const emailTo = TEST_EMAIL_SEND
+    ? (process.env.TEST_EMAIL_TO || process.env.EMAIL_TO)
+    : process.env.EMAIL_TO;
   if (!emailTo) {
-    console.log('Email skipped: EMAIL_TO is not configured.');
+    console.log('Email skipped: recipient is not configured (TEST_EMAIL_TO/EMAIL_TO).');
     return false;
   }
 
@@ -1825,12 +1887,12 @@ async function sendEmailDigest({ period, relevantRows }) {
   await transporter.sendMail({
     from: env('EMAIL_FROM', process.env.SMTP_USER || ''),
     to: emailTo,
-    subject: EMAIL_SUBJECT_PREFIX,
+    subject: TEST_EMAIL_SEND ? `[ТЕСТ] ${buildEmailSubject(period)}` : buildEmailSubject(period),
     text: renderEmailText({ period, relevantRows }),
     html: renderEmailHtml({ period, relevantRows })
   });
 
-  console.log(`Email sent to ${emailTo}`);
+  console.log(`${TEST_EMAIL_SEND ? 'Test email' : 'Email'} sent to ${emailTo}`);
   return true;
 }
 
@@ -1927,7 +1989,7 @@ async function main() {
 
   if (!runComplete) {
     console.warn(`Run incomplete: budgetExceeded=${budgetExceeded}, itemErrors=${itemErrors.length}. Email will NOT be sent and period will NOT be marked as sent.`);
-  } else if (!state.sent_digests[digestKey] || FORCE_SEND) {
+  } else if (TEST_EMAIL_SEND || !state.sent_digests[digestKey] || FORCE_SEND) {
     emailSent = await sendEmailDigest({ period, relevantRows: digestRows });
   }
 
@@ -1952,6 +2014,7 @@ async function main() {
       skip_gemini: SKIP_GEMINI,
       max_gemini_calls: MAX_GEMINI_CALLS,
       send_email: SEND_EMAIL,
+      test_email_send: TEST_EMAIL_SEND,
       send_empty_email: SEND_EMPTY_EMAIL,
       force_send: FORCE_SEND,
       pdf_fallback_enabled: PDF_FALLBACK_ENABLED,
@@ -1959,7 +2022,7 @@ async function main() {
     }
   };
 
-  if (runComplete && (emailSent || (!relevantRows.length && SEND_EMPTY_EMAIL && SEND_EMAIL && !DRY_RUN))) {
+  if (!TEST_EMAIL_SEND && runComplete && (emailSent || (!relevantRows.length && SEND_EMPTY_EMAIL && SEND_EMAIL && !DRY_RUN))) {
     state.sent_digests[digestKey] = {
       sent_at: new Date().toISOString(),
       relevant_count: digestRows.length,
