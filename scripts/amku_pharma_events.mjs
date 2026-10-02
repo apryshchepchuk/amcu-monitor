@@ -1602,7 +1602,7 @@ function htmlEscape(value) {
     .replace(/'/g, '&#39;');
 }
 
-function plainList(values, fallback = 'Не зазначено') {
+function plainList(values, fallback = '') {
   if (!Array.isArray(values) || !values.length) return fallback;
   return values.filter(Boolean).join('; ');
 }
@@ -1620,9 +1620,9 @@ function sectorLabel(value) {
     distribution: 'дистрибуція / опт',
     manufacturing: 'виробництво',
     mixed: 'змішаний фармсектор',
-    other: 'інше / потребує перевірки'
+    other: 'інше'
   };
-  return map[value] || value || 'інше / потребує перевірки';
+  return map[value] || value || 'інше';
 }
 
 function eventTypeLabel(type) {
@@ -1630,19 +1630,19 @@ function eventTypeLabel(type) {
     case_started: 'Розпочато справу',
     case_decided: 'Прийнято рішення',
     recommendation_issued: 'Надано рекомендації',
-    case_procedural_update: 'Процесуальна подія у справі',
-    other_relevant: 'Інша релевантна подія'
+    case_procedural_update: 'Справа в розгляді',
+    other_relevant: 'Ринкова подія'
   };
   return map[type] || type;
 }
 
 function eventTypeHeading(type) {
   const map = {
-    case_started: 'Розпочато справи',
-    case_decided: 'Прийнято рішення',
-    recommendation_issued: 'Надано рекомендації',
-    case_procedural_update: 'Процесуальні події у справах',
-    other_relevant: 'Інші релевантні події'
+    case_decided: 'Рішення та штрафи',
+    recommendation_issued: 'Рекомендації АМКУ',
+    case_started: 'Нові справи',
+    case_procedural_update: 'Справи в розгляді',
+    other_relevant: 'Ринок та адвокатування'
   };
   return map[type] || type;
 }
@@ -1676,8 +1676,12 @@ function periodIntro(period) {
 }
 
 function formatCaseNumbers(values) {
-  if (!Array.isArray(values) || !values.length) return 'не зазначено';
-  return values.map((v) => String(v).trim().replace(/^№\s*/u, '')).map((v) => `№ ${v}`).join(', ');
+  if (!Array.isArray(values) || !values.length) return '';
+  return values
+    .map((v) => String(v).trim().replace(/^№\s*/u, ''))
+    .filter(Boolean)
+    .map((v) => `№ ${v}`)
+    .join(', ');
 }
 
 function sourceLinkLabel() {
@@ -1686,7 +1690,7 @@ function sourceLinkLabel() {
 
 function practiceDbFooterText() {
   return [
-    'Тижневий вісник АМКУ — неофіційний автоматизований моніторинг публічних матеріалів Антимонопольного комітету України.',
+    '«Тижневий вісник АМКУ» — неофіційний автоматизований моніторинг публічних матеріалів Антимонопольного комітету України.',
     'Відбір охоплює матеріали, у яких фармацевтична релевантність прямо випливає з публікації АМКУ або доданого до неї документа.',
     'База практики АМКУ:',
     PRACTICE_DB_URL
@@ -1709,7 +1713,8 @@ function practiceDbFooterHtml() {
 }
 
 function groupEvents(rows) {
-  const order = ['case_started', 'case_decided', 'recommendation_issued', 'case_procedural_update', 'other_relevant'];
+  // Editorial order: the most consequential material first.
+  const order = ['case_decided', 'recommendation_issued', 'case_started', 'case_procedural_update', 'other_relevant'];
   return order
     .map((type) => [type, (rows || []).filter((r) => r.event_type === type)])
     .filter(([, items]) => items.length);
@@ -1723,78 +1728,295 @@ function buildEmailSubject(period) {
   return `${EMAIL_SUBJECT_PREFIX} — ${periodLabelShort(period)}`;
 }
 
+function actorValuesForRow(row) {
+  return row.event_type === 'recommendation_issued' ? row.recommendation_addressees : row.subjects;
+}
+
+function actorTextForRow(row) {
+  return plainList(actorValuesForRow(row), '');
+}
+
+function editorialTopic(row) {
+  const text = normalizeSpaces([
+    row.short_description,
+    row.title,
+    row.timeline_title,
+    qualificationText(row)
+  ].filter(Boolean).join(' ')).toLowerCase();
+
+  if (/концентрац|набуття\s+контрол|контроль\s+над/i.test(text)) return 'concentration';
+  if (/недобросовісн|ввод[^.]{0,40}в\s+оман|оманлив|реклам|15\s*[-–—]?\s*1/i.test(text)) return 'unfair_competition';
+  if (/рекомендац/i.test(text)) return 'recommendations';
+  return 'other';
+}
+
+function topicHeading(topic) {
+  const map = {
+    unfair_competition: 'Недобросовісна конкуренція',
+    concentration: 'Концентрації',
+    recommendations: 'Рекомендації'
+  };
+  return map[topic] || null;
+}
+
+function topicOrderForType(type) {
+  if (type === 'case_decided') return ['unfair_competition', 'concentration', 'other'];
+  if (type === 'case_started') return ['unfair_competition', 'concentration', 'other'];
+  if (type === 'case_procedural_update') return ['unfair_competition', 'concentration', 'other'];
+  return ['recommendations', 'unfair_competition', 'concentration', 'other'];
+}
+
+function groupRowsByTopic(rows, type) {
+  const order = topicOrderForType(type);
+  const byTopic = new Map();
+  for (const row of rows || []) {
+    const topic = editorialTopic(row);
+    if (!byTopic.has(topic)) byTopic.set(topic, []);
+    byTopic.get(topic).push(row);
+  }
+
+  return order
+    .filter((topic) => byTopic.has(topic))
+    .map((topic) => [topic, byTopic.get(topic)]);
+}
+
+function buildStoryGroups(rows, type, topic) {
+  const buckets = new Map();
+
+  for (const row of rows || []) {
+    // Group only events originating from the same AMCU publication and the same topic.
+    // The underlying events remain separate in JSON/state; this is presentation-only.
+    const urlKey = normalizeUrlKey(row.url);
+    const key = urlKey ? `${type}|${topic}|${urlKey}` : `${type}|${topic}|${row.event_key}`;
+    if (!buckets.has(key)) buckets.set(key, []);
+    buckets.get(key).push(row);
+  }
+
+  const stories = [];
+  for (const items of buckets.values()) {
+    if (items.length >= 2) {
+      stories.push({ kind: 'group', type, topic, rows: items });
+    } else {
+      stories.push({ kind: 'single', type, topic, rows: items });
+    }
+  }
+
+  return stories.sort((a, b) => {
+    const ad = String(a.rows?.[0]?.publication_datetime || a.rows?.[0]?.publication_date || '');
+    const bd = String(b.rows?.[0]?.publication_datetime || b.rows?.[0]?.publication_date || '');
+    return bd.localeCompare(ad, 'uk');
+  });
+}
+
+function countEditorialStories(rows) {
+  let count = 0;
+  for (const [type, sectionRows] of groupEvents(rows)) {
+    for (const [topic, topicRows] of groupRowsByTopic(sectionRows, type)) {
+      count += buildStoryGroups(topicRows, type, topic).length;
+    }
+  }
+  return count;
+}
+
+function ukCount(n, one, few, many) {
+  const abs = Math.abs(Number(n) || 0);
+  const mod100 = abs % 100;
+  const mod10 = abs % 10;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+}
+
+function groupedStoryHeadline(type, topic, count) {
+  if (topic === 'concentration') {
+    if (type === 'case_decided') {
+      return `Концентрації: ${count} ${ukCount(count, 'рішення', 'рішення', 'рішень')} АМКУ`;
+    }
+    if (type === 'case_started') {
+      return `Концентрації: ${count} ${ukCount(count, 'нова справа', 'нові справи', 'нових справ')}`;
+    }
+    if (type === 'case_procedural_update') {
+      return `Концентрації: ${count} ${ukCount(count, 'справа в розгляді', 'справи в розгляді', 'справ у розгляді')}`;
+    }
+  }
+
+  if (topic === 'unfair_competition') {
+    if (type === 'case_decided') {
+      return `Недобросовісна конкуренція: ${count} ${ukCount(count, 'рішення', 'рішення', 'рішень')}`;
+    }
+    if (type === 'case_started') {
+      return `Недобросовісна конкуренція: ${count} ${ukCount(count, 'нова справа', 'нові справи', 'нових справ')}`;
+    }
+    if (type === 'case_procedural_update') {
+      return `Недобросовісна конкуренція: ${count} ${ukCount(count, 'справа в розгляді', 'справи в розгляді', 'справ у розгляді')}`;
+    }
+  }
+
+  return `${count} ${ukCount(count, 'подія', 'події', 'подій')} з одного матеріалу АМКУ`;
+}
+
 function renderEventText(row, index) {
-  const actorValues = row.event_type === 'recommendation_issued' ? row.recommendation_addressees : row.subjects;
   const lines = [
     `${index + 1}. ${row.short_description || eventTypeLabel(row.event_type)}`,
-    `${formatDateUk(row.publication_date)} · ${plainList(actorValues)}`,
-    `Сектор: ${sectorLabel(row.sector)}`
+    `${formatDateUk(row.publication_date)} · ${sectorLabel(row.sector)}`
   ];
 
-  if (row.case_numbers?.length) lines.push(`Справа: ${formatCaseNumbers(row.case_numbers)}`);
+  const actor = actorTextForRow(row);
+  if (actor) lines.push(actor);
+
+  const caseNumbers = formatCaseNumbers(row.case_numbers);
+  if (caseNumbers) lines.push(`Справа: ${caseNumbers}`);
   if (row.decision_number) lines.push(`Рішення: № ${row.decision_number}${row.decision_date ? ` від ${formatDateUk(row.decision_date)}` : ''}`);
-  if (row.event_type === 'case_decided') lines.push(`Результат: ${outcomeLabel(row.outcome)}`);
+  if (row.event_type === 'case_decided' && row.outcome && row.outcome !== 'unknown') lines.push(`Результат: ${outcomeLabel(row.outcome)}`);
   if (row.fine_imposed) lines.push(`Штраф: ${formatMoneyUah(row.fine_amount_uah) || 'накладено, сума не визначена'}`);
   if (qualificationText(row) !== 'Не зазначено в повідомленні') lines.push(`Кваліфікація: ${qualificationText(row)}`);
   lines.push(`Джерело: ${row.url}`);
   return lines.join('\n');
 }
 
+function renderGroupedStoryText(story) {
+  const rows = story.rows || [];
+  const first = rows[0] || {};
+  const lines = [
+    `${formatDateUk(first.publication_date)} · ${groupedStoryHeadline(story.type, story.topic, rows.length)}`
+  ];
+
+  for (const row of rows) {
+    const actor = actorTextForRow(row) || row.short_description || 'Подія АМКУ';
+    const details = [];
+    const caseNumbers = formatCaseNumbers(row.case_numbers);
+    if (row.fine_imposed) details.push(`штраф ${formatMoneyUah(row.fine_amount_uah) || 'накладено'}`);
+    else if (caseNumbers) details.push(`справа ${caseNumbers}`);
+    else if (row.decision_number) details.push(`рішення № ${row.decision_number}`);
+    lines.push(`• ${actor}${details.length ? ` — ${details.join(', ')}` : ''}`);
+  }
+
+  if (first.url) lines.push(`Джерело: ${first.url}`);
+  return lines.join('\n');
+}
+
 function renderEmailText({ period, relevantRows }) {
   const groups = groupEvents(relevantRows);
+  const storyCount = countEditorialStories(relevantRows);
   const masthead = [
     EMAIL_SUBJECT_PREFIX.toUpperCase(),
-    `Фармацевтичний огляд практики АМКУ · ${periodLabelShort(period)}`,
-    `Неофіційний моніторинг · ${relevantRows.length} подій`
+    `Огляд подій АМКУ на фармацевтичному ринку · ${periodLabelShort(period)}`,
+    `Неофіційний моніторинг · ${relevantRows.length} ${ukCount(relevantRows.length, 'подія', 'події', 'подій')} · ${storyCount} ${ukCount(storyCount, 'замітка', 'замітки', 'заміток')}`
   ].join('\n');
 
   if (!relevantRows.length) {
     return [masthead, '', 'Релевантних подій за цей період не виявлено.', '', practiceDbFooterText()].join('\n');
   }
 
-  const body = groups.map(([type, rows]) => {
-    const items = rows.map((row, index) => renderEventText(row, index)).join('\n\n');
-    return `${eventTypeHeading(type).toUpperCase()} · ${rows.length}\n${'-'.repeat(48)}\n${items}`;
-  }).join('\n\n' + '='.repeat(56) + '\n\n');
+  const sections = [];
+  for (const [type, sectionRows] of groups) {
+    const sectionParts = [`${eventTypeHeading(type).toUpperCase()} · ${sectionRows.length}`, '-'.repeat(48)];
 
-  return [masthead, '', body, '', practiceDbFooterText()].join('\n');
+    for (const [topic, topicRows] of groupRowsByTopic(sectionRows, type)) {
+      const stories = buildStoryGroups(topicRows, type, topic);
+      const topicLabel = topicHeading(topic);
+      if (topicLabel && stories.length) sectionParts.push(`\n${topicLabel.toUpperCase()}`);
+
+      stories.forEach((story, index) => {
+        sectionParts.push(
+          story.kind === 'group'
+            ? renderGroupedStoryText(story)
+            : renderEventText(story.rows[0], index)
+        );
+      });
+    }
+
+    sections.push(sectionParts.join('\n\n'));
+  }
+
+  return [masthead, '', sections.join('\n\n' + '='.repeat(56) + '\n\n'), '', practiceDbFooterText()].join('\n');
 }
 
-function renderEventHtml(row, index) {
-  const actorValues = row.event_type === 'recommendation_issued' ? row.recommendation_addressees : row.subjects;
+function renderEventHtml(row) {
   const meta = [];
+  const caseNumbers = formatCaseNumbers(row.case_numbers);
 
-  if (row.case_numbers?.length) meta.push(`<strong>Справа:</strong> ${htmlEscape(formatCaseNumbers(row.case_numbers))}`);
+  if (caseNumbers) meta.push(`<strong>Справа:</strong> ${htmlEscape(caseNumbers)}`);
   if (row.decision_number) meta.push(`<strong>Рішення:</strong> № ${htmlEscape(row.decision_number)}${row.decision_date ? ` від ${htmlEscape(formatDateUk(row.decision_date))}` : ''}`);
-  if (row.event_type === 'case_decided') meta.push(`<strong>Результат:</strong> ${htmlEscape(outcomeLabel(row.outcome))}`);
+  if (row.event_type === 'case_decided' && row.outcome && row.outcome !== 'unknown') meta.push(`<strong>Результат:</strong> ${htmlEscape(outcomeLabel(row.outcome))}`);
   if (row.fine_imposed) meta.push(`<strong>Штраф:</strong> ${htmlEscape(formatMoneyUah(row.fine_amount_uah) || 'накладено, сума не визначена')}`);
   if (qualificationText(row) !== 'Не зазначено в повідомленні') meta.push(`<strong>Кваліфікація:</strong> ${htmlEscape(qualificationText(row))}`);
 
   const headline = normalizeSpaces(row.short_description || row.title || eventTypeLabel(row.event_type));
-  const actor = plainList(actorValues);
+  const actor = actorTextForRow(row);
 
   return `
-    <article style="margin:0;padding:16px 0 17px 0;border-bottom:1px solid #9ca3af;">
-      <div style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:1.1px;text-transform:uppercase;color:#6b7280;margin:0 0 5px 0;">
+    <article style="margin:0;padding:15px 0 16px 0;border-bottom:1px solid #b6bbc3;">
+      <div style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:1.05px;text-transform:uppercase;color:#6b7280;margin:0 0 5px 0;">
         ${htmlEscape(formatDateUk(row.publication_date))} &nbsp;·&nbsp; ${htmlEscape(sectorLabel(row.sector))}
       </div>
-      <h3 style="margin:0 0 7px 0;font-family:Georgia,'Times New Roman',serif;font-size:19px;line-height:1.22;font-weight:700;color:#111827;">
+      <h3 style="margin:0 0 7px 0;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.27;font-weight:700;color:#111827;">
         ${htmlEscape(headline)}
       </h3>
-      <p style="margin:0 0 8px 0;font-family:Georgia,'Times New Roman',serif;font-size:14px;line-height:1.48;color:#374151;">
-        <strong>${htmlEscape(actor)}</strong>
-      </p>
-      ${meta.length ? `<p style="margin:0 0 8px 0;font-family:Arial,sans-serif;font-size:12px;line-height:1.55;color:#374151;">${meta.join(' &nbsp;·&nbsp; ')}</p>` : ''}
-      <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.5;">
+      ${actor ? `<p style="margin:0 0 7px 0;font-family:Georgia,'Times New Roman',serif;font-size:13.5px;line-height:1.45;color:#374151;"><strong>${htmlEscape(actor)}</strong></p>` : ''}
+      ${meta.length ? `<p style="margin:0 0 8px 0;font-family:Arial,sans-serif;font-size:11.5px;line-height:1.55;color:#374151;">${meta.join(' &nbsp;·&nbsp; ')}</p>` : ''}
+      <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:12.5px;line-height:1.5;">
         <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener" style="color:#111827;text-decoration:underline;">${htmlEscape(sourceLinkLabel())} →</a>
       </p>
     </article>
   `;
 }
 
-function renderSectionHtml(type, rows) {
+function renderGroupedStoryHtml(story) {
+  const rows = story.rows || [];
+  const first = rows[0] || {};
+  const headline = groupedStoryHeadline(story.type, story.topic, rows.length);
+
+  const items = rows.map((row) => {
+    const actor = actorTextForRow(row) || normalizeSpaces(row.short_description || row.title || 'Подія АМКУ');
+    const details = [];
+    const caseNumbers = formatCaseNumbers(row.case_numbers);
+
+    if (row.fine_imposed) details.push(`штраф ${formatMoneyUah(row.fine_amount_uah) || 'накладено'}`);
+    else if (caseNumbers) details.push(`справа ${caseNumbers}`);
+    else if (row.decision_number) details.push(`рішення № ${row.decision_number}`);
+
+    return `
+      <li style="margin:0 0 7px 0;padding:0 0 0 2px;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.45;color:#374151;">
+        <strong>${htmlEscape(actor)}</strong>${details.length ? ` — ${htmlEscape(details.join(', '))}` : ''}
+      </li>`;
+  }).join('\n');
+
   return `
-    <section style="margin:27px 0 0 0;">
+    <article style="margin:0;padding:15px 0 16px 0;border-bottom:1px solid #b6bbc3;">
+      <div style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:1.05px;text-transform:uppercase;color:#6b7280;margin:0 0 5px 0;">
+        ${htmlEscape(formatDateUk(first.publication_date))} &nbsp;·&nbsp; ${htmlEscape(topicHeading(story.topic) || sectorLabel(first.sector))}
+      </div>
+      <h3 style="margin:0 0 9px 0;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.27;font-weight:700;color:#111827;">
+        ${htmlEscape(headline)}
+      </h3>
+      <ul style="margin:0 0 9px 19px;padding:0;">${items}</ul>
+      ${first.url ? `<p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:12.5px;line-height:1.5;"><a href="${htmlEscape(first.url)}" target="_blank" rel="noopener" style="color:#111827;text-decoration:underline;">${htmlEscape(sourceLinkLabel())} →</a></p>` : ''}
+    </article>
+  `;
+}
+
+function renderTopicBlockHtml(type, topic, rows) {
+  const stories = buildStoryGroups(rows, type, topic);
+  const label = topicHeading(topic);
+  const showSubheading = Boolean(label) && (type === 'case_decided' || rows.length >= 2);
+
+  return `
+    <div style="margin:${showSubheading ? '15px' : '0'} 0 0 0;">
+      ${showSubheading ? `<div style="margin:0 0 2px 0;font-family:Arial,sans-serif;font-size:10px;line-height:1.2;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:#6b7280;">${htmlEscape(label)}</div>` : ''}
+      ${stories.map((story) => story.kind === 'group' ? renderGroupedStoryHtml(story) : renderEventHtml(story.rows[0])).join('\n')}
+    </div>
+  `;
+}
+
+function renderSectionHtml(type, rows) {
+  const topicBlocks = groupRowsByTopic(rows, type)
+    .map(([topic, topicRows]) => renderTopicBlockHtml(type, topic, topicRows))
+    .join('\n');
+
+  return `
+    <section style="margin:29px 0 0 0;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
         <tr>
           <td style="border-top:3px solid #111827;border-bottom:1px solid #111827;padding:7px 0 6px 0;">
@@ -1803,16 +2025,20 @@ function renderSectionHtml(type, rows) {
           <td align="right" style="border-top:3px solid #111827;border-bottom:1px solid #111827;padding:7px 0 6px 10px;font-family:Arial,sans-serif;font-size:11px;color:#6b7280;white-space:nowrap;">${rows.length}</td>
         </tr>
       </table>
-      ${rows.map((row, index) => renderEventHtml(row, index)).join('\n')}
+      ${topicBlocks}
     </section>
   `;
 }
 
 function renderEmailHtml({ period, relevantRows }) {
   const groups = groupEvents(relevantRows);
+  const storyCount = countEditorialStories(relevantRows);
   const body = relevantRows.length
     ? groups.map(([type, rows]) => renderSectionHtml(type, rows)).join('\n')
     : `<p style="margin:24px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.6;">Релевантних подій за цей період не виявлено.</p>`;
+
+  const eventWord = ukCount(relevantRows.length, 'подія', 'події', 'подій');
+  const storyWord = ukCount(storyCount, 'замітка', 'замітки', 'заміток');
 
   return `<!doctype html>
 <html lang="uk">
@@ -1826,18 +2052,18 @@ function renderEmailHtml({ period, relevantRows }) {
               <div style="text-align:center;border-top:5px solid #111827;border-bottom:5px double #111827;padding:16px 0 14px 0;">
                 <div style="font-family:Arial,sans-serif;font-size:9px;line-height:1.3;letter-spacing:2px;text-transform:uppercase;color:#6b7280;margin-bottom:7px;">неофіційний моніторинг публічних матеріалів</div>
                 <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.05;font-weight:700;letter-spacing:-0.4px;color:#111827;">${htmlEscape(EMAIL_SUBJECT_PREFIX)}</h1>
-                <div style="margin-top:8px;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.35;font-style:italic;color:#374151;">Фармацевтичний огляд практики Антимонопольного комітету України</div>
+                <div style="margin-top:8px;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.35;font-style:italic;color:#374151;">Огляд подій АМКУ на фармацевтичному ринку</div>
               </div>
 
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;margin-top:9px;">
                 <tr>
                   <td style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 0;">Випуск за ${htmlEscape(periodLabelShort(period))}</td>
-                  <td align="right" style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 10px;">${relevantRows.length} ${relevantRows.length === 1 ? 'подія' : 'подій'}</td>
+                  <td align="right" style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 10px;">${relevantRows.length} ${eventWord} · ${storyCount} ${storyWord}</td>
                 </tr>
               </table>
 
               <p style="margin:12px 0 0 0;padding:12px 0;border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.55;color:#374151;text-align:center;">
-                Короткий огляд оприлюднених АМКУ матеріалів, у яких прямо простежується зв’язок із фармацевтичним ринком.
+                Короткий огляд публічних матеріалів АМКУ, у яких прямо простежується зв’язок із фармацевтичним ринком.
               </p>
 
               ${body}
