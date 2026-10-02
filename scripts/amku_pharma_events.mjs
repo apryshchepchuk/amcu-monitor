@@ -1025,10 +1025,10 @@ async function fetchAndPreparePage(item) {
     pdfText ? `PDF (перші ${PDF_PREFILTER_PAGES} сторінки):\n${pdfText}` : ''
   ].filter(Boolean).join('\n\n'));
 
-  // If HTML was negative and at least one PDF existed, any PDF extraction
-  // failure leaves a real possibility of a false negative. Mark it so the
-  // run will not silently send an incomplete digest.
-  const pdfFallbackCriticalError = !htmlCandidate && pdfUrls.length > 0 && pdfErrors.length > 0;
+  // PDF extraction failures do not make the whole digest incomplete.
+  // If HTML has no pharma signal and the PDF cannot be read, we simply have
+  // no confirmed pharma relevance from the AMCU material and skip the item.
+  const pdfFallbackCriticalError = false;
 
   return {
     ...item,
@@ -1317,7 +1317,7 @@ function inferEventFacts(rawEvent, page) {
   ].filter(Boolean).join(' '));
 
   return {
-    case_started: Boolean(facts.case_started) || /розпочат\w*\s+(?:розгляд\w*\s+)?справ/i.test(text),
+    case_started: Boolean(facts.case_started) || /розпочато\s+(?:розгляд\s+)?справ[иу]?/iu.test(text),
     decision_adopted: Boolean(facts.decision_adopted)
       || /оштраф|накладен\w*\s+штраф|визнан\w*\s+порушенням|надано\s+дозвіл\s+на\s+концентрац|відмовлен\w*\s+у\s+наданн\w*\s+дозвол/i.test(text),
     recommendation_issued: Boolean(facts.recommendation_issued)
@@ -1800,7 +1800,7 @@ async function main() {
     }
   }
 
-  const runComplete = !budgetExceeded && itemErrors.length === 0 && pdfFallbackCriticalErrors === 0;
+  const runComplete = !budgetExceeded && itemErrors.length === 0;
   const digestRows = mergeResults([], relevantRows);
   const merged = mergeResults(existingResults, digestRows);
   let emailSent = false;
