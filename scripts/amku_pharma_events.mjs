@@ -247,36 +247,50 @@ function extractBetween(html, tagName) {
 
 function extractDivByClass(html, className) {
   const source = String(html || '');
-  const escaped = String(className || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const openRe = new RegExp(
-    `<div\\b[^>]*class=["'][^"']*(?:^|\\s)${escaped}(?:\\s|$)[^"']*["'][^>]*>`,
-    'i'
-  );
+  const wantedClass = String(className || '').trim();
+  if (!wantedClass) return '';
 
-  const match = openRe.exec(source);
-  if (!match) return '';
+  // Find opening <div> tags and inspect the class attribute as tokens.
+  // This matches editor-content regardless of whether it is the first,
+  // middle, or last class in the attribute.
+  const openTagRe = /<div\b[^>]*>/gi;
+  let match;
 
-  const contentStart = match.index + match[0].length;
-  const tokenRe = /<div\b[^>]*>|<\/div>/gi;
-  tokenRe.lastIndex = contentStart;
+  while ((match = openTagRe.exec(source))) {
+    const tag = match[0];
+    const classMatch = tag.match(/\bclass\s*=\s*(["'])(.*?)\1/i);
+    if (!classMatch) continue;
 
-  let depth = 1;
-  let token;
+    const classes = String(classMatch[2] || '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
 
-  while ((token = tokenRe.exec(source))) {
-    if (/^<div\b/i.test(token[0])) {
-      depth += 1;
-    } else {
-      depth -= 1;
-      if (depth === 0) {
-        return source.slice(contentStart, token.index);
+    if (!classes.includes(wantedClass)) continue;
+
+    const contentStart = match.index + tag.length;
+    const tokenRe = /<div\b[^>]*>|<\/div>/gi;
+    tokenRe.lastIndex = contentStart;
+
+    let depth = 1;
+    let token;
+
+    while ((token = tokenRe.exec(source))) {
+      if (/^<div\b/i.test(token[0])) {
+        depth += 1;
+      } else {
+        depth -= 1;
+        if (depth === 0) {
+          return source.slice(contentStart, token.index);
+        }
       }
     }
+
+    return '';
   }
 
   return '';
 }
-
 
 function extractTitle(html) {
   const h1 = extractBetween(html, 'h1');
