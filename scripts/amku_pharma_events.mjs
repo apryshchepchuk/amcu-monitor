@@ -1025,10 +1025,10 @@ async function fetchAndPreparePage(item) {
     pdfText ? `PDF (перші ${PDF_PREFILTER_PAGES} сторінки):\n${pdfText}` : ''
   ].filter(Boolean).join('\n\n'));
 
-  // If HTML was negative and at least one PDF existed, any PDF extraction
-  // failure leaves a real possibility of a false negative. Mark it so the
-  // run will not silently send an incomplete digest.
-  const pdfFallbackCriticalError = !htmlCandidate && pdfUrls.length > 0 && pdfErrors.length > 0;
+  // An unreadable PDF does not establish pharma relevance. Keep the error
+  // in diagnostics, but do not block the whole digest: if neither readable
+  // HTML nor readable PDF confirms a pharma signal, the item is simply skipped.
+  const pdfFallbackCriticalError = false;
 
   return {
     ...item,
@@ -1079,7 +1079,7 @@ function buildGeminiPrompt(page) {
    - procedural_update: інша проміжна процесуальна подія у вже існуючій справі (попередні висновки, засідання, слухання тощо).
 5. Якщо новина повідомляє про штраф як наслідок рішення, decision_adopted=true, fine_imposed=true.
 6. Якщо матеріал є лише аналітикою/адвокатуванням, але прямо релевантний фармринку, усі four facts можуть бути false — такий матеріал піде в other_relevant.
-7. Для КОЖНОЇ події поле source_excerpt є обов'язковим. Скопіюй дослівно фрагмент саме того пункту/абзацу наданого матеріалу АМКУ, який прямо показує фарм-релевантність цієї конкретної події (лікарські засоби, дієтичні добавки, медичні вироби, аптеки, фармацевтика тощо).
+7. Для КОЖНОЇ події поле source_excerpt є обов'язковим. Скопіюй дослівно достатній фрагмент саме того пункту/абзацу наданого матеріалу АМКУ, щоб у ньому одночасно було видно, про яку подію/суб'єкта йдеться, і прямий фарм-сигнал (лікарські засоби, дієтичні добавки, медичні вироби, аптеки, фармацевтика тощо), якщо вони містяться в одному фрагменті.
 8. Не використовуй власні знання про компанії, бренди або ринки. Якщо в тексті конкретного пункту немає прямого фарм-сигналу, НЕ повертай цей пункт як фарм-релевантну подію, навіть якщо тобі відомо, що компанія працює у фармі.
 9. Фарм-релевантність одного пункту багатопунктової сторінки не поширюється на інші пункти.
 
@@ -1323,14 +1323,72 @@ function validatedCaseNumbers(values) {
   return [...new Set(values.map(normalizeCaseNumber).filter(Boolean))];
 }
 
-function validateSourceExcerpt(rawEvent, page) {
+function normalizeEvidenceText(value) {
+  return normalizeSpaces(value)
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[«»„“”"'’‘`]/gu, ' ')
+    .replace(/[^0-9a-zа-яіїєґ./\-]+/giu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function eventEvidenceAnchors(rawEvent) {
+  return [...new Set([
+    ...normalizedStringArray(rawEvent?.subjects),
+    ...normalizedStringArray(rawEvent?.recommendation_addressees),
+    ...normalizedStringArray(rawEvent?.case_numbers),
+    normalizeSpaces(rawEvent?.decision_number || '')
+  ].filter((value) => normalizeEvidenceText(value).length >= 5))];
+}
+
+function validateEventPharmaEvidence(rawEvent, page, totalEventsOnPage) {
+  // For a single-event page, page-level discovery is enough: the pharma
+  // signal belongs to that one event, even if Gemini chose a shorter quote.
+  if (totalEventsOnPage <= 1) {
+    return Boolean(page?.pharma_candidate);
+  }
+
+  const haystack = String(page?.combined_text || '');
+  const haystackNormalized = normalizeEvidenceText(haystack);
+
+  // On multi-event pages, an excerpt is useful only when it can be located
+  // in the supplied AMCU text (punctuation/quotation differences ignored)
+  // and that local excerpt itself contains a direct pharma signal.
   const excerpt = normalizeSpaces(rawEvent?.source_excerpt || '');
-  if (!excerpt || excerpt.length < 12) return false;
+  const excerptNormalized = normalizeEvidenceText(excerpt);
+  if (
+    excerptNormalized.length >= 12
+    && haystackNormalized.includes(excerptNormalized)
+    && hasPharmaSignals(excerpt)
+  ) {
+    return true;
+  }
 
-  const haystack = normalizeSpaces(page?.combined_text || '');
-  if (!haystack.includes(excerpt)) return false;
+  // Otherwise locate the concrete event by a factual anchor (subject,
+  // case number, decision number) and require the pharma signal in the
+  // same AMCU paragraph/item. This prevents a pharma item elsewhere on a
+  // multi-item page from making unrelated Merck/Meyer items relevant.
+  const anchors = eventEvidenceAnchors(rawEvent);
+  if (!anchors.length) return false;
 
-  return hasPharmaSignals(excerpt);
+  const paragraphs = haystack
+    .split(/\n+/)
+    .map((line) => normalizeSpaces(line))
+    .filter(Boolean);
+
+  for (const paragraph of paragraphs) {
+    if (!hasPharmaSignals(paragraph)) continue;
+
+    const paragraphNormalized = normalizeEvidenceText(paragraph);
+    for (const anchor of anchors) {
+      const anchorNormalized = normalizeEvidenceText(anchor);
+      if (anchorNormalized.length < 5) continue;
+      if (paragraphNormalized.includes(anchorNormalized)) return true;
+    }
+  }
+
+  return false;
 }
 
 function isAgendaPage(page) {
@@ -1416,8 +1474,8 @@ function normalizeOutcome(value, eventType) {
 
 function buildEventKey(event, page) {
   const eventType = deriveEventType(event, page);
-  const decisionNumber = normalizeDecisionNumber(event.decision_number);
-  const decisionDate = String(event.decision_date || '').slice(0, 10);
+  const decisionNumber = eventType === 'case_decided' ? normalizeDecisionNumber(event.decision_number) : null;
+  const decisionDate = eventType === 'case_decided' ? String(event.decision_date || '').slice(0, 10) : '';
   const cases = validatedCaseNumbers(event.case_numbers).sort();
 
   if (decisionNumber && decisionDate) {
@@ -1437,11 +1495,12 @@ function buildEventKey(event, page) {
 function normalizeEvents(analysis, page, period) {
   const rawEvents = Array.isArray(analysis?.events) ? analysis.events : [];
   const normalized = [];
+  const totalEventsOnPage = rawEvents.filter((event) => event && typeof event === 'object').length;
 
   rawEvents.forEach((rawEvent, index) => {
     if (!rawEvent || typeof rawEvent !== 'object') return;
 
-    if (!validateSourceExcerpt(rawEvent, page)) {
+    if (!validateEventPharmaEvidence(rawEvent, page, totalEventsOnPage)) {
       console.warn(`Dropped event without direct pharma evidence: ${page.title || page.url} | ${normalizeSpaces(rawEvent?.short_description || '').slice(0, 180)}`);
       return;
     }
@@ -1474,8 +1533,13 @@ function normalizeEvents(analysis, page, period) {
       facts: inferEventFacts(rawEvent, page),
       sector: rawEvent.sector || 'other',
       case_numbers: validatedCaseNumbers(rawEvent.case_numbers),
-      decision_number: normalizeDecisionNumber(rawEvent.decision_number),
-      decision_date: rawEvent.decision_date ? String(rawEvent.decision_date).slice(0, 10) : null,
+      // Decision identifiers are useful only for a substantive decision.
+      // For case starts/procedural items Gemini can mistake an order,
+      // demand or other document number for a decision number, so omit it.
+      decision_number: eventType === 'case_decided' ? normalizeDecisionNumber(rawEvent.decision_number) : null,
+      decision_date: eventType === 'case_decided' && rawEvent.decision_date
+        ? String(rawEvent.decision_date).slice(0, 10)
+        : null,
       subjects: normalizedStringArray(rawEvent.subjects),
       recommendation_addressees: normalizedStringArray(rawEvent.recommendation_addressees),
       qualification: {
@@ -1848,7 +1912,7 @@ async function main() {
       relevantRows.push(...rows);
       console.log(`Relevant pharma events: ${rows.length} from ${page.title || page.url}`);
       for (const row of rows) {
-        console.log(`EVENT_FOUND ${row.event_type} | ${row.decision_number || row.case_numbers?.join(', ') || 'no-id'} | ${row.short_description?.slice(0, 240) || ''} | ${row.url}`);
+        console.log(`EVENT_FOUND ${row.event_type} | ${row.case_numbers?.join(', ') || row.decision_number || 'no-id'} | ${row.short_description?.slice(0, 240) || ''} | ${row.url}`);
       }
     } catch (err) {
       console.error(`Item error: ${item.url}: ${err.message}`);
@@ -1856,7 +1920,7 @@ async function main() {
     }
   }
 
-  const runComplete = !budgetExceeded && itemErrors.length === 0 && pdfFallbackCriticalErrors === 0;
+  const runComplete = !budgetExceeded && itemErrors.length === 0;
   const digestRows = mergeResults([], relevantRows);
   const merged = mergeResults(existingResults, digestRows);
   let emailSent = false;
