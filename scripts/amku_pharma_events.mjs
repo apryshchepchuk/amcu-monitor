@@ -1,6 +1,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import os from 'node:os';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+
+const execFileAsync = promisify(execFile);
 
 const ROOT = process.cwd();
 const DATA_DIR = path.join(ROOT, 'data');
@@ -33,6 +38,10 @@ const SEND_EMPTY_EMAIL = boolEnv('SEND_EMPTY_EMAIL', true);
 const MAX_GEMINI_CALLS = intEnv('MAX_GEMINI_CALLS', 20);
 const MAX_PAGE_TEXT_CHARS = intEnv('MAX_PAGE_TEXT_CHARS', 60000);
 const MAX_FETCH_RETRIES = intEnv('MAX_FETCH_RETRIES', 4);
+const PDF_FALLBACK_ENABLED = boolEnv('PDF_FALLBACK_ENABLED', true);
+const PDF_PREFILTER_PAGES = intEnv('PDF_PREFILTER_PAGES', 3);
+const MAX_PDFS_PER_PAGE = intEnv('MAX_PDFS_PER_PAGE', 3);
+const MAX_PDF_BYTES = intEnv('MAX_PDF_BYTES', 25_000_000);
 
 const GEMINI_MODEL = env('GEMINI_MODEL', 'gemini-3.1-flash-lite');
 const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 3);
@@ -297,44 +306,67 @@ function removeSemanticNoise(html) {
     .replace(/<form\b[\s\S]*?<\/form>/gi, ' ');
 }
 
-function truncateKnownSiteTail(text) {
-  const s = normalizeSpaces(text);
-  if (s.length < 300) return s;
+function trimPrimaryContent(text, pageTitle = '') {
+  const rawLines = String(text || '')
+    .split(/\n+/)
+    .map((line) => normalizeSpaces(line))
+    .filter(Boolean);
 
-  const tailMarkers = [
-    /(?:^|\n)\s*Останні новини\b/i,
-    /(?:^|\n)\s*Інші новини\b/i,
-    /(?:^|\n)\s*Схожі новини\b/i,
-    /(?:^|\n)\s*Схожі матеріали\b/i,
-    /(?:^|\n)\s*Читайте також\b/i,
-    /(?:^|\n)\s*Рекомендовані матеріали\b/i,
-    /(?:^|\n)\s*Усі новини\b/i,
-    /(?:^|\n)\s*Усі рішення\b/i,
-    /(?:^|\n)\s*Підписатися\b/i,
-    /(?:^|\n)\s*Поділитися\b/i
-  ];
+  if (!rawLines.length) return '';
 
-  let cutAt = s.length;
+  const titleNorm = normalizeSpaces(pageTitle).toLowerCase();
+  let start = 0;
 
-  for (const re of tailMarkers) {
-    const m = re.exec(s);
-    if (m && m.index >= 250) cutAt = Math.min(cutAt, m.index);
+  if (titleNorm.length >= 8) {
+    const titleIndex = rawLines.findIndex((line) => {
+      const normalized = line.toLowerCase();
+      return normalized === titleNorm || normalized.includes(titleNorm) || titleNorm.includes(normalized);
+    });
+
+    // Keep a few lines before the H1 because NPA pages often place
+    // document type/date/number immediately above the title.
+    if (titleIndex >= 0) start = Math.max(0, titleIndex - 3);
   }
 
-  return s.slice(0, cutAt).trim();
+  const stopPatterns = [
+    /^Попередня\b/i,
+    /^Наступна\b/i,
+    /^Більше за темою\b/i,
+    /^Часто шукають\b/i,
+    /^Останні новини\b/i,
+    /^Інші новини\b/i,
+    /^Схожі новини\b/i,
+    /^Схожі матеріали\b/i,
+    /^Читайте також\b/i,
+    /^Рекомендовані матеріали\b/i,
+    /^Усі новини\b/i,
+    /^Усі рішення\b/i,
+    /^Підписатися\b/i,
+    /^Мапа порталу\b/i
+  ];
+
+  let end = rawLines.length;
+  for (let i = start + 1; i < rawLines.length; i += 1) {
+    if (stopPatterns.some((re) => re.test(rawLines[i]))) {
+      end = i;
+      break;
+    }
+  }
+
+  return normalizeSpaces(rawLines.slice(start, end).join('\n'));
 }
 
-function extractContentText(html) {
+function extractContentText(html, pageTitle = '') {
   const jsonLdBody = extractJsonLdArticleBody(html);
   if (jsonLdBody) {
     return {
-      text: truncateKnownSiteTail(jsonLdBody),
+      text: trimPrimaryContent(jsonLdBody, pageTitle),
       source: 'jsonld_article_body'
     };
   }
 
   const article = extractBetween(html, 'article');
-  const articleText = truncateKnownSiteTail(normalizeSpaces(stripTags(removeSemanticNoise(article))));
+  const articleText = trimPrimaryContent(stripTags(removeSemanticNoise(article)), pageTitle);
   if (articleText.length >= 60) {
     return {
       text: articleText,
@@ -343,21 +375,36 @@ function extractContentText(html) {
   }
 
   const main = extractBetween(html, 'main');
-  const mainText = truncateKnownSiteTail(normalizeSpaces(stripTags(removeSemanticNoise(main))));
+  const mainText = trimPrimaryContent(stripTags(removeSemanticNoise(main)), pageTitle);
   if (mainText.length >= 60) {
     return {
       text: mainText,
-      source: 'main_fallback'
+      source: 'main_fallback_trimmed'
     };
   }
 
   const body = extractBetween(html, 'body');
-  const bodyText = truncateKnownSiteTail(normalizeSpaces(stripTags(removeSemanticNoise(body || html))));
+  const bodyText = trimPrimaryContent(stripTags(removeSemanticNoise(body || html)), pageTitle);
 
   return {
     text: bodyText,
-    source: 'body_fallback'
+    source: 'body_fallback_trimmed'
   };
+}
+
+function extractPdfUrls(html, baseUrl) {
+  const found = [];
+  const re = /href=["']([^"']+?\.pdf(?:\?[^"']*)?)["']/gi;
+
+  for (const match of String(html || '').matchAll(re)) {
+    try {
+      const url = new URL(decodeHtmlEntities(match[1]), baseUrl).toString();
+      if (new URL(url).origin !== AMCU_ORIGIN) continue;
+      if (!found.includes(url)) found.push(url);
+    } catch {}
+  }
+
+  return found;
 }
 
 function findPharmaSignals(text) {
@@ -679,6 +726,45 @@ async function fetchText(url, label) {
   return await res.text();
 }
 
+async function fetchBuffer(url, label, accept = 'application/octet-stream,*/*') {
+  const res = await fetchWithRetry(url, { label, accept });
+  const declaredLength = Number(res.headers.get('content-length') || 0);
+
+  if (declaredLength && declaredLength > MAX_PDF_BYTES) {
+    throw new Error(`PDF too large: ${declaredLength} bytes > ${MAX_PDF_BYTES}`);
+  }
+
+  const buffer = Buffer.from(await res.arrayBuffer());
+  if (buffer.length > MAX_PDF_BYTES) {
+    throw new Error(`PDF too large: ${buffer.length} bytes > ${MAX_PDF_BYTES}`);
+  }
+
+  return buffer;
+}
+
+async function extractPdfTextFirstPages(pdfUrl) {
+  const buffer = await fetchBuffer(pdfUrl, `PDF ${pdfUrl}`, 'application/pdf,application/octet-stream,*/*');
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'amku-pdf-'));
+  const pdfPath = path.join(tempDir, 'document.pdf');
+
+  try {
+    await fs.writeFile(pdfPath, buffer);
+    const { stdout } = await execFileAsync(
+      'pdftotext',
+      ['-f', '1', '-l', String(PDF_PREFILTER_PAGES), '-layout', pdfPath, '-'],
+      { maxBuffer: 12 * 1024 * 1024 }
+    );
+
+    const text = normalizeSpaces(stdout || '');
+    if (text.length < 20) {
+      throw new Error(`PDF has no extractable text in first ${PDF_PREFILTER_PAGES} pages`);
+    }
+    return text;
+  } finally {
+    await fs.rm(tempDir, { recursive: true, force: true });
+  }
+}
+
 function flattenTimelineData(payload) {
   const data = payload?.data || {};
   const rows = [];
@@ -815,17 +901,78 @@ function normalizeUrlKey(url) {
 async function fetchAndPreparePage(item) {
   const html = await fetchText(item.url, `page ${item.url}`);
   const pageTitle = extractTitle(html) || item.title || '';
-  const content = extractContentText(html);
+  const content = extractContentText(html, pageTitle);
   const bodyText = content.text;
-  const combinedText = normalizeSpaces([
+  const htmlCombinedText = normalizeSpaces([
     item.title,
     item.excerpt,
     pageTitle,
     bodyText
   ].filter(Boolean).join('\n\n'));
 
-  const pharmaSignals = findPharmaSignals(combinedText);
+  const htmlSignals = findPharmaSignals(htmlCombinedText);
+  const htmlCandidate = htmlSignals.length > 0;
+  const pdfUrls = extractPdfUrls(html, item.url);
+
+  let pdfText = '';
+  let pdfSignals = [];
+  let pdfCheckedCount = 0;
+  let pdfPositiveUrl = null;
+  const pdfErrors = [];
+
+  const isNpaPage = /\/npas\//i.test(item.url || '');
+  const shouldInspectPdf = PDF_FALLBACK_ENABLED && pdfUrls.length > 0 && (!htmlCandidate || isNpaPage);
+
+  if (shouldInspectPdf) {
+    const urlsToCheck = pdfUrls.slice(0, MAX_PDFS_PER_PAGE);
+
+    for (const pdfUrl of urlsToCheck) {
+      try {
+        const text = await extractPdfTextFirstPages(pdfUrl);
+        pdfCheckedCount += 1;
+        if (!text) continue;
+
+        const signals = findPharmaSignals(text);
+        if (signals.length) {
+          pdfText = text;
+          pdfSignals = [...new Set([...pdfSignals, ...signals])];
+          pdfPositiveUrl = pdfUrl;
+          break;
+        }
+
+        // On an already-positive NPA page, retain the first PDF text as
+        // supporting context even when the keyword itself was in HTML.
+        if (htmlCandidate && !pdfText) {
+          pdfText = text;
+          pdfPositiveUrl = pdfUrl;
+          break;
+        }
+      } catch (err) {
+        pdfErrors.push({ pdf_url: pdfUrl, error: String(err.message || err).slice(0, 500) });
+        console.warn(`PDF fallback failed for ${pdfUrl}: ${String(err.message || err).slice(0, 500)}`);
+      }
+    }
+  }
+
+  const pharmaSignals = [...new Set([...htmlSignals, ...pdfSignals])];
   const pharmaCandidate = pharmaSignals.length > 0;
+  const discoverySource = htmlSignals.length && pdfSignals.length
+    ? 'html+pdf'
+    : pdfSignals.length
+      ? 'pdf'
+      : htmlSignals.length
+        ? 'html'
+        : 'none';
+
+  const combinedText = normalizeSpaces([
+    htmlCombinedText,
+    pdfText ? `PDF (перші ${PDF_PREFILTER_PAGES} сторінки):\n${pdfText}` : ''
+  ].filter(Boolean).join('\n\n'));
+
+  // If HTML was negative and at least one PDF existed, any PDF extraction
+  // failure leaves a real possibility of a false negative. Mark it so the
+  // run will not silently send an incomplete digest.
+  const pdfFallbackCriticalError = !htmlCandidate && pdfUrls.length > 0 && pdfErrors.length > 0;
 
   return {
     ...item,
@@ -837,6 +984,14 @@ async function fetchAndPreparePage(item) {
     text_sha256: sha256Text(combinedText),
     pharma_candidate: pharmaCandidate,
     pharma_signals: pharmaSignals,
+    html_pharma_signals: htmlSignals,
+    pdf_pharma_signals: pdfSignals,
+    discovery_source: discoverySource,
+    pdf_urls: pdfUrls,
+    pdf_checked_count: pdfCheckedCount,
+    pdf_source_url: pdfPositiveUrl,
+    pdf_fallback_errors: pdfErrors,
+    pdf_fallback_critical_error: pdfFallbackCriticalError,
     case_numbers_basic: extractCaseNumbers(combinedText),
     qualification_basic: extractBasicQualification(combinedText),
     summary_basic: extractFallbackSummary(combinedText)
@@ -850,26 +1005,24 @@ function buildGeminiPrompt(page) {
 
 Проаналізуй матеріал офіційного сайту Антимонопольного комітету України.
 
-Мета моніторингу — виявляти події АМКУ, які стосуються фармацевтичного ринку, зокрема:
-- початок розгляду справ;
-- рішення у справах / встановлення або невстановлення порушення;
-- накладення штрафів;
-- надання рекомендацій;
-- інші суттєві процесуальні або правозастосовні події, безпосередньо пов'язані з фармринком.
+Мета — витягнути ФАКТИ про кожну окрему фарм-релевантну юридичну подію.
+НЕ вигадуй власну класифікацію event_type: тип події буде присвоєний кодом після твого аналізу.
 
 До фармринку віднось лікарські засоби, дієтичні добавки, медичні вироби, аптеки/аптечний ритейл,
 дистрибуцію/оптову торгівлю, виробництво, імпорт, реєстрацію та промоцію такої продукції.
-Рекомендації органам влади також є релевантними, якщо їх предмет прямо стосується фармринку.
+Рекомендації органам влади також релевантні, якщо їх предмет прямо стосується фармринку.
 
 ВАЖЛИВО:
-1. Одна вебсторінка може містити кілька окремих рішень/справ. Поверни окремий event для КОЖНОЇ фарм-релевантної події.
-2. Не повертай нерелевантні нефaрмацевтичні рішення з тієї самої сторінки.
-3. Не вигадуй номер справи, номер/дату рішення, суму штрафу, суб'єктів або кваліфікацію.
-4. Якщо новина повідомляє про штраф як наслідок рішення у справі, класифікуй подію як case_decided, а штраф відобрази окремими полями.
-5. case_started — розпочато розгляд справи.
-6. case_decided — прийнято рішення по суті справи / встановлено або не встановлено порушення / закрито справу / накладено штраф.
-7. recommendation_issued — АМКУ надав рекомендації компанії, органу влади або іншому адресату.
-8. other_relevant — лише якщо подія прямо стосується правозастосування/розгляду АМКУ у фармсекторі, але не підпадає під попередні типи.
+1. Одна сторінка може містити кілька різних справ/рішень. Поверни окремий об'єкт для КОЖНОЇ фарм-релевантної події.
+2. Не повертай нефaрмацевтичні події з тієї самої сторінки.
+3. Не вигадуй номер справи, номер/дату рішення, суму штрафу, суб'єктів або норму.
+4. Поля facts — лише true/false за змістом конкретної події:
+   - case_started: прямо повідомлено про початок/відкриття розгляду справи;
+   - decision_adopted: прийнято рішення по суті, у т.ч. встановлено порушення, закрито провадження, накладено штраф, надано/відмовлено у дозволі на концентрацію;
+   - recommendation_issued: АМКУ надав рекомендації;
+   - procedural_update: інша проміжна процесуальна подія у вже існуючій справі (попередні висновки, засідання, слухання тощо).
+5. Якщо новина повідомляє про штраф як наслідок рішення, decision_adopted=true, fine_imposed=true.
+6. Якщо матеріал є лише аналітикою/адвокатуванням, але прямо релевантний фармринку, усі four facts можуть бути false — такий матеріал піде в other_relevant.
 
 Поверни виключно валідний JSON без Markdown.
 
@@ -878,7 +1031,12 @@ function buildGeminiPrompt(page) {
   "is_pharma_relevant": true,
   "events": [
     {
-      "event_type": "case_started | case_decided | recommendation_issued | other_relevant",
+      "facts": {
+        "case_started": false,
+        "decision_adopted": false,
+        "recommendation_issued": false,
+        "procedural_update": false
+      },
       "sector": "medicines | dietary_supplements | medical_devices | pharmacy_retail | distribution | manufacturing | mixed | other",
       "case_numbers": [],
       "decision_number": null,
@@ -891,7 +1049,7 @@ function buildGeminiPrompt(page) {
         "point": null,
         "text": null
       },
-      "outcome": "violation_found | no_violation | case_closed | recommendation | other | unknown",
+      "outcome": "violation_found | proceeding_closed_no_violation | proceeding_closed_other | permit_granted | permit_denied | recommendation | procedural | other | unknown",
       "fine_imposed": false,
       "fine_amount_uah": null,
       "short_description": "",
@@ -908,10 +1066,12 @@ function buildGeminiPrompt(page) {
 - Page title: ${page.page_title || ''}
 - URL: ${page.url || ''}
 - Source tags: ${(page.tags || []).join(', ') || 'none'}
+- Discovery source: ${page.discovery_source || 'unknown'}
+- Supporting PDF: ${page.pdf_source_url || 'none'}
 - Basic detected case numbers: ${(page.case_numbers_basic || []).join(', ') || 'none'}
 - Basic detected qualification: ${page.qualification_basic?.text || 'none'}
 
-Текст матеріалу:
+Текст матеріалу (для NPA може включати текст перших ${PDF_PREFILTER_PAGES} сторінок PDF):
 ${text}`;
 }
 
@@ -920,7 +1080,12 @@ async function analyzeWithGemini(page) {
     return {
       is_pharma_relevant: page.pharma_candidate,
       events: page.pharma_candidate ? [{
-        event_type: 'other_relevant',
+        facts: {
+          case_started: false,
+          decision_adopted: false,
+          recommendation_issued: false,
+          procedural_update: false
+        },
         sector: 'other',
         case_numbers: page.case_numbers_basic || [],
         decision_number: null,
@@ -1087,20 +1252,64 @@ function normalizeDecisionNumber(value) {
   return normalizeSpaces(value).replace(/^№\s*/u, '') || null;
 }
 
+function inferEventFacts(rawEvent, page) {
+  const facts = rawEvent?.facts && typeof rawEvent.facts === 'object' ? rawEvent.facts : {};
+  const text = normalizeSpaces([
+    page?.title,
+    page?.page_title,
+    rawEvent?.short_description
+  ].filter(Boolean).join(' '));
+
+  return {
+    case_started: Boolean(facts.case_started) || /розпочат\w*\s+(?:розгляд\w*\s+)?справ/i.test(text),
+    decision_adopted: Boolean(facts.decision_adopted)
+      || /оштраф|накладен\w*\s+штраф|визнан\w*\s+порушенням|надано\s+дозвіл\s+на\s+концентрац|відмовлен\w*\s+у\s+наданн\w*\s+дозвол/i.test(text),
+    recommendation_issued: Boolean(facts.recommendation_issued)
+      || /надав\w*\s+рекомендац|про\s+надання\s+рекомендац/i.test(text),
+    procedural_update: Boolean(facts.procedural_update)
+      || /попередн\w*\s+висновк|засіданн|слуханн|розгляд\s+справи/i.test(text)
+  };
+}
+
+function deriveEventType(rawEvent, page) {
+  const facts = inferEventFacts(rawEvent, page);
+  if (facts.decision_adopted) return 'case_decided';
+  if (facts.recommendation_issued) return 'recommendation_issued';
+  if (facts.case_started) return 'case_started';
+  if (facts.procedural_update) return 'case_procedural_update';
+  return 'other_relevant';
+}
+
 function normalizeEventType(value) {
-  const allowed = new Set(['case_started', 'case_decided', 'recommendation_issued', 'other_relevant']);
+  const allowed = new Set(['case_started', 'case_decided', 'recommendation_issued', 'case_procedural_update', 'other_relevant']);
   return allowed.has(value) ? value : 'other_relevant';
 }
 
 function normalizeOutcome(value, eventType) {
-  const allowed = new Set(['violation_found', 'no_violation', 'case_closed', 'recommendation', 'other', 'unknown']);
-  if (allowed.has(value)) return value;
+  const aliases = {
+    no_violation: 'proceeding_closed_no_violation',
+    case_closed: 'proceeding_closed_other'
+  };
+  const normalized = aliases[value] || value;
+  const allowed = new Set([
+    'violation_found',
+    'proceeding_closed_no_violation',
+    'proceeding_closed_other',
+    'permit_granted',
+    'permit_denied',
+    'recommendation',
+    'procedural',
+    'other',
+    'unknown'
+  ]);
+  if (allowed.has(normalized)) return normalized;
   if (eventType === 'recommendation_issued') return 'recommendation';
+  if (eventType === 'case_procedural_update') return 'procedural';
   return 'unknown';
 }
 
 function buildEventKey(event, page) {
-  const eventType = normalizeEventType(event.event_type);
+  const eventType = deriveEventType(event, page);
   const decisionNumber = normalizeDecisionNumber(event.decision_number);
   const decisionDate = String(event.decision_date || '').slice(0, 10);
   const cases = normalizedStringArray(event.case_numbers).sort();
@@ -1126,7 +1335,7 @@ function normalizeEvents(analysis, page, period) {
   rawEvents.forEach((rawEvent, index) => {
     if (!rawEvent || typeof rawEvent !== 'object') return;
 
-    const eventType = normalizeEventType(rawEvent.event_type);
+    const eventType = deriveEventType(rawEvent, page);
     const qualification = rawEvent.qualification && typeof rawEvent.qualification === 'object'
       ? rawEvent.qualification
       : page.qualification_basic;
@@ -1148,7 +1357,10 @@ function normalizeEvents(analysis, page, period) {
       url: page.url,
       source: page.source || null,
       source_tags: page.tags || [],
+      discovery_source: page.discovery_source || 'unknown',
+      source_document_url: page.pdf_source_url || null,
 
+      facts: inferEventFacts(rawEvent, page),
       sector: rawEvent.sector || 'other',
       case_numbers: normalizedStringArray(rawEvent.case_numbers?.length ? rawEvent.case_numbers : page.case_numbers_basic),
       decision_number: normalizeDecisionNumber(rawEvent.decision_number),
@@ -1241,6 +1453,7 @@ function eventTypeLabel(type) {
     case_started: 'Розпочато справу',
     case_decided: 'Прийнято рішення',
     recommendation_issued: 'Надано рекомендації',
+    case_procedural_update: 'Процесуальна подія у справі',
     other_relevant: 'Інша релевантна подія'
   };
   return map[type] || type;
@@ -1251,6 +1464,7 @@ function eventTypeHeading(type) {
     case_started: 'Розпочато справи',
     case_decided: 'Прийнято рішення',
     recommendation_issued: 'Надано рекомендації',
+    case_procedural_update: 'Процесуальні події у справах',
     other_relevant: 'Інші релевантні події'
   };
   return map[type] || type;
@@ -1259,9 +1473,12 @@ function eventTypeHeading(type) {
 function outcomeLabel(value) {
   const map = {
     violation_found: 'Порушення встановлено',
-    no_violation: 'Порушення не встановлено',
-    case_closed: 'Справу закрито',
+    proceeding_closed_no_violation: 'Провадження закрито без встановлення порушення',
+    proceeding_closed_other: 'Провадження закрито з іншої підстави',
+    permit_granted: 'Дозвіл надано',
+    permit_denied: 'У наданні дозволу відмовлено',
     recommendation: 'Надано рекомендації',
+    procedural: 'Проміжна процесуальна подія',
     other: 'Інший результат',
     unknown: 'Результат не визначено'
   };
@@ -1313,7 +1530,7 @@ function practiceDbFooterHtml() {
 }
 
 function groupEvents(rows) {
-  const order = ['case_started', 'case_decided', 'recommendation_issued', 'other_relevant'];
+  const order = ['case_started', 'case_decided', 'recommendation_issued', 'case_procedural_update', 'other_relevant'];
   return order
     .map((type) => [type, (rows || []).filter((r) => r.event_type === type)])
     .filter(([, items]) => items.length);
@@ -1469,11 +1686,21 @@ async function main() {
   const itemErrors = [];
   let geminiCalls = 0;
   let budgetExceeded = false;
+  let pdfFallbackChecked = 0;
+  let pdfFallbackCandidates = 0;
+  let pdfFallbackCriticalErrors = 0;
 
   for (const item of timelineItems) {
     try {
       const page = await fetchAndPreparePage(item);
       preparedPages.push(page);
+
+      pdfFallbackChecked += page.pdf_checked_count || 0;
+      if (page.discovery_source === 'pdf' || page.discovery_source === 'html+pdf') pdfFallbackCandidates += 1;
+      if (page.pdf_fallback_critical_error) {
+        pdfFallbackCriticalErrors += 1;
+        console.warn(`Potential false-negative risk: PDF fallback incomplete for ${item.url}`);
+      }
 
       state.seen_urls[normalizeUrlKey(item.url)] = {
         title: item.title,
@@ -1488,7 +1715,7 @@ async function main() {
       }
 
       console.log(
-        `Pharma candidate [source=${page.content_source}, chars=${page.body_text_chars}, signals=${page.pharma_signals.join(', ')}]: ${item.title}`
+        `Pharma candidate [discovery=${page.discovery_source}, html_source=${page.content_source}, html_signals=${page.html_pharma_signals.join(', ') || 'none'}, pdf_signals=${page.pdf_pharma_signals.join(', ') || 'none'}, pdf_checked=${page.pdf_checked_count}]: ${item.title}`
       );
 
       if (!SKIP_GEMINI && geminiCalls >= MAX_GEMINI_CALLS) {
@@ -1517,7 +1744,7 @@ async function main() {
     }
   }
 
-  const runComplete = !budgetExceeded && itemErrors.length === 0;
+  const runComplete = !budgetExceeded && itemErrors.length === 0 && pdfFallbackCriticalErrors === 0;
   const digestRows = mergeResults([], relevantRows);
   const merged = mergeResults(existingResults, digestRows);
   let emailSent = false;
@@ -1534,6 +1761,10 @@ async function main() {
     digest_key: digestKey,
     timeline_items: timelineItems.length,
     pharma_candidates: preparedPages.filter((p) => p.pharma_candidate).length,
+    html_candidates: preparedPages.filter((p) => (p.html_pharma_signals || []).length > 0).length,
+    pdf_fallback_checked: pdfFallbackChecked,
+    pdf_fallback_candidates: pdfFallbackCandidates,
+    pdf_fallback_critical_errors: pdfFallbackCriticalErrors,
     relevant_events: digestRows.length,
     gemini_calls: geminiCalls,
     email_sent: emailSent,
@@ -1546,7 +1777,9 @@ async function main() {
       max_gemini_calls: MAX_GEMINI_CALLS,
       send_email: SEND_EMAIL,
       send_empty_email: SEND_EMPTY_EMAIL,
-      force_send: FORCE_SEND
+      force_send: FORCE_SEND,
+      pdf_fallback_enabled: PDF_FALLBACK_ENABLED,
+      pdf_prefilter_pages: PDF_PREFILTER_PAGES
     }
   };
 
@@ -1559,7 +1792,11 @@ async function main() {
     };
   }
 
-  console.log(`Pharma candidates: ${preparedPages.filter((p) => p.pharma_candidate).length}`);
+  console.log(`HTML pharma candidates: ${preparedPages.filter((p) => (p.html_pharma_signals || []).length > 0).length}`);
+  console.log(`PDF fallback documents checked: ${pdfFallbackChecked}`);
+  console.log(`Candidates with PDF evidence: ${pdfFallbackCandidates}`);
+  console.log(`PDF fallback critical errors: ${pdfFallbackCriticalErrors}`);
+  console.log(`Pharma candidates total: ${preparedPages.filter((p) => p.pharma_candidate).length}`);
   console.log(`Relevant events before event-level dedup: ${relevantRows.length}`);
   console.log(`Relevant events after event-level dedup: ${digestRows.length}`);
   console.log(`Gemini calls used: ${geminiCalls}/${MAX_GEMINI_CALLS}`);
