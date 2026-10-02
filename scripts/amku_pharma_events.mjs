@@ -245,6 +245,39 @@ function extractBetween(html, tagName) {
   return m ? m[1] : '';
 }
 
+function extractDivByClass(html, className) {
+  const source = String(html || '');
+  const escaped = String(className || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const openRe = new RegExp(
+    `<div\\b[^>]*class=["'][^"']*(?:^|\\s)${escaped}(?:\\s|$)[^"']*["'][^>]*>`,
+    'i'
+  );
+
+  const match = openRe.exec(source);
+  if (!match) return '';
+
+  const contentStart = match.index + match[0].length;
+  const tokenRe = /<div\b[^>]*>|<\/div>/gi;
+  tokenRe.lastIndex = contentStart;
+
+  let depth = 1;
+  let token;
+
+  while ((token = tokenRe.exec(source))) {
+    if (/^<div\b/i.test(token[0])) {
+      depth += 1;
+    } else {
+      depth -= 1;
+      if (depth === 0) {
+        return source.slice(contentStart, token.index);
+      }
+    }
+  }
+
+  return '';
+}
+
+
 function extractTitle(html) {
   const h1 = extractBetween(html, 'h1');
   if (h1) return normalizeSpaces(stripTags(h1));
@@ -362,6 +395,15 @@ function extractContentText(html, pageTitle = '') {
     return {
       text: trimPrimaryContent(jsonLdBody, pageTitle),
       source: 'jsonld_article_body'
+    };
+  }
+
+  const editorContent = extractDivByClass(html, 'editor-content');
+  const editorContentText = normalizeSpaces(stripTags(removeSemanticNoise(editorContent)));
+  if (editorContentText.length >= 60) {
+    return {
+      text: editorContentText,
+      source: 'editor_content'
     };
   }
 
