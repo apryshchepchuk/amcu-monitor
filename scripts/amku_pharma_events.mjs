@@ -49,7 +49,6 @@ const GEMINI_RETRY_MAX = intEnv('GEMINI_RETRY_MAX', 3);
 const GEMINI_RETRY_BUFFER_MS = intEnv('GEMINI_RETRY_BUFFER_MS', 1500);
 
 const EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', 'Тижневий вісник АМКУ');
-const PRACTICE_DB_URL = env('PRACTICE_DB_URL', 'https://apryshchepchuk.github.io/amcu-monitor/amku/');
 
 const PHARMA_PATTERNS = [
   /фармац/i,
@@ -1694,33 +1693,10 @@ function sourceLinkLabel() {
   return 'Читати матеріал АМКУ';
 }
 
-function practiceDbFooterText() {
-  return [
-    '«Тижневий вісник АМКУ» — неофіційний автоматизований моніторинг публічних матеріалів Антимонопольного комітету України.',
-    'Відбір охоплює матеріали, у яких фармацевтична релевантність прямо випливає з публікації АМКУ або доданого до неї документа.',
-    'База практики АМКУ:',
-    PRACTICE_DB_URL
-  ].join('\n');
-}
-
-function practiceDbFooterHtml() {
-  return `
-    <div style="margin:32px 0 0 0;padding:16px 0 0 0;border-top:3px double #1f2937;">
-      <p style="margin:0 0 6px 0;font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.5;color:#374151;">
-        <strong>Про видання.</strong> «Тижневий вісник АМКУ» — неофіційний автоматизований моніторинг публічних матеріалів Антимонопольного комітету України.
-      </p>
-      <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.5;color:#4b5563;">
-        Відбір охоплює матеріали, у яких фармацевтична релевантність прямо випливає з публікації АМКУ або доданого до неї документа.
-        Для аналізу вже сформованої практики доступна
-        <a href="${htmlEscape(PRACTICE_DB_URL)}" target="_blank" rel="noopener" style="color:#111827;text-decoration:underline;">База практики АМКУ</a>.
-      </p>
-    </div>
-  `;
-}
-
 function groupEvents(rows) {
-  // Editorial order: the most consequential material first.
-  const order = ['case_decided', 'recommendation_issued', 'case_started', 'case_procedural_update', 'other_relevant'];
+  // Follow the AMCU proceeding lifecycle, then cover other relevant material.
+  // Agenda pages are classified as case_procedural_update and appear with matters under consideration.
+  const order = ['case_started', 'case_procedural_update', 'case_decided', 'recommendation_issued', 'other_relevant'];
   return order
     .map((type) => [type, (rows || []).filter((r) => r.event_type === type)])
     .filter(([, items]) => items.length);
@@ -1813,16 +1789,6 @@ function buildStoryGroups(rows, type, topic) {
     const bd = String(b.rows?.[0]?.publication_datetime || b.rows?.[0]?.publication_date || '');
     return bd.localeCompare(ad, 'uk');
   });
-}
-
-function countEditorialStories(rows) {
-  let count = 0;
-  for (const [type, sectionRows] of groupEvents(rows)) {
-    for (const [topic, topicRows] of groupRowsByTopic(sectionRows, type)) {
-      count += buildStoryGroups(topicRows, type, topic).length;
-    }
-  }
-  return count;
 }
 
 function ukCount(n, one, few, many) {
@@ -1938,15 +1904,13 @@ function renderGroupedStoryText(story) {
 
 function renderEmailText({ period, relevantRows }) {
   const groups = groupEvents(relevantRows);
-  const storyCount = countEditorialStories(relevantRows);
   const masthead = [
     EMAIL_SUBJECT_PREFIX.toUpperCase(),
-    `Огляд подій АМКУ на фармацевтичному ринку · ${periodLabelShort(period)}`,
-    `Неофіційний моніторинг · ${relevantRows.length} ${ukCount(relevantRows.length, 'подія', 'події', 'подій')} · ${storyCount} ${ukCount(storyCount, 'замітка', 'замітки', 'заміток')}`
+    `Огляд подій АМКУ на фармацевтичному ринку · ${periodLabelShort(period)}`
   ].join('\n');
 
   if (!relevantRows.length) {
-    return [masthead, '', 'Релевантних подій за цей період не виявлено.', '', practiceDbFooterText()].join('\n');
+    return [masthead, '', 'Релевантних подій за цей період не виявлено.'].join('\n');
   }
 
   const sections = [];
@@ -1970,7 +1934,7 @@ function renderEmailText({ period, relevantRows }) {
     sections.push(sectionParts.join('\n\n'));
   }
 
-  return [masthead, '', sections.join('\n\n' + '='.repeat(56) + '\n\n'), '', practiceDbFooterText()].join('\n');
+  return [masthead, '', sections.join('\n\n' + '='.repeat(56) + '\n\n')].join('\n');
 }
 
 function renderEventHtml(row) {
@@ -1978,16 +1942,16 @@ function renderEventHtml(row) {
   const detail = shouldShowShortDescription(row) ? normalizeSpaces(row.short_description) : '';
 
   return `
-    <article style="margin:0;padding:15px 0 16px 0;border-bottom:1px solid #b6bbc3;">
-      <div style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:1.05px;text-transform:uppercase;color:#6b7280;margin:0 0 5px 0;">
+    <article style="margin:0;padding:17px 0 18px 0;border-bottom:1px solid #b6bbc3;page-break-inside:avoid;break-inside:avoid;">
+      <div style="font-family:Arial,sans-serif;font-size:9px;line-height:1.3;letter-spacing:.7px;text-transform:uppercase;color:#7b7d80;margin:0 0 6px 0;">
         ${htmlEscape(formatDateUk(row.publication_date))} &nbsp;·&nbsp; ${htmlEscape(sectorLabel(row.sector))}
       </div>
       <h3 style="margin:0 0 ${detail ? '7px' : '10px'} 0;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.27;font-weight:700;color:#111827;">
         ${htmlEscape(headline)}
       </h3>
       ${detail ? `<p style="margin:0 0 10px 0;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.52;color:#4b5563;">${htmlEscape(detail)}</p>` : ''}
-      <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:12.5px;line-height:1.5;">
-        <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener" style="color:#111827;text-decoration:underline;">${htmlEscape(sourceLinkLabel())} →</a>
+      <p style="margin:5px 0 0 0;font-family:Arial,sans-serif;font-size:11px;line-height:1.45;">
+        <a href="${htmlEscape(row.url)}" target="_blank" rel="noopener" style="color:#374151;text-decoration:underline;text-underline-offset:2px;">${htmlEscape(sourceLinkLabel())} →</a>
       </p>
     </article>
   `;
@@ -2008,15 +1972,15 @@ function renderGroupedStoryHtml(story) {
   }).join('\n');
 
   return `
-    <article style="margin:0;padding:15px 0 16px 0;border-bottom:1px solid #b6bbc3;">
-      <div style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:1.05px;text-transform:uppercase;color:#6b7280;margin:0 0 5px 0;">
+    <article style="margin:0;padding:17px 0 18px 0;border-bottom:1px solid #b6bbc3;page-break-inside:avoid;break-inside:avoid;">
+      <div style="font-family:Arial,sans-serif;font-size:9px;line-height:1.3;letter-spacing:.7px;text-transform:uppercase;color:#7b7d80;margin:0 0 6px 0;">
         ${htmlEscape(formatDateUk(first.publication_date))} &nbsp;·&nbsp; ${htmlEscape(topicHeading(story.topic) || sectorLabel(first.sector))}
       </div>
       <h3 style="margin:0 0 9px 0;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.27;font-weight:700;color:#111827;">
         ${htmlEscape(headline)}
       </h3>
       <ul style="margin:0 0 9px 19px;padding:0;">${items}</ul>
-      ${first.url ? `<p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:12.5px;line-height:1.5;"><a href="${htmlEscape(first.url)}" target="_blank" rel="noopener" style="color:#111827;text-decoration:underline;">${htmlEscape(sourceLinkLabel())} →</a></p>` : ''}
+      ${first.url ? `<p style="margin:5px 0 0 0;font-family:Arial,sans-serif;font-size:11px;line-height:1.45;"><a href="${htmlEscape(first.url)}" target="_blank" rel="noopener" style="color:#374151;text-decoration:underline;text-underline-offset:2px;">${htmlEscape(sourceLinkLabel())} →</a></p>` : ''}
     </article>
   `;
 }
@@ -2027,8 +1991,8 @@ function renderTopicBlockHtml(type, topic, rows) {
   const showSubheading = Boolean(label) && (type === 'case_decided' || rows.length >= 2);
 
   return `
-    <div style="margin:${showSubheading ? '15px' : '0'} 0 0 0;">
-      ${showSubheading ? `<div style="margin:0 0 2px 0;font-family:Arial,sans-serif;font-size:10px;line-height:1.2;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:#6b7280;">${htmlEscape(label)}</div>` : ''}
+    <div style="margin:${showSubheading ? '16px' : '0'} 0 0 0;">
+      ${showSubheading ? `<div style="margin:0 0 4px 0;padding:4px 8px;border-left:3px solid #9b8c6d;background:#f3f1eb;font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;font-weight:700;color:#4b5563;page-break-after:avoid;break-after:avoid;">${htmlEscape(label)}</div>` : ''}
       ${stories.map((story) => story.kind === 'group' ? renderGroupedStoryHtml(story) : renderEventHtml(story.rows[0])).join('\n')}
     </div>
   `;
@@ -2043,10 +2007,12 @@ function renderSectionHtml(type, rows) {
     <section style="margin:29px 0 0 0;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
         <tr>
-          <td style="border-top:3px solid #111827;border-bottom:1px solid #111827;padding:7px 0 6px 0;">
-            <span style="font-family:Arial,sans-serif;font-size:11px;line-height:1.2;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:#111827;">${htmlEscape(eventTypeHeading(type))}</span>
+          <td bgcolor="#efede6" style="border-top:3px solid #111827;border-bottom:1px solid #c8c4b9;padding:10px 12px 9px 12px;background:#efede6;">
+            <span style="font-family:Arial,sans-serif;font-size:13px;line-height:1.25;letter-spacing:1.05px;text-transform:uppercase;font-weight:700;color:#111827;page-break-after:avoid;break-after:avoid;">${htmlEscape(eventTypeHeading(type))}</span>
           </td>
-          <td align="right" style="border-top:3px solid #111827;border-bottom:1px solid #111827;padding:7px 0 6px 10px;font-family:Arial,sans-serif;font-size:11px;color:#6b7280;white-space:nowrap;">${rows.length}</td>
+          <td align="right" bgcolor="#efede6" style="border-top:3px solid #111827;border-bottom:1px solid #c8c4b9;padding:8px 12px;background:#efede6;white-space:nowrap;">
+            <span style="display:inline-block;padding:4px 8px;background:#111827;color:#fffdf7;font-family:Arial,sans-serif;font-size:11px;line-height:1;font-weight:700;">${rows.length}</span>
+          </td>
         </tr>
       </table>
       ${topicBlocks}
@@ -2056,13 +2022,9 @@ function renderSectionHtml(type, rows) {
 
 function renderEmailHtml({ period, relevantRows }) {
   const groups = groupEvents(relevantRows);
-  const storyCount = countEditorialStories(relevantRows);
   const body = relevantRows.length
     ? groups.map(([type, rows]) => renderSectionHtml(type, rows)).join('\n')
     : `<p style="margin:24px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.6;">Релевантних подій за цей період не виявлено.</p>`;
-
-  const eventWord = ukCount(relevantRows.length, 'подія', 'події', 'подій');
-  const storyWord = ukCount(storyCount, 'замітка', 'замітки', 'заміток');
 
   return `<!doctype html>
 <html lang="uk">
@@ -2074,24 +2036,17 @@ function renderEmailHtml({ period, relevantRows }) {
           <tr>
             <td style="padding:28px 28px 26px 28px;">
               <div style="text-align:center;border-top:5px solid #111827;border-bottom:5px double #111827;padding:16px 0 14px 0;">
-                <div style="font-family:Arial,sans-serif;font-size:9px;line-height:1.3;letter-spacing:2px;text-transform:uppercase;color:#6b7280;margin-bottom:7px;">неофіційний моніторинг публічних матеріалів</div>
                 <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.05;font-weight:700;letter-spacing:-0.4px;color:#111827;">${htmlEscape(EMAIL_SUBJECT_PREFIX)}</h1>
                 <div style="margin-top:8px;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.35;font-style:italic;color:#374151;">Огляд подій АМКУ на фармацевтичному ринку</div>
               </div>
 
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;margin-top:9px;">
                 <tr>
-                  <td style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 0;">Випуск за ${htmlEscape(periodLabelShort(period))}</td>
-                  <td align="right" style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 10px;">${relevantRows.length} ${eventWord} · ${storyCount} ${storyWord}</td>
+                  <td colspan="2" style="font-family:Arial,sans-serif;font-size:10px;line-height:1.3;letter-spacing:.8px;text-transform:uppercase;color:#4b5563;padding:0 0 7px 0;">Випуск за ${htmlEscape(periodLabelShort(period))}</td>
                 </tr>
               </table>
 
-              <p style="margin:12px 0 0 0;padding:12px 0;border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;font-family:Georgia,'Times New Roman',serif;font-size:13px;line-height:1.55;color:#374151;text-align:center;">
-                Короткий огляд публічних матеріалів АМКУ, у яких прямо простежується зв’язок із фармацевтичним ринком.
-              </p>
-
               ${body}
-              ${practiceDbFooterHtml()}
             </td>
           </tr>
         </table>
