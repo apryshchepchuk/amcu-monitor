@@ -1,0 +1,497 @@
+[
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/amku-oshtrafuvav-vyrobnyka-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii|0",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-02",
+    "publication_datetime": "2026-10-02 11:17:00",
+    "timeline_day": "02.10.2026",
+    "title": "АМКУ оштрафував виробника дієтичної добавки за поширення оманливої інформації",
+    "timeline_title": "АМКУ оштрафував виробника дієтичної добавки за поширення оманливої інформації",
+    "url": "https://amcu.gov.ua/news/amku-oshtrafuvav-vyrobnyka-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii",
+    "source": "posts",
+    "source_tags": [
+      "новини"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "dietary_supplements",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "2026-10-01",
+    "subjects": [
+      "ТОВ «НВЛ «ФІТОПРОДУКТ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": true,
+    "fine_amount_uah": 407160,
+    "headline": "АМКУ оштрафував ТОВ «НВЛ «ФІТОПРОДУКТ» на 407 160 грн за поширення оманливої інформації про властивості дієтичної добавки «КОМПЛЕКС ДЛЯ ЗДОРОВ’Я ОЧЕЙ».",
+    "short_description": "Компанія поширювала на упаковці та вкладиші непідтверджені твердження про покращення функцій зору та профілактику захворювань, що могло сприйматися споживачами як властивості лікарського засобу.",
+    "source_excerpt": "АМКУ визнав такі дії ТОВ «НВЛ «ФІТОПРОДУКТ» порушенням статті 15-1 Закону України «Про захист від недобросовісної конкуренції» у вигляді поширення інформації, що вводить в оману та оштрафував товариство на 407 160 грн.",
+    "confidence": "high",
+    "page_text_sha256": "48ff48ee00465a8421221c1b1cc50e2b1c492e1627a15504da9db9ca4cbc4c34",
+    "analyzed_at": "2026-10-05T05:00:32.994Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:32.994Z"
+    }
+  },
+  {
+    "event_key": "case_started|case|127-26.4/177-26",
+    "event_type": "case_started",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-01",
+    "publication_datetime": "2026-10-01 18:13:39",
+    "timeline_day": "01.10.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/177-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/177-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264177-26",
+    "source": "pages",
+    "source_tags": [
+      "про початок розгляду справи"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": true,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/177-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ТОВ «Байєр»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "outcome": "other",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "Антимонопольний комітет розпочав справу проти ТОВ «Байєр» за поширення інформації, що вводить в оману щодо лікарського засобу «ТЕРАЛІВ».",
+    "short_description": "Справа стосується поширення неповних або неточних відомостей про лікарський засіб «ТЕРАЛІВ» (реєстраційне посвідчення № UA/19482/01/01).",
+    "source_excerpt": "Предметом розгляду справи № 127-26.4/177-26 є, зокрема, дії Товариства у вигляді поширення невизначеному колу осіб неповних та/або неточних внаслідок обраного способу їх викладення відомостей про лікарський засіб «ТЕРАЛІВ» (реєстраційне посвідчення № UA/19482/01/01), що містять ознаки порушення, передбаченогостаттею 15-1 Закону України «Про захист від недобросовісної конкуренції», у вигляді поширення інформації, що вводить в оману.",
+    "confidence": "high",
+    "page_text_sha256": "3f9dc92b1134ce7ca781490d3bef75587c9268d129d89907ebb5e573cd3e81b8",
+    "analyzed_at": "2026-10-05T05:00:36.036Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:36.036Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026|0",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-01",
+    "publication_datetime": "2026-10-01 17:18:00",
+    "timeline_day": "01.10.2026",
+    "title": "Інформація про рішення АМКУ 01.10.2026",
+    "timeline_title": "Інформація про рішення АМКУ 01.10.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "pharmacy_retail",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ»",
+      "ТОВ «АПТЕКИ МЕДИЧНА АКАДЕМІЯ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": true,
+    "fine_amount_uah": 113000,
+    "headline": "АМКУ оштрафував АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» на 113 000 грн за придбання контролю над ТОВ «АПТЕКИ МЕДИЧНА АКАДЕМІЯ» без дозволу Комітету.",
+    "short_description": "",
+    "source_excerpt": "Оштрафовано АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» на 113 000 грн за вчинення порушення законодавства про захист економічної конкуренції, передбаченого пунктом 12 статті 50 Закону України «Про захист економічної конкуренції», у вигляді здійснення концентрації шляхом набуття контролю над ТОВ «АПТЕКИ МЕДИЧНА АКАДЕМІЯ» без отримання відповідного дозволу органів Антимонопольного комітету України, наявність якого необхідна.",
+    "confidence": "high",
+    "page_text_sha256": "0aa034654a684e9371b7dcdd4a92820ec46c4a5e6728af57640071b27b39dcac",
+    "analyzed_at": "2026-10-05T05:00:45.817Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:45.817Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026|1",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-01",
+    "publication_datetime": "2026-10-01 17:18:00",
+    "timeline_day": "01.10.2026",
+    "title": "Інформація про рішення АМКУ 01.10.2026",
+    "timeline_title": "Інформація про рішення АМКУ 01.10.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "distribution",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ»",
+      "ТОВ «АПТЕЧНИЙ СКЛАД МЕДИЧНОЇ АКАДЕМІЇ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": true,
+    "fine_amount_uah": 113000,
+    "headline": "АМКУ оштрафував АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» на 113 000 грн за придбання контролю над ТОВ «АПТЕЧНИЙ СКЛАД МЕДИЧНОЇ АКАДЕМІЇ» без дозволу Комітету.",
+    "short_description": "",
+    "source_excerpt": "Оштрафовано АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» на 113 000 грн за вчинення порушення законодавства про захист економічної конкуренції, передбаченого пунктом 12 статті 50 Закону України «Про захист економічної конкуренції», у вигляді здійснення концентрації шляхом набуття контролю над ТОВ «АПТЕЧНИЙ СКЛАД МЕДИЧНОЇ АКАДЕМІЇ» без отримання відповідного дозволу органів Антимонопольного комітету України, наявність якого необхідна.",
+    "confidence": "high",
+    "page_text_sha256": "0aa034654a684e9371b7dcdd4a92820ec46c4a5e6728af57640071b27b39dcac",
+    "analyzed_at": "2026-10-05T05:00:45.819Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:45.819Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026|2",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-01",
+    "publication_datetime": "2026-10-01 17:18:00",
+    "timeline_day": "01.10.2026",
+    "title": "Інформація про рішення АМКУ 01.10.2026",
+    "timeline_title": "Інформація про рішення АМКУ 01.10.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ»",
+      "ТОВ «ЛЕКФАРМ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": true,
+    "fine_amount_uah": 113000,
+    "headline": "АМКУ оштрафував АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» на 113 000 грн за придбання контролю над ТОВ «ЛЕКФАРМ» без дозволу Комітету.",
+    "short_description": "",
+    "source_excerpt": "Оштрафовано АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» на 113 000 грн за вчинення порушення законодавства про захист економічної конкуренції, передбаченого пунктом 12 статті 50 Закону України «Про захист економічної конкуренції», у вигляді здійснення концентрації шляхом набуття контролю над ТОВ «ЛЕКФАРМ» без отримання відповідного дозволу органів Антимонопольного комітету України, наявність якого необхідна.",
+    "confidence": "high",
+    "page_text_sha256": "0aa034654a684e9371b7dcdd4a92820ec46c4a5e6728af57640071b27b39dcac",
+    "analyzed_at": "2026-10-05T05:00:45.819Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:45.819Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|case|126-26.13/94-26",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-01",
+    "publication_datetime": "2026-10-01 10:05:00",
+    "timeline_day": "01.10.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 01.10.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 01.10.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-01102026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "pharmacy_retail",
+    "case_numbers": [
+      "126-26.13/94-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ»",
+      "ТОВ «КУА «УНІВЕР МЕНЕДЖМЕНТ»",
+      "ТОВ «АПТЕКИ МЕДИЧНА АКАДЕМІЯ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Про захист економічної конкуренції",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне справу про порушення АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» законодавства про захист економічної конкуренції під час набуття контролю над ТОВ «АПТЕКИ МЕДИЧНА АКАДЕМІЯ».",
+    "short_description": "",
+    "source_excerpt": "Про результати розгляду справи № 126-26.13/94-26 про порушення АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ», від імені, в інтересах та за рахунок якого діє ТОВ «КУА «УНІВЕР МЕНЕДЖМЕНТ» законодавства про захист економічної конкуренції, передбаченого пунктом 12 статті 50 Закону України «Про захист економічної конкуренції», у вигляді здійснення концентрації шляхом набуття контролю над ТОВ «АПТЕКИ МЕДИЧНА АКАДЕМІЯ» без отримання відповідного дозволу органів Антимонопольного комітету України, наявність якого необхідна.",
+    "confidence": "high",
+    "page_text_sha256": "89c79323999fa020dcd2ca2ae05335d46f0b792057a5f552716e2f27cbf2dac2",
+    "analyzed_at": "2026-10-05T05:00:52.652Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:52.652Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|case|126-26.13/95-26",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-01",
+    "publication_datetime": "2026-10-01 10:05:00",
+    "timeline_day": "01.10.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 01.10.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 01.10.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-01102026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "distribution",
+    "case_numbers": [
+      "126-26.13/95-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ»",
+      "ТОВ «КУА «УНІВЕР МЕНЕДЖМЕНТ»",
+      "ТОВ «АПТЕЧНИЙ СКЛАД МЕДИЧНОЇ АКАДЕМІЇ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Про захист економічної конкуренції",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне справу про порушення АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» законодавства про захист економічної конкуренції під час набуття контролю над ТОВ «АПТЕЧНИЙ СКЛАД МЕДИЧНОЇ АКАДЕМІЇ».",
+    "short_description": "",
+    "source_excerpt": "Про результати розгляду справи № 126-26.13/95-26 про порушення АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ», від імені, в інтересах та за рахунок якого діє ТОВ «КУА «УНІВЕР МЕНЕДЖМЕНТ» законодавства про захист економічної конкуренції, передбаченого пунктом 12 статті 50 Закону України «Про захист економічної конкуренції», у вигляді здійснення концентрації шляхом набуття контролю над ТОВ «АПТЕЧНИЙ СКЛАД МЕДИЧНОЇ АКАДЕМІЇ» без отримання відповідного дозволу органів Антимонопольного комітету України, наявність якого необхідна.",
+    "confidence": "high",
+    "page_text_sha256": "89c79323999fa020dcd2ca2ae05335d46f0b792057a5f552716e2f27cbf2dac2",
+    "analyzed_at": "2026-10-05T05:00:52.652Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:52.652Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|case|126-26.13/96-26",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-10-01",
+    "publication_datetime": "2026-10-01 10:05:00",
+    "timeline_day": "01.10.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 01.10.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 01.10.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-01102026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "manufacturing",
+    "case_numbers": [
+      "126-26.13/96-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ»",
+      "ТОВ «КУА «УНІВЕР МЕНЕДЖМЕНТ»",
+      "ТОВ «ЛЕКФАРМ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Про захист економічної конкуренції",
+      "article": "50",
+      "point": "12",
+      "text": "здійснення концентрації без отримання відповідного дозволу"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне справу про порушення АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ» законодавства про захист економічної конкуренції під час набуття контролю над ТОВ «ЛЕКФАРМ».",
+    "short_description": "",
+    "source_excerpt": "Про результати розгляду справи № 126-26.13/96-26 про порушення АТ «ЗНВКІФ «ОЛІМП МЕНЕДЖМЕНТ», від імені, в інтересах та за рахунок якого діє ТОВ «КУА «УНІВЕР МЕНЕДЖМЕНТ» законодавства про захист економічної конкуренції, передбаченого пунктом 12 статті 50 Закону України «Про захист економічної конкуренції», у вигляді здійснення концентрації шляхом набуття контролю над ТОВ «ЛЕКФАРМ» без отримання відповідного дозволу органів Антимонопольного комітету України, наявність якого необхідна.",
+    "confidence": "high",
+    "page_text_sha256": "89c79323999fa020dcd2ca2ae05335d46f0b792057a5f552716e2f27cbf2dac2",
+    "analyzed_at": "2026-10-05T05:00:52.653Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:52.653Z"
+    }
+  },
+  {
+    "event_key": "other_relevant|url|https://amcu.gov.ua/news/advokatuvannia-konkurentsii-na-rynku-diietychnykh-dobavok|0",
+    "event_type": "other_relevant",
+    "period_mode": "weekly",
+    "period_from": "2026-09-28",
+    "period_to": "2026-10-04",
+    "publication_date": "2026-09-29",
+    "publication_datetime": "2026-09-29 18:01:00",
+    "timeline_day": "29.09.2026",
+    "title": "Адвокатування конкуренції на ринку дієтичних добавок",
+    "timeline_title": "Адвокатування конкуренції на ринку дієтичних добавок",
+    "url": "https://amcu.gov.ua/news/advokatuvannia-konkurentsii-na-rynku-diietychnykh-dobavok",
+    "source": "posts",
+    "source_tags": [
+      "новини"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "dietary_supplements",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "other",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "Антимонопольний комітет України провів адвокатування конкуренції на ринку дієтичних добавок під час галузевої конференції.",
+    "short_description": "Представники АМКУ роз'яснили підходи до оцінки оманливої інформації про властивості дієтичних добавок, зокрема щодо їх неправомірного позиціонування як лікарських засобів.",
+    "source_excerpt": "29 вересня 2026 року представниця Антимонопольного комітету України взяла участь в онлайн-конференції на тему «Дієтичні добавки після реформи: рік нових правил – підсумки, штрафи, можливості», організованій компанією «Proxima Research International», під час якої висвітлила актуальні підходи АМКУ до протидії недобросовісним практикам на ринку дієтичних добавок.",
+    "confidence": "high",
+    "page_text_sha256": "08129a295e8e6c0043980f3981f4b8d85d07d869930e243eba3f154144e65759",
+    "analyzed_at": "2026-10-05T05:00:59.240Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-05T05:00:59.240Z"
+    }
+  }
+]

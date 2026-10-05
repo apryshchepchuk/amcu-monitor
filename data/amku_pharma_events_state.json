@@ -1,0 +1,129 @@
+{
+  "sent_digests": {
+    "weekly:2026-09-28:2026-10-04": {
+      "sent_at": "2026-10-05T05:01:01.717Z",
+      "relevant_count": 9,
+      "timeline_items": 14,
+      "pharma_candidates": 5
+    }
+  },
+  "seen_urls": {
+    "https://amcu.gov.ua/news/do-uvahy-pat-arselormittal-kryvyi-rih-ta-tov-arselormittal-kryvyi-rih-hirnychyi-departament": {
+      "title": "До уваги ПАТ «АрселорМіттал Кривий Ріг» та ТОВ «АрселорМіттал Кривий Ріг» Гірничий Департамент»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-pat-arselormittal-kryvyi-rih-ta-tov-arselormittal-kryvyi-rih-hirnychyi-departament",
+      "first_seen_at": "2026-10-05T05:00:29.643Z",
+      "last_seen_at": "2026-10-05T05:00:29.643Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tov-aodema": {
+      "title": "До уваги ТОВ «Аодема»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tov-aodema",
+      "first_seen_at": "2026-10-05T05:00:30.597Z",
+      "last_seen_at": "2026-10-05T05:00:30.597Z"
+    },
+    "https://amcu.gov.ua/news/amku-oshtrafuvav-vyrobnyka-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii": {
+      "title": "АМКУ оштрафував виробника дієтичної добавки за поширення оманливої інформації",
+      "url": "https://amcu.gov.ua/news/amku-oshtrafuvav-vyrobnyka-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii",
+      "first_seen_at": "2026-10-05T05:00:31.340Z",
+      "last_seen_at": "2026-10-05T05:00:31.340Z"
+    },
+    "https://amcu.gov.ua/news/amku-skhvalyv-zakonoproiekt-u-sferi-provedennia-konkurentnykh-protsedur-z-vidboru-pryvatnoho-partnera-kontsesionera": {
+      "title": "АМКУ схвалив законопроєкт у сфері проведення конкурентних процедур з відбору приватного партнера, концесіонера",
+      "url": "https://amcu.gov.ua/news/amku-skhvalyv-zakonoproiekt-u-sferi-provedennia-konkurentnykh-protsedur-z-vidboru-pryvatnoho-partnera-kontsesionera",
+      "first_seen_at": "2026-10-05T05:00:33.787Z",
+      "last_seen_at": "2026-10-05T05:00:33.787Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264177-26": {
+      "title": "Розпочато розгляд справи № 127-26.4/177-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264177-26",
+      "first_seen_at": "2026-10-05T05:00:34.349Z",
+      "last_seen_at": "2026-10-05T05:00:34.349Z"
+    },
+    "https://amcu.gov.ua/konsultaciyi-z-gromadskistyu/elektronni-konsultaciyi-z-gromadskistyu/elektronni-konsultatsii-z-hromadskistiu-za-2026-rik/pro-vnesennia-zmin-do-zakonu-ukrainy-pro-amku-shchodo-povnovazhen-amku-iak-orhanu-oskarzhennia-u-sferi-provedennia-konkurentnykh-protsedur-z-vidboru-pryvatnoho-partnera-kontsesionera": {
+      "title": "«Про внесення змін до Закону України «Про АМКУ» щодо повноважень АМКУ як органу оскарження у сфері проведення конкурентних процедур з відбору приватного партнера, концесіонера»",
+      "url": "https://amcu.gov.ua/konsultaciyi-z-gromadskistyu/elektronni-konsultaciyi-z-gromadskistyu/elektronni-konsultatsii-z-hromadskistiu-za-2026-rik/pro-vnesennia-zmin-do-zakonu-ukrainy-pro-amku-shchodo-povnovazhen-amku-iak-orhanu-oskarzhennia-u-sferi-provedennia-konkurentnykh-protsedur-z-vidboru-pryvatnoho-partnera-kontsesionera",
+      "first_seen_at": "2026-10-05T05:00:37.712Z",
+      "last_seen_at": "2026-10-05T05:00:37.712Z"
+    },
+    "https://amcu.gov.ua/news/amku-vyiavyv-zmovy-subiektiv-hospodariuvannia-u-zakupivliakh-tovariv-dlia-potreb-oborony": {
+      "title": "АМКУ виявив змови суб’єктів господарювання у закупівлях товарів для потреб оборони",
+      "url": "https://amcu.gov.ua/news/amku-vyiavyv-zmovy-subiektiv-hospodariuvannia-u-zakupivliakh-tovariv-dlia-potreb-oborony",
+      "first_seen_at": "2026-10-05T05:00:38.644Z",
+      "last_seen_at": "2026-10-05T05:00:38.644Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026": {
+      "title": "Інформація про рішення АМКУ 01.10.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-01102026",
+      "first_seen_at": "2026-10-05T05:00:39.409Z",
+      "last_seen_at": "2026-10-05T05:00:39.409Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-01102026": {
+      "title": "Проєкт порядку денного засідання АМКУ 01.10.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-01102026",
+      "first_seen_at": "2026-10-05T05:00:46.897Z",
+      "last_seen_at": "2026-10-05T05:00:46.897Z"
+    },
+    "https://amcu.gov.ua/news/1-zhovtnia-den-zakhysnykiv-i-zakhisnyts-ukrainy": {
+      "title": "1 жовтня – День захисників і захісниць України",
+      "url": "https://amcu.gov.ua/news/1-zhovtnia-den-zakhysnykiv-i-zakhisnyts-ukrainy",
+      "first_seen_at": "2026-10-05T05:00:53.813Z",
+      "last_seen_at": "2026-10-05T05:00:53.813Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264173-26-za-oznakamy-vchynennia-tov-ml-dila-porushennia": {
+      "title": "Розпочато розгляд справи № 127-26.4/173-26 за ознаками вчинення ТОВ «МЛ «ДІЛА» порушення",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-127-264173-26-za-oznakamy-vchynennia-tov-ml-dila-porushennia",
+      "first_seen_at": "2026-10-05T05:00:54.748Z",
+      "last_seen_at": "2026-10-05T05:00:54.748Z"
+    },
+    "https://amcu.gov.ua/gromadskosti/zvernennya-gromadyan/frequently-asked-questions-faq": {
+      "title": "Frequently Asked Questions (FAQ)",
+      "url": "https://amcu.gov.ua/gromadskosti/zvernennya-gromadyan/frequently-asked-questions-faq",
+      "first_seen_at": "2026-10-05T05:00:55.651Z",
+      "last_seen_at": "2026-10-05T05:00:55.651Z"
+    },
+    "https://amcu.gov.ua/news/advokatuvannia-konkurentsii-na-rynku-diietychnykh-dobavok": {
+      "title": "Адвокатування конкуренції на ринку дієтичних добавок",
+      "url": "https://amcu.gov.ua/news/advokatuvannia-konkurentsii-na-rynku-diietychnykh-dobavok",
+      "first_seen_at": "2026-10-05T05:00:56.658Z",
+      "last_seen_at": "2026-10-05T05:00:56.658Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-130-2613174-26": {
+      "title": "Розпочато розгляд справи № 130-26.13/174-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-130-2613174-26",
+      "first_seen_at": "2026-10-05T05:01:00.103Z",
+      "last_seen_at": "2026-10-05T05:01:00.103Z"
+    }
+  },
+  "last_run": {
+    "at": "2026-10-05T05:01:01.717Z",
+    "period": {
+      "mode": "weekly",
+      "from": "2026-09-28",
+      "to": "2026-10-04",
+      "label": "2026-09-28 — 2026-10-04"
+    },
+    "digest_key": "weekly:2026-09-28:2026-10-04",
+    "timeline_items": 14,
+    "pharma_candidates": 5,
+    "html_candidates": 5,
+    "pdf_fallback_checked": 3,
+    "pdf_fallback_candidates": 0,
+    "pdf_fallback_critical_errors": 0,
+    "relevant_events": 9,
+    "gemini_calls": 5,
+    "email_sent": true,
+    "technically_complete": true,
+    "budget_exceeded": false,
+    "item_errors": [],
+    "settings": {
+      "period_mode": "weekly",
+      "skip_gemini": false,
+      "max_gemini_calls": 40,
+      "send_email": true,
+      "test_email_send": false,
+      "send_empty_email": false,
+      "force_send": false,
+      "pdf_fallback_enabled": true,
+      "pdf_prefilter_pages": 3
+    }
+  }
+}
