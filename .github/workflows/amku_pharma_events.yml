@@ -1,6 +1,14 @@
-name: AMCU Pharma Events Digest (Pilot)
+name: AMCU Pharma Events Digest
 
 on:
+  # Main run at 06:15 Kyiv time. The second run is a same-day safety net:
+  # the script's sent_digests state prevents a duplicate successful email.
+  schedule:
+    - cron: "15 6 * * 1"
+      timezone: "Europe/Kyiv"
+    - cron: "15 8 * * 1"
+      timezone: "Europe/Kyiv"
+
   workflow_dispatch:
     inputs:
       period_mode:
@@ -28,7 +36,6 @@ on:
         required: false
         default: false
         type: boolean
-
 
       test_email_send:
         description: "Send a TEST email even in dry-run (does not mark period as sent)"
@@ -66,15 +73,16 @@ on:
         default: "40"
 
 concurrency:
-  group: amku-pharma-events
+  group: amcu-pharma-events
   cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
   digest:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
 
     steps:
       - name: Checkout repository
@@ -85,6 +93,22 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Validate scheduled-run secrets
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: |
+          set -euo pipefail
+          for name in GEMINI_API_KEY SMTP_USER SMTP_PASS EMAIL_TO; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Required repository secret is missing: ${name}"
+              exit 1
+            fi
+          done
+
       - name: Ensure PDF text extractor
         run: |
           if ! command -v pdftotext >/dev/null 2>&1; then
@@ -93,7 +117,13 @@ jobs:
           fi
 
       - name: Install Node dependencies
-        run: npm install
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            echo "::warning::package-lock.json is missing; using npm install. Add and commit a lockfile for reproducible installs."
+            npm install --no-audit --no-fund
+          fi
 
       - name: Check script syntax
         run: node --check scripts/amku_pharma_events.mjs
@@ -104,19 +134,19 @@ jobs:
           DATE_FROM: ${{ github.event.inputs.date_from || '' }}
           DATE_TO: ${{ github.event.inputs.date_to || '' }}
 
-          SEND_EMAIL: ${{ github.event.inputs.send_email || 'false' }}
-          TEST_EMAIL_SEND: ${{ github.event.inputs.test_email_send || 'false' }}
-          SEND_EMPTY_EMAIL: ${{ github.event.inputs.send_empty_email || 'false' }}
-          FORCE_SEND: ${{ github.event.inputs.force_send || 'false' }}
-          SKIP_GEMINI: ${{ github.event.inputs.skip_gemini || 'false' }}
-          DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+          # Scheduled runs are production sends; manual runs keep their safe defaults.
+          SEND_EMAIL: ${{ github.event_name == 'schedule' && 'true' || github.event.inputs.send_email || 'false' }}
+          TEST_EMAIL_SEND: ${{ github.event_name == 'schedule' && 'false' || github.event.inputs.test_email_send || 'false' }}
+          SEND_EMPTY_EMAIL: ${{ github.event_name == 'schedule' && 'false' || github.event.inputs.send_empty_email || 'false' }}
+          FORCE_SEND: ${{ github.event_name == 'schedule' && 'false' || github.event.inputs.force_send || 'false' }}
+          SKIP_GEMINI: ${{ github.event_name == 'schedule' && 'false' || github.event.inputs.skip_gemini || 'false' }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || github.event.inputs.dry_run || 'true' }}
           MAX_GEMINI_CALLS: ${{ github.event.inputs.max_gemini_calls || '40' }}
 
           PDF_FALLBACK_ENABLED: "true"
           PDF_PREFILTER_PAGES: "3"
           MAX_PDFS_PER_PAGE: "3"
           MAX_PDF_BYTES: "25000000"
-
           TIMELINE_LANG: "uk"
 
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -134,10 +164,11 @@ jobs:
         run: node scripts/amku_pharma_events.mjs
 
       - name: Commit AMCU pharma events data
-        if: ${{ github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.dry_run == 'false' }}
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add data/amku_pharma_events.json
           git add data/amku_pharma_events_state.json
