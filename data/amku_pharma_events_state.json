@@ -5,6 +5,12 @@
       "relevant_count": 9,
       "timeline_items": 14,
       "pharma_candidates": 5
+    },
+    "weekly:2026-10-05:2026-10-11": {
+      "sent_at": "2026-10-12T10:44:09.737Z",
+      "relevant_count": 1,
+      "timeline_items": 15,
+      "pharma_candidates": 1
     }
   },
   "seen_urls": {
@@ -91,25 +97,115 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/veresen-2026/rozpochato-rozghliad-spravy-130-2613174-26",
       "first_seen_at": "2026-10-05T05:01:00.103Z",
       "last_seen_at": "2026-10-05T05:01:00.103Z"
+    },
+    "https://amcu.gov.ua/news/orhan-oskarzhennia-prozvituvav-za-iii-kvartal-2026-roku": {
+      "title": "Орган оскарження прозвітував за ІІІ квартал 2026 року",
+      "url": "https://amcu.gov.ua/news/orhan-oskarzhennia-prozvituvav-za-iii-kvartal-2026-roku",
+      "first_seen_at": "2026-10-12T10:43:20.596Z",
+      "last_seen_at": "2026-10-12T10:43:20.597Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-08102026": {
+      "title": "Інформація про рішення АМКУ 08.10.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-08102026",
+      "first_seen_at": "2026-10-12T10:43:21.899Z",
+      "last_seen_at": "2026-10-12T10:43:21.899Z"
+    },
+    "https://amcu.gov.ua/news/v-amku-vidbudetsia-bryfinh-orhanu-oskarzhennia": {
+      "title": "В АМКУ відбудеться брифінг Органу оскарження",
+      "url": "https://amcu.gov.ua/news/v-amku-vidbudetsia-bryfinh-orhanu-oskarzhennia",
+      "first_seen_at": "2026-10-12T10:43:23.111Z",
+      "last_seen_at": "2026-10-12T10:43:23.111Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-08102026": {
+      "title": "Проєкт порядку денного засідання АМКУ 08.10.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-08102026",
+      "first_seen_at": "2026-10-12T10:43:23.947Z",
+      "last_seen_at": "2026-10-12T10:43:23.947Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613178-26": {
+      "title": "Розпочато розгляд справи № № 145-26.13/178-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613178-26",
+      "first_seen_at": "2026-10-12T10:43:25.030Z",
+      "last_seen_at": "2026-10-12T10:43:25.030Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tov-alians-2013-tov-hlobalmedhrup-tov-suchasna-likarnia-tov-fiore-m-tov-tekhmed-kardio-tov-topservis-medtekhnika-tov-svitmed-tov-imd-tov-medychna-kompaniia-aina": {
+      "title": "До уваги ТОВ «АЛЬЯНС-2013», ТОВ «ГЛОБАЛМЕДГРУП», ТОВ «СУЧАСНА ЛІКАРНЯ», ТОВ «ФІОРЕ-М», ТОВ «ТЕХМЕД КАРДІО», ТОВ «ТОПСЕРВІС-МЕДТЕХНІКА», ТОВ «СВІТМЕД», ТОВ «ІМД+», ТОВ «МЕДИЧНА КОМПАНІЯ «АЙНА»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tov-alians-2013-tov-hlobalmedhrup-tov-suchasna-likarnia-tov-fiore-m-tov-tekhmed-kardio-tov-topservis-medtekhnika-tov-svitmed-tov-imd-tov-medychna-kompaniia-aina",
+      "first_seen_at": "2026-10-12T10:43:26.343Z",
+      "last_seen_at": "2026-10-12T10:43:26.343Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-128-2613181-26": {
+      "title": "Розпочато розгляд справи № 128-26.13/181-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-128-2613181-26",
+      "first_seen_at": "2026-10-12T10:43:58.243Z",
+      "last_seen_at": "2026-10-12T10:43:58.243Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613176-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/176-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613176-26",
+      "first_seen_at": "2026-10-12T10:43:59.217Z",
+      "last_seen_at": "2026-10-12T10:43:59.217Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613175-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/175-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613175-26",
+      "first_seen_at": "2026-10-12T10:44:00.196Z",
+      "last_seen_at": "2026-10-12T10:44:00.196Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-130-2613182-26": {
+      "title": "Розпочато розгляд справи № 130-26.13/182-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-130-2613182-26",
+      "first_seen_at": "2026-10-12T10:44:01.159Z",
+      "last_seen_at": "2026-10-12T10:44:01.159Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-130-2613183-26": {
+      "title": "Розпочато розгляд справи № 130-26.13/183-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-130-2613183-26",
+      "first_seen_at": "2026-10-12T10:44:02.604Z",
+      "last_seen_at": "2026-10-12T10:44:02.604Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-130-2613184-26": {
+      "title": "Розпочато розгляд справи № 130-26.13/184-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-130-2613184-26",
+      "first_seen_at": "2026-10-12T10:44:03.214Z",
+      "last_seen_at": "2026-10-12T10:44:03.214Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026": {
+      "title": "Жовтень 2026",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026",
+      "first_seen_at": "2026-10-12T10:44:04.113Z",
+      "last_seen_at": "2026-10-12T10:44:04.113Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-shchodo-poperednikh-vysnovkiv-u-spravi-127-26457-25-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація щодо попередніх висновків у справі № 127-26.4/57-25 про порушення законодавства про захист економічної конкуренції та розгляд зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-shchodo-poperednikh-vysnovkiv-u-spravi-127-26457-25-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-10-12T10:44:05.213Z",
+      "last_seen_at": "2026-10-12T10:44:05.213Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-kompanii-arcelormittal-sa-pat-arselormittal-kryvyi-rih-ta-tov-arselor-met": {
+      "title": "До уваги компанії «ArcelorMittal, S.A.», ПАТ «АрселорМіттал Кривий Ріг» та ТОВ «Арселор Мет»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-kompanii-arcelormittal-sa-pat-arselormittal-kryvyi-rih-ta-tov-arselor-met",
+      "first_seen_at": "2026-10-12T10:44:06.572Z",
+      "last_seen_at": "2026-10-12T10:44:06.572Z"
     }
   },
   "last_run": {
-    "at": "2026-10-05T05:01:01.717Z",
+    "at": "2026-10-12T10:44:09.737Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-09-28",
-      "to": "2026-10-04",
-      "label": "2026-09-28 — 2026-10-04"
+      "from": "2026-10-05",
+      "to": "2026-10-11",
+      "label": "2026-10-05 — 2026-10-11"
     },
-    "digest_key": "weekly:2026-09-28:2026-10-04",
-    "timeline_items": 14,
-    "pharma_candidates": 5,
-    "html_candidates": 5,
-    "pdf_fallback_checked": 3,
+    "digest_key": "weekly:2026-10-05:2026-10-11",
+    "timeline_items": 15,
+    "pharma_candidates": 1,
+    "html_candidates": 1,
+    "pdf_fallback_checked": 0,
     "pdf_fallback_candidates": 0,
     "pdf_fallback_critical_errors": 0,
-    "relevant_events": 9,
-    "gemini_calls": 5,
+    "relevant_events": 1,
+    "gemini_calls": 1,
     "email_sent": true,
     "technically_complete": true,
     "budget_exceeded": false,

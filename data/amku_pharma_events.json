@@ -1,5 +1,70 @@
 [
   {
+    "event_key": "case_started|case|145-26.13/159-26",
+    "event_type": "case_started",
+    "period_mode": "weekly",
+    "period_from": "2026-10-05",
+    "period_to": "2026-10-11",
+    "publication_date": "2026-10-07",
+    "publication_datetime": "2026-10-07 12:35:00",
+    "timeline_day": "07.10.2026",
+    "title": "До уваги ТОВ «АЛЬЯНС-2013», ТОВ «ГЛОБАЛМЕДГРУП», ТОВ «СУЧАСНА ЛІКАРНЯ», ТОВ «ФІОРЕ-М», ТОВ «ТЕХМЕД КАРДІО», ТОВ «ТОПСЕРВІС-МЕДТЕХНІКА», ТОВ «СВІТМЕД», ТОВ «ІМД+», ТОВ «МЕДИЧНА КОМПАНІЯ «АЙНА»",
+    "timeline_title": "До уваги ТОВ «АЛЬЯНС-2013», ТОВ «ГЛОБАЛМЕДГРУП», ТОВ «СУЧАСНА ЛІКАРНЯ», ТОВ «ФІОРЕ-М», ТОВ «ТЕХМЕД КАРДІО», ТОВ «ТОПСЕРВІС-МЕДТЕХНІКА», ТОВ «СВІТМЕД», ТОВ «ІМД+», ТОВ «МЕДИЧНА КОМПАНІЯ «АЙНА»",
+    "url": "https://amcu.gov.ua/news/do-uvahy-tov-alians-2013-tov-hlobalmedhrup-tov-suchasna-likarnia-tov-fiore-m-tov-tekhmed-kardio-tov-topservis-medtekhnika-tov-svitmed-tov-imd-tov-medychna-kompaniia-aina",
+    "source": "posts",
+    "source_tags": [
+      "розгляд справ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": true,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "medical_devices",
+    "case_numbers": [
+      "145-26.13/159-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ТОВ «АЛЬЯНС-2013»",
+      "ТОВ «ГЛОБАЛМЕДГРУП»",
+      "ТОВ «СУЧАСНА ЛІКАРНЯ»",
+      "ТОВ «ФІОРЕ-М»",
+      "ТОВ «ТЕХМЕД КАРДІО»",
+      "ТОВ «ТОПСЕРВІС-МЕДТЕХНІКА»",
+      "ТОВ «СВІТМЕД»",
+      "ТОВ «ІМД+»",
+      "ТОВ «МЕДИЧНА КОМПАНІЯ «АЙНА»",
+      "ТОВ «АРТЕК МЕДІКАЛ ГРУП»",
+      "ТОВ «ОРТОІМПЕКС»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "6, 50",
+      "point": "пункт 1 статті 50, пункт 4 частини другої статті 6",
+      "text": "вчинення антиконкурентних узгоджених дій, які стосуються спотворення результатів торгів"
+    },
+    "outcome": "other",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розпочав розгляд справи щодо антиконкурентних узгоджених дій під час торгів, проведених ДНП «Національний інститут раку».",
+    "short_description": "Розгляд стосується спотворення результатів закупівель медичних виробів та обладнання, проведених Національним інститутом раку у 2021 році.",
+    "source_excerpt": "В Антимонопольному комітеті України розпорядженням державного уповноваженого Антимонопольного комітету України від 12.08.2026 № 03/247-р розпочато розгляд справи № 145-26.13/159-26 за ознаками вчинення... антиконкурентних узгоджених дій, які стосуються спотворення результатів торгів, проведених державним некомерційним підприємством «Національний інститут раку»",
+    "confidence": "high",
+    "page_text_sha256": "6e72293e43f8fdfb93d348b1ca7ffae3288000f9cd98869bc1856b5b9a9efd32",
+    "analyzed_at": "2026-10-12T10:43:56.919Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-12T10:43:56.919Z"
+    }
+  },
+  {
     "event_key": "case_decided|url|https://amcu.gov.ua/news/amku-oshtrafuvav-vyrobnyka-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii|0",
     "event_type": "case_decided",
     "period_mode": "weekly",
