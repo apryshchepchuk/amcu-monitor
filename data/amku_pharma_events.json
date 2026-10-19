@@ -1,5 +1,59 @@
 [
   {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli|0",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-10-12",
+    "period_to": "2026-10-18",
+    "publication_date": "2026-10-15",
+    "publication_datetime": "2026-10-15 18:07:00",
+    "timeline_day": "15.10.2026",
+    "title": "ДО УВАГИ УЧАСНИКІВ РИНКІВ РОЗДРІБНОЇ ТОРГІВЛІ",
+    "timeline_title": "ДО УВАГИ УЧАСНИКІВ РИНКІВ РОЗДРІБНОЇ ТОРГІВЛІ",
+    "url": "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli",
+    "source": "posts",
+    "source_tags": [
+      "розгляд справ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "pharmacy_retail",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ТОВ «ФАРМА-СІТІ»",
+      "ТОВ «МАРКЕТ УНІВЕРСАЛ ЛТД»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "31",
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "procedural",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розглядає справу про концентрацію ТОВ «ФАРМА-СІТІ» та ТОВ «МАРКЕТ УНІВЕРСАЛ ЛТД» на ринках роздрібної торгівлі лікарськими засобами та медичними товарами.",
+    "short_description": "Компанія-покупець надала пропозиції щодо зобов'язань для пом'якшення негативного впливу на конкуренцію, які включають обмеження на кількість аптек, цінову політику та асортимент товарів у низці населених пунктів.",
+    "source_excerpt": "В Антимонопольному комітеті України (далі – Комітет) розглядається справа № 126-25/3-25-ЕК про концентрацію у вигляді набуття товариством з обмеженою відповідальністю «ФАРМА-СІТІ» (далі – ТОВ «ФАРМА-СІТІ», Покупець) (Інформація, доступ до якої обмежено) контролю над товариством з обмеженою відповідальністю «МАРКЕТ УНІВЕРСАЛ ЛТД» (далі – ТОВ «МАРКЕТ УНІВЕРСАЛ ЛТД», Об'єкт придбання) (Інформація, доступ до якої обмежено) .",
+    "confidence": "high",
+    "page_text_sha256": "dec2668800d811eb4bfdf0ac68207ad2f75e60aa4f7aa5bb8800525429c7bac9",
+    "analyzed_at": "2026-10-19T08:47:56.732Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-19T08:47:56.732Z"
+    }
+  },
+  {
     "event_key": "case_started|case|145-26.13/159-26",
     "event_type": "case_started",
     "period_mode": "weekly",

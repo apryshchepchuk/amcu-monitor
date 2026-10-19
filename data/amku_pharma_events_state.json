@@ -11,6 +11,12 @@
       "relevant_count": 1,
       "timeline_items": 15,
       "pharma_candidates": 1
+    },
+    "weekly:2026-10-12:2026-10-18": {
+      "sent_at": "2026-10-19T08:48:06.906Z",
+      "relevant_count": 1,
+      "timeline_items": 13,
+      "pharma_candidates": 2
     }
   },
   "seen_urls": {
@@ -187,25 +193,103 @@
       "url": "https://amcu.gov.ua/news/do-uvahy-kompanii-arcelormittal-sa-pat-arselormittal-kryvyi-rih-ta-tov-arselor-met",
       "first_seen_at": "2026-10-12T10:44:06.572Z",
       "last_seen_at": "2026-10-12T10:44:06.572Z"
+    },
+    "https://amcu.gov.ua/news/holova-amku-proviv-robochu-naradu-z-kolektyvom-skhidnoho-mtv": {
+      "title": "Голова АМКУ провів робочу нараду з колективом Східного МТВ",
+      "url": "https://amcu.gov.ua/news/holova-amku-proviv-robochu-naradu-z-kolektyvom-skhidnoho-mtv",
+      "first_seen_at": "2026-10-19T08:47:51.447Z",
+      "last_seen_at": "2026-10-19T08:47:51.447Z"
+    },
+    "https://amcu.gov.ua/news/amku-zoboviazav-vyrobnyka-paperovykh-servetok-prypynyty-nedobrosovisnu-konkurentsiiu": {
+      "title": "АМКУ зобов’язав виробника паперових серветок припинити недобросовісну конкуренцію",
+      "url": "https://amcu.gov.ua/news/amku-zoboviazav-vyrobnyka-paperovykh-servetok-prypynyty-nedobrosovisnu-konkurentsiiu",
+      "first_seen_at": "2026-10-19T08:47:52.483Z",
+      "last_seen_at": "2026-10-19T08:47:52.483Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-klasychnoho-nakopychuvalnoho-strakhuvannia-zhyttia-kompaniieiu-powszechny-zakad-ubezpiecze-sa-zaproponovani-zoboviazannia-v-ramkakh-spravy-": {
+      "title": "ДО УВАГИ УЧАСНИКІВ РИНКІВ КЛАСИЧНОГО НАКОПИЧУВАЛЬНОГО СТРАХУВАННЯ ЖИТТЯ! КОМПАНІЄЮ «POWSZECHNY ZAKŁAD UBEZPIECZEŃ S.A.» ЗАПРОПОНОВАНІ ЗОБОВ’ЯЗАННЯ В РАМКАХ СПРАВИ ПРО ЕКОНОМІЧНУ КОНЦЕНТРАЦІЮ",
+      "url": "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-klasychnoho-nakopychuvalnoho-strakhuvannia-zhyttia-kompaniieiu-powszechny-zakad-ubezpiecze-sa-zaproponovani-zoboviazannia-v-ramkakh-spravy-",
+      "first_seen_at": "2026-10-19T08:47:53.514Z",
+      "last_seen_at": "2026-10-19T08:47:53.514Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli": {
+      "title": "ДО УВАГИ УЧАСНИКІВ РИНКІВ РОЗДРІБНОЇ ТОРГІВЛІ",
+      "url": "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli",
+      "first_seen_at": "2026-10-19T08:47:55.313Z",
+      "last_seen_at": "2026-10-19T08:47:55.313Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-15102026": {
+      "title": "Інформація про рішення АМКУ 15.10.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-15102026",
+      "first_seen_at": "2026-10-19T08:47:57.833Z",
+      "last_seen_at": "2026-10-19T08:47:57.833Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-torhovyi-dim-to-rest-ta-tovarystva-z-obmezhenoiu-vidpovidalnistiu-borei-treid": {
+      "title": "До уваги товариства з обмеженою відповідальністю «ТОРГОВИЙ ДІМ «ТО РЕСТ» та товариства з обмеженою відповідальністю «БОРЕЙ-ТРЕЙД»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-torhovyi-dim-to-rest-ta-tovarystva-z-obmezhenoiu-vidpovidalnistiu-borei-treid",
+      "first_seen_at": "2026-10-19T08:47:58.961Z",
+      "last_seen_at": "2026-10-19T08:47:58.961Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613187-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/187-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613187-26",
+      "first_seen_at": "2026-10-19T08:47:59.185Z",
+      "last_seen_at": "2026-10-19T08:47:59.185Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-15102026": {
+      "title": "Проєкт порядку денного засідання АМКУ 15.10.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-15102026",
+      "first_seen_at": "2026-10-19T08:48:00.033Z",
+      "last_seen_at": "2026-10-19T08:48:00.033Z"
+    },
+    "https://amcu.gov.ua/news/pavlo-kyrylenko-proviv-naradu-z-holovamy-mtv-amku": {
+      "title": "Павло Кириленко провів нараду з головами МТВ АМКУ",
+      "url": "https://amcu.gov.ua/news/pavlo-kyrylenko-proviv-naradu-z-holovamy-mtv-amku",
+      "first_seen_at": "2026-10-19T08:48:00.956Z",
+      "last_seen_at": "2026-10-19T08:48:00.956Z"
+    },
+    "https://amcu.gov.ua/news/amku-predstavyv-ievropeiskii-komisii-stan-vykonannia-benchmarkiv-za-rozdilom-8-konkurentna-polityka": {
+      "title": "АМКУ представив Європейській Комісії стан виконання бенчмарків за розділом 8 «Конкурентна політика»",
+      "url": "https://amcu.gov.ua/news/amku-predstavyv-ievropeiskii-komisii-stan-vykonannia-benchmarkiv-za-rozdilom-8-konkurentna-polityka",
+      "first_seen_at": "2026-10-19T08:48:02.046Z",
+      "last_seen_at": "2026-10-19T08:48:02.046Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynku-optovoi-realizatsii-zasobiv-zhinochoi-hihiieny-dlia-menstrualnoho-dohliadu-v-sehmenti-tamponiv-zaproponovani-kompaniieiu-kimberly-clark-corporation": {
+      "title": "ДО УВАГИ УЧАСНИКІВ РИНКУ ОПТОВОЇ РЕАЛІЗАЦІЇ ЗАСОБІВ ЖІНОЧОЇ ГІГІЄНИ. ЗАПРОПОНОВАНІ КОМПАНІЄЮ «KIMBERLY-CLARK CORPORATION ЗОБОВʼЯЗАННЯ В РАМКАХ СПРАВИ ПРО КОНЦЕНТРАЦІЮ",
+      "url": "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynku-optovoi-realizatsii-zasobiv-zhinochoi-hihiieny-dlia-menstrualnoho-dohliadu-v-sehmenti-tamponiv-zaproponovani-kompaniieiu-kimberly-clark-corporation",
+      "first_seen_at": "2026-10-19T08:48:02.870Z",
+      "last_seen_at": "2026-10-19T08:48:02.870Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613179-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/179-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613179-26",
+      "first_seen_at": "2026-10-19T08:48:03.528Z",
+      "last_seen_at": "2026-10-19T08:48:03.528Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-126-2613185-26": {
+      "title": "Розпочато розгляд справи № 126-26.13/185-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-126-2613185-26",
+      "first_seen_at": "2026-10-19T08:48:04.260Z",
+      "last_seen_at": "2026-10-19T08:48:04.260Z"
     }
   },
   "last_run": {
-    "at": "2026-10-12T10:44:09.737Z",
+    "at": "2026-10-19T08:48:06.906Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-10-05",
-      "to": "2026-10-11",
-      "label": "2026-10-05 — 2026-10-11"
+      "from": "2026-10-12",
+      "to": "2026-10-18",
+      "label": "2026-10-12 — 2026-10-18"
     },
-    "digest_key": "weekly:2026-10-05:2026-10-11",
-    "timeline_items": 15,
-    "pharma_candidates": 1,
-    "html_candidates": 1,
+    "digest_key": "weekly:2026-10-12:2026-10-18",
+    "timeline_items": 13,
+    "pharma_candidates": 2,
+    "html_candidates": 2,
     "pdf_fallback_checked": 0,
     "pdf_fallback_candidates": 0,
     "pdf_fallback_critical_errors": 0,
     "relevant_events": 1,
-    "gemini_calls": 1,
+    "gemini_calls": 2,
     "email_sent": true,
     "technically_complete": true,
     "budget_exceeded": false,
