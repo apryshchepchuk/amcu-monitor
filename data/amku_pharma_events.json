@@ -1,5 +1,119 @@
 [
   {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli-likarskymy-zasobamy-kosmetychnymy-tovaramy-medychnymy-ta-ortopedychnymy-tovaramy|0",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-10-19",
+    "period_to": "2026-10-25",
+    "publication_date": "2026-10-22",
+    "publication_datetime": "2026-10-22 17:21:00",
+    "timeline_day": "22.10.2026",
+    "title": "ДО УВАГИ УЧАСНИКІВ РИНКІВ РОЗДРІБНОЇ ТОРГІВЛІ: ЛІКАРСЬКИМИ ЗАСОБАМИ; КОСМЕТИЧНИМИ ТОВАРАМИ; МЕДИЧНИМИ ТА ОРТОПЕДИЧНИМИ ТОВАРАМИ",
+    "timeline_title": "ДО УВАГИ УЧАСНИКІВ РИНКІВ РОЗДРІБНОЇ ТОРГІВЛІ: ЛІКАРСЬКИМИ ЗАСОБАМИ; КОСМЕТИЧНИМИ ТОВАРАМИ; МЕДИЧНИМИ ТА ОРТОПЕДИЧНИМИ ТОВАРАМИ",
+    "url": "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli-likarskymy-zasobamy-kosmetychnymy-tovaramy-medychnymy-ta-ortopedychnymy-tovaramy",
+    "source": "posts",
+    "source_tags": [],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "pharmacy_retail",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "Особа 1",
+      "ПП «Фармацевтична Компанія «Здорова Родина»",
+      "ПП «Юма-Віта»",
+      "ТОВ «Медфармсервіс»",
+      "ТОВ «Сальве-Львів»",
+      "ТОВ «Сальве»",
+      "ТОВ «Нова Уж»",
+      "ПП «Роммед»",
+      "ПП ФІРМА «НАІС»",
+      "ТОВ «Іда»",
+      "ТОВ «Перша»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Про захист економічної конкуренції",
+      "article": "31",
+      "point": null,
+      "text": "Розгляд справ про концентрацію"
+    },
+    "outcome": "procedural",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розглядає справи про концентрацію на ринках роздрібної торгівлі лікарськими засобами та медичними товарами за участю мережі аптек «Здорова Родина» та інших суб'єктів.",
+    "short_description": "АМКУ оприлюднив перелік зобов'язань, запропонованих заявником для усунення негативного впливу на конкуренцію, включаючи відчуження аптечних закладів у низці населених пунктів та поведінкові обмеження.",
+    "source_excerpt": "АМКУ було встановлено, що задіяними товарними ринками в рамках заявлених концентрацій є ринки роздрібної торгівлі: лікарськими засобами, косметичними товарами, медичними та ортопедичними товарами у певних визначених АМКУ територіальних межах.",
+    "confidence": "high",
+    "page_text_sha256": "dccae448123436b392e2861c8ae35aaf567d42fd005bf42016068da706ad103b",
+    "analyzed_at": "2026-10-26T10:04:17.530Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-26T10:04:17.530Z"
+    }
+  },
+  {
+    "event_key": "case_started|case|127-26.4/188-26",
+    "event_type": "case_started",
+    "period_mode": "weekly",
+    "period_from": "2026-10-19",
+    "period_to": "2026-10-25",
+    "publication_date": "2026-10-19",
+    "publication_datetime": "2026-10-19 18:13:50",
+    "timeline_day": "19.10.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/188-26",
+    "timeline_title": "Розпочато розгляд справи № 127-26.4/188-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-127-264188-26",
+    "source": "pages",
+    "source_tags": [],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": true,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/188-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ТОВ «ХАЛЕОН УКРАЇНА»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "outcome": "other",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "Антимонопольний комітет розпочав розгляд справи щодо ТОВ «ХАЛЕОН УКРАЇНА» за поширення інформації, що вводить в оману стосовно лікарського засобу «ТЕРАФЛЮ ВІД ГРИПУ ТА ЗАСТУДИ ЗІ СМАКОМ ЛИМОНА».",
+    "short_description": "Справа стосується поширення інформації, що вводить в оману щодо лікарського засобу «ТЕРАФЛЮ ВІД ГРИПУ ТА ЗАСТУДИ ЗІ СМАКОМ ЛИМОНА» у формі порошку для орального розчину.",
+    "source_excerpt": "Розпорядженням державного уповноваженого Антимонопольного комітету України від 16.10.2026 № 04/299-р розпочато розгляд справи № 127-26.4/188-26 за ознаками вчинення товариством з обмженою відповідальністю «ХАЛЕОН УКРАЇНА» (далі – ТОВ «ХАЛЕОН УКРАЇНА») (ідентифікаційний код юридичної особи «інформація, доступ до якої обмежено» ) порушення, передбаченого статтею 15-1 Закону України «Про захист від недобросовісної конкуренції». Предметом справи № 127-26.4/188-26 є дії ТОВ «ХАЛЕОН УКРАЇНА» у вигляді поширення інформації, що вводить в оману щодо лікарського засобу «ТЕРАФЛЮ ВІД ГРИПУ ТА ЗАСТУДИ ЗІ СМАКОМ ЛИМОНА»",
+    "confidence": "high",
+    "page_text_sha256": "a364ce55a2608155d13d56fcf34b6ac59ab839bfbfeae60bb54ff5846b86dbe3",
+    "analyzed_at": "2026-10-26T10:04:30.266Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-10-26T10:04:30.267Z"
+    }
+  },
+  {
     "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli|0",
     "event_type": "case_procedural_update",
     "period_mode": "weekly",

@@ -17,6 +17,12 @@
       "relevant_count": 1,
       "timeline_items": 13,
       "pharma_candidates": 2
+    },
+    "weekly:2026-10-19:2026-10-25": {
+      "sent_at": "2026-10-26T10:04:32.198Z",
+      "relevant_count": 2,
+      "timeline_items": 15,
+      "pharma_candidates": 2
     }
   },
   "seen_urls": {
@@ -271,24 +277,114 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-126-2613185-26",
       "first_seen_at": "2026-10-19T08:48:04.260Z",
       "last_seen_at": "2026-10-19T08:48:04.260Z"
+    },
+    "https://amcu.gov.ua/news/amku-posyliuie-praktychnu-mizhnarodnu-spivpratsiu-u-protydii-zmovam-na-torhakh": {
+      "title": "АМКУ посилює практичну міжнародну співпрацю у протидії змовам на торгах",
+      "url": "https://amcu.gov.ua/news/amku-posyliuie-praktychnu-mizhnarodnu-spivpratsiu-u-protydii-zmovam-na-torhakh",
+      "first_seen_at": "2026-10-26T10:04:12.746Z",
+      "last_seen_at": "2026-10-26T10:04:12.747Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613192-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/192-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613192-26",
+      "first_seen_at": "2026-10-26T10:04:13.646Z",
+      "last_seen_at": "2026-10-26T10:04:13.646Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli-likarskymy-zasobamy-kosmetychnymy-tovaramy-medychnymy-ta-ortopedychnymy-tovaramy": {
+      "title": "ДО УВАГИ УЧАСНИКІВ РИНКІВ РОЗДРІБНОЇ ТОРГІВЛІ: ЛІКАРСЬКИМИ ЗАСОБАМИ; КОСМЕТИЧНИМИ ТОВАРАМИ; МЕДИЧНИМИ ТА ОРТОПЕДИЧНИМИ ТОВАРАМИ",
+      "url": "https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli-likarskymy-zasobamy-kosmetychnymy-tovaramy-medychnymy-ta-ortopedychnymy-tovaramy",
+      "first_seen_at": "2026-10-26T10:04:14.870Z",
+      "last_seen_at": "2026-10-26T10:04:14.870Z"
+    },
+    "https://amcu.gov.ua/news/amku-dozvolyv-hrupi-pzu-nabuty-kontrol-nad-prat-metlaif-za-umovy-vykonannia-povedinkovykh-zoboviazan": {
+      "title": "АМКУ дозволив Групі PZU  набути контроль над ПрАТ «МетЛайф» за умови виконання поведінкових зобов’язань",
+      "url": "https://amcu.gov.ua/news/amku-dozvolyv-hrupi-pzu-nabuty-kontrol-nad-prat-metlaif-za-umovy-vykonannia-povedinkovykh-zoboviazan",
+      "first_seen_at": "2026-10-26T10:04:18.522Z",
+      "last_seen_at": "2026-10-26T10:04:18.522Z"
+    },
+    "https://amcu.gov.ua/news/vakansiia-holovnoho-spetsialista-departamentu-monitorynhu-i-kontroliu-derzhavnoi-dopomohy_0": {
+      "title": "Вакансія головного спеціаліста Департаменту моніторингу і контролю державної допомоги",
+      "url": "https://amcu.gov.ua/news/vakansiia-holovnoho-spetsialista-departamentu-monitorynhu-i-kontroliu-derzhavnoi-dopomohy_0",
+      "first_seen_at": "2026-10-26T10:04:19.686Z",
+      "last_seen_at": "2026-10-26T10:04:19.686Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613190-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/190-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613190-26",
+      "first_seen_at": "2026-10-26T10:04:20.685Z",
+      "last_seen_at": "2026-10-26T10:04:20.685Z"
+    },
+    "https://amcu.gov.ua/news/amku-skhvalyv-proiekt-postanovy-kmu-u-sferi-otsinky-dopustymosti-derzhavnoi-dopomohy-na-pratsevlashtuvannia-okremykh-katehorii-pratsivnykiv": {
+      "title": "АМКУ схвалив проєкт постанови КМУ у сфері оцінки допустимості державної допомоги на працевлаштування окремих категорій працівників",
+      "url": "https://amcu.gov.ua/news/amku-skhvalyv-proiekt-postanovy-kmu-u-sferi-otsinky-dopustymosti-derzhavnoi-dopomohy-na-pratsevlashtuvannia-okremykh-katehorii-pratsivnykiv",
+      "first_seen_at": "2026-10-26T10:04:21.700Z",
+      "last_seen_at": "2026-10-26T10:04:21.700Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-2613128-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 145-26.13/128-26 та розгляд зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-2613128-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-10-26T10:04:22.843Z",
+      "last_seen_at": "2026-10-26T10:04:22.843Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-20102026": {
+      "title": "Інформація про рішення АМКУ 20.10.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-20102026",
+      "first_seen_at": "2026-10-26T10:04:23.499Z",
+      "last_seen_at": "2026-10-26T10:04:23.499Z"
+    },
+    "https://amcu.gov.ua/konsultaciyi-z-gromadskistyu/zviti-elektronnih-konsultacij-z-gromadskistyu/zvity-2026-rik/pro-vnesennia-zmin-do-zakonu-ukrainy-pro-amku-shchodo-povnovazhen-amku-iak-orhanu-oskarzhennia-u-sferi-provedennia-konkurentnykh-protsedur-z-vidboru-pryvatnoho-partnera-kontsesionera": {
+      "title": "Про внесення змін до Закону України «Про АМКУ» щодо повноважень АМКУ як органу оскарження у сфері проведення конкурентних процедур з відбору приватного партнера, концесіонера",
+      "url": "https://amcu.gov.ua/konsultaciyi-z-gromadskistyu/zviti-elektronnih-konsultacij-z-gromadskistyu/zvity-2026-rik/pro-vnesennia-zmin-do-zakonu-ukrainy-pro-amku-shchodo-povnovazhen-amku-iak-orhanu-oskarzhennia-u-sferi-provedennia-konkurentnykh-protsedur-z-vidboru-pryvatnoho-partnera-kontsesionera",
+      "first_seen_at": "2026-10-26T10:04:24.487Z",
+      "last_seen_at": "2026-10-26T10:04:24.487Z"
+    },
+    "https://amcu.gov.ua/news/vi-shchorichnyi-konkurs-istorii-hromadianske-suspilstvo-biznes-ta-vlada-krashchi-praktyky-spivpratsi": {
+      "title": "VІ щорічний Конкурс історій «Громадянське суспільство, бізнес та влада – кращі практики співпраці»",
+      "url": "https://amcu.gov.ua/news/vi-shchorichnyi-konkurs-istorii-hromadianske-suspilstvo-biznes-ta-vlada-krashchi-praktyky-spivpratsi",
+      "first_seen_at": "2026-10-26T10:04:25.625Z",
+      "last_seen_at": "2026-10-26T10:04:25.625Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-126-2613189-26": {
+      "title": "Розпочато розгляд справи № 126-26.13/189-26.",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-126-2613189-26",
+      "first_seen_at": "2026-10-26T10:04:26.217Z",
+      "last_seen_at": "2026-10-26T10:04:26.217Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-20102026": {
+      "title": "Проєкт порядку денного засідання АМКУ 20.10.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-20102026",
+      "first_seen_at": "2026-10-26T10:04:26.870Z",
+      "last_seen_at": "2026-10-26T10:04:26.870Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-127-264188-26": {
+      "title": "Розпочато розгляд справи № 127-26.4/188-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-127-264188-26",
+      "first_seen_at": "2026-10-26T10:04:27.660Z",
+      "last_seen_at": "2026-10-26T10:04:27.660Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-beveridzh-treidinh-kompani-identyfikatsiinyi-kod-iurydychnoi-osoby-informatsiia-dostup-do-iakoi-obmezheno": {
+      "title": "«До уваги товариства з обмеженою відповідальністю «БЕВЕРІДЖ ТРЕЙДІНГ КОМПАНІ» (ідентифікаційний код юридичної особи «інформація, доступ до якої обмежено»)",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-beveridzh-treidinh-kompani-identyfikatsiinyi-kod-iurydychnoi-osoby-informatsiia-dostup-do-iakoi-obmezheno",
+      "first_seen_at": "2026-10-26T10:04:31.059Z",
+      "last_seen_at": "2026-10-26T10:04:31.059Z"
     }
   },
   "last_run": {
-    "at": "2026-10-19T08:48:06.906Z",
+    "at": "2026-10-26T10:04:32.198Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-10-12",
-      "to": "2026-10-18",
-      "label": "2026-10-12 — 2026-10-18"
+      "from": "2026-10-19",
+      "to": "2026-10-25",
+      "label": "2026-10-19 — 2026-10-25"
     },
-    "digest_key": "weekly:2026-10-12:2026-10-18",
-    "timeline_items": 13,
+    "digest_key": "weekly:2026-10-19:2026-10-25",
+    "timeline_items": 15,
     "pharma_candidates": 2,
     "html_candidates": 2,
     "pdf_fallback_checked": 0,
     "pdf_fallback_candidates": 0,
     "pdf_fallback_critical_errors": 0,
-    "relevant_events": 1,
+    "relevant_events": 2,
     "gemini_calls": 2,
     "email_sent": true,
     "technically_complete": true,
