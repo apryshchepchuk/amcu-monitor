@@ -23,6 +23,12 @@
       "relevant_count": 2,
       "timeline_items": 15,
       "pharma_candidates": 2
+    },
+    "weekly:2026-10-26:2026-11-01": {
+      "sent_at": "2026-11-02T12:20:40.593Z",
+      "relevant_count": 4,
+      "timeline_items": 16,
+      "pharma_candidates": 4
     }
   },
   "seen_urls": {
@@ -367,25 +373,121 @@
       "url": "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-beveridzh-treidinh-kompani-identyfikatsiinyi-kod-iurydychnoi-osoby-informatsiia-dostup-do-iakoi-obmezheno",
       "first_seen_at": "2026-10-26T10:04:31.059Z",
       "last_seen_at": "2026-10-26T10:04:31.059Z"
+    },
+    "https://amcu.gov.ua/news/v-ukraini-rozpochav-robotu-informatsiinyi-portal-ieopora": {
+      "title": "В Україні розпочав роботу інформаційний портал єОпора",
+      "url": "https://amcu.gov.ua/news/v-ukraini-rozpochav-robotu-informatsiinyi-portal-ieopora",
+      "first_seen_at": "2026-11-02T12:19:54.997Z",
+      "last_seen_at": "2026-11-02T12:19:54.997Z"
+    },
+    "https://amcu.gov.ua/news/amku-ta-biznes-obhovoryly-praktychni-pidkhody-do-zapobihannia-nedobrosovisnii-konkurentsii": {
+      "title": "АМКУ та бізнес обговорили практичні підходи до запобігання недобросовісній конкуренції",
+      "url": "https://amcu.gov.ua/news/amku-ta-biznes-obhovoryly-praktychni-pidkhody-do-zapobihannia-nedobrosovisnii-konkurentsii",
+      "first_seen_at": "2026-11-02T12:19:56.403Z",
+      "last_seen_at": "2026-11-02T12:19:56.403Z"
+    },
+    "https://amcu.gov.ua/news/amku-oshtrafuvav-importera-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii-pro-ii-vlastyvosti": {
+      "title": "АМКУ оштрафував імпортера дієтичної добавки за поширення оманливої інформації про її властивості",
+      "url": "https://amcu.gov.ua/news/amku-oshtrafuvav-importera-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii-pro-ii-vlastyvosti",
+      "first_seen_at": "2026-11-02T12:20:02.664Z",
+      "last_seen_at": "2026-11-02T12:20:02.664Z"
+    },
+    "https://amcu.gov.ua/news/operatory-mobilnoho-zviazku-vykonaly-rekomendatsii-amku-shchodo-informuvannia-spozhyvachiv-pro-bezlimitnyi-mobilnyi-internet": {
+      "title": "Оператори мобільного зв’язку виконали рекомендації АМКУ щодо інформування споживачів про безлімітний мобільний інтернет",
+      "url": "https://amcu.gov.ua/news/operatory-mobilnoho-zviazku-vykonaly-rekomendatsii-amku-shchodo-informuvannia-spozhyvachiv-pro-bezlimitnyi-mobilnyi-internet",
+      "first_seen_at": "2026-11-02T12:20:05.600Z",
+      "last_seen_at": "2026-11-02T12:20:05.600Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-29102026": {
+      "title": "Інформація про рішення АМКУ 29.10.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-29102026",
+      "first_seen_at": "2026-11-02T12:20:06.829Z",
+      "last_seen_at": "2026-11-02T12:20:06.829Z"
+    },
+    "https://amcu.gov.ua/news/amku-vykryv-zmovu-na-torhakh-iz-humanitarnoho-rozminuvannia": {
+      "title": "АМКУ викрив змову на торгах із гуманітарного розмінування",
+      "url": "https://amcu.gov.ua/news/amku-vykryv-zmovu-na-torhakh-iz-humanitarnoho-rozminuvannia",
+      "first_seen_at": "2026-11-02T12:20:10.785Z",
+      "last_seen_at": "2026-11-02T12:20:10.785Z"
+    },
+    "https://amcu.gov.ua/konsultaciyi-z-gromadskistyu/elektronni-konsultaciyi-z-gromadskistyu/elektronni-konsultatsii-z-hromadskistiu-za-2026-rik/pro-zatverdzhennia-kryteriiv-otsinky-dopustymosti-derzhavnoi-dopomohy-subiektam-hospodariuvannia-na-pratsevlashtuvannia-okremykh-katehorii-pratsivnykiv-ta-stvorennia-novykh-robochykh-mists": {
+      "title": "Про затвердження критеріїв оцінки допустимості державної допомоги суб’єктам господарювання на працевлаштування окремих категорій працівників  та створення нових робочих місць",
+      "url": "https://amcu.gov.ua/konsultaciyi-z-gromadskistyu/elektronni-konsultaciyi-z-gromadskistyu/elektronni-konsultatsii-z-hromadskistiu-za-2026-rik/pro-zatverdzhennia-kryteriiv-otsinky-dopustymosti-derzhavnoi-dopomohy-subiektam-hospodariuvannia-na-pratsevlashtuvannia-okremykh-katehorii-pratsivnykiv-ta-stvorennia-novykh-robochykh-mists",
+      "first_seen_at": "2026-11-02T12:20:14.447Z",
+      "last_seen_at": "2026-11-02T12:20:14.447Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613191-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/191-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613191-26",
+      "first_seen_at": "2026-11-02T12:20:15.128Z",
+      "last_seen_at": "2026-11-02T12:20:15.128Z"
+    },
+    "https://amcu.gov.ua/gromadskosti/profspilka-amku/novyny-profspilky-amku/sportyvnyi-rozvytok-chleniv-profspilky-amku": {
+      "title": "Спортивний розвиток членів Профспілки АМКУ",
+      "url": "https://amcu.gov.ua/gromadskosti/profspilka-amku/novyny-profspilky-amku/sportyvnyi-rozvytok-chleniv-profspilky-amku",
+      "first_seen_at": "2026-11-02T12:20:17.307Z",
+      "last_seen_at": "2026-11-02T12:20:17.307Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-128-2613193-26": {
+      "title": "Розпочато розгляд справи № 128-26.13/193-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-128-2613193-26",
+      "first_seen_at": "2026-11-02T12:20:17.985Z",
+      "last_seen_at": "2026-11-02T12:20:17.986Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-29102026": {
+      "title": "Проєкт порядку денного засідання АМКУ 29.10.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-29102026",
+      "first_seen_at": "2026-11-02T12:20:19.325Z",
+      "last_seen_at": "2026-11-02T12:20:19.325Z"
+    },
+    "https://amcu.gov.ua/npas/proiekt-postanovy-kabinetu-ministriv-ukrainy-pro-zatverdzhennia-kryteriiv-otsinky-dopustymosti-derzhavnoi-dopomohy-subiektam-hospodariuvannia-na-pratsevlashtuvannia-okremykh-katehorii-pratsiv": {
+      "title": "Проєкт постанови Кабінету Міністрів України «Про затвердження критеріїв оцінки допустимості державної допомоги суб’єктам господарювання на працевлаштування окремих категорій працівників та створення нових робочих місць»",
+      "url": "https://amcu.gov.ua/npas/proiekt-postanovy-kabinetu-ministriv-ukrainy-pro-zatverdzhennia-kryteriiv-otsinky-dopustymosti-derzhavnoi-dopomohy-subiektam-hospodariuvannia-na-pratsevlashtuvannia-okremykh-katehorii-pratsiv",
+      "first_seen_at": "2026-11-02T12:20:33.886Z",
+      "last_seen_at": "2026-11-02T12:20:33.886Z"
+    },
+    "https://amcu.gov.ua/news/v-amku-obhovoryly-praktyku-zakhystu-ekonomichnoi-konkurentsii-u-sferi-zhytlovo-komunalnykh-posluh": {
+      "title": "В АМКУ обговорили практику захисту економічної конкуренції у сфері житлово-комунальних послуг",
+      "url": "https://amcu.gov.ua/news/v-amku-obhovoryly-praktyku-zakhystu-ekonomichnoi-konkurentsii-u-sferi-zhytlovo-komunalnykh-posluh",
+      "first_seen_at": "2026-11-02T12:20:35.216Z",
+      "last_seen_at": "2026-11-02T12:20:35.216Z"
+    },
+    "https://amcu.gov.ua/news/sviatkova-tradytsiia-pratsivnyky-amku-vkotre-doluchylysia-do-radiodyktantu": {
+      "title": "Святкова традиція: працівники АМКУ вкотре долучилися до радіодиктанту",
+      "url": "https://amcu.gov.ua/news/sviatkova-tradytsiia-pratsivnyky-amku-vkotre-doluchylysia-do-radiodyktantu",
+      "first_seen_at": "2026-11-02T12:20:36.084Z",
+      "last_seen_at": "2026-11-02T12:20:36.084Z"
+    },
+    "https://amcu.gov.ua/news/holova-amku-vziav-uchast-u-kyivskomu-mizhnarodnomu-ekonomichnomu-forumi": {
+      "title": "Голова АМКУ взяв участь у Київському міжнародному економічному форумі",
+      "url": "https://amcu.gov.ua/news/holova-amku-vziav-uchast-u-kyivskomu-mizhnarodnomu-ekonomichnomu-forumi",
+      "first_seen_at": "2026-11-02T12:20:37.362Z",
+      "last_seen_at": "2026-11-02T12:20:37.362Z"
+    },
+    "https://amcu.gov.ua/news/v-ukraini-mozhna-proity-natsionalnyi-test-z-mediahramotnosti": {
+      "title": "В Україні можна пройти Національний тест з медіаграмотності",
+      "url": "https://amcu.gov.ua/news/v-ukraini-mozhna-proity-natsionalnyi-test-z-mediahramotnosti",
+      "first_seen_at": "2026-11-02T12:20:38.718Z",
+      "last_seen_at": "2026-11-02T12:20:38.718Z"
     }
   },
   "last_run": {
-    "at": "2026-10-26T10:04:32.198Z",
+    "at": "2026-11-02T12:20:40.593Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-10-19",
-      "to": "2026-10-25",
-      "label": "2026-10-19 — 2026-10-25"
+      "from": "2026-10-26",
+      "to": "2026-11-01",
+      "label": "2026-10-26 — 2026-11-01"
     },
-    "digest_key": "weekly:2026-10-19:2026-10-25",
-    "timeline_items": 15,
-    "pharma_candidates": 2,
-    "html_candidates": 2,
-    "pdf_fallback_checked": 0,
+    "digest_key": "weekly:2026-10-26:2026-11-01",
+    "timeline_items": 16,
+    "pharma_candidates": 4,
+    "html_candidates": 4,
+    "pdf_fallback_checked": 7,
     "pdf_fallback_candidates": 0,
     "pdf_fallback_critical_errors": 0,
-    "relevant_events": 2,
-    "gemini_calls": 2,
+    "relevant_events": 4,
+    "gemini_calls": 4,
     "email_sent": true,
     "technically_complete": true,
     "budget_exceeded": false,

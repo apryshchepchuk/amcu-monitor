@@ -1,5 +1,218 @@
 [
   {
+    "event_key": "other_relevant|url|https://amcu.gov.ua/news/amku-ta-biznes-obhovoryly-praktychni-pidkhody-do-zapobihannia-nedobrosovisnii-konkurentsii|0",
+    "event_type": "other_relevant",
+    "period_mode": "weekly",
+    "period_from": "2026-10-26",
+    "period_to": "2026-11-01",
+    "publication_date": "2026-10-30",
+    "publication_datetime": "2026-10-30 16:26:00",
+    "timeline_day": "30.10.2026",
+    "title": "АМКУ та бізнес обговорили практичні підходи до запобігання недобросовісній конкуренції",
+    "timeline_title": "АМКУ та бізнес обговорили практичні підходи до запобігання недобросовісній конкуренції",
+    "url": "https://amcu.gov.ua/news/amku-ta-biznes-obhovoryly-praktychni-pidkhody-do-zapobihannia-nedobrosovisnii-konkurentsii",
+    "source": "posts",
+    "source_tags": [
+      "новини"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "mixed",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "other",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "Антимонопольний комітет України провів фахове обговорення з бізнесом щодо запобігання недобросовісній конкуренції на ринках дієтичних добавок та медичних виробів.",
+    "short_description": "Зустріч була присвячена питанням достовірності інформації про продукцію, підтвердженню її властивостей та розмежуванню повноважень АМКУ з профільними регуляторами.",
+    "source_excerpt": "30 жовтня 2026 року представники Антимонопольного комітету України взяли участь у фаховому обговоренні практики Комітету на ринках дієтичних добавок, косметичної продукції та медичних виробів, організованому Асоціацією «Оператори ринку медичних виробів» (AMOMD).",
+    "confidence": "high",
+    "page_text_sha256": "13b451dc5c3e31f71f412007210dc4e6b6a7c87f5ca10b893022e6d53a00b050",
+    "analyzed_at": "2026-11-02T12:20:01.190Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-02T12:20:01.190Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/amku-oshtrafuvav-importera-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii-pro-ii-vlastyvosti|0",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-10-26",
+    "period_to": "2026-11-01",
+    "publication_date": "2026-10-30",
+    "publication_datetime": "2026-10-30 11:24:00",
+    "timeline_day": "30.10.2026",
+    "title": "АМКУ оштрафував імпортера дієтичної добавки за поширення оманливої інформації про її властивості",
+    "timeline_title": "АМКУ оштрафував імпортера дієтичної добавки за поширення оманливої інформації про її властивості",
+    "url": "https://amcu.gov.ua/news/amku-oshtrafuvav-importera-diietychnoi-dobavky-za-poshyrennia-omanlyvoi-informatsii-pro-ii-vlastyvosti",
+    "source": "posts",
+    "source_tags": [
+      "новини"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "dietary_supplements",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ТОВ «Актіфарм»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": true,
+    "fine_amount_uah": 955000,
+    "headline": "АМКУ оштрафував ТОВ «Актіфарм» на 955 000 грн за поширення оманливої інформації про лікувальні властивості дієтичної добавки «Кадван».",
+    "short_description": "Компанія безпідставно приписувала добавці властивості щодо відновлення кісткової тканини, захисту судин, серця, мозку та протидії цукровому діабету, що вводило споживачів в оману щодо її лікувального ефекту.",
+    "source_excerpt": "АМКУ визнав такі дії ТОВ «Актіфарм» порушенням статті 15-1 Закону України «Про захист від недобросовісної конкуренції» у вигляді поширення інформації, що вводить в оману та наклав на товариство штраф у розмірі 955 000 грн.",
+    "confidence": "high",
+    "page_text_sha256": "b6be8a3e327063a26dbe0192925ca341b4a15086e93b9eb9226419e7918206f2",
+    "analyzed_at": "2026-11-02T12:20:04.279Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-02T12:20:04.279Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-29102026|2",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-10-26",
+    "period_to": "2026-11-01",
+    "publication_date": "2026-10-29",
+    "publication_datetime": "2026-10-29 17:43:00",
+    "timeline_day": "29.10.2026",
+    "title": "Інформація про рішення АМКУ 29.10.2026",
+    "timeline_title": "Інформація про рішення АМКУ 29.10.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-29102026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "medicines",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "Grünenthal GmbH",
+      "Bayer Aktiengesellschaft"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав дозвіл компанії «Grünenthal GmbH» на набуття контролю над активами компанії «Bayer Aktiengesellschaft», пов'язаними з протипухлинними лікарськими засобами.",
+    "short_description": "Дозвіл стосується активів, пов'язаних із рецептурними протипухлинними лікарськими засобами, що містять регорафеніб (бренди Stivarga® та Nublexa®).",
+    "source_excerpt": "Надано дозвіл компанії «Grünenthal GmbH» (м. Аахен, Німеччина) про надання дозволу на набуття контролю над активами, пов’язаними із рецептурними протипухлинними лікарськими засобами, що містять регорафеніб як активну діючу речовину і реалізуються під брендами Stivarga® та Nublexa®, що належать компанії «Bayer Aktiengesellschaft» (м. Леверкузен, Німеччина).",
+    "confidence": "high",
+    "page_text_sha256": "5637fc99654e3b5505cdfe70fd74beaef3cb2477336d6a5c58b1adaee64f4d95",
+    "analyzed_at": "2026-11-02T12:20:09.860Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-02T12:20:09.860Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-29102026|0",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-10-26",
+    "period_to": "2026-11-01",
+    "publication_date": "2026-10-29",
+    "publication_datetime": "2026-10-29 10:07:00",
+    "timeline_day": "29.10.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 29.10.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 29.10.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-29102026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "medicines",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "Grünenthal GmbH",
+      "Bayer Aktiengesellschaft"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне заяву компанії «Grünenthal GmbH» про набуття контролю над активами компанії «Bayer Aktiengesellschaft», пов'язаними з протипухлинними лікарськими засобами.",
+    "short_description": "Йдеться про набуття контролю над активами, що стосуються рецептурних протипухлинних лікарських засобів з діючою речовиною регорафеніб (бренди Stivarga® та Nublexa®).",
+    "source_excerpt": "5. Про результати розгляду заяви від 07.10.2026 № 15-01/823-ЕКк компанії «Grünenthal GmbH» (м. Аахен, Німеччина) про надання дозволу на набуття контролю над активами, пов’язаними із рецептурними протипухлинними лікарськими засобами, що містять регорафеніб як активну діючу речовину і реалізуються під брендами Stivarga® та Nublexa®, що належать компанії «Bayer Aktiengesellschaft» (м. Леверкузен, Німеччина).",
+    "confidence": "high",
+    "page_text_sha256": "6efa79ff5abe2c1e2a039e09384c50aa0c12c05dc7ec449de8419ac52c6edc43",
+    "analyzed_at": "2026-11-02T12:20:30.156Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-02T12:20:30.156Z"
+    }
+  },
+  {
     "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/do-uvahy-uchasnykiv-rynkiv-rozdribnoi-torhivli-likarskymy-zasobamy-kosmetychnymy-tovaramy-medychnymy-ta-ortopedychnymy-tovaramy|0",
     "event_type": "case_procedural_update",
     "period_mode": "weekly",
