@@ -1752,15 +1752,19 @@ function topicOrderForType(type) {
 function groupRowsByTopic(rows, type) {
   const order = topicOrderForType(type);
   const byTopic = new Map();
+
   for (const row of rows || []) {
     const topic = editorialTopic(row);
     if (!byTopic.has(topic)) byTopic.set(topic, []);
     byTopic.get(topic).push(row);
   }
 
-  return order
-    .filter((topic) => byTopic.has(topic))
-    .map((topic) => [topic, byTopic.get(topic)]);
+  const orderedTopics = [
+    ...order.filter((topic) => byTopic.has(topic)),
+    ...[...byTopic.keys()].filter((topic) => !order.includes(topic))
+  ];
+
+  return orderedTopics.map((topic) => [topic, byTopic.get(topic)]);
 }
 
 function buildStoryGroups(rows, type, topic) {
