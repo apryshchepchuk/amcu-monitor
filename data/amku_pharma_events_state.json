@@ -29,6 +29,12 @@
       "relevant_count": 4,
       "timeline_items": 16,
       "pharma_candidates": 4
+    },
+    "weekly:2026-11-02:2026-11-08": {
+      "sent_at": "2026-11-09T12:48:31.354Z",
+      "relevant_count": 1,
+      "timeline_items": 20,
+      "pharma_candidates": 1
     }
   },
   "seen_urls": {
@@ -469,25 +475,145 @@
       "url": "https://amcu.gov.ua/news/v-ukraini-mozhna-proity-natsionalnyi-test-z-mediahramotnosti",
       "first_seen_at": "2026-11-02T12:20:38.718Z",
       "last_seen_at": "2026-11-02T12:20:38.718Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-2613205-26": {
+      "title": "Розпочато розгляд справи № 127-26.13/205-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-2613205-26",
+      "first_seen_at": "2026-11-09T12:48:08.231Z",
+      "last_seen_at": "2026-11-09T12:48:08.231Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-sprav-126-2613200-26-126-2613201-26-126-2613202-26-ta-126-2613203-26": {
+      "title": "Розпочато розгляд справ № 126-26.13/200-26, № 126-26.13/201-26, № 126-26.13/202-26 та № 126-26.13/203-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-sprav-126-2613200-26-126-2613201-26-126-2613202-26-ta-126-2613203-26",
+      "first_seen_at": "2026-11-09T12:48:09.220Z",
+      "last_seen_at": "2026-11-09T12:48:09.220Z"
+    },
+    "https://amcu.gov.ua/news/kiberhihiiena-haid-vid-derzhspetszviazku": {
+      "title": "Кібергігієна: гайд від Держспецзв'язку",
+      "url": "https://amcu.gov.ua/news/kiberhihiiena-haid-vid-derzhspetszviazku",
+      "first_seen_at": "2026-11-09T12:48:10.494Z",
+      "last_seen_at": "2026-11-09T12:48:10.494Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-128-2613204-26": {
+      "title": "Розпочато розгляд справи № 128-26.13/204-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-128-2613204-26",
+      "first_seen_at": "2026-11-09T12:48:11.379Z",
+      "last_seen_at": "2026-11-09T12:48:11.379Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-05112026": {
+      "title": "Інформація про рішення АМКУ 05.11.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-05112026",
+      "first_seen_at": "2026-11-09T12:48:12.483Z",
+      "last_seen_at": "2026-11-09T12:48:12.483Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-145-2613198-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/198-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-145-2613198-26",
+      "first_seen_at": "2026-11-09T12:48:13.374Z",
+      "last_seen_at": "2026-11-09T12:48:13.374Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026": {
+      "title": "Листопад 2026",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026",
+      "first_seen_at": "2026-11-09T12:48:14.277Z",
+      "last_seen_at": "2026-11-09T12:48:14.278Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-05112026": {
+      "title": "Проєкт порядку денного засідання АМКУ 05.11.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-05112026",
+      "first_seen_at": "2026-11-09T12:48:15.345Z",
+      "last_seen_at": "2026-11-09T12:48:15.345Z"
+    },
+    "https://amcu.gov.ua/news/holova-amku-vziav-uchast-u-zasidanni-komitetu-verkhovnoi-rady-z-pytan-ekonomichnoho-rozvytku": {
+      "title": "Голова АМКУ взяв участь у засіданні Комітету Верховної Ради з питань економічного розвитку",
+      "url": "https://amcu.gov.ua/news/holova-amku-vziav-uchast-u-zasidanni-komitetu-verkhovnoi-rady-z-pytan-ekonomichnoho-rozvytku",
+      "first_seen_at": "2026-11-09T12:48:19.525Z",
+      "last_seen_at": "2026-11-09T12:48:19.525Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-ukrpas-iua": {
+      "title": "До уваги товариства з обмеженою відповідальністю «УКРПАС ЮА»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-ukrpas-iua",
+      "first_seen_at": "2026-11-09T12:48:20.652Z",
+      "last_seen_at": "2026-11-09T12:48:20.652Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-601-189-21-na-zasidanni-tymchasovoi-administratyvnoi-kolehii-antymonopolnoho-komitetu-ukrainy": {
+      "title": "Інформація про розгляд справи № 6/01-189-21 на засіданні Тимчасової адміністративної колегії Антимонопольного комітету України",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-601-189-21-na-zasidanni-tymchasovoi-administratyvnoi-kolehii-antymonopolnoho-komitetu-ukrainy",
+      "first_seen_at": "2026-11-09T12:48:21.788Z",
+      "last_seen_at": "2026-11-09T12:48:21.788Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613195-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/195-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613195-26",
+      "first_seen_at": "2026-11-09T12:48:22.686Z",
+      "last_seen_at": "2026-11-09T12:48:22.686Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613194-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/194-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-145-2613194-26",
+      "first_seen_at": "2026-11-09T12:48:23.370Z",
+      "last_seen_at": "2026-11-09T12:48:23.370Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-301-104-25-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-tak-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 3/01-104-25 та розгляд зазначеної справи на засіданні ТАК АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-301-104-25-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-tak-amku",
+      "first_seen_at": "2026-11-09T12:48:24.508Z",
+      "last_seen_at": "2026-11-09T12:48:24.508Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261384-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 145-26.13/84-26 та розгляд зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261384-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-11-09T12:48:25.660Z",
+      "last_seen_at": "2026-11-09T12:48:25.660Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-11160159-rpk25-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-na-zasidanni-tak-amku": {
+      "title": "Інформація про розгляд справи № 111/60/159-рп/к.25 про порушення законодавства про захист економічної конкуренції  на засіданні ТАК АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-11160159-rpk25-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-na-zasidanni-tak-amku",
+      "first_seen_at": "2026-11-09T12:48:26.435Z",
+      "last_seen_at": "2026-11-09T12:48:26.435Z"
+    },
+    "https://amcu.gov.ua/news/vakansiia-holovnoho-spetsialista-viddilu-rozvytku-personalu-upravlinnia-personalu": {
+      "title": "Вакансія головного спеціаліста відділу розвитку персоналу Управління персоналу",
+      "url": "https://amcu.gov.ua/news/vakansiia-holovnoho-spetsialista-viddilu-rozvytku-personalu-upravlinnia-personalu",
+      "first_seen_at": "2026-11-09T12:48:27.509Z",
+      "last_seen_at": "2026-11-09T12:48:27.509Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-127-264196-26": {
+      "title": "Розпочато розгляд справи № 127-26.4/196-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-127-264196-26",
+      "first_seen_at": "2026-11-09T12:48:28.164Z",
+      "last_seen_at": "2026-11-09T12:48:28.164Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-ild-ta-fizychnoi-osoby-pidpryiemtsia-vizental-o-b": {
+      "title": "До уваги товариства з обмеженою відповідальністю «ІЛД» та фізичної особи-підприємця Візенталь О. Б.",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-ild-ta-fizychnoi-osoby-pidpryiemtsia-vizental-o-b",
+      "first_seen_at": "2026-11-09T12:48:29.194Z",
+      "last_seen_at": "2026-11-09T12:48:29.194Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-128-2613197-26": {
+      "title": "Розпочато розгляд справи № 128-26.13/197-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-128-2613197-26",
+      "first_seen_at": "2026-11-09T12:48:29.787Z",
+      "last_seen_at": "2026-11-09T12:48:29.787Z"
     }
   },
   "last_run": {
-    "at": "2026-11-02T12:20:40.593Z",
+    "at": "2026-11-09T12:48:31.353Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-10-26",
-      "to": "2026-11-01",
-      "label": "2026-10-26 — 2026-11-01"
+      "from": "2026-11-02",
+      "to": "2026-11-08",
+      "label": "2026-11-02 — 2026-11-08"
     },
-    "digest_key": "weekly:2026-10-26:2026-11-01",
-    "timeline_items": 16,
-    "pharma_candidates": 4,
-    "html_candidates": 4,
-    "pdf_fallback_checked": 7,
+    "digest_key": "weekly:2026-11-02:2026-11-08",
+    "timeline_items": 20,
+    "pharma_candidates": 1,
+    "html_candidates": 1,
+    "pdf_fallback_checked": 0,
     "pdf_fallback_candidates": 0,
     "pdf_fallback_critical_errors": 0,
-    "relevant_events": 4,
-    "gemini_calls": 4,
+    "relevant_events": 1,
+    "gemini_calls": 1,
     "email_sent": true,
     "technically_complete": true,
     "budget_exceeded": false,

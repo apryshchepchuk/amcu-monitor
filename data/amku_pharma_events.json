@@ -1,5 +1,61 @@
 [
   {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-05112026|2",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-11-02",
+    "period_to": "2026-11-08",
+    "publication_date": "2026-11-05",
+    "publication_datetime": "2026-11-05 10:25:00",
+    "timeline_day": "05.11.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 05.11.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 05.11.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-05112026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "medicines",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ПрАТ «Фармацевтична фірма «Дарниця»"
+    ],
+    "recommendation_addressees": [
+      "ПрАТ «Фармацевтична фірма «Дарниця»"
+    ],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": "13",
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "recommendation",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне питання надання рекомендаційних роз’яснень ПрАТ «Фармацевтична фірма «Дарниця» щодо відповідності дій положенням статті 13 Закону України «Про захист економічної конкуренції».",
+    "short_description": "",
+    "source_excerpt": "11. Про надання висновків у формі рекомендаційних роз’яснень щодо відповідності дій ПрАТ «Фармацевтична фірма «Дарниця» положенням статті 13 Закону України «Про захист економічної конкуренції».",
+    "confidence": "high",
+    "page_text_sha256": "fefd41ef56a0725e4667e2781e1d74b593f4ddc8b6f65e22e857f8d9531b2a90",
+    "analyzed_at": "2026-11-09T12:48:18.448Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-09T12:48:18.448Z"
+    }
+  },
+  {
     "event_key": "other_relevant|url|https://amcu.gov.ua/news/amku-ta-biznes-obhovoryly-praktychni-pidkhody-do-zapobihannia-nedobrosovisnii-konkurentsii|0",
     "event_type": "other_relevant",
     "period_mode": "weekly",
