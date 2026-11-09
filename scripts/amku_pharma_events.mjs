@@ -1745,7 +1745,7 @@ function topicHeading(topic) {
 function topicOrderForType(type) {
   if (type === 'case_decided') return ['unfair_competition', 'concentration', 'other'];
   if (type === 'case_started') return ['unfair_competition', 'concentration', 'other'];
-  if (type === 'case_procedural_update') return ['unfair_competition', 'concentration', 'other'];
+  if (type === 'case_procedural_update') return ['recommendations', 'unfair_competition', 'concentration', 'other'];
   return ['recommendations', 'unfair_competition', 'concentration', 'other'];
 }
 
