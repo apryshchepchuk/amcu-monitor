@@ -1,5 +1,822 @@
 [
   {
+    "event_key": "case_procedural_update|case|127-26.4/37-24",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 15:58:00",
+    "timeline_day": "13.11.2026",
+    "title": "Інформація щодо попередніх висновків у справі № 127-26.4/37-24 про порушення законодавства про захист від недобросовісної конкуренції та розгляду зазначеної справи на засіданні АМКУ",
+    "timeline_title": "Інформація щодо попередніх висновків у справі № 127-26.4/37-24 про порушення законодавства про захист від недобросовісної конкуренції та розгляду зазначеної справи на засіданні АМКУ",
+    "url": "https://amcu.gov.ua/news/informatsiia-shchodo-poperednikh-vysnovkiv-u-spravi-127-26437-24-pro-porushennia-zakonodavstva-pro-zakhyst-vid-nedobrosovisnoi-konkurentsii-ta-rozghliadu-zaznachenoi-spravy-na-zasidanni-amku",
+    "source": "posts",
+    "source_tags": [
+      "інформація про попередні висновки у справі"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "pharmacy_retail",
+    "case_numbers": [
+      "127-26.4/37-24"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ТОВ «ПЕРША ФАРМАЦІЯ ПОЛТАВИ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "outcome": "procedural",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ оприлюднив попередні висновки у справі проти ТОВ «ПЕРША ФАРМАЦІЯ ПОЛТАВИ» щодо неправдивої інформації про ціни в аптеці.",
+    "short_description": "Компанію звинувачують у використанні вивіски «АПТЕКА ОПТОВИХ ЦІН» та закликів про найнижчі ціни, що вводить споживачів в оману.",
+    "source_excerpt": "Визнати, що товариство з обмеженою відповідальністю «ПЕРША ФАРМАЦІЯ ПОЛТАВИ» (ідентифікаційний код юридичної особи «інформація, доступ до якої обмежено» ) вчинило порушення, передбачене статтею 15-1 Закону України «Про захист від недобросовісної конкуренції», у вигляді поширення інформації, що вводить в оману, шляхом повідомлення невизначеному колу осіб на фасаді аптечного закладу № 5 за адресою: «інформація, доступ до якої обмежено» неправдивих відомостей: «АПТЕКА ОПТОВИХ ЦІН»",
+    "confidence": "high",
+    "page_text_sha256": "bf009760ae710b3a216f385e0eff65c77c7664447d7942bcfb5316fea1184024",
+    "analyzed_at": "2026-11-16T12:41:41.180Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:41.180Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|case|127-26.4/80-26",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 11:55:00",
+    "timeline_day": "13.11.2026",
+    "title": "До уваги Заявниці у справі № 127-26.4/80-26",
+    "timeline_title": "До уваги Заявниці у справі № 127-26.4/80-26",
+    "url": "https://amcu.gov.ua/news/do-uvahy-zaiavnytsi-u-spravi-127-26480-26",
+    "source": "posts",
+    "source_tags": [
+      "розгляд справ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "medicines",
+    "case_numbers": [
+      "127-26.4/80-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ПрАТ «Фармацевтична фірма «Дарниця»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "outcome": "procedural",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ оприлюднив попередні висновки у справі проти ПрАТ «Фармацевтична фірма «Дарниця» щодо поширення інформації, що вводить в оману, стосовно косметичних засобів серії «Оксолін-Дарниця».",
+    "short_description": "Комітет пропонує визнати порушенням маркування та рекламу косметичних засобів «Оксолін-Дарниця» як таких, що призначені для профілактики грипу, вірусного риніту та герпесу, а також накласти штраф у розмірі до 5% доходу за 2025 рік.",
+    "source_excerpt": "За результатами розгляду справи № 127-26.4/80-26 про порушення приватним акціонерним товариством «Фармацевтична фірма «Дарниця» законодавства про захист від недобросовісної конкуренції, передбаченого статтею 15-1 Закону України «Про захист від недобросовісної конкуренції», у вигляді поширення інформації, що вводить в оману, складено подання з попередніми висновками від 06.11.2026 № 127-26.4/80-26/562-спр/кі",
+    "confidence": "high",
+    "page_text_sha256": "22d7e10cb392191d54ca3a777c7293afa7cf15dd7917bc188efa735227ba7c20",
+    "analyzed_at": "2026-11-16T12:41:44.137Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:44.137Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026|0",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 11:33:00",
+    "timeline_day": "13.11.2026",
+    "title": "Інформація про рішення АМКУ 12.11.2026",
+    "timeline_title": "Інформація про рішення АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "12.11.2026",
+    "subjects": [
+      "Cheplapharm Arzneimittel GmbH",
+      "Sanofi"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав дозвіл компанії «Cheplapharm Arzneimittel GmbH» на набуття контролю над портфелем активів компанії «Sanofi»",
+    "short_description": "Дозвіл стосується придбання активів, що включають певні групи фармацевтичної продукції.",
+    "source_excerpt": "Надано дозвіл компанії «Cheplapharm Arzneimittel GmbH» (м. Грайфсвальд, Німеччина) на набуття контролю над портфелем активів компанії «Sanofi» (м. Париж, Франція) та її пов’язаних осіб, що включає певні групи фармацевтичної продукції.",
+    "confidence": "high",
+    "page_text_sha256": "159f965d72336be6df67dc31bcbf71d5d29e2be4ffcedc4330e70f663fb2b92a",
+    "analyzed_at": "2026-11-16T12:41:51.326Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:51.326Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026|1",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 11:33:00",
+    "timeline_day": "13.11.2026",
+    "title": "Інформація про рішення АМКУ 12.11.2026",
+    "timeline_title": "Інформація про рішення АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "12.11.2026",
+    "subjects": [
+      "Cheplapharm Arzneimittel GmbH",
+      "Sanofi Winthrop Industrie"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав дозвіл на опосередковане набуття контролю компанією «Cheplapharm Arzneimittel GmbH» над виробничим майданчиком «Sanofi Winthrop Industrie» у Франції",
+    "short_description": "Виробничий майданчик у м. Плоермель призначений для виробництва певної фармацевтичної продукції.",
+    "source_excerpt": "Надано дозвіл компанії «Cheplapharm Arzneimittel GmbH» (м. Грайфсвальд, Німеччина) на опосередковане [через компанію «Cheplapharm France Manufacturing SAS»...] набуття контролю над виробничим майданчиком та пов’язаними активами компанії «Sanofi Winthrop Industrie» (м. Жантії, Франція), що розташовані у м. Плоермель, Франція та призначені для виробництва певної фармацевтичної продукції.",
+    "confidence": "high",
+    "page_text_sha256": "159f965d72336be6df67dc31bcbf71d5d29e2be4ffcedc4330e70f663fb2b92a",
+    "analyzed_at": "2026-11-16T12:41:51.327Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:51.327Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026|2",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 11:33:00",
+    "timeline_day": "13.11.2026",
+    "title": "Інформація про рішення АМКУ 12.11.2026",
+    "timeline_title": "Інформація про рішення АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "12.11.2026",
+    "subjects": [
+      "Cheplapharm Arzneimittel GmbH",
+      "Chinoin Private Co, Ltd"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав дозвіл компанії «Cheplapharm Arzneimittel GmbH» на опосередковане набуття контролю над виробничим майданчиком «Chinoin Private Co, Ltd» в Угорщині",
+    "short_description": "Виробничий майданчик у м. Мішкольц призначений для виробництва певної фармацевтичної продукції.",
+    "source_excerpt": "Надано дозвіл компанії «Cheplapharm Arzneimittel GmbH» (м. Грайфсвальд, Німеччина) на опосередковане [через компанію «Cheplapharm Hungary Manufacturing Kft.»...] набуття контролю над виробничим майданчиком та пов’язаними активами компанії «Chinoin Private Co, Ltd» (м. Будапешт, Угорщина), що розташовані у м. Мішкольц, Угорщина та призначені для виробництва певної фармацевтичної продукції.",
+    "confidence": "high",
+    "page_text_sha256": "159f965d72336be6df67dc31bcbf71d5d29e2be4ffcedc4330e70f663fb2b92a",
+    "analyzed_at": "2026-11-16T12:41:51.329Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:51.329Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026|3",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 11:33:00",
+    "timeline_day": "13.11.2026",
+    "title": "Інформація про рішення АМКУ 12.11.2026",
+    "timeline_title": "Інформація про рішення АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "12.11.2026",
+    "subjects": [
+      "Cheplapharm Arzneimittel GmbH",
+      "Sanofi Aventis Singapore Pte Ltd"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав дозвіл компанії «Cheplapharm Arzneimittel GmbH» на опосередковане набуття контролю над виробничим майданчиком «Sanofi Aventis Singapore Pte Ltd» у Сінгапурі",
+    "short_description": "Виробничий майданчик у регіоні Джуронг призначений для виробництва певної фармацевтичної продукції.",
+    "source_excerpt": "Надано дозвіл компанії «Cheplapharm Arzneimittel GmbH» (м. Грайфсвальд, Німеччина) на опосередковане [через компанію «Cheplapharm Singapore Manufacturing Pte. Ltd.»...] набуття контролю над виробничим майданчиком та пов’язаними активами компанії «Sanofi Aventis Singapore Pte Ltd» (м. Сінгапур, Республіка Сінгапур), що розташовані у регіоні Джуронг, Республіка Сінгапур та призначені для виробництва певної фармацевтичної продукції.",
+    "confidence": "high",
+    "page_text_sha256": "159f965d72336be6df67dc31bcbf71d5d29e2be4ffcedc4330e70f663fb2b92a",
+    "analyzed_at": "2026-11-16T12:41:51.329Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:51.329Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026|4",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 11:33:00",
+    "timeline_day": "13.11.2026",
+    "title": "Інформація про рішення АМКУ 12.11.2026",
+    "timeline_title": "Інформація про рішення АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "12.11.2026",
+    "subjects": [
+      "Cheplapharm Arzneimittel GmbH",
+      "Sanofi"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав дозвіл на узгоджені дії між компаніями «Cheplapharm Arzneimittel GmbH» та «Sanofi» щодо утримання від конкуренції",
+    "short_description": "Дозвіл надано на реалізацію положень про утримання від конкуренції та заборону переманювання працівників строком на 4 роки.",
+    "source_excerpt": "Надано дозвіл компаніям «Cheplapharm Arzneimittel GmbH» (м. Грайфсвальд, Німеччина) і «Sanofi» (м. Париж, Франція) на узгоджені дії у вигляді реалізації положень про утримання від конкуренції та заборону переманювання працівників, що містяться у розділі 7 договору купівлі-продажу активів...",
+    "confidence": "high",
+    "page_text_sha256": "159f965d72336be6df67dc31bcbf71d5d29e2be4ffcedc4330e70f663fb2b92a",
+    "analyzed_at": "2026-11-16T12:41:51.330Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:51.330Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026|5",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-13",
+    "publication_datetime": "2026-11-13 11:33:00",
+    "timeline_day": "13.11.2026",
+    "title": "Інформація про рішення АМКУ 12.11.2026",
+    "timeline_title": "Інформація про рішення АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": true,
+      "procedural_update": false
+    },
+    "sector": "other",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "12.11.2026",
+    "subjects": [],
+    "recommendation_addressees": [
+      "місцеві державні (військові) адміністрації",
+      "органи місцевого самоврядування"
+    ],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "recommendation",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав рекомендації органам влади щодо розвитку конкуренції на ринку медичних інформаційних систем",
+    "short_description": "Рекомендації спрямовані на запобігання порушенням законодавства про захист економічної конкуренції при наданні послуг із використання медичних інформаційних систем.",
+    "source_excerpt": "Надано рекомендації Антимонопольного комітету України місцевим державним (військовим) адміністраціям та органам місцевого самоврядування з метою сприяння розвитку конкуренції та запобігання порушенням законодавства про захист економічної конкуренції на ринку надання послуг із використання медичних інформаційних систем.",
+    "confidence": "high",
+    "page_text_sha256": "159f965d72336be6df67dc31bcbf71d5d29e2be4ffcedc4330e70f663fb2b92a",
+    "analyzed_at": "2026-11-16T12:41:51.330Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:51.330Z"
+    }
+  },
+  {
+    "event_key": "recommendation_issued|url|https://amcu.gov.ua/news/amku-zasterihaie-vid-dii-iaki-mozhut-obmezhyty-konkurentsiiu-na-rynku-posluh-medychnykh-informatsiinykh-system|0",
+    "event_type": "recommendation_issued",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-12",
+    "publication_datetime": "2026-11-12 20:04:00",
+    "timeline_day": "12.11.2026",
+    "title": "АМКУ застерігає від дій, які можуть обмежити конкуренцію на ринку послуг медичних інформаційних систем",
+    "timeline_title": "АМКУ застерігає від дій, які можуть обмежити конкуренцію на ринку послуг медичних інформаційних систем",
+    "url": "https://amcu.gov.ua/news/amku-zasterihaie-vid-dii-iaki-mozhut-obmezhyty-konkurentsiiu-na-rynku-posluh-medychnykh-informatsiinykh-system",
+    "source": "posts",
+    "source_tags": [
+      "новини"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": true,
+      "procedural_update": false
+    },
+    "sector": "other",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [],
+    "recommendation_addressees": [
+      "місцеві державні (військові) адміністрації",
+      "органи місцевого самоврядування"
+    ],
+    "qualification": {
+      "law": null,
+      "article": null,
+      "point": null,
+      "text": "Не зазначено в повідомленні"
+    },
+    "outcome": "recommendation",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надав рекомендації органам влади утримуватися від дій, що обмежують конкуренцію на ринку послуг медичних інформаційних систем.",
+    "short_description": "Рекомендації стосуються недопущення надання необґрунтованих переваг окремим операторам МІС та забезпечення права закладів охорони здоров'я на вільний вибір таких систем.",
+    "source_excerpt": "АМКУ надав рекомендації місцевим державним (військовим) адміністраціям та органам місцевого самоврядування утримуватися від дій, які можуть призвести до недопущення, усунення, обмеження чи спотворення конкуренції на ринку послуг із використання медичних інформаційних систем.",
+    "confidence": "high",
+    "page_text_sha256": "162ea66764d0fe68e84baff1ef924af9c3f750b12fa43d75a437e2714fd16b6a",
+    "analyzed_at": "2026-11-16T12:41:55.020Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:41:55.020Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026|0",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-12",
+    "publication_datetime": "2026-11-12 10:42:00",
+    "timeline_day": "12.11.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 12.11.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "Cheplapharm Arzneimittel GmbH",
+      "Sanofi",
+      "Sanofi Winthrop Industrie",
+      "Chinoin Private Co, Ltd",
+      "Sanofi Aventis Singapore Pte Ltd"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": null,
+      "point": null,
+      "text": "концентрація"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне надання дозволу компанії Cheplapharm Arzneimittel GmbH на набуття контролю над активами та виробничими майданчиками компанії Sanofi у сфері фармацевтичної продукції.",
+    "short_description": "Йдеться про набуття контролю над портфелем фармацевтичної продукції та виробничими потужностями у Франції, Угорщині та Сінгапурі.",
+    "source_excerpt": "№ 15-01/806-ЕКк про надання дозволу компанії «Cheplapharm Arzneimittel GmbH» (м. Грайфсвальд, Німеччина) на набуття контролю над портфелем активів компанії «Sanofi» (м. Париж, Франція) та її пов’язаних осіб, що включає певні групи фармацевтичної продукції;",
+    "confidence": "high",
+    "page_text_sha256": "0ddad67087e1387b81bd660a9a327cfb8a03b3ccbe6e1e2e01b85a0930969e32",
+    "analyzed_at": "2026-11-16T12:42:04.881Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:42:04.881Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026|1",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-12",
+    "publication_datetime": "2026-11-12 10:42:00",
+    "timeline_day": "12.11.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 12.11.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "manufacturing",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "Cheplapharm Arzneimittel GmbH",
+      "Sanofi"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": null,
+      "point": null,
+      "text": "узгоджені дії"
+    },
+    "outcome": "permit_granted",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне надання дозволу на узгоджені дії між компаніями Cheplapharm Arzneimittel GmbH та Sanofi у вигляді обмежень конкуренції строком на 4 роки.",
+    "short_description": "Узгоджені дії стосуються положень про утримання від конкуренції та заборону переманювання працівників у межах договору купівлі-продажу активів.",
+    "source_excerpt": "Про результати розгляду заяви від 29.09.2026 № 15-01/811-УДк про надання дозволу компаніям «Cheplapharm Arzneimittel GmbH» (м. Грайфсвальд, Німеччина) і «Sanofi» (м. Париж, Франція) на узгоджені дії у вигляді реалізації положень про утримання від конкуренції та заборону переманювання працівників",
+    "confidence": "high",
+    "page_text_sha256": "0ddad67087e1387b81bd660a9a327cfb8a03b3ccbe6e1e2e01b85a0930969e32",
+    "analyzed_at": "2026-11-16T12:42:04.882Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:42:04.882Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026|2",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-12",
+    "publication_datetime": "2026-11-12 10:42:00",
+    "timeline_day": "12.11.2026",
+    "title": "Проєкт порядку денного засідання АМКУ 12.11.2026",
+    "timeline_title": "Проєкт порядку денного засідання АМКУ 12.11.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "medical_devices",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [],
+    "recommendation_addressees": [
+      "місцеві державні (військові) адміністрації",
+      "органи місцевого самоврядування"
+    ],
+    "qualification": {
+      "law": "Закон України «Про захист економічної конкуренції»",
+      "article": null,
+      "point": null,
+      "text": "сприяння розвитку конкуренції"
+    },
+    "outcome": "recommendation",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ надасть рекомендації органам влади щодо розвитку конкуренції на ринку послуг із використання медичних інформаційних систем.",
+    "short_description": "",
+    "source_excerpt": "Про надання місцевим державним (військовим) адміністраціям та органам місцевого самоврядування рекомендацій з метою сприяння розвитку конкуренції та запобігання порушенням законодавства про захист економічної конкуренції на ринку надання послуг із використання медичних інформаційних систем.",
+    "confidence": "high",
+    "page_text_sha256": "0ddad67087e1387b81bd660a9a327cfb8a03b3ccbe6e1e2e01b85a0930969e32",
+    "analyzed_at": "2026-11-16T12:42:04.883Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:42:04.883Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/tak-amku-oshtrafuvala-importera-diietychnoi-dobavky-za-nepravomirne-vykorystannia-oformlennia-upakovky-produktsii|0",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-11",
+    "publication_datetime": "2026-11-11 12:30:00",
+    "timeline_day": "11.11.2026",
+    "title": "ТАК АМКУ оштрафувала імпортера дієтичної добавки за неправомірне використання оформлення упаковки продукції",
+    "timeline_title": "ТАК АМКУ оштрафувала імпортера дієтичної добавки за неправомірне використання оформлення упаковки продукції",
+    "url": "https://amcu.gov.ua/news/tak-amku-oshtrafuvala-importera-diietychnoi-dobavky-za-nepravomirne-vykorystannia-oformlennia-upakovky-produktsii",
+    "source": "posts",
+    "source_tags": [
+      "новини"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "dietary_supplements",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "2026-11-10",
+    "subjects": [
+      "СУІП ТОВ «СПЕРКО УКРАЇНА»",
+      "ТОВ ВТФ «ФАРМАКОМ»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "4",
+      "point": null,
+      "text": "неправомірне використання оформлення упаковки"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": true,
+    "fine_amount_uah": 2346008,
+    "headline": "АМКУ оштрафував СУІП ТОВ «СПЕРКО УКРАЇНА» на 2 346 008 грн за неправомірне використання оформлення упаковки дієтичної добавки «СХІЗАНДРИН».",
+    "short_description": "Порушення полягало у використанні оформлення упаковки, схожого на продукцію ТОВ ВТФ «ФАРМАКОМ», що могло призвести до змішування діяльності суб'єктів господарювання.",
+    "source_excerpt": "10 листопада 2026 року Тимчасова адміністративна колегія Антимонопольного комітету України визнала дії СУІП ТОВ «СПЕРКО УКРАЇНА» порушенням, передбаченим статтею 4 Закону України «Про захист від недобросовісної конкуренції», у вигляді неправомірного використання оформлення упаковки дієтичної добавки «СХІЗАНДРИН»",
+    "confidence": "high",
+    "page_text_sha256": "a87fc822477983a6549c3f5ac0aebf81cfc76f5fa03352f1ce35b85a5beaf68b",
+    "analyzed_at": "2026-11-16T12:42:13.364Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:42:13.364Z"
+    }
+  },
+  {
+    "event_key": "case_decided|url|https://amcu.gov.ua/news/informatsiia-pro-rishennia-tak-amku-10112026|0",
+    "event_type": "case_decided",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-10",
+    "publication_datetime": "2026-11-10 14:59:00",
+    "timeline_day": "10.11.2026",
+    "title": "Інформація про рішення ТАК АМКУ 10.11.2026",
+    "timeline_title": "Інформація про рішення ТАК АМКУ 10.11.2026",
+    "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-tak-amku-10112026",
+    "source": "posts",
+    "source_tags": [
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": true,
+      "recommendation_issued": false,
+      "procedural_update": false
+    },
+    "sector": "dietary_supplements",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": "2026-11-10",
+    "subjects": [
+      "ТОВ «СПЕРКО УКРАЇНА»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "4",
+      "point": null,
+      "text": "неправомірне використання в господарській діяльності оформлення упаковки"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": true,
+    "fine_amount_uah": 2346008,
+    "headline": "АМКУ оштрафував ТОВ «СПЕРКО УКРАЇНА» на 2 346 008 грн за неправомірне використання оформлення упаковки дієтичної добавки «СХІЗАНДРИН».",
+    "short_description": "Порушення полягало у неправомірному використанні оформлення упаковки дієтичної добавки «СХІЗАНДРИН», що виробляється польською компанією BIOFAKTOR Sp.z.o.o.",
+    "source_excerpt": "Оштрафовано спільне українсько-іспанське підприємство у формі ТОВ «СПЕРКО УКРАЇНА» на 2 346 008 грн за вчинення порушення законодавства про захист від недобросовісної конкуренції, передбаченого статтею 4 Закону України «Про захист від недобросовісної конкуренції», у вигляді неправомірного використання в господарській діяльності оформлення упаковки дієтичної добавки «СХІЗАНДРИН» виробництва компанії BIOFAKTOR Sp.z.o.o. (Польща).",
+    "confidence": "high",
+    "page_text_sha256": "88ebb3bb94414c41832a4c58f4f6912baaeba2a3e7fe42ae68e164855b3254a7",
+    "analyzed_at": "2026-11-16T12:42:42.753Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:42:42.753Z"
+    }
+  },
+  {
+    "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-tak-amku-10112026|0",
+    "event_type": "case_procedural_update",
+    "period_mode": "weekly",
+    "period_from": "2026-11-09",
+    "period_to": "2026-11-15",
+    "publication_date": "2026-11-10",
+    "publication_datetime": "2026-11-10 10:17:00",
+    "timeline_day": "10.11.2026",
+    "title": "Проєкт порядку денного засідання ТАК АМКУ 10.11.2026",
+    "timeline_title": "Проєкт порядку денного засідання ТАК АМКУ 10.11.2026",
+    "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-tak-amku-10112026",
+    "source": "posts",
+    "source_tags": [
+      "порядок денний",
+      "рішення та розпорядження АМКУ"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": false,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "dietary_supplements",
+    "case_numbers": [],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "СПЕРКО УКРАЇНА"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "4",
+      "point": null,
+      "text": "неправомірне використання в господарській діяльності оформлення упаковки дієтичної добавки"
+    },
+    "outcome": "violation_found",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "АМКУ розгляне справу щодо неправомірного використання ТОВ «СПЕРКО УКРАЇНА» оформлення упаковки дієтичної добавки «СХІЗАНДРИН».",
+    "short_description": "Справа стосується копіювання оформлення упаковки дієтичної добавки виробництва польської компанії BIOFAKTOR Sp.z.o.o.",
+    "source_excerpt": "3. Про результати розгляду справи № 3/20-53-23 про порушення спільним українсько-іспанським підприємством у формі товариства з обмеженою відповідальністю «СПЕРКО УКРАЇНА» законодавства про захист від недобросовісної конкуренції, передбаченого статтею 4 Закону України «Про захист від недобросовісної конкуренції», у вигляді неправомірного використання в господарській діяльності оформлення упаковки дієтичної добавки «СХІЗАНДРИН» виробництва компанії BIOFAKTOR Sp.z.o.o. (Польща).",
+    "confidence": "high",
+    "page_text_sha256": "f373f78ad0a2af77b74746b4310a3bf5ca79c1ce3594f0d33162fcc45f6fda5c",
+    "analyzed_at": "2026-11-16T12:42:48.220Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-16T12:42:48.220Z"
+    }
+  },
+  {
     "event_key": "case_procedural_update|url|https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-05112026|2",
     "event_type": "case_procedural_update",
     "period_mode": "weekly",

@@ -35,6 +35,12 @@
       "relevant_count": 1,
       "timeline_items": 20,
       "pharma_candidates": 1
+    },
+    "weekly:2026-11-09:2026-11-15": {
+      "sent_at": "2026-11-16T12:42:52.272Z",
+      "relevant_count": 15,
+      "timeline_items": 24,
+      "pharma_candidates": 8
     }
   },
   "seen_urls": {
@@ -595,25 +601,169 @@
       "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/zhovten-2026/rozpochato-rozghliad-spravy-128-2613197-26",
       "first_seen_at": "2026-11-09T12:48:29.787Z",
       "last_seen_at": "2026-11-09T14:08:02.632Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-shchodo-poperednikh-vysnovkiv-u-spravi-127-26437-24-pro-porushennia-zakonodavstva-pro-zakhyst-vid-nedobrosovisnoi-konkurentsii-ta-rozghliadu-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація щодо попередніх висновків у справі № 127-26.4/37-24 про порушення законодавства про захист від недобросовісної конкуренції та розгляду зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-shchodo-poperednikh-vysnovkiv-u-spravi-127-26437-24-pro-porushennia-zakonodavstva-pro-zakhyst-vid-nedobrosovisnoi-konkurentsii-ta-rozghliadu-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-11-16T12:41:39.467Z",
+      "last_seen_at": "2026-11-16T12:41:39.467Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-zaiavnytsi-u-spravi-127-26480-26": {
+      "title": "До уваги Заявниці у справі № 127-26.4/80-26",
+      "url": "https://amcu.gov.ua/news/do-uvahy-zaiavnytsi-u-spravi-127-26480-26",
+      "first_seen_at": "2026-11-16T12:41:42.453Z",
+      "last_seen_at": "2026-11-16T12:41:42.453Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026": {
+      "title": "Інформація про рішення АМКУ 12.11.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-12112026",
+      "first_seen_at": "2026-11-16T12:41:45.491Z",
+      "last_seen_at": "2026-11-16T12:41:45.491Z"
+    },
+    "https://amcu.gov.ua/news/amku-zasterihaie-vid-dii-iaki-mozhut-obmezhyty-konkurentsiiu-na-rynku-posluh-medychnykh-informatsiinykh-system": {
+      "title": "АМКУ застерігає від дій, які можуть обмежити конкуренцію на ринку послуг медичних інформаційних систем",
+      "url": "https://amcu.gov.ua/news/amku-zasterihaie-vid-dii-iaki-mozhut-obmezhyty-konkurentsiiu-na-rynku-posluh-medychnykh-informatsiinykh-system",
+      "first_seen_at": "2026-11-16T12:41:52.754Z",
+      "last_seen_at": "2026-11-16T12:41:52.754Z"
+    },
+    "https://amcu.gov.ua/news/amku-vstanovyv-zmovu-tovarystv-pid-chas-zakupivli-kompleksu-posluh-z-vyroshchuvannia-ta-zbyrannia-nasinnia": {
+      "title": "АМКУ встановив змову товариств під час закупівлі комплексу послуг з вирощування та збирання насіння",
+      "url": "https://amcu.gov.ua/news/amku-vstanovyv-zmovu-tovarystv-pid-chas-zakupivli-kompleksu-posluh-z-vyroshchuvannia-ta-zbyrannia-nasinnia",
+      "first_seen_at": "2026-11-16T12:41:56.508Z",
+      "last_seen_at": "2026-11-16T12:41:56.508Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261347-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 145-26.13/47-26 та розгляд зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261347-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-11-16T12:41:57.893Z",
+      "last_seen_at": "2026-11-16T12:41:57.893Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261340-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 145-26.13/40-26 та розгляд зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261340-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-11-16T12:41:59.092Z",
+      "last_seen_at": "2026-11-16T12:41:59.092Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261397-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 145-26.13/97-26 та розгляд зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-261397-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-11-16T12:42:00.339Z",
+      "last_seen_at": "2026-11-16T12:42:00.339Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-145-2613206-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/206-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-145-2613206-26",
+      "first_seen_at": "2026-11-16T12:42:01.011Z",
+      "last_seen_at": "2026-11-16T12:42:01.011Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026": {
+      "title": "Проєкт порядку денного засідання АМКУ 12.11.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-12112026",
+      "first_seen_at": "2026-11-16T12:42:01.879Z",
+      "last_seen_at": "2026-11-16T12:42:01.879Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-6545-022026-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-tak-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 65/45-02/2026 та розгляд зазначеної справи на засіданні ТАК АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-6545-022026-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-tak-amku",
+      "first_seen_at": "2026-11-16T12:42:06.116Z",
+      "last_seen_at": "2026-11-16T12:42:06.116Z"
+    },
+    "https://amcu.gov.ua/news/parlament-ukhvalyv-zakon-shchodo-vidnovlennia-dii-okremykh-norm-zakonodavstva-pro-derzhavnu-dopomohu": {
+      "title": "Парламент ухвалив Закон щодо відновлення дії окремих норм законодавства про державну допомогу",
+      "url": "https://amcu.gov.ua/news/parlament-ukhvalyv-zakon-shchodo-vidnovlennia-dii-okremykh-norm-zakonodavstva-pro-derzhavnu-dopomohu",
+      "first_seen_at": "2026-11-16T12:42:07.019Z",
+      "last_seen_at": "2026-11-16T12:42:07.019Z"
+    },
+    "https://amcu.gov.ua/news/vakantna-posada-holovnoho-spetsialista-departamentu-monitorynhu-i-kontroliu-derzhavnoi-dopomohy": {
+      "title": "Антимонопольний комітет України подовжує термін подачі резюме",
+      "url": "https://amcu.gov.ua/news/vakantna-posada-holovnoho-spetsialista-departamentu-monitorynhu-i-kontroliu-derzhavnoi-dopomohy",
+      "first_seen_at": "2026-11-16T12:42:08.173Z",
+      "last_seen_at": "2026-11-16T12:42:08.173Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-5479-26-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-na-zasidanni-tymchasovoi-administratyvnoi-kolehii": {
+      "title": "Інформація про розгляд справи  № 54/79-26 про порушення законодавства про захист економічної конкуренції  на засіданні Тимчасової адміністративної колегії Антимонопольного комітету України",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-5479-26-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-na-zasidanni-tymchasovoi-administratyvnoi-kolehii",
+      "first_seen_at": "2026-11-16T12:42:08.995Z",
+      "last_seen_at": "2026-11-16T12:42:08.995Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-65172-022025-na-zasidanni-tymchasovoi-administratyvnoi-kolehii-antymonopolnoho-komitetu-ukrainy": {
+      "title": "Інформація про розгляд справи № 65/172-02/2025 на засіданні Тимчасової адміністративної колегії Антимонопольного комітету України",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-65172-022025-na-zasidanni-tymchasovoi-administratyvnoi-kolehii-antymonopolnoho-komitetu-ukrainy",
+      "first_seen_at": "2026-11-16T12:42:09.870Z",
+      "last_seen_at": "2026-11-16T12:42:09.870Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-65132-022025-na-zasidanni-tymchasovoi-administratyvnoi-kolehii-antymonopolnoho-komitetu-ukrainy": {
+      "title": "Інформація про розгляд справи № 65/132-02/2025 на засіданні Тимчасової адміністративної колегії Антимонопольного комітету України",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rozghliad-spravy-65132-022025-na-zasidanni-tymchasovoi-administratyvnoi-kolehii-antymonopolnoho-komitetu-ukrainy",
+      "first_seen_at": "2026-11-16T12:42:10.730Z",
+      "last_seen_at": "2026-11-16T12:42:10.730Z"
+    },
+    "https://amcu.gov.ua/news/tak-amku-oshtrafuvala-importera-diietychnoi-dobavky-za-nepravomirne-vykorystannia-oformlennia-upakovky-produktsii": {
+      "title": "ТАК АМКУ оштрафувала імпортера дієтичної добавки за неправомірне використання оформлення упаковки продукції",
+      "url": "https://amcu.gov.ua/news/tak-amku-oshtrafuvala-importera-diietychnoi-dobavky-za-nepravomirne-vykorystannia-oformlennia-upakovky-produktsii",
+      "first_seen_at": "2026-11-16T12:42:11.886Z",
+      "last_seen_at": "2026-11-16T12:42:11.886Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-5439-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-tymchasovoi": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 54/39-26 та розгляд зазначеної справи на засіданні Тимчасової адміністративної колегії АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-5439-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-tymchasovoi",
+      "first_seen_at": "2026-11-16T12:42:14.280Z",
+      "last_seen_at": "2026-11-16T12:42:14.280Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-tak-amku-10112026": {
+      "title": "Інформація про рішення ТАК АМКУ 10.11.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-tak-amku-10112026",
+      "first_seen_at": "2026-11-16T12:42:15.234Z",
+      "last_seen_at": "2026-11-16T12:42:15.234Z"
+    },
+    "https://amcu.gov.ua/news/ponad-7-mln-hrn-shtrafiv-za-antykonkurentni-uzghodzheni-dii": {
+      "title": "Понад 7 млн грн штрафів – за антиконкурентні узгоджені дії",
+      "url": "https://amcu.gov.ua/news/ponad-7-mln-hrn-shtrafiv-za-antykonkurentni-uzghodzheni-dii",
+      "first_seen_at": "2026-11-16T12:42:44.026Z",
+      "last_seen_at": "2026-11-16T12:42:44.026Z"
+    },
+    "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-trans-vud-ms-i-tovarystva-z-obmezhenoiu-vidpovidalnistiu-liukskrona": {
+      "title": "До уваги товариства з обмеженою відповідальністю «ТРАНС ВУД-МС» і товариства з обмеженою відповідальністю «ЛЮКСКРОНА»",
+      "url": "https://amcu.gov.ua/news/do-uvahy-tovarystva-z-obmezhenoiu-vidpovidalnistiu-trans-vud-ms-i-tovarystva-z-obmezhenoiu-vidpovidalnistiu-liukskrona",
+      "first_seen_at": "2026-11-16T12:42:44.853Z",
+      "last_seen_at": "2026-11-16T12:42:44.853Z"
+    },
+    "https://amcu.gov.ua/news/v-ukraini-startuvav-misiats-tsyfrovoi-hramotnosti": {
+      "title": "В Україні стартував Місяць цифрової грамотності",
+      "url": "https://amcu.gov.ua/news/v-ukraini-startuvav-misiats-tsyfrovoi-hramotnosti",
+      "first_seen_at": "2026-11-16T12:42:45.766Z",
+      "last_seen_at": "2026-11-16T12:42:45.766Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-tak-amku-10112026": {
+      "title": "Проєкт порядку денного засідання ТАК АМКУ 10.11.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-tak-amku-10112026",
+      "first_seen_at": "2026-11-16T12:42:46.596Z",
+      "last_seen_at": "2026-11-16T12:42:46.596Z"
+    },
+    "https://amcu.gov.ua/gromadskosti/dostup-do-publichnoyi-informaciyi/zviti-pro-robotu-iz-zapitami-pro-dostup-do-publichnoyi-informaciyi/zvit-2026": {
+      "title": "Звіт 2026",
+      "url": "https://amcu.gov.ua/gromadskosti/dostup-do-publichnoyi-informaciyi/zviti-pro-robotu-iz-zapitami-pro-dostup-do-publichnoyi-informaciyi/zvit-2026",
+      "first_seen_at": "2026-11-16T12:42:50.764Z",
+      "last_seen_at": "2026-11-16T12:42:50.764Z"
     }
   },
   "last_run": {
-    "at": "2026-11-09T14:08:04.498Z",
+    "at": "2026-11-16T12:42:52.272Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-11-02",
-      "to": "2026-11-08",
-      "label": "2026-11-02 — 2026-11-08"
+      "from": "2026-11-09",
+      "to": "2026-11-15",
+      "label": "2026-11-09 — 2026-11-15"
     },
-    "digest_key": "weekly:2026-11-02:2026-11-08",
-    "timeline_items": 20,
-    "pharma_candidates": 1,
-    "html_candidates": 1,
-    "pdf_fallback_checked": 0,
+    "digest_key": "weekly:2026-11-09:2026-11-15",
+    "timeline_items": 24,
+    "pharma_candidates": 8,
+    "html_candidates": 8,
+    "pdf_fallback_checked": 3,
     "pdf_fallback_candidates": 0,
     "pdf_fallback_critical_errors": 0,
-    "relevant_events": 1,
-    "gemini_calls": 1,
+    "relevant_events": 15,
+    "gemini_calls": 8,
     "email_sent": true,
     "technically_complete": true,
     "budget_exceeded": false,
@@ -625,7 +775,7 @@
       "send_email": true,
       "test_email_send": false,
       "send_empty_email": false,
-      "force_send": true,
+      "force_send": false,
       "pdf_fallback_enabled": true,
       "pdf_prefilter_pages": 3
     }
