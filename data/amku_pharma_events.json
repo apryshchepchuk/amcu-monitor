@@ -1,5 +1,60 @@
 [
   {
+    "event_key": "case_started|case|127-26.4/208-26",
+    "event_type": "case_started",
+    "period_mode": "weekly",
+    "period_from": "2026-11-16",
+    "period_to": "2026-11-22",
+    "publication_date": "2026-11-18",
+    "publication_datetime": "2026-11-18 13:50:53",
+    "timeline_day": "18.11.2026",
+    "title": "Розпочато розгляд справи № 127-26.4/208-26",
+    "timeline_title": "Розпочато розгляд справи  № 127-26.4/208-26",
+    "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-264208-26",
+    "source": "pages",
+    "source_tags": [
+      "про початок розгляду справи"
+    ],
+    "discovery_source": "html",
+    "source_document_url": null,
+    "facts": {
+      "case_started": true,
+      "decision_adopted": false,
+      "recommendation_issued": false,
+      "procedural_update": true
+    },
+    "sector": "dietary_supplements",
+    "case_numbers": [
+      "127-26.4/208-26"
+    ],
+    "decision_number": null,
+    "decision_date": null,
+    "subjects": [
+      "ПрАТ «Київський вітамінний завод»"
+    ],
+    "recommendation_addressees": [],
+    "qualification": {
+      "law": "Закон України «Про захист від недобросовісної конкуренції»",
+      "article": "15-1",
+      "point": null,
+      "text": "поширення інформації, що вводить в оману"
+    },
+    "outcome": "other",
+    "fine_imposed": false,
+    "fine_amount_uah": null,
+    "headline": "Антимонопольний комітет розпочав справу проти ПрАТ «Київський вітамінний завод» за поширення інформації, що вводить в оману щодо дієтичної добавки «Квадевіт ІМУН».",
+    "short_description": "Предметом розгляду є поширення неправдивих, неточних або неповних відомостей про дієтичну добавку.",
+    "source_excerpt": "Предметом розгляду справи № 127-26.4/208-26 є, зокрема, дії приватного акціонерного товариства «Київський вітамінний завод» (ідентифікаційний код юридичної особи «інформація, доступ до якої обмежено» ) у вигляді поширення неправдивих та/або неточних, та/або неповних відомостей щодо дієтичної добавки під позначенням «Квадевіт ІМУН», що містять ознаки порушення, передбаченого статтею 15-1 Закону України «Про захист від недобросовісної конкуренції», у вигляді поширення інформації, що вводить в оману.",
+    "confidence": "high",
+    "page_text_sha256": "b01ce4e3778fc8b009cc7d1e2c82db364f52d10252ee8525952c6b34f389a358",
+    "analyzed_at": "2026-11-23T18:07:45.991Z",
+    "analysis": {
+      "model": "gemini-3.1-flash-lite",
+      "skipped": false,
+      "analyzed_at": "2026-11-23T18:07:45.991Z"
+    }
+  },
+  {
     "event_key": "case_procedural_update|case|127-26.4/37-24",
     "event_type": "case_procedural_update",
     "period_mode": "weekly",
