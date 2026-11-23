@@ -745,29 +745,106 @@
       "url": "https://amcu.gov.ua/gromadskosti/dostup-do-publichnoyi-informaciyi/zviti-pro-robotu-iz-zapitami-pro-dostup-do-publichnoyi-informaciyi/zvit-2026",
       "first_seen_at": "2026-11-16T12:42:50.764Z",
       "last_seen_at": "2026-11-16T12:42:50.764Z"
+    },
+    "https://amcu.gov.ua/news/21-lystopada-den-hidnosti-ta-svobody": {
+      "title": "21 листопада – День Гідності та Свободи",
+      "url": "https://amcu.gov.ua/news/21-lystopada-den-hidnosti-ta-svobody",
+      "first_seen_at": "2026-11-23T14:32:15.543Z",
+      "last_seen_at": "2026-11-23T14:32:15.544Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-264209-26": {
+      "title": "Розпочато розгляд справи № 127-26.4/209-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-264209-26",
+      "first_seen_at": "2026-11-23T14:32:16.763Z",
+      "last_seen_at": "2026-11-23T14:32:16.763Z"
+    },
+    "https://amcu.gov.ua/news/na-ponad-10-mln-hrn-amku-oshtrafuvav-try-kompanii-za-zmovu-u-torhakh": {
+      "title": "На понад 10 млн грн АМКУ оштрафував три компанії за змову у торгах",
+      "url": "https://amcu.gov.ua/news/na-ponad-10-mln-hrn-amku-oshtrafuvav-try-kompanii-za-zmovu-u-torhakh",
+      "first_seen_at": "2026-11-23T14:32:18.069Z",
+      "last_seen_at": "2026-11-23T14:32:18.069Z"
+    },
+    "https://amcu.gov.ua/news/amku-oshtrafuvav-chotyry-tovarystva-za-zmovu-u-torhakh-dlia-enerhetychnoho-sektoru": {
+      "title": "АМКУ оштрафував чотири товариства за змову у торгах для енергетичного сектору",
+      "url": "https://amcu.gov.ua/news/amku-oshtrafuvav-chotyry-tovarystva-za-zmovu-u-torhakh-dlia-enerhetychnoho-sektoru",
+      "first_seen_at": "2026-11-23T14:32:18.857Z",
+      "last_seen_at": "2026-11-23T14:32:18.857Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-145-2613211-26": {
+      "title": "Розпочато розгляд справи № 145-26.13/211-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-145-2613211-26",
+      "first_seen_at": "2026-11-23T14:32:20.141Z",
+      "last_seen_at": "2026-11-23T14:32:20.141Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-19112026": {
+      "title": "Інформація про рішення АМКУ 19.11.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-amku-19112026",
+      "first_seen_at": "2026-11-23T14:32:21.612Z",
+      "last_seen_at": "2026-11-23T14:32:21.612Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-19112026": {
+      "title": "Проєкт порядку денного засідання АМКУ 19.11.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-amku-19112026",
+      "first_seen_at": "2026-11-23T14:32:23.011Z",
+      "last_seen_at": "2026-11-23T14:32:23.011Z"
+    },
+    "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-264208-26": {
+      "title": "Розпочато розгляд справи  № 127-26.4/208-26",
+      "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-264208-26",
+      "first_seen_at": "2026-11-23T14:32:24.234Z",
+      "last_seen_at": "2026-11-23T14:32:24.234Z"
+    },
+    "https://amcu.gov.ua/news/ponad-35-mln-hrn-shtrafiv-za-antykonkurentni-uzghodzheni-dii": {
+      "title": "Понад 35 млн грн штрафів – за антиконкурентні узгоджені дії",
+      "url": "https://amcu.gov.ua/news/ponad-35-mln-hrn-shtrafiv-za-antykonkurentni-uzghodzheni-dii",
+      "first_seen_at": "2026-11-23T14:33:16.669Z",
+      "last_seen_at": "2026-11-23T14:33:16.669Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-rishennia-tak-amku-17112026": {
+      "title": "Інформація про рішення ТАК АМКУ 17.11.2026",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-rishennia-tak-amku-17112026",
+      "first_seen_at": "2026-11-23T14:33:18.089Z",
+      "last_seen_at": "2026-11-23T14:33:18.089Z"
+    },
+    "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-tak-amku-17112026": {
+      "title": "Проєкт порядку денного засідання ТАК АМКУ 17.11.2026",
+      "url": "https://amcu.gov.ua/news/proiekt-poriadku-dennoho-zasidannia-tak-amku-17112026",
+      "first_seen_at": "2026-11-23T14:33:19.470Z",
+      "last_seen_at": "2026-11-23T14:33:19.470Z"
+    },
+    "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-2613137-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku": {
+      "title": "Інформація про попередні висновки у справі про порушення законодавства про захист економічної конкуренції № 145-26.13/137-26 та розгляд зазначеної справи на засіданні АМКУ",
+      "url": "https://amcu.gov.ua/news/informatsiia-pro-poperedni-vysnovky-u-spravi-pro-porushennia-zakonodavstva-pro-zakhyst-ekonomichnoi-konkurentsii-145-2613137-26-ta-rozghliad-zaznachenoi-spravy-na-zasidanni-amku",
+      "first_seen_at": "2026-11-23T14:33:20.737Z",
+      "last_seen_at": "2026-11-23T14:33:20.737Z"
     }
   },
   "last_run": {
-    "at": "2026-11-16T12:42:52.272Z",
+    "at": "2026-11-23T14:33:20.742Z",
     "period": {
       "mode": "weekly",
-      "from": "2026-11-09",
-      "to": "2026-11-15",
-      "label": "2026-11-09 — 2026-11-15"
+      "from": "2026-11-16",
+      "to": "2026-11-22",
+      "label": "2026-11-16 — 2026-11-22"
     },
-    "digest_key": "weekly:2026-11-09:2026-11-15",
-    "timeline_items": 24,
-    "pharma_candidates": 8,
-    "html_candidates": 8,
-    "pdf_fallback_checked": 3,
+    "digest_key": "weekly:2026-11-16:2026-11-22",
+    "timeline_items": 12,
+    "pharma_candidates": 1,
+    "html_candidates": 1,
+    "pdf_fallback_checked": 0,
     "pdf_fallback_candidates": 0,
     "pdf_fallback_critical_errors": 0,
-    "relevant_events": 15,
-    "gemini_calls": 8,
-    "email_sent": true,
-    "technically_complete": true,
+    "relevant_events": 0,
+    "gemini_calls": 1,
+    "email_sent": false,
+    "technically_complete": false,
     "budget_exceeded": false,
-    "item_errors": [],
+    "item_errors": [
+      {
+        "url": "https://amcu.gov.ua/napryami/vycherpnyi-perelik-sprav-iaki-z-01012024-perebuvaiut-na-rozghliadi-v-amku/spravy-2026-roku/lystopad-2026/rozpochato-rozghliad-spravy-127-264208-26",
+        "error": "Gemini HTTP 503: {\"error\":{\"code\":503,\"message\":\"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\"status\":\"UNAVAILABLE\"}}"
+      }
+    ],
     "settings": {
       "period_mode": "weekly",
       "skip_gemini": false,
